@@ -1,0 +1,9 @@
+Debug
+Release
+ipch
+*.sdf
+*.suo
+*.vcxproj.filters
+*.vcxproj.user
+*.orig
+*~
