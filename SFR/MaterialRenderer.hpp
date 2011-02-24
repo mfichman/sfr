@@ -24,7 +24,8 @@ public:
     void operator()(Camera* camera);
 
 private:
-    Matrix transform_;
+    Matrix modelTransform_;
+    Matrix projectionTransform_;
     Matrix viewTransform_;
     Ptr<Effect> effect_;
     

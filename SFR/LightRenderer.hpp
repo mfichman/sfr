@@ -15,18 +15,23 @@ namespace SFR {
 /* Deferred shading renderer (2nd pass). */
 class LightRenderer : public Node::Functor {
 public:
+    LightRenderer(ResourceManager* manager);
     void operator()(Transform* transform);
     void operator()(Light* light);
     void operator()(Effect* effect);
+    void operator()(Camera* camera);
 
 private:
+    Ptr<Mesh> unitSphere_;
     Ptr<Effect> effect_;
     Ptr<Effect> directionalLight_;
     Ptr<Effect> pointLight_;
     Ptr<Effect> hemiLight_;
     Ptr<Effect> spotLight_;
 
-    Matrix transform_;
+    Matrix modelTransform_;
+    Matrix projectionTransform_;
+    Matrix viewTransform_;
 
     GLint shadowMap_;
     GLint diffuseBuffer_;
@@ -42,9 +47,11 @@ private:
     GLint atten1_;
     GLint atten2_;
 
-    GLint position_;
-    GLint direction_;
+    GLint lightPosition_;
+    GLint lightDirection_;
     GLint cutoff_;
+
+    GLint position_;
 
     GLint model_;
     GLint view_;

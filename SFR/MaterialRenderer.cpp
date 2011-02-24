@@ -16,15 +16,17 @@
 using namespace SFR;
 
 void MaterialRenderer::operator()(Transform* transform) {
-    Matrix previous = transform_;
+    Matrix previous = modelTransform_;
 
     // Compute the transform for all children of the current node
-    transform_ = transform_ * transform->transform();
+    modelTransform_ = modelTransform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
 
-    transform_ = previous;
+    modelTransform_ = previous;
+
+    operator()((Effect*)0);
 }
 
 void MaterialRenderer::operator()(Mesh* mesh) {
@@ -47,10 +49,10 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     operator()(mesh->attributeBuffer("texCoord"));
 
     // Pass the model matrix to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, transform_);
+    glUniformMatrix4fv(model_, 1, 0, modelTransform_);
 
     // Calculate the normal matrix and pass it to the vertex shader
-    Matrix temp = (transform_ * viewTransform_).inverse();
+    Matrix temp = (modelTransform_ * viewTransform_).inverse();
     float normalMatrix[9] = { 
         temp[0], temp[1], temp[2], 
         temp[4], temp[5], temp[6],
@@ -79,6 +81,7 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
     buffer->statusIs(IndexBuffer::SYNCED);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void MaterialRenderer::operator()(Material* material) {
@@ -118,12 +121,8 @@ void MaterialRenderer::operator()(Texture* texture) {
 } 
 
 void MaterialRenderer::operator()(Camera* camera) {
-    if (effect_) {
-        glUniformMatrix4fv(projection_, 1, 0, camera->projectionMatrix());
-        glUniformMatrix4fv(view_, 1, 0, transform_);
-    }
-
-    viewTransform_ = transform_;
+    projectionTransform_ = camera->projectionMatrix();
+    viewTransform_ = modelTransform_;
 }
 
 void MaterialRenderer::operator()(Effect* effect) {
@@ -168,6 +167,9 @@ void MaterialRenderer::operator()(Effect* effect) {
         view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
         projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
         normalMatrix_ = glGetUniformLocation(effect_->id(), "normalMatrix");
+
+        glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
+        glUniformMatrix4fv(view_, 1, 0, viewTransform_);
 
         glUniform1i(diffuseMap_, 0);
         glUniform1i(specularMap_, 1);

@@ -18,7 +18,7 @@ namespace SFR {
 /* Deferred shading renderer (1st and 2nd pass). */
 class DeferredRenderer : public Node::Functor {
 public:
-    DeferredRenderer();
+    DeferredRenderer(ResourceManager* manager);
     void operator()(Transform* transform);
 
 private:

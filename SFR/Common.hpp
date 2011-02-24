@@ -23,8 +23,6 @@ class Mesh;
 class Material;
 class Texture;
 class Light;
-class HemiLight;
-class SpotLight;
 class AttributeBuffer;
 class IndexBuffer;
 class Effect;
@@ -39,6 +37,7 @@ class MeshLoader;
 class MaterialLoader;
 class EffectLoader;
 class Camera;
+class ResourceManager;
 
 }
 

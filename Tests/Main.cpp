@@ -3,6 +3,7 @@
 #include <SFR/ResourceManager.hpp>
 #include <SFR/Mesh.hpp>
 #include <SFR/Camera.hpp>
+#include <SFR/Light.hpp>
 #include <SFR/DeferredRenderer.hpp>
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
@@ -27,11 +28,21 @@ void run() {
 
     Ptr<SFR::ResourceManager> manager(new SFR::ResourceManager);
     Ptr<SFR::Mesh> mesh = manager->meshNew("Meshes/Sphere.obj");
-    Ptr<SFR::DeferredRenderer> renderer(new SFR::DeferredRenderer);
+    Ptr<SFR::DeferredRenderer> renderer(new SFR::DeferredRenderer(manager.ptr()));
     Ptr<SFR::Effect> effect = manager->effectNew("Shaders/Material");
     Ptr<SFR::Camera> camera(new SFR::Camera);
     Ptr<SFR::Material> material(new SFR::Material("Test"));
     Ptr<SFR::Transform> transform(new SFR::Transform);
+    Ptr<SFR::Light> light(new SFR::Light);
+
+
+    light->diffuseColorIs(SFR::Color(1.0f, 1.0f, 1.0f, 1.0f));
+    light->specularColorIs(SFR::Color(1.0f, 1.0f, 1.0f, 1.0f));
+
+
+    Ptr<SFR::Transform> lightTransform(new SFR::Transform);
+    lightTransform->positionIs(SFR::Vector(0.f, 0.0f, -5.0f));
+    lightTransform->childNew(mesh.ptr());
 
     material->diffuseColorIs(SFR::Color(1.0f, 0.0f, 0.0f, 1.0f));
     material->specularColorIs(SFR::Color(0.0f, 1.0f, 0.0f, 1.0f));
@@ -42,16 +53,17 @@ void run() {
     mesh->materialIs(material.ptr());
     mesh->effectIs(effect.ptr());
 
-    camera->nearIs(-2.f);
-    camera->farIs(2.f);
-    camera->leftIs(-2.f);
-    camera->rightIs(2.f);
-    camera->topIs(-2.f);
-    camera->bottomIs(2.f);
+    camera->nearIs(-10.f);
+    camera->farIs(10.f);
+    camera->leftIs(-10.f);
+    camera->rightIs(10.f);
+    camera->topIs(-10.f);
+    camera->bottomIs(10.f);
     camera->typeIs(Camera::ORTHOGRAPHIC);
 
+   // transform->childNew(light.ptr());
+    transform->childNew(lightTransform.ptr());
     transform->childNew(camera.ptr());
-    transform->childNew(mesh.ptr());
 
     glClearDepth(1.0f);
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);

@@ -15,8 +15,11 @@
 
  /* Deferred render point light shader */
  void main() {
+	mat4 transform = modelMatrix * viewMatrix * projectionMatrix;
 
 	// Transform the vertex to get the clip-space position of the vertex
-	gl_Position = positionIn * modelMatrix * viewMatrix * projectionMatrix;
-	clipPosition = gl_Position.xy;
+	vec4 position = vec4(positionIn, 1) * transform;
+	clipPosition = position.xy;
+
+	gl_Position = position;
  }

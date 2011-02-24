@@ -46,6 +46,6 @@ void main() {
 	gl_FragData[1].a = alpha;
 
 	// Save the normal vector in view space
-	gl_FragData[2].xyz = normalMatrix * TBN * Tn;
+	gl_FragData[2].xyz = ((normalMatrix * TBN * Tn) + 1.)/2.;
 	gl_FragData[2].a = 1.;
 }

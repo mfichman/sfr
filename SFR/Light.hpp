@@ -21,6 +21,7 @@ public:
     class Notifiee;
     enum Type { SPOT, POINT, HEMI, DIRECTIONAL };
 
+    Light();
     const Color& ambientColor() const;
     const Color& diffuseColor() const;
     const Color& backDiffuseColor() const;

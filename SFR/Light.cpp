@@ -10,6 +10,15 @@
 
 using namespace SFR;
 
+Light::Light() {
+    constantAttenuation_ = 0.0f;
+    linearAttenuation_ = 1000.0f;
+    quadraticAttenuation_ = 0.0f;
+    spotCutoff_ = 45.0f;
+    direction_ = Vector(0, 0, -1);
+    type_ = POINT;
+}
+
 const Color& Light::ambientColor() const {
     return ambientColor_;
 }
@@ -50,12 +59,19 @@ float Light::radiusOfEffect() const {
     float a = quadraticAttenuation();
     float b = linearAttenuation();
     float c = constantAttenuation(); 
-    float minIntensity = 0.001;
+    float minIntensity = 0.001f;
 
-    float d1 = -b + sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
-    float d2 = -b - sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+    if (a != 0) {
+        // Quadratic equation to find distance at which intensity
+        // is below the threshold
+        float d1 = -b + sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        float d2 = -b - sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
 
-    return max(d1, d2);
+        return max(d1, d2);
+    } else {
+        // If a == 0, then we use the slope instead.
+        return (1 - minIntensity*c)/(minIntensity*b);
+    }
 }
 
 Light::Type Light::type() const {

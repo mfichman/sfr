@@ -13,12 +13,12 @@
 
 using namespace SFR;
 
-DeferredRenderer::DeferredRenderer() {
+DeferredRenderer::DeferredRenderer(ResourceManager* manager) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
     materialPass_ = new MaterialRenderer;
-    lightPass_ = new LightRenderer;
+    lightPass_ = new LightRenderer(manager);
     renderTarget_ = new DeferredRenderTarget(3, viewport[2], viewport[3]);
 }
 
@@ -32,17 +32,18 @@ void DeferredRenderer::operator()(Transform* transform) {
     renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
 
     // Pass 2: Render lighting using light bounding boxes
-#if 0
     glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(0));
+
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(1));
+
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(2));
+
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
     transform->operator()(lightPass_.ptr());
-#endif
 }
