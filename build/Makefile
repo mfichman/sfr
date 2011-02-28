@@ -1,4 +1,4 @@
-CXXFLAGS := -g -Wall -Werror -I.
+CXXFLAGS := -g -Wall -Werror -I../include
 CXX := g++
 UNAME := $(shell uname)
 
@@ -10,15 +10,12 @@ LDFLAGS := -framework SFML -framework OpenGL -framework sfml-window \
 endif
 
 
-OBJS += $(patsubst %.cpp, %.o, $(wildcard SFR/*.cpp))
-OBJS += $(patsubst %.cpp, %.o, $(wildcard Tests/*.cpp))
+OBJS += $(patsubst %.cpp, %.o, $(wildcard ../src/*.cpp))
+OBJS += $(patsubst %.cpp, %.o, $(wildcard ../tests/*.cpp))
 
 
-main: $(OBJS)
+../main: $(OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $^
 
-run: main
-	./main
-
 clean:
-	rm -f main $(OBJS) 
+	rm -f ../main $(OBJS) 
