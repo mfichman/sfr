@@ -2,6 +2,7 @@ CXXFLAGS := -g -Wall -Werror -I../include
 CXX := g++
 UNAME := $(shell uname)
 
+
 ifeq ($(UNAME), Linux)
 LDFLAGS := -lGL -lsfml-window -lsfml-graphics -lsfml-system
 else
