@@ -16,7 +16,7 @@
 #endif
 #ifdef __linux__
 #define SFR_USE_GLEW
-#incude <GL/glew.h>
+#include <GL/glew.h>
 #endif
 
 #include <SFML/Window.hpp>
