@@ -16,6 +16,7 @@
     <ClInclude Include="SFR\Color.hpp" />
     <ClInclude Include="SFR\Common.hpp" />
     <ClInclude Include="SFR\DeferredRenderer.hpp" />
+    <ClInclude Include="SFR\HemiLight.hpp" />
     <ClInclude Include="SFR\IndexBuffer.hpp" />
     <ClInclude Include="SFR\LightRenderer.hpp" />
     <ClInclude Include="SFR\Effect.hpp" />
@@ -31,12 +32,13 @@
     <ClInclude Include="SFR\MeshObject.hpp" />
     <ClInclude Include="SFR\MeshVertex.hpp" />
     <ClInclude Include="SFR\Node.hpp" />
-    <ClInclude Include="SFR\Light.hpp" />
+    <ClInclude Include="SFR\PointLight.hpp" />
     <ClInclude Include="SFR\Ptr.hpp" />
     <ClInclude Include="SFR\Quaternion.hpp" />
     <ClInclude Include="SFR\ResourceManager.hpp" />
     <ClInclude Include="SFR\Shader.hpp" />
     <ClInclude Include="SFR\EffectLoader.hpp" />
+    <ClInclude Include="SFR\SpotLight.hpp" />
     <ClInclude Include="SFR\TexCoord.hpp" />
     <ClInclude Include="SFR\Texture.hpp" />
     <ClInclude Include="SFR\Transform.hpp" />
@@ -49,6 +51,7 @@
     <ClCompile Include="SFR\Color.cpp" />
     <ClCompile Include="SFR\DeferredRenderer.cpp" />
     <ClCompile Include="SFR\Effect.cpp" />
+    <ClCompile Include="SFR\HemiLight.cpp" />
     <ClCompile Include="SFR\IndexBuffer.cpp" />
     <ClCompile Include="SFR\LightRenderer.cpp" />
     <ClCompile Include="SFR\MaterialRenderer.cpp" />
@@ -60,11 +63,12 @@
     <ClCompile Include="SFR\MeshObject.cpp" />
     <ClCompile Include="SFR\MeshVertex.cpp" />
     <ClCompile Include="SFR\Node.cpp" />
-    <ClCompile Include="SFR\Light.cpp" />
+    <ClCompile Include="SFR\PointLight.cpp" />
     <ClCompile Include="SFR\Quaternion.cpp" />
     <ClCompile Include="SFR\ResourceManager.cpp" />
     <ClCompile Include="SFR\Shader.cpp" />
     <ClCompile Include="SFR\EffectLoader.cpp" />
+    <ClCompile Include="SFR\SpotLight.cpp" />
     <ClCompile Include="SFR\TexCoord.cpp" />
     <ClCompile Include="SFR\Texture.cpp" />
     <ClCompile Include="SFR\Transform.cpp" />

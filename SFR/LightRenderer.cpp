@@ -8,7 +8,7 @@
 #include "SFR/LightRenderer.hpp"
 #include "SFR/Effect.hpp"
 #include "SFR/Transform.hpp"
-#include "SFR/Light.hpp"
+#include "SFR/PointLight.hpp"
 #include "SFR/ResourceManager.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Camera.hpp"
@@ -30,29 +30,16 @@ void LightRenderer::operator()(Transform* transform) {
 
     modelTransform_ = previous;
 
-    operator()((Effect*)0);
+    // Clear out the current effect
+    operator()(static_cast<Effect*>(0));
 }
 
-void LightRenderer::operator()(Light* light) {
-
-    // Set the correct shader for the given light type
-    switch (light->type()) {
-    case Light::POINT: operator()(pointLight_.ptr()); break;
-    case Light::HEMI: operator()(hemiLight_.ptr()); break;
-    case Light::SPOT: operator()(spotLight_.ptr()); break;
-    case Light::DIRECTIONAL: operator()(directionalLight_.ptr()); break;
-    default: return;
-    }
-
-    //glActiveTexture(GL_TEXTURE4);
-    //glBindTexture(GL_TEXTURE_2D, light->shadowMap());
+void LightRenderer::operator()(PointLight* light) {
+    operator()(pointLight_.ptr());
 
     // Set the light color, attenuation, and direction properties.
     if (diffuse_ != -1) {
         glUniform3fv(diffuse_, 1, light->diffuseColor());
-    }
-    if (backDiffuse_ != -1) {
-        glUniform3fv(backDiffuse_, 1, light->backDiffuseColor());
     }
     if (specular_ != -1) {
         glUniform3fv(specular_, 1, light->specularColor());
@@ -66,29 +53,30 @@ void LightRenderer::operator()(Light* light) {
     if (atten2_ != -1) {
         glUniform1f(atten2_, light->quadraticAttenuation());
     }
-    if (cutoff_ != -1) {
-        glUniform1f(cutoff_, light->spotCutoff());
-    }
-    if (direction_ != -1) {
-        glUniform3fv(direction_, 1, light->direction());
-    }
-
-    Matrix previous = modelTransform_;
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
+    Matrix previous = modelTransform_;
     float radius = light->radiusOfEffect();
     modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
-    glUniformMatrix4fv(model_, 1, 0, modelTransform_);
-     
-    // Set up the view, projection, and inverse projection transforms
-    Matrix inverseProjection = projectionTransform_.inverse();
-    glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
-    glUniformMatrix4fv(view_, 1, 0, viewTransform_);
-    glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
-
+    
     // This renders the light's bounding volume (usually a sphere)
-    AttributeBuffer* buffer = unitSphere_->attributeBuffer(("position"));
+    operator()(unitSphere_.ptr());
+    modelTransform_ = previous;
+}
+
+void LightRenderer::operator()(HemiLight* light) {
+}
+
+void LightRenderer::operator()(SpotLight* light) {
+}
+
+void LightRenderer::operator()(Mesh* mesh) {
+    operator()(mesh->attributeBuffer("position"));
+    operator()(mesh->indexBuffer());
+}
+
+void LightRenderer::operator()(AttributeBuffer* buffer) {
     if (buffer && position_ != -1) {
         buffer->statusIs(AttributeBuffer::SYNCED);
         glEnableVertexAttribArray(position_);
@@ -98,6 +86,15 @@ void LightRenderer::operator()(Light* light) {
     } else if (position_ != -1) {
         glDisableVertexAttribArray(position_);
     }
+}
+
+void LightRenderer::operator()(IndexBuffer* buffer) {
+    // Set up the view, projection, and inverse projection transforms
+    Matrix inverseProjection = projectionTransform_.inverse();
+    glUniformMatrix4fv(model_, 1, 0, modelTransform_);
+    glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
+    glUniformMatrix4fv(view_, 1, 0, viewTransform_);
+    glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
 
     // Render the indices of the light's bounding volume
     IndexBuffer* indices = unitSphere_->indexBuffer();
@@ -105,8 +102,6 @@ void LightRenderer::operator()(Light* light) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    modelTransform_ = previous;
 }
 
 void LightRenderer::operator()(Camera* camera) {
@@ -144,7 +139,6 @@ void LightRenderer::operator()(Effect* effect) {
         atten0_ = glGetUniformLocation(effect_->id(), "atten0");
         atten1_ = glGetUniformLocation(effect_->id(), "atten1");
         atten2_ = glGetUniformLocation(effect_->id(), "atten2");
-
 
         cutoff_ = glGetUniformLocation(effect_->id(), "cutoff");
         direction_ = glGetUniformLocation(effect_->id(), "lightDirection");

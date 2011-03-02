@@ -31,8 +31,10 @@ class Node::Functor : public Interface {
 public:
     virtual void operator()(Camera* camera) {}
     virtual void operator()(Transform* transform) {}
-    virtual void operator()(Light* light) {}
+    virtual void operator()(PointLight* light) {}
     virtual void operator()(MeshObject* object) {}
+    virtual void operator()(HemiLight* light) {}
+    virtual void operator()(SpotLight* light) {}
 };
 
 }

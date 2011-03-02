@@ -27,7 +27,8 @@ void MaterialRenderer::operator()(Transform* transform) {
 
     modelTransform_ = previous;
 
-    operator()((Effect*)0);
+    // Clear out the previous effect
+    operator()(static_cast<Effect*>(0));
 }
 
 void MaterialRenderer::operator()(MeshObject* object) {
@@ -53,6 +54,23 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     attrib_ = texCoord_;
     operator()(mesh->attributeBuffer("texCoord"));
 
+    // Render the mesh
+    operator()(mesh->indexBuffer());
+}
+
+void MaterialRenderer::operator()(AttributeBuffer* buffer) {
+    if (buffer && attrib_ != -1) {
+        buffer->statusIs(AttributeBuffer::SYNCED);
+        glEnableVertexAttribArray(attrib_);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
+        GLint size = buffer->elementSize()/sizeof(GLfloat);
+        glVertexAttribPointer(attrib_, size, GL_FLOAT, 0, 0, 0);
+    } else if (attrib_ != -1) {
+        glDisableVertexAttribArray(attrib_);
+    }
+}
+
+void MaterialRenderer::operator()(IndexBuffer* buffer) {
     // Pass the model matrix to the vertex shader
     glUniformMatrix4fv(model_, 1, 0, modelTransform_);
 
@@ -71,23 +89,6 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
     glUniformMatrix4fv(view_, 1, 0, viewTransform_);
 
-    // Render the mesh
-    operator()(mesh->indexBuffer());
-}
-
-void MaterialRenderer::operator()(AttributeBuffer* buffer) {
-    if (buffer && attrib_ != -1) {
-        buffer->statusIs(AttributeBuffer::SYNCED);
-        glEnableVertexAttribArray(attrib_);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
-        GLint size = buffer->elementSize()/sizeof(GLfloat);
-        glVertexAttribPointer(attrib_, size, GL_FLOAT, 0, 0, 0);
-    } else if (attrib_ != -1) {
-        glDisableVertexAttribArray(attrib_);
-    }
-}
-
-void MaterialRenderer::operator()(IndexBuffer* buffer) {
     // Draw the attribute buffer
     buffer->statusIs(IndexBuffer::SYNCED);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->id());

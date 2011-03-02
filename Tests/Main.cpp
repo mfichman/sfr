@@ -3,7 +3,7 @@
 #include <SFR/ResourceManager.hpp>
 #include <SFR/Mesh.hpp>
 #include <SFR/Camera.hpp>
-#include <SFR/Light.hpp>
+#include <SFR/PointLight.hpp>
 #include <SFR/DeferredRenderer.hpp>
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
@@ -47,12 +47,16 @@ void run() {
     plane->effectIs(effect.ptr());
 
     Ptr<SFR::Transform> light0(new SFR::Transform);
-    light0->childNew(new SFR::Light);
-    light0->positionIs(SFR::Vector(0.f, 0.f, 2.f));
+    light0->childNew(new SFR::PointLight);
+    light0->positionIs(SFR::Vector(0.f, -1.f, 2.f));
 
     Ptr<SFR::Transform> light1(new SFR::Transform);
-    light1->childNew(new SFR::Light);
+    light1->childNew(new SFR::PointLight);
     light1->positionIs(SFR::Vector(0.f, 2.f, 0.f));
+
+    Ptr<SFR::Transform> light2(new SFR::Transform);
+    light2->childNew(new SFR::PointLight);
+    light2->positionIs(SFR::Vector(-2.f, 0.f, 0.f));
 
     Ptr<SFR::Transform> camera(new SFR::Transform);
     camera->childNew(new SFR::Camera);
@@ -64,6 +68,7 @@ void run() {
     Ptr<SFR::Transform> root(new SFR::Transform);
     root->childNew(light0.ptr());
     root->childNew(light1.ptr());
+    root->childNew(light2.ptr());
     root->childNew(object.ptr());
     root->childNew(planeNode.ptr());
     root->childNew(camera.ptr());

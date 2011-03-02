@@ -17,9 +17,14 @@ class LightRenderer : public Node::Functor {
 public:
     LightRenderer(ResourceManager* manager);
     void operator()(Transform* transform);
-    void operator()(Light* light);
+    void operator()(PointLight* light);
     void operator()(Effect* effect);
     void operator()(Camera* camera);
+    void operator()(HemiLight* light);
+    void operator()(SpotLight* light);
+    void operator()(Mesh* mesh);
+    void operator()(AttributeBuffer* buffer);
+    void operator()(IndexBuffer* buffer);
 
 private:
     Ptr<Mesh> unitSphere_;

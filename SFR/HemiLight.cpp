@@ -5,60 +5,40 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Light.hpp"
+#include "SFR/HemiLight.hpp"
 #include <algorithm>
 
 using namespace SFR;
 
-Light::Light() {
+HemiLight::HemiLight() {
     constantAttenuation_ = 1.0f;
     linearAttenuation_ = 1.;//-0.5f;
     quadraticAttenuation_ = 0.0f;
-    spotCutoff_ = 45.0f;
-    direction_ = Vector(0, 0, -1);
-    type_ = POINT;
-    specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
-    ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
+    backDiffuseColor_ = Color(0.f, 0.f, 0.f, 1.f);
 }
 
-const Color& Light::ambientColor() const {
-    return ambientColor_;
-}
-
-const Color& Light::diffuseColor() const {
+const Color& HemiLight::diffuseColor() const {
     return diffuseColor_;
 }
 
-const Color& Light::backDiffuseColor() const {
+const Color& HemiLight::backDiffuseColor() const {
     return backDiffuseColor_;
 }
 
-const Color& Light::specularColor() const {
-    return specularColor_;
-}
-
-const Vector& Light::direction() const {
-    return direction_;
-}
-
-float Light::constantAttenuation() const {
+float HemiLight::constantAttenuation() const {
     return constantAttenuation_;
 }
 
-float Light::linearAttenuation() const {
+float HemiLight::linearAttenuation() const {
     return linearAttenuation_;
 }
 
-float Light::quadraticAttenuation() const {
+float HemiLight::quadraticAttenuation() const {
     return quadraticAttenuation_;
 }
 
-float Light::spotCutoff() const {
-    return spotCutoff_;
-}
-
-float Light::radiusOfEffect() const {
+float HemiLight::radiusOfEffect() const {
     float a = quadraticAttenuation();
     float b = linearAttenuation();
     float c = constantAttenuation(); 
@@ -77,22 +57,7 @@ float Light::radiusOfEffect() const {
     }
 }
 
-Light::Type Light::type() const {
-    return type_;
-}
-
-void Light::ambientColorIs(const Color& ambient) {
-    if (ambientColor_ == ambient) {
-        return;
-    }
-    ambientColor_ = ambient;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onAmbientColor();
-    }
-}
-
-void Light::diffuseColorIs(const Color& diffuse) {
+void HemiLight::diffuseColorIs(const Color& diffuse) {
     if (diffuseColor_ == diffuse) {
         return;
     }
@@ -103,7 +68,7 @@ void Light::diffuseColorIs(const Color& diffuse) {
     }
 }
 
-void Light::backDiffuseColorIs(const Color& backDiffuse) {
+void HemiLight::backDiffuseColorIs(const Color& backDiffuse) {
     if (backDiffuseColor_ = backDiffuse) {
         return;
     }
@@ -114,28 +79,7 @@ void Light::backDiffuseColorIs(const Color& backDiffuse) {
     }
 }
 
-void Light::specularColorIs(const Color& specular) {
-    if (specularColor_ == specular) {
-        return;
-    }
-    specularColor_ = specular;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpecularColor();
-    }
-}
-
-void Light::directionIs(const Vector& direction) {
-    if (direction_ == direction) {
-        return;
-    }
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDirection();
-    }
-}
-
-void Light::constantAttenuationIs(float atten) {
+void HemiLight::constantAttenuationIs(float atten) {
     if (constantAttenuation_ == atten) {
         return;
     }
@@ -146,7 +90,7 @@ void Light::constantAttenuationIs(float atten) {
     }
 }
 
-void Light::linearAttenuationIs(float atten) {
+void HemiLight::linearAttenuationIs(float atten) {
     if (linearAttenuation_ == atten) {
         return;
     }
@@ -157,7 +101,7 @@ void Light::linearAttenuationIs(float atten) {
     }
 }
 
-void Light::quadraticAttenuationIs(float atten) {
+void HemiLight::quadraticAttenuationIs(float atten) {
     if (quadraticAttenuation_ == atten) {
         return;
     }
@@ -168,38 +112,16 @@ void Light::quadraticAttenuationIs(float atten) {
     }
 }
 
-void Light::spotCutoffIs(float cutoff) {
-    if (spotCutoff_ == cutoff) {
-        return;
-    }
-    spotCutoff_ = cutoff;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpotCutoff();
-    }
-}
-
-void Light::typeIs(Type type) {
-    if (type_ == type) {
-        return;
-    }
-    type_ = type;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onType();
-    }
-}
-
-void Light::notifieeNew(Notifiee* notifiee) {
+void HemiLight::notifieeNew(Notifiee* notifiee) {
     if (notifiee) {
         notifiee_.push_back(notifiee);
     }
 }
 
-void Light::notifieeDel(Notifiee* notifiee) {
+void HemiLight::notifieeDel(Notifiee* notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
 
-void Light::operator()(Functor* functor) {
+void HemiLight::operator()(Functor* functor) {
     functor->operator()(this);
 }

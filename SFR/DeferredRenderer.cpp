@@ -35,9 +35,8 @@ void DeferredRenderer::operator()(Transform* transform) {
     // Pass 2: Render lighting using light bounding boxes
     glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
 
     glActiveTexture(GL_TEXTURE0);
