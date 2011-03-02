@@ -6,11 +6,11 @@ OBJS += $(patsubst %.cpp, %.o, $(wildcard sfr/*.cpp))
 OBJS += $(patsubst %.cpp, %.o, $(wildcard tests/*.cpp))
 
 
-binaries/main: $(OBJS)
+main: $(OBJS)
 	g++ $(LDFLAGS) -o $@ $^
 
-run: binaries/main
-	binaries/main
+run: main
+	./main
 
 clean:
 	rm -f main $(OBJS) 
