@@ -26,7 +26,6 @@ void main() {
 
 	// Get the normal from the normal map texture and unpack it
 	vec3 Tn = normalize((texture2D(normalMap, texCoord) * 2. - 1.).xyz);
-	Tn = vec3(0, 0, 1.);
 
 	// Create the TBN matrix from the normalized T and N vectors
 	vec3 N = normalize(normal);
