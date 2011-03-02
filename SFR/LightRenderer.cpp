@@ -114,49 +114,40 @@ void LightRenderer::operator()(Effect* effect) {
         return;
     }
     if (effect_) {
-        // TODO: Enable vertex attribute array
         glDisableVertexAttribArray(position_);
     }
-
     effect_ = effect;
+    if (!effect_) {
+        glUseProgram(0);
+        return;
+    }
 
     // Activate the shader by querying for uniform variables and attributes 
-    // within the shader source
-    if (effect_) {
-        effect_->statusIs(Effect::LINKED);
-        glUseProgram(effect_->id());
+    effect_->statusIs(Effect::LINKED);
+    glUseProgram(effect_->id());
+    shadowMap_ = glGetUniformLocation(effect_->id(), "shadowMap");
+    diffuseBuffer_ = glGetUniformLocation(effect_->id(), "diffuseBuffer");
+    specularBuffer_ = glGetUniformLocation(effect_->id(), "specularBuffer");
+    normalBuffer_ = glGetUniformLocation(effect_->id(), "normalBuffer");
+    depthBuffer_ = glGetUniformLocation(effect_->id(), "depthBuffer");
+    diffuse_ = glGetUniformLocation(effect_->id(), "Ld");
+    backDiffuse_ = glGetUniformLocation(effect_->id(), "Ldb");
+    specular_ = glGetUniformLocation(effect_->id(), "Ls");
+    atten0_ = glGetUniformLocation(effect_->id(), "atten0");
+    atten1_ = glGetUniformLocation(effect_->id(), "atten1");
+    atten2_ = glGetUniformLocation(effect_->id(), "atten2");
+    cutoff_ = glGetUniformLocation(effect_->id(), "cutoff");
+    direction_ = glGetUniformLocation(effect_->id(), "lightDirection");
+    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
+    position_ = glGetAttribLocation(effect_->id(), "positionIn");
 
-        shadowMap_ = glGetUniformLocation(effect_->id(), "shadowMap");
-        diffuseBuffer_ = glGetUniformLocation(effect_->id(), "diffuseBuffer");
-        specularBuffer_ = glGetUniformLocation(effect_->id(), "specularBuffer");
-        normalBuffer_ = glGetUniformLocation(effect_->id(), "normalBuffer");
-        depthBuffer_ = glGetUniformLocation(effect_->id(), "depthBuffer");
-
-        diffuse_ = glGetUniformLocation(effect_->id(), "Ld");
-        backDiffuse_ = glGetUniformLocation(effect_->id(), "Ldb");
-        specular_ = glGetUniformLocation(effect_->id(), "Ls");
-
-        atten0_ = glGetUniformLocation(effect_->id(), "atten0");
-        atten1_ = glGetUniformLocation(effect_->id(), "atten1");
-        atten2_ = glGetUniformLocation(effect_->id(), "atten2");
-
-        cutoff_ = glGetUniformLocation(effect_->id(), "cutoff");
-        direction_ = glGetUniformLocation(effect_->id(), "lightDirection");
-
-        model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-        view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-        projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
-        unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
-        position_ = glGetAttribLocation(effect_->id(), "positionIn");
-
-        // Set texture samplers
-        glUniform1i(diffuseBuffer_, 0);
-        glUniform1i(specularBuffer_, 1);
-        glUniform1i(normalBuffer_, 2);
-        glUniform1i(depthBuffer_, 3);
-        glUniform1i(shadowMap_, 4);
-
-    } else {
-        glUseProgram(0);
-    }
+    // Set texture samplers
+    glUniform1i(diffuseBuffer_, 0);
+    glUniform1i(specularBuffer_, 1);
+    glUniform1i(normalBuffer_, 2);
+    glUniform1i(depthBuffer_, 3);
+    glUniform1i(shadowMap_, 4);
 }

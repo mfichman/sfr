@@ -155,35 +155,33 @@ void MaterialRenderer::operator()(Effect* effect) {
             glDisableVertexAttribArray(tangent_);
         }
     }
-
     effect_ = effect;
-
-    if (effect_) {
-        effect_->statusIs(Effect::LINKED);
-        glUseProgram(effect_->id());
-        diffuseMap_ = glGetUniformLocation(effect_->id(), "diffuseMap");
-        specularMap_ = glGetUniformLocation(effect_->id(), "specularMap");
-        normalMap_ = glGetUniformLocation(effect_->id(), "normalMap");
-        
-        ambient_ = glGetUniformLocation(effect_->id(), "Ka");
-        diffuse_ = glGetUniformLocation(effect_->id(), "Kd");
-        specular_ = glGetUniformLocation(effect_->id(), "Ks");
-        shininess_ = glGetUniformLocation(effect_->id(), "alpha");
-
-        normal_ = glGetAttribLocation(effect_->id(), "normalIn");
-        position_ = glGetAttribLocation(effect_->id(), "positionIn");
-        texCoord_ = glGetAttribLocation(effect_->id(), "texCoordIn");
-        tangent_ = glGetAttribLocation(effect_->id(), "tangentIn");
-
-        model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-        view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-        projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
-        normalMatrix_ = glGetUniformLocation(effect_->id(), "normalMatrix");
-
-        glUniform1i(diffuseMap_, 0);
-        glUniform1i(specularMap_, 1);
-        glUniform1i(normalMap_, 2);
-    } else {
+    if (!effect_) {
         glUseProgram(0);
+        return;
     }
+
+     // Activate the shader by querying for uniform variables and attributes 
+    effect_->statusIs(Effect::LINKED);
+    glUseProgram(effect_->id());
+    diffuseMap_ = glGetUniformLocation(effect_->id(), "diffuseMap");
+    specularMap_ = glGetUniformLocation(effect_->id(), "specularMap");
+    normalMap_ = glGetUniformLocation(effect_->id(), "normalMap");   
+    ambient_ = glGetUniformLocation(effect_->id(), "Ka");
+    diffuse_ = glGetUniformLocation(effect_->id(), "Kd");
+    specular_ = glGetUniformLocation(effect_->id(), "Ks");
+    shininess_ = glGetUniformLocation(effect_->id(), "alpha");
+    normal_ = glGetAttribLocation(effect_->id(), "normalIn");
+    position_ = glGetAttribLocation(effect_->id(), "positionIn");
+    texCoord_ = glGetAttribLocation(effect_->id(), "texCoordIn");
+    tangent_ = glGetAttribLocation(effect_->id(), "tangentIn");
+    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    normalMatrix_ = glGetUniformLocation(effect_->id(), "normalMatrix");
+
+    // Set texture samplers
+    glUniform1i(diffuseMap_, 0);
+    glUniform1i(specularMap_, 1);
+    glUniform1i(normalMap_, 2);
 }
