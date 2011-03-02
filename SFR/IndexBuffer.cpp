@@ -96,11 +96,6 @@ void IndexBuffer::syncHardwareBuffers() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-
-void IndexBuffer::operator()(Functor* functor) {
-    functor->operator()(this);
-}
-
 const void* IndexBuffer::data() const {
     return element_.empty() ? 0 : &element_[0];
 }

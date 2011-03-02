@@ -12,7 +12,7 @@ using namespace SFR;
 
 Light::Light() {
     constantAttenuation_ = 1.0f;
-    linearAttenuation_ = 0.0f;
+    linearAttenuation_ = -0.5f;
     quadraticAttenuation_ = 1.0f;
     spotCutoff_ = 45.0f;
     direction_ = Vector(0, 0, -1);

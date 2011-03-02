@@ -31,14 +31,8 @@ class Node::Functor : public Interface {
 public:
     virtual void operator()(Camera* camera) {}
     virtual void operator()(Transform* transform) {}
-    virtual void operator()(Mesh* mesh) {}
-    virtual void operator()(Material* material) {}
-    virtual void operator()(Texture* texture) {}
     virtual void operator()(Light* light) {}
-    virtual void operator()(AttributeBuffer* buffer) {}
-    virtual void operator()(IndexBuffer* buffer) {}
-    virtual void operator()(Effect* effect) {}
-    virtual void operator()(Shader* shader) {}
+    virtual void operator()(MeshObject* object) {}
 };
 
 }

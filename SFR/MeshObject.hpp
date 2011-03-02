@@ -7,45 +7,49 @@
 #pragma once
 
 #include "SFR/Common.hpp"
+#include "SFR/Interface.hpp"
+#include "SFR/AttributeBuffer.hpp"
+#include "SFR/IndexBuffer.hpp"
 #include "SFR/Node.hpp"
+#include "SFR/Effect.hpp"
+#include "SFR/Material.hpp"
+#include "SFR/Mesh.hpp"
 #include <string>
+#include <hash_map>
 #include <vector>
 
 namespace SFR {
 
-/* Single GPU shader source file. */
-class Shader : public Interface {
+/* Geometric mesh node (with attached textures) */
+class MeshObject : public Node {
 public:
     class Notifiee;
-    enum Status { COMPILED, DIRTY };
 
-    Shader(GLenum type, const std::string& name);
-    ~Shader(); 
+    MeshObject();
+    Effect* effect() const;
+    Material* material() const;
+    Mesh* mesh() const;
 
-    const std::string& name() const;
-    const std::string& source() const;
-    GLenum type() const;
-    Status status() const;
-    GLuint id() const;
-
-    void sourceIs(const std::string& name);
-    void statusIs(Status status);
+    void effectIs(Effect* effect);
+    void materialIs(Material* material);
+    void meshIs(Mesh* mesh);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
+    virtual void operator()(Functor* functor);
+
 private:
-    std::string name_;
-    std::string source_;
-    GLenum type_;
-    Status status_;
-    GLuint id_;
+    Ptr<Material> material_;
+    Ptr<Effect> effect_;
+    Ptr<Mesh> mesh_;
     std::vector<Notifiee*> notifiee_;
 };
 
-class Shader::Notifiee : public Node {
+class MeshObject::Notifiee : public Interface {
 public:
-    virtual void onSource() {}
-    virtual void onStatus() {}
+    virtual void onEffect() {}
+    virtual void onMesh() {}
+    virtual void onMaterial() {}
 };
 
 }

@@ -35,14 +35,6 @@ IndexBuffer* Mesh::indexBuffer() const {
     return indexBuffer_.ptr();
 }
 
-Effect* Mesh::effect() const {
-    return effect_.ptr();
-}
-
-Material* Mesh::material() const {
-    return material_.ptr();
-}
-
 Mesh::Status Mesh::status() const {
     return status_;
 }
@@ -66,17 +58,6 @@ void Mesh::indexBufferIs(IndexBuffer* indices) {
     }
 }
 
-void Mesh::materialIs(Material* material) {
-    if (material_ == material) {
-        return;
-    }
-    material_ = material;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onMaterial();
-    }
-}
-
 void Mesh::statusIs(Status status) {
     if (status == status_) {
         return;
@@ -92,16 +73,6 @@ void Mesh::statusIs(Status status) {
     }
 }
 
-void Mesh::effectIs(Effect* effect) {
-    if (effect_ == effect) {
-        return;
-    }
-    effect_ = effect;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onEffect();
-    }
-}
-
 void Mesh::notifieeNew(Notifiee* notifiee) {
     if (notifiee) {
         notifiee_.push_back(notifiee);
@@ -110,10 +81,6 @@ void Mesh::notifieeNew(Notifiee* notifiee) {
 
 void Mesh::notifieeDel(Notifiee* notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-void Mesh::operator()(Functor* functor) {
-    functor->operator()(this);
 }
 
 void Mesh::updateTangents() {

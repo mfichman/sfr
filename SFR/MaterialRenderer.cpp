@@ -12,6 +12,7 @@
 #include "SFR/Texture.hpp"
 #include "SFR/Material.hpp"
 #include "SFR/Effect.hpp"
+#include "SFR/MeshObject.hpp"
 
 using namespace SFR;
 
@@ -29,14 +30,18 @@ void MaterialRenderer::operator()(Transform* transform) {
     operator()((Effect*)0);
 }
 
-void MaterialRenderer::operator()(Mesh* mesh) {
-    if (!mesh->indexBuffer()) {
-        return;
-    }
+void MaterialRenderer::operator()(MeshObject* object) {
 
     // Set the material parameters for this mesh
-    operator()(mesh->effect());
-    operator()(mesh->material());
+    operator()(object->effect());
+    operator()(object->material());
+    operator()(object->mesh());
+}
+
+void MaterialRenderer::operator()(Mesh* mesh) {
+    if (!mesh || !mesh->indexBuffer()) {
+        return;
+    }
 
     // Pass the normals, position, tangent, etc. to the vertex shader
     attrib_ = position_;
@@ -67,7 +72,7 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     glUniformMatrix4fv(view_, 1, 0, viewTransform_);
 
     // Render the mesh
-    mesh->indexBuffer()->operator()(this);
+    this->operator()(mesh->indexBuffer());
 }
 
 void MaterialRenderer::operator()(AttributeBuffer* buffer) {

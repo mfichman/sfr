@@ -14,7 +14,7 @@
 namespace SFR {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
-class IndexBuffer : public Node {
+class IndexBuffer : public Interface {
 public:
     class Notifiee;
     enum Status { SYNCED, DIRTY };
@@ -34,8 +34,6 @@ public:
     void statusIs(Status status);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
-
-    void operator()(Functor* functor);
 
 private:
     void syncHardwareBuffers();

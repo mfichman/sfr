@@ -130,10 +130,6 @@ void Effect::notifieeDel(Notifiee* notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
 
-void Effect::operator()(Functor* functor) {
-    functor->operator()(this);
-}
-
 Effect::ShaderReactor::ShaderReactor(Effect* effect) {
     notifier_ = effect;
 }

@@ -28,6 +28,7 @@
     <ClInclude Include="SFR\Matrix.hpp" />
     <ClInclude Include="SFR\Mesh.hpp" />
     <ClInclude Include="SFR\DeferredRenderTarget.hpp" />
+    <ClInclude Include="SFR\MeshObject.hpp" />
     <ClInclude Include="SFR\MeshVertex.hpp" />
     <ClInclude Include="SFR\Node.hpp" />
     <ClInclude Include="SFR\Light.hpp" />
@@ -56,6 +57,7 @@
     <ClCompile Include="SFR\Matrix.cpp" />
     <ClCompile Include="SFR\Mesh.cpp" />
     <ClCompile Include="SFR\DeferredRenderTarget.cpp" />
+    <ClCompile Include="SFR\MeshObject.cpp" />
     <ClCompile Include="SFR\MeshVertex.cpp" />
     <ClCompile Include="SFR\Node.cpp" />
     <ClCompile Include="SFR\Light.cpp" />

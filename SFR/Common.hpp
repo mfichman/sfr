@@ -38,6 +38,7 @@ class MaterialLoader;
 class EffectLoader;
 class Camera;
 class ResourceManager;
+class MeshObject;
 
 }
 

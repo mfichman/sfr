@@ -53,7 +53,3 @@ GLuint Texture::height() const {
 GLuint Texture::id() const {
     return id_;
 }
-
-void Texture::operator()(Functor* functor) {
-    functor->operator()(this);
-}

@@ -60,10 +60,6 @@ void Shader::notifieeNew(Notifiee* notifiee) {
     }
 }
 
-void Shader::operator()(Functor* functor) {
-    functor->operator()(this);
-}
-
 void Shader::statusIs(Status status) {
     if (status_ == status) {
         return;

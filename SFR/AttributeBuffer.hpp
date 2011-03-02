@@ -14,7 +14,7 @@
 namespace SFR {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
-class AttributeBuffer : public Node {
+class AttributeBuffer : public Interface {
 public:
     class Notifiee;
     enum Status { SYNCED, DIRTY };
@@ -32,8 +32,6 @@ public:
     void statusIs(Status status);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
-
-    void operator()(Functor* functor);
 
 private:
     virtual const void* data() const=0;

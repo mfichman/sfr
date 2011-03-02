@@ -114,8 +114,3 @@ void Material::notifieeNew(Notifiee* notifiee) {
 void Material::notifieeDel(Notifiee* notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
-
-
-void Material::operator()(Functor* functor) {
-    functor->operator()(this);
-}

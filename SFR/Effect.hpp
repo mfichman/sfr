@@ -16,7 +16,7 @@
 namespace SFR {
 
 /* Manages a GPU program, which may have multiple shaders attached. */
-class Effect : public Node {
+class Effect : public Interface {
 public:
     class Notifiee;
     enum Status { LINKED, DIRTY };
@@ -35,8 +35,6 @@ public:
     void statusIs(Status status);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
-
-    void operator()(Functor* functor);
 
 private:
     class ShaderReactor;

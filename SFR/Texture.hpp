@@ -15,7 +15,7 @@
 namespace SFR {
 
 /* Manages texture data */
-class Texture : public Node {
+class Texture : public Interface {
 public:
     Texture(const std::string& name);
     ~Texture();
@@ -24,8 +24,6 @@ public:
     GLuint width() const;
     GLuint height() const;
     GLuint id() const;
-
-    void operator()(Functor* functor);
 
 private:
     std::string name_;

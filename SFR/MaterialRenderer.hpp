@@ -15,6 +15,7 @@ namespace SFR {
 class MaterialRenderer : public Node::Functor {
 public:
     void operator()(Transform* transform);
+    void operator()(MeshObject* object);
     void operator()(Mesh* mesh);
     void operator()(Material* material);
     void operator()(Texture* texture);

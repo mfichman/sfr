@@ -55,10 +55,6 @@ void AttributeBuffer::notifieeDel(Notifiee* notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
 
-void AttributeBuffer::operator()(Functor* functor) {
-    functor->operator()(this);
-}
-
 void AttributeBuffer::syncHardwareBuffers() {
     GLuint size = elementCount()*elementSize();
     glBindBuffer(GL_ARRAY_BUFFER, id_);

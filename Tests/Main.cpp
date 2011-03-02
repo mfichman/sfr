@@ -7,6 +7,7 @@
 #include <SFR/DeferredRenderer.hpp>
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
+#include <SFR/MeshObject.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -36,9 +37,11 @@ void run() {
     material->textureIs("specular", manager->textureNew("Textures/MetalSpecular.png"));
     
     Ptr<SFR::Mesh> mesh = manager->meshNew("Meshes/SmoothSphere.obj");
-    mesh->materialIs(material.ptr());
-    mesh->effectIs(effect.ptr());
 
+    Ptr<SFR::MeshObject> object(new MeshObject);
+    object->meshIs(mesh.ptr());
+    object->materialIs(material.ptr());
+    object->effectIs(effect.ptr());
 
     Ptr<SFR::Transform> light0(new SFR::Transform);
     light0->childNew(new SFR::Light);
@@ -48,7 +51,6 @@ void run() {
     light1->childNew(new SFR::Light);
     light1->positionIs(SFR::Vector(0.f, 2.f, 0.f));
 
-
     Ptr<SFR::Transform> camera(new SFR::Transform);
     camera->childNew(new SFR::Camera);
 
@@ -57,7 +59,7 @@ void run() {
     Ptr<SFR::Transform> root(new SFR::Transform);
     root->childNew(light0.ptr());
     root->childNew(light1.ptr());
-    root->childNew(mesh.ptr());
+    root->childNew(object.ptr());
     root->childNew(camera.ptr());
 
     glViewport(0, 0, window.GetWidth(), window.GetHeight());

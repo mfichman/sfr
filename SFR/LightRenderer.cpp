@@ -37,10 +37,10 @@ void LightRenderer::operator()(Light* light) {
 
     // Set the correct shader for the given light type
     switch (light->type()) {
-    case Light::POINT: pointLight_(this); break;
-    case Light::HEMI: hemiLight_(this); break;
-    case Light::SPOT: spotLight_(this); break;
-    case Light::DIRECTIONAL: directionalLight_(this); break;
+    case Light::POINT: operator()(pointLight_.ptr()); break;
+    case Light::HEMI: operator()(hemiLight_.ptr()); break;
+    case Light::SPOT: operator()(spotLight_.ptr()); break;
+    case Light::DIRECTIONAL: operator()(directionalLight_.ptr()); break;
     default: return;
     }
 

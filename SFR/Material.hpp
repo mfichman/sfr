@@ -17,7 +17,7 @@
 namespace SFR {
 
 /* Mesh color and texture properties */
-class Material : public Node {
+class Material : public Interface {
 public:
     class Notifiee;
 
@@ -37,8 +37,6 @@ public:
     void shininessIs(float shininess);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
-
-    void operator()(Functor* functor);
 
 private:
     std::string name_;
