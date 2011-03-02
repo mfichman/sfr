@@ -35,13 +35,16 @@ void run() {
     material->textureIs("diffuse", manager->textureNew("Textures/MetalDiffuse.png"));
     material->textureIs("normal", manager->textureNew("Textures/MetalNormal.png"));
     material->textureIs("specular", manager->textureNew("Textures/MetalSpecular.png"));
-    
-    Ptr<SFR::Mesh> mesh = manager->meshNew("Meshes/SmoothSphere.obj");
 
     Ptr<SFR::MeshObject> object(new MeshObject);
-    object->meshIs(mesh.ptr());
+    object->meshIs(manager->meshNew("Meshes/SmoothSphere.obj"));
     object->materialIs(material.ptr());
     object->effectIs(effect.ptr());
+
+    Ptr<SFR::MeshObject> plane(new MeshObject);
+    plane->meshIs(manager->meshNew("Meshes/Plane.obj"));
+    plane->materialIs(material.ptr());
+    plane->effectIs(effect.ptr());
 
     Ptr<SFR::Transform> light0(new SFR::Transform);
     light0->childNew(new SFR::Light);
@@ -54,12 +57,15 @@ void run() {
     Ptr<SFR::Transform> camera(new SFR::Transform);
     camera->childNew(new SFR::Camera);
 
-    Ptr<SFR::Transform> other(new SFR::Transform);
+    Ptr<SFR::Transform> planeNode(new SFR::Transform);
+    planeNode->childNew(plane.ptr());
+    planeNode->positionIs(SFR::Vector(0.f, -2.f, 0.f));
 
     Ptr<SFR::Transform> root(new SFR::Transform);
     root->childNew(light0.ptr());
     root->childNew(light1.ptr());
     root->childNew(object.ptr());
+    root->childNew(planeNode.ptr());
     root->childNew(camera.ptr());
 
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
@@ -101,7 +107,7 @@ void run() {
             z += 2.f * elapsedTime;
         }
 
-        light0->positionIs(SFR::Vector(0.f, 0.f, z));
+        light0->positionIs(SFR::Vector(0.f, -1.f, z));
 
         camera->transformIs(SFR::Matrix::look(
             SFR::Vector(5., 0., x),

@@ -72,7 +72,7 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     glUniformMatrix4fv(view_, 1, 0, viewTransform_);
 
     // Render the mesh
-    this->operator()(mesh->indexBuffer());
+    operator()(mesh->indexBuffer());
 }
 
 void MaterialRenderer::operator()(AttributeBuffer* buffer) {

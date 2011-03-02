@@ -12,8 +12,8 @@ using namespace SFR;
 
 Light::Light() {
     constantAttenuation_ = 1.0f;
-    linearAttenuation_ = -0.5f;
-    quadraticAttenuation_ = 1.0f;
+    linearAttenuation_ = 1.;//-0.5f;
+    quadraticAttenuation_ = 0.0f;
     spotCutoff_ = 45.0f;
     direction_ = Vector(0, 0, -1);
     type_ = POINT;
@@ -62,7 +62,7 @@ float Light::radiusOfEffect() const {
     float a = quadraticAttenuation();
     float b = linearAttenuation();
     float c = constantAttenuation(); 
-    float minIntensity = 0.06f;
+    float minIntensity = 0.02f;
 
     if (a != 0) {
         // Quadratic equation to find distance at which intensity
