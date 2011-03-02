@@ -7,6 +7,7 @@
 
 #include "SFR/PointLight.hpp"
 #include <algorithm>
+#include <cmath>
 
 using namespace SFR;
 

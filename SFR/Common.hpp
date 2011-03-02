@@ -10,6 +10,7 @@
 
 #ifdef _WIN32
 #define SFR_USE_GLEW
+#define NOMINMAX
 #include <windows.h>
 #include <GL/glew.h>
 #endif

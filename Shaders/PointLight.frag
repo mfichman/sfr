@@ -45,7 +45,7 @@ void main() {
 	float alpha = temp.a;
 
 	// Sample the normal and the view vector
-	vec3 N = texture2D(normalBuffer, viewport).xyz;
+	vec3 N = texture2D(normalBuffer, viewport).xyz * 2. - 1.;
 	vec3 V = normalize(-eyePosition.xyz);
 	vec3 R = reflect(-V, N);
 	vec3 L = lightPosition - eyePosition.xyz;
@@ -67,4 +67,6 @@ void main() {
 	} else {
 		gl_FragColor = vec4(0., 0., 0., 1.);
 	}
+
+//	gl_FragColor = abs(vec4(N, 1.));
 }

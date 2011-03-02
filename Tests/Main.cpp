@@ -117,7 +117,7 @@ void run() {
         light0->positionIs(SFR::Vector(0.f, -1.f, z));
 
         camera->transformIs(SFR::Matrix::look(
-            SFR::Vector(5., 0., x),
+            SFR::Vector(x, 0., 5.),
             SFR::Vector(0.f, 0.f, 0.f),
             SFR::Vector(0.f, 1.f, 0.f)));
 
