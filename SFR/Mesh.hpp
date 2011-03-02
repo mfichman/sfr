@@ -14,7 +14,7 @@
 #include "SFR/Effect.hpp"
 #include "SFR/Material.hpp"
 #include <string>
-#include <hash_map>
+#include <map>
 #include <vector>
 
 namespace SFR {
@@ -41,7 +41,7 @@ private:
     void updateTangents();
 
     std::string name_;
-    std::hash_map<std::string, Ptr<AttributeBuffer>> attributeBuffer_;
+    std::map<std::string, Ptr<AttributeBuffer> > attributeBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
     std::vector<Notifiee*> notifiee_;
     Status status_;

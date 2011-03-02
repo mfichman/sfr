@@ -1,9 +1,12 @@
 Debug
 Release
 ipch
+binaries
 *.sdf
 *.suo
 *.vcxproj.filters
 *.vcxproj.user
 *.orig
 *~
+*.o
+*.swp

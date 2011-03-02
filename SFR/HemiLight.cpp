@@ -50,7 +50,7 @@ float HemiLight::radiusOfEffect() const {
         float d1 = -b + sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
         float d2 = -b - sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
 
-        return max(d1, d2);
+        return std::max(d1, d2);
     } else {
         // If a == 0, then we use the slope instead.
         return (1 - minIntensity*c)/(minIntensity*b);
@@ -69,7 +69,7 @@ void HemiLight::diffuseColorIs(const Color& diffuse) {
 }
 
 void HemiLight::backDiffuseColorIs(const Color& backDiffuse) {
-    if (backDiffuseColor_ = backDiffuse) {
+    if (backDiffuseColor_ == backDiffuse) {
         return;
     }
     backDiffuseColor_ = backDiffuse;

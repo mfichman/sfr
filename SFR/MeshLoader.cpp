@@ -31,36 +31,36 @@ void MeshLoader::onMeshNew(Mesh* mesh) {
     mesh->attributeBufferIs("tangent", tangentBuffer_.ptr());
     mesh->indexBufferIs(indexBuffer_.ptr());
 
-    in_ = std::ifstream(mesh->name());
-    if (!in_.good()) {
+    in_.reset(new std::ifstream(mesh->name().c_str()));
+    if (!in_->good()) {
         throw std::runtime_error("File not found: " + mesh->name());
     }
 
     // Read in the whole file, one command at a time.  Each line starts
 	// with a command word or "#" if the line is a comment.
-    while (in_.good()) {
+    while (in_->good()) {
 		std::string command;
-        in_ >> command;
+        *in_ >> command;
 
-		if (in_.fail()) break;
+		if (in_->fail()) break;
         
         if (command.find("#") == 0) {
             // Skip the comment line
             std::string line;
-            std::getline(in_, line);
+            std::getline(*in_, line);
         } else if (command == "v") {
 			Vector position;
-			in_ >> position;
+			*in_ >> position;
 			position_.push_back(position);
 		} else if (command == "vt") {
 			TexCoord texCoord;
-			in_ >> texCoord;
+			*in_ >> texCoord;
 			texCoord.v = 1 - texCoord.v;
 			//texCoord.u = 1 - texCoord.u;
 			texCoord_.push_back(texCoord);
 		} else if (command == "vn") {
 			Vector normal;
-			in_ >> normal;
+			*in_ >> normal;
 			normal_.push_back(normal);
 		} else if (command == "f") {
 			readFace();
@@ -83,11 +83,11 @@ void MeshLoader::readFace() {
     // f position/texCoord/normal
     for (int i = 0; i < 3; i++) {
         std::string line, i1, i2, i3;
-        in_ >> line;
+        *in_ >> line;
         std::istringstream ss(line);
         std::getline(ss, i1, '/'); 
         std::getline(ss, i2, '/');
-        std::getline(ss, i3, '/');
+        std::getline(ss, i3, ' ');
         
         if (ss.fail()) {
             throw std::runtime_error("Invalid mesh: " + mesh_->name());
@@ -132,21 +132,23 @@ void MeshLoader::insertFace(MeshVertex face[3]) {
     // attribute buffers.
 
     for (int i = 0; i < 3; i++) {
-        std::map<MeshVertex, GLuint>::iterator j = cache_.find(face[i]);
+        //std::map<MeshVertex, GLuint>::iterator j = cache_.find(face[i]);
         GLuint index = 0;
-        if (j == cache_.end()) {
+        //if (j == cache_.end()) {
             // Vertex was not found, so push a new index and vertex into the
             // list.  Add the vertex to the cache.
             index = vertexBuffer_->elementCount();
             cache_.insert(std::make_pair(face[i], index));
-        } else {
+            vertexBuffer_->elementIs(index, face[i].position);
+            normalBuffer_->elementIs(index, face[i].normal);
+            texCoordBuffer_->elementIs(index, face[i].texCoord);
+            tangentBuffer_->elementIs(index, face[i].tangent);
+        //} else {
             // Vertex was found, so use the existing index
-            index = j->second;
-        }
-        vertexBuffer_->elementIs(index, face[i].position);
-        normalBuffer_->elementIs(index, face[i].normal);
-        texCoordBuffer_->elementIs(index, face[i].texCoord);
-        tangentBuffer_->elementIs(index, face[i].tangent);
+        //    index = j->second;
+        //    std::cout << "FOUND" << index << std::endl;
+        //}
+
         indexBuffer_->elementIs(indexBuffer_->elementCount(), index);
     }
 }

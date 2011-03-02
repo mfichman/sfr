@@ -16,9 +16,10 @@ using namespace SFR;
 
 void run() {
     /* Initialize the window */
-    sf::Window window(sf::VideoMode(1200, 800, 32), "Window");
+    sf::Window window(sf::VideoMode(800, 600, 32), "Window");
 
     /* Load OpenGL extensions and check for required features */
+#ifdef SFR_USE_GLEW
     GLint error = glewInit();
     if (GLEW_OK != error) {
         throw std::runtime_error((char*)glewGetErrorString(error));
@@ -26,23 +27,24 @@ void run() {
     if (!GLEW_VERSION_3_0) {
         throw std::runtime_error("This program requires OpenGL 3.0");
     }
+#endif
 
     Ptr<SFR::ResourceManager> manager(new SFR::ResourceManager);
     Ptr<SFR::DeferredRenderer> renderer(new SFR::DeferredRenderer(manager.ptr()));
-    Ptr<SFR::Effect> effect = manager->effectNew("Shaders/Material");
+    Ptr<SFR::Effect> effect = manager->effectNew("shaders/Material");
 
     Ptr<SFR::Material> material(new SFR::Material("Test"));
-    material->textureIs("diffuse", manager->textureNew("Textures/MetalDiffuse.png"));
-    material->textureIs("normal", manager->textureNew("Textures/MetalNormal.png"));
-    material->textureIs("specular", manager->textureNew("Textures/MetalSpecular.png"));
+    material->textureIs("diffuse", manager->textureNew("textures/MetalDiffuse.png"));
+    material->textureIs("normal", manager->textureNew("textures/MetalNormal.png"));
+    material->textureIs("specular", manager->textureNew("textures/MetalSpecular.png"));
 
     Ptr<SFR::MeshObject> object(new MeshObject);
-    object->meshIs(manager->meshNew("Meshes/SmoothSphere.obj"));
+    object->meshIs(manager->meshNew("meshes/SmoothSphere.obj"));
     object->materialIs(material.ptr());
     object->effectIs(effect.ptr());
 
     Ptr<SFR::MeshObject> plane(new MeshObject);
-    plane->meshIs(manager->meshNew("Meshes/Plane.obj"));
+    plane->meshIs(manager->meshNew("meshes/Plane.obj"));
     plane->materialIs(material.ptr());
     plane->effectIs(effect.ptr());
 

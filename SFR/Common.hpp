@@ -8,10 +8,18 @@
 
 #define GLEW_STATIC
 
+#ifdef _WIN32
+#define SFR_USE_GLEW
 #include <windows.h>
 #include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#endif
+#ifdef __linux__
+#define SFR_USE_GLEW
+#incude <GL/glew.h>
+#endif
+
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 
 namespace SFR {

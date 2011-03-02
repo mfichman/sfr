@@ -15,6 +15,7 @@
 #include "SFR/IndexBuffer.hpp"
 #include <fstream>
 #include <map>
+#include <memory>
 
 namespace SFR {
 
@@ -29,13 +30,13 @@ private:
 
     Ptr<ResourceManager> resourceManager_;
     Ptr<Mesh> mesh_;
-    Ptr<MutableAttributeBuffer<Vector>> vertexBuffer_;
-    Ptr<MutableAttributeBuffer<Vector>> normalBuffer_;
-    Ptr<MutableAttributeBuffer<Vector>> tangentBuffer_;
-    Ptr<MutableAttributeBuffer<TexCoord>> texCoordBuffer_;
+    Ptr<MutableAttributeBuffer<Vector> > vertexBuffer_;
+    Ptr<MutableAttributeBuffer<Vector> > normalBuffer_;
+    Ptr<MutableAttributeBuffer<Vector> > tangentBuffer_;
+    Ptr<MutableAttributeBuffer<TexCoord> > texCoordBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
     std::map<MeshVertex, GLuint> cache_;
-    std::ifstream in_;
+    std::auto_ptr<std::ifstream> in_;
     std::string name_;
     std::vector<TexCoord> texCoord_;
     std::vector<Vector> position_;

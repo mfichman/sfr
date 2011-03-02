@@ -42,7 +42,7 @@ public:
     }
 
     operator T*() const {
-        return object_;
+        return current_;
     }
 
     bool operator==(const Ptr<T>& other) {
@@ -50,7 +50,7 @@ public:
     }
 
     bool operator!=(const Ptr<T>& other) {
-        return current != other;
+        return current_ != other;
     }
 
     const Iterator<T>& operator++(int) {

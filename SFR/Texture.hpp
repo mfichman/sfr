@@ -9,7 +9,6 @@
 #include "SFR/Common.hpp"
 #include "SFR/Node.hpp"
 #include <SFML/Graphics.hpp>
-#include <cstdint>
 #include <string>
 
 namespace SFR {

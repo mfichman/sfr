@@ -17,8 +17,8 @@ TexCoord::TexCoord() : u(0), v(0) {
 
 bool TexCoord::operator<(const TexCoord& other) const {
     static float epsilon = 0.0000001f;
-    if (abs(u - other.u) < epsilon) return u < other.u;
-    if (abs(v - other.v) < epsilon) return v < other.v;
+    if (abs(u - other.u) > epsilon) return u < other.u;
+    if (abs(v - other.v) > epsilon) return v < other.v;
     return false;
 }
 
@@ -49,10 +49,10 @@ TexCoord::operator float*() {
     return &u;
 }
 
-std::ostream& ::operator<<(std::ostream& out, const TexCoord& tex) {
+std::ostream& operator<<(std::ostream& out, const TexCoord& tex) {
     return out << tex.u << " " << tex.v;
 }
 
-std::istream& ::operator>>(std::istream& in, TexCoord& tex) {
+std::istream& operator>>(std::istream& in, TexCoord& tex) {
     return in >> tex.u >> tex.v;
 }

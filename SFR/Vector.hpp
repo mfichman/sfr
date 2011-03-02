@@ -4,7 +4,7 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-#pragma once;
+#pragma once
 
 #include "SFR/Common.hpp"
 #include <iostream>

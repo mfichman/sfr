@@ -9,7 +9,8 @@
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
 #include <string>
-#include <hash_map>
+#include <map>
+#include <stdexcept>
 
 namespace SFR {
 
@@ -34,12 +35,12 @@ public:
     void notifieeDel(Notifiee* notifiee);
 
 private:
-    std::hash_map<std::string, Ptr<Mesh>> mesh_;
-    std::hash_map<std::string, Ptr<Material>> material_;
-    std::hash_map<std::string, Ptr<Texture>> texture_;
-    std::hash_map<std::string, Ptr<Transform>> node_;
-    std::hash_map<std::string, Ptr<Effect>> effect_;
-    std::vector<Ptr<Notifiee>> notifiee_;
+    std::map<std::string, Ptr<Mesh> > mesh_;
+    std::map<std::string, Ptr<Material> > material_;
+    std::map<std::string, Ptr<Texture> > texture_;
+    std::map<std::string, Ptr<Transform> > node_;
+    std::map<std::string, Ptr<Effect> > effect_;
+    std::vector<Ptr<Notifiee> > notifiee_;
 
     Ptr<MeshLoader> meshLoader_;
     Ptr<MaterialLoader> materialLoader_;

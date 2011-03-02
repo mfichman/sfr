@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <stdexcept>
 
 using namespace SFR;
 using namespace std;

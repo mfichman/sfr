@@ -10,7 +10,7 @@
 #include "SFR/Interface.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
-#include <hash_map>
+#include <map>
 #include <vector>
 #include <string>
 
@@ -40,7 +40,7 @@ public:
 
 private:
     std::string name_;
-    std::hash_map<std::string, Ptr<Texture>> texture_;
+    std::map<std::string, Ptr<Texture> > texture_;
     Color ambientColor_;
     Color diffuseColor_;
     Color specularColor_;

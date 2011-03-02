@@ -15,7 +15,7 @@
 #include "SFR/Material.hpp"
 #include "SFR/Mesh.hpp"
 #include <string>
-#include <hash_map>
+#include <map>
 #include <vector>
 
 namespace SFR {

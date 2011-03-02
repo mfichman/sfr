@@ -22,7 +22,7 @@ const std::string& Mesh::name() const {
 }
 
 AttributeBuffer* Mesh::attributeBuffer(const std::string& name) const {
-    std::hash_map<std::string, Ptr<AttributeBuffer>>
+    std::map<std::string, Ptr<AttributeBuffer> >
         ::const_iterator i = attributeBuffer_.find(name);
     if (i == attributeBuffer_.end()) {
         return 0;
@@ -84,15 +84,15 @@ void Mesh::notifieeDel(Notifiee* notifiee) {
 }
 
 void Mesh::updateTangents() {
-     Ptr<MutableAttributeBuffer<Vector>> tangents = dynamic_cast<
+     Ptr<MutableAttributeBuffer<Vector> > tangents = dynamic_cast<
         MutableAttributeBuffer<Vector>*>(
         attributeBuffer("tangent"));
 
-    Ptr<MutableAttributeBuffer<Vector>> positions = dynamic_cast<
+    Ptr<MutableAttributeBuffer<Vector> > positions = dynamic_cast<
         MutableAttributeBuffer<Vector>*>(
         attributeBuffer("position"));
 
-    Ptr<MutableAttributeBuffer<TexCoord>> texCoords = dynamic_cast<
+    Ptr<MutableAttributeBuffer<TexCoord> > texCoords = dynamic_cast<
         MutableAttributeBuffer<TexCoord>*>(
         attributeBuffer("texCoord"));
 

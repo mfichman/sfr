@@ -80,7 +80,7 @@ Effect* ResourceManager::effectNew(const std::string& name) {
 }
 
 Mesh* ResourceManager::mesh(const std::string& name) const {
-    std::hash_map<std::string, Ptr<Mesh>>
+    std::map<std::string, Ptr<Mesh> >
         ::const_iterator i = mesh_.find(name);
     if (i == mesh_.end()) {
         return 0;
@@ -90,7 +90,7 @@ Mesh* ResourceManager::mesh(const std::string& name) const {
 }
 
 Material* ResourceManager::material(const std::string& name) const {
-    std::hash_map<std::string, Ptr<Material>>
+    std::map<std::string, Ptr<Material> >
         ::const_iterator i = material_.find(name);
     if (i == material_.end()) {
         return 0;
@@ -100,7 +100,7 @@ Material* ResourceManager::material(const std::string& name) const {
 }
 
 Texture* ResourceManager::texture(const std::string& name) const {
-    std::hash_map<std::string, Ptr<Texture>>
+    std::map<std::string, Ptr<Texture> >
         ::const_iterator i = texture_.find(name);
     if (i == texture_.end()) {
         return 0;
@@ -110,7 +110,7 @@ Texture* ResourceManager::texture(const std::string& name) const {
 }
 
 Transform* ResourceManager::node(const std::string& name) const {
-    std::hash_map<std::string, Ptr<Transform>>
+    std::map<std::string, Ptr<Transform> >
         ::const_iterator i = node_.find(name);
     if (i == node_.end()) {
         return 0;
@@ -120,7 +120,7 @@ Transform* ResourceManager::node(const std::string& name) const {
 }
 
 Effect* ResourceManager::effect(const std::string& name) const {
-    std::hash_map<std::string, Ptr<Effect>>
+    std::map<std::string, Ptr<Effect> >
         ::const_iterator i = effect_.find(name);
     if (i == effect_.end()) {
         return 0;

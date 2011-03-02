@@ -24,6 +24,6 @@ void Interface::refCountDec() {
     refCount_--;
 }
 
-uint32_t Interface::refCount() const {
+int Interface::refCount() const {
     return refCount_;
 }

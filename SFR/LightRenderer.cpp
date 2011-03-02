@@ -16,8 +16,8 @@
 using namespace SFR;
 
 LightRenderer::LightRenderer(ResourceManager* manager) {
-    unitSphere_ = manager->meshNew("Meshes/Sphere.obj");
-    pointLight_ = manager->effectNew("Shaders/PointLight");
+    unitSphere_ = manager->meshNew("meshes/Sphere.obj");
+    pointLight_ = manager->effectNew("shaders/PointLight");
 }
 
 void LightRenderer::operator()(Transform* transform) {

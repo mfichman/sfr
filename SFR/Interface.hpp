@@ -6,8 +6,6 @@
  *****************************************************************************/
 #pragma once
 
-#include <cstdint>
-
 namespace SFR {
 
 /* Provides intrusive smart-pointer support. */
@@ -18,10 +16,10 @@ public:
 
     void refCountInc();
     void refCountDec();
-    uint32_t refCount() const;
+    int refCount() const;
 
 private:
-    uint32_t refCount_;
+    int refCount_;
 };
 
 }
