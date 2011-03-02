@@ -13,7 +13,10 @@ using namespace SFR;
 
 Material::Material(const std::string& name) {
     name_ = name;
-    shininess_ = 40;
+    shininess_ = 40.f;
+    ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
+    diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
+    specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
 
 const std::string& Material::name() const {

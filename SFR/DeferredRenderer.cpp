@@ -25,15 +25,21 @@ DeferredRenderer::DeferredRenderer(ResourceManager* manager) {
 void DeferredRenderer::operator()(Transform* transform) {
 
     // Pass 1: Write material properties into the material G-Buffers
-    renderTarget_->statusIs(DeferredRenderTarget::ENABLED);
     glEnable(GL_DEPTH_TEST);
+    renderTarget_->statusIs(DeferredRenderTarget::ENABLED);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     transform->operator()(materialPass_.ptr());
     renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
-
+    
     // Pass 2: Render lighting using light bounding boxes
     glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glBlendFunc(GL_ONE, GL_ONE);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(0));
 
@@ -46,4 +52,7 @@ void DeferredRenderer::operator()(Transform* transform) {
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
     transform->operator()(lightPass_.ptr());
+
+    glDisable(GL_BLEND);
+    glDisable(GL_CULL_FACE);
 }

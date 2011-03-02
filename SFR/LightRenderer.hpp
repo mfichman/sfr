@@ -47,8 +47,7 @@ private:
     GLint atten1_;
     GLint atten2_;
 
-    GLint lightPosition_;
-    GLint lightDirection_;
+    GLint direction_;
     GLint cutoff_;
 
     GLint position_;

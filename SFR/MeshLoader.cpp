@@ -20,13 +20,18 @@ void MeshLoader::onMeshNew(Mesh* mesh) {
     tangentBuffer_ = new MutableAttributeBuffer<Vector>("tangent");
     indexBuffer_ = new IndexBuffer(mesh->name());
 
+    texCoord_.clear();
+    position_.clear();
+    normal_.clear();
+    cache_.clear();
+
     mesh->attributeBufferIs("position", vertexBuffer_.ptr());
     mesh->attributeBufferIs("normal", normalBuffer_.ptr());
     mesh->attributeBufferIs("texCoord", texCoordBuffer_.ptr());
     mesh->attributeBufferIs("tangent", tangentBuffer_.ptr());
     mesh->indexBufferIs(indexBuffer_.ptr());
 
-    in_.open(mesh->name());
+    in_ = std::ifstream(mesh->name());
     if (!in_.good()) {
         throw std::runtime_error("File not found: " + mesh->name());
     }

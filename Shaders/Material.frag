@@ -16,6 +16,7 @@ uniform vec3 Ks;
 uniform vec3 Ka;
 uniform float alpha;
 
+varying vec4 position;
 varying vec3 normal;
 varying vec3 tangent;
 varying vec2 texCoord;
@@ -38,14 +39,13 @@ void main() {
 
 	// Save diffuse material parameters
 	gl_FragData[0].rgb = Td * Kd;
-	gl_FragData[0].a = 1.;
-	//gl_FragData[0] = vec4(1., 0., 0., 1.);
+	gl_FragData[0].a = 1.;// position.z;
 
 	// Save the specular material parameters (with shininess)
 	gl_FragData[1].rgb = Ts * Ks;
 	gl_FragData[1].a = alpha;
 
 	// Save the normal vector in view space
-	gl_FragData[2].xyz = ((normalMatrix * TBN * Tn) + 1.)/2.;
+	gl_FragData[2].xyz = TBN * Tn;
 	gl_FragData[2].a = 1.;
 }

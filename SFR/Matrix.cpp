@@ -38,6 +38,17 @@ Matrix Matrix::perspective(float fov, float aspect, float n, float f) {
 	return Matrix::frustum(left, right, bottom, top, n, f);
 }
 
+Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& up) {
+    Vector zaxis = (at - pos).unit();
+    Vector xaxis = (zaxis.cross(up)).unit();
+
+
+    Matrix R = Matrix(xaxis, up, zaxis);
+    Matrix T = Matrix(pos);
+    Matrix M =  R * T;
+    return M;
+}
+
 Matrix Matrix::scale(float sx, float sy, float sz) {
     return Matrix(
         sx,     0,      0,      0, 
@@ -164,10 +175,13 @@ Matrix::Matrix(const Quaternion& rotation) {
 Matrix::Matrix(const Vector& trans) {
     std::fill_n(data, 16, 0.0f);
     
+    data[0] = 1.0f;
+    data[5] = 1.0f;
+    data[10] = 1.0f;
+    data[15] = 1.0f;
     data[12] = trans.x;
     data[13] = trans.y;
     data[14] = trans.z;
-    data[15] = 1.0f;
 }
 
 Matrix::Matrix() {
@@ -263,34 +277,34 @@ Matrix Matrix::inverse() const {
     // This inversion routine is taken from Ogre3D, version 1.7.
     Matrix out;
     
-    float m00 = data[0], m01 = data[1], m02 = data[2], m03 = data[3];
-    float m10 = data[4], m11 = data[5], m12 = data[6], m13 = data[7];
-    float m20 = data[8], m21 = data[9], m22 = data[10], m23 = data[11];
-    float m30 = data[12], m31 = data[13], m32 = data[14], m33 = data[15];
-    
+    float m00 = data[0], m01 = data[4], m02 = data[8], m03 = data[12];
+    float m10 = data[1], m11 = data[5], m12 = data[9], m13 = data[13];
+    float m20 = data[2], m21 = data[6], m22 = data[10], m23 = data[14];
+    float m30 = data[3], m31 = data[7], m32 = data[11], m33 = data[15];
+
     float v0 = m20 * m31 - m21 * m30;
     float v1 = m20 * m32 - m22 * m30;
     float v2 = m20 * m33 - m23 * m30;
     float v3 = m21 * m32 - m22 * m31;
     float v4 = m21 * m33 - m23 * m31;
     float v5 = m22 * m33 - m23 * m32;
-           
+
     float t00 = + (v5 * m11 - v4 * m12 + v3 * m13);
     float t10 = - (v5 * m10 - v2 * m12 + v1 * m13);
     float t20 = + (v4 * m10 - v2 * m11 + v0 * m13);
     float t30 = - (v3 * m10 - v1 * m11 + v0 * m12);
-    
+
     float invDet = 1 / (t00 * m00 + t10 * m01 + t20 * m02 + t30 * m03);
 
-    float d00 = t00 * invDet;
-    float d10 = t10 * invDet;
-    float d20 = t20 * invDet;
-    float d30 = t30 * invDet;
+    out[0] = t00 * invDet;
+    out[1] = t10 * invDet;
+    out[2] = t20 * invDet;
+    out[3] = t30 * invDet;
 
-    float d01 = - (v5 * m01 - v4 * m02 + v3 * m03) * invDet;
-    float d11 = + (v5 * m00 - v2 * m02 + v1 * m03) * invDet;
-    float d21 = - (v4 * m00 - v2 * m01 + v0 * m03) * invDet;
-    float d31 = + (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
+    out[4] = - (v5 * m01 - v4 * m02 + v3 * m03) * invDet;
+    out[5] = + (v5 * m00 - v2 * m02 + v1 * m03) * invDet;
+    out[6] = - (v4 * m00 - v2 * m01 + v0 * m03) * invDet;
+    out[7] = + (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
 
     v0 = m10 * m31 - m11 * m30;
     v1 = m10 * m32 - m12 * m30;
@@ -299,10 +313,10 @@ Matrix Matrix::inverse() const {
     v4 = m11 * m33 - m13 * m31;
     v5 = m12 * m33 - m13 * m32;
 
-    float d02 = + (v5 * m01 - v4 * m02 + v3 * m03) * invDet;
-    float d12 = - (v5 * m00 - v2 * m02 + v1 * m03) * invDet;
-    float d22 = + (v4 * m00 - v2 * m01 + v0 * m03) * invDet;
-    float d32 = - (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
+    out[8] = + (v5 * m01 - v4 * m02 + v3 * m03) * invDet;
+    out[9] = - (v5 * m00 - v2 * m02 + v1 * m03) * invDet;
+    out[10] = + (v4 * m00 - v2 * m01 + v0 * m03) * invDet;
+    out[11] = - (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
 
     v0 = m21 * m10 - m20 * m11;
     v1 = m22 * m10 - m20 * m12;
@@ -311,27 +325,10 @@ Matrix Matrix::inverse() const {
     v4 = m23 * m11 - m21 * m13;
     v5 = m23 * m12 - m22 * m13;
 
-    float d03 = - (v5 * m01 - v4 * m02 + v3 * m03) * invDet;
-    float d13 = + (v5 * m00 - v2 * m02 + v1 * m03) * invDet;
-    float d23 = - (v4 * m00 - v2 * m01 + v0 * m03) * invDet;
-    float d33 = + (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
-    
-    out.data[0] = d00;
-    out.data[4] = d01;
-    out.data[8] = d02;
-    out.data[12] = d03;
-    out.data[1] = d10;
-    out.data[5] = d11;
-    out.data[9] = d12;
-    out.data[13] = d13;
-    out.data[2] = d20;
-    out.data[6] = d21;
-    out.data[10] = d22;
-    out.data[14] = d23;
-    out.data[3] = d30;
-    out.data[7] = d31;
-    out.data[11] = d32;
-    out.data[15] = d33;
+    out[12] = - (v5 * m01 - v4 * m02 + v3 * m03) * invDet;
+    out[13] = + (v5 * m00 - v2 * m02 + v1 * m03) * invDet;
+    out[14] = - (v4 * m00 - v2 * m01 + v0 * m03) * invDet;
+    out[15] = + (v3 * m00 - v1 * m01 + v0 * m02) * invDet;
     
     return out;
 }
@@ -362,4 +359,30 @@ Vector Matrix::origin() const {
 
 Quaternion Matrix::rotation() const {
     return Quaternion(right(), up(), forward());
+}
+
+Matrix Matrix::transpose() const {
+    Matrix out;
+
+    out[0] = data[0];
+    out[1] = data[4];
+    out[2] = data[8];
+    out[3] = data[12];
+
+    out[4] = data[1];
+    out[5] = data[5];
+    out[6] = data[9];
+    out[7] = data[13];
+
+    out[8] = data[2];
+    out[9] = data[6];
+    out[10] = data[10];
+    out[11] = data[14];
+
+    out[12] = data[3];
+    out[13] = data[7];
+    out[14] = data[11];
+    out[15] = data[15];
+
+    return out;
 }

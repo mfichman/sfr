@@ -15,7 +15,7 @@ using namespace SFR;
 
 void run() {
     /* Initialize the window */
-    sf::Window window(sf::VideoMode(800, 600, 32), "Window");
+    sf::Window window(sf::VideoMode(1200, 800, 32), "Window");
 
     /* Load OpenGL extensions and check for required features */
     GLint error = glewInit();
@@ -27,52 +27,50 @@ void run() {
     }
 
     Ptr<SFR::ResourceManager> manager(new SFR::ResourceManager);
-    Ptr<SFR::Mesh> mesh = manager->meshNew("Meshes/Sphere.obj");
     Ptr<SFR::DeferredRenderer> renderer(new SFR::DeferredRenderer(manager.ptr()));
     Ptr<SFR::Effect> effect = manager->effectNew("Shaders/Material");
-    Ptr<SFR::Camera> camera(new SFR::Camera);
+
     Ptr<SFR::Material> material(new SFR::Material("Test"));
-    Ptr<SFR::Transform> transform(new SFR::Transform);
-    Ptr<SFR::Light> light(new SFR::Light);
-
-
-    light->diffuseColorIs(SFR::Color(1.0f, 1.0f, 1.0f, 1.0f));
-    light->specularColorIs(SFR::Color(1.0f, 1.0f, 1.0f, 1.0f));
-
-
-    Ptr<SFR::Transform> lightTransform(new SFR::Transform);
-    lightTransform->positionIs(SFR::Vector(0.f, 0.0f, -5.0f));
-    lightTransform->childNew(mesh.ptr());
-
-    material->diffuseColorIs(SFR::Color(1.0f, 0.0f, 0.0f, 1.0f));
-    material->specularColorIs(SFR::Color(0.0f, 1.0f, 0.0f, 1.0f));
     material->textureIs("diffuse", manager->textureNew("Textures/MetalDiffuse.png"));
     material->textureIs("normal", manager->textureNew("Textures/MetalNormal.png"));
     material->textureIs("specular", manager->textureNew("Textures/MetalSpecular.png"));
-
+    
+    Ptr<SFR::Mesh> mesh = manager->meshNew("Meshes/SmoothSphere.obj");
     mesh->materialIs(material.ptr());
     mesh->effectIs(effect.ptr());
 
-    camera->nearIs(-10.f);
-    camera->farIs(10.f);
-    camera->leftIs(-10.f);
-    camera->rightIs(10.f);
-    camera->topIs(-10.f);
-    camera->bottomIs(10.f);
-    camera->typeIs(Camera::ORTHOGRAPHIC);
 
-   // transform->childNew(light.ptr());
-    transform->childNew(lightTransform.ptr());
-    transform->childNew(camera.ptr());
+    Ptr<SFR::Transform> light0(new SFR::Transform);
+    light0->childNew(new SFR::Light);
+    light0->positionIs(SFR::Vector(0.f, 0.f, 2.f));
 
-    glClearDepth(1.0f);
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
+    Ptr<SFR::Transform> light1(new SFR::Transform);
+    light1->childNew(new SFR::Light);
+    light1->positionIs(SFR::Vector(0.f, 2.f, 0.f));
+
+
+    Ptr<SFR::Transform> camera(new SFR::Transform);
+    camera->childNew(new SFR::Camera);
+
+    Ptr<SFR::Transform> other(new SFR::Transform);
+
+    Ptr<SFR::Transform> root(new SFR::Transform);
+    root->childNew(light0.ptr());
+    root->childNew(light1.ptr());
+    root->childNew(mesh.ptr());
+    root->childNew(camera.ptr());
+
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
+
+    float x = -5.f;
+    float z = 2.f;
+
+    sf::Clock clock;
 
     /* Run the event loop */
     while (window.IsOpened()) {
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        float elapsedTime = clock.GetElapsedTime();
+        clock.Reset();
 
         sf::Event evt;
         while (window.GetEvent(evt)) {
@@ -88,7 +86,27 @@ void run() {
             }
         }
 
-        transform(renderer.ptr());
+        if (window.GetInput().IsKeyDown(sf::Key::Left)) {
+            x -= 2.f * elapsedTime;
+        } 
+        if (window.GetInput().IsKeyDown(sf::Key::Right)) {
+            x += 2.f * elapsedTime;
+        }
+        if (window.GetInput().IsKeyDown(sf::Key::Up)) {
+            z -= 2.f * elapsedTime;
+        } 
+        if (window.GetInput().IsKeyDown(sf::Key::Down)) {
+            z += 2.f * elapsedTime;
+        }
+
+        light0->positionIs(SFR::Vector(0.f, 0.f, z));
+
+        camera->transformIs(SFR::Matrix::look(
+            SFR::Vector(5., 0., x),
+            SFR::Vector(0.f, 0.f, 0.f),
+            SFR::Vector(0.f, 1.f, 0.f)));
+
+        root(renderer.ptr());
 
         window.Display();
     }

@@ -22,14 +22,16 @@
  
  /* Deferred render shader with normal, specular, and diffuse mapping */
  void main() {
-	mat4 transform = modelMatrix * viewMatrix * projectionMatrix;
+	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
+
+	position = viewMatrix * modelMatrix * vec4(positionIn, 1);
 
 	// Transform the vertex to get the clip-space position of the vertex
-	gl_Position = vec4(positionIn, 1) * transform;
+	gl_Position = transform * vec4(positionIn, 1);
 
 	// Transform the normal and tangent by the normal matrix
-	normal = normalIn * normalMatrix;
-	tangent = tangentIn * normalMatrix;
+	normal = normalMatrix * normalIn;
+	tangent = normalMatrix * tangentIn;
 
 	// Simply copy the texture coordinates over to the fragment shader
 	texCoord = texCoordIn;

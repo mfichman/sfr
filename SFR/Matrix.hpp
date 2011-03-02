@@ -18,6 +18,7 @@ public:
 	static Matrix ortho(float l, float r, float b, float t, float n, float f);
 	static Matrix perspective(float fovy, float aspect, float near, float far);
     static Matrix scale(float sx, float sy, float sz);
+    static Matrix look(const Vector& pos, const Vector& at, const Vector& up);
 
     Matrix(const float data[16]);
 
@@ -33,6 +34,7 @@ public:
     Matrix();
 
     Matrix inverse() const;
+    Matrix transpose() const;
     Matrix operator*(const Matrix& other) const;
     Vector operator*(const Vector& other) const;
     Frustum operator*(const Frustum& other) const;

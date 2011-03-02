@@ -19,7 +19,7 @@ void MaterialRenderer::operator()(Transform* transform) {
     Matrix previous = modelTransform_;
 
     // Compute the transform for all children of the current node
-    modelTransform_ = modelTransform_ * transform->transform();
+    modelTransform_ =  modelTransform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
@@ -52,13 +52,19 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     glUniformMatrix4fv(model_, 1, 0, modelTransform_);
 
     // Calculate the normal matrix and pass it to the vertex shader
-    Matrix temp = (modelTransform_ * viewTransform_).inverse();
-    float normalMatrix[9] = { 
-        temp[0], temp[1], temp[2], 
-        temp[4], temp[5], temp[6],
-        temp[8], temp[9], temp[10]
+    Matrix normalMatrix = viewTransform_ * modelTransform_;
+    normalMatrix = normalMatrix.inverse();
+    normalMatrix = normalMatrix.transpose();
+
+    GLfloat temp[9] = {
+        normalMatrix[0], normalMatrix[1], normalMatrix[2],
+        normalMatrix[4], normalMatrix[5], normalMatrix[6],
+        normalMatrix[8], normalMatrix[9], normalMatrix[10]
     };
-    glUniformMatrix3fv(normalMatrix_, 1, 1, normalMatrix);
+
+    glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
+    glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
+    glUniformMatrix4fv(view_, 1, 0, viewTransform_);
 
     // Render the mesh
     mesh->indexBuffer()->operator()(this);
@@ -167,9 +173,6 @@ void MaterialRenderer::operator()(Effect* effect) {
         view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
         projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
         normalMatrix_ = glGetUniformLocation(effect_->id(), "normalMatrix");
-
-        glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
-        glUniformMatrix4fv(view_, 1, 0, viewTransform_);
 
         glUniform1i(diffuseMap_, 0);
         glUniform1i(specularMap_, 1);

@@ -23,7 +23,7 @@ LightRenderer::LightRenderer(ResourceManager* manager) {
 void LightRenderer::operator()(Transform* transform) {
     Matrix previous = modelTransform_;
 
-    modelTransform_ = modelTransform_ *  transform->transform();
+    modelTransform_ = modelTransform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
@@ -47,6 +47,7 @@ void LightRenderer::operator()(Light* light) {
     //glActiveTexture(GL_TEXTURE4);
     //glBindTexture(GL_TEXTURE_2D, light->shadowMap());
 
+    // Set the light color, attenuation, and direction properties.
     if (diffuse_ != -1) {
         glUniform3fv(diffuse_, 1, light->diffuseColor());
     }
@@ -68,18 +69,23 @@ void LightRenderer::operator()(Light* light) {
     if (cutoff_ != -1) {
         glUniform1f(cutoff_, light->spotCutoff());
     }
-    if (lightDirection_ != -1) {
-        glUniform3fv(lightDirection_, 1, light->direction());
-    }
-    if (lightPosition_ != -1) {
-        glUniform3fv(lightPosition_, 1, modelTransform_.origin());
+    if (direction_ != -1) {
+        glUniform3fv(direction_, 1, light->direction());
     }
 
-
-    float radius = light->radiusOfEffect();
     Matrix previous = modelTransform_;
-    modelTransform_ = Matrix::scale(radius, radius, radius) * modelTransform_; 
+
+    // Calculate the model transform, and scale the model to cover the light's 
+    // area of effect.
+    float radius = light->radiusOfEffect();
+    modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
     glUniformMatrix4fv(model_, 1, 0, modelTransform_);
+     
+    // Set up the view, projection, and inverse projection transforms
+    Matrix inverseProjection = projectionTransform_.inverse();
+    glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
+    glUniformMatrix4fv(view_, 1, 0, viewTransform_);
+    glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
 
     // This renders the light's bounding volume (usually a sphere)
     AttributeBuffer* buffer = unitSphere_->attributeBuffer(("position"));
@@ -93,6 +99,7 @@ void LightRenderer::operator()(Light* light) {
         glDisableVertexAttribArray(position_);
     }
 
+    // Render the indices of the light's bounding volume
     IndexBuffer* indices = unitSphere_->indexBuffer();
     indices->statusIs(IndexBuffer::SYNCED);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->id());
@@ -140,18 +147,12 @@ void LightRenderer::operator()(Effect* effect) {
 
 
         cutoff_ = glGetUniformLocation(effect_->id(), "cutoff");
-        lightPosition_ = glGetUniformLocation(effect_->id(), "lightPosition");
-        lightDirection_ = glGetUniformLocation(effect_->id(), "lightDirection");
+        direction_ = glGetUniformLocation(effect_->id(), "lightDirection");
 
         model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
         view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
         projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
         unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
-
-        glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
-        glUniformMatrix4fv(view_, 1, 0, viewTransform_);
-        glUniformMatrix4fv(unproject_, 1, 0, projectionTransform_.inverse());
-
         position_ = glGetAttribLocation(effect_->id(), "positionIn");
 
         // Set texture samplers

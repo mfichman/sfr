@@ -11,12 +11,15 @@
 using namespace SFR;
 
 Light::Light() {
-    constantAttenuation_ = 0.0f;
-    linearAttenuation_ = 1000.0f;
-    quadraticAttenuation_ = 0.0f;
+    constantAttenuation_ = 1.0f;
+    linearAttenuation_ = 0.0f;
+    quadraticAttenuation_ = 1.0f;
     spotCutoff_ = 45.0f;
     direction_ = Vector(0, 0, -1);
     type_ = POINT;
+    specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
+    diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
+    ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
 }
 
 const Color& Light::ambientColor() const {
@@ -59,7 +62,7 @@ float Light::radiusOfEffect() const {
     float a = quadraticAttenuation();
     float b = linearAttenuation();
     float c = constantAttenuation(); 
-    float minIntensity = 0.001f;
+    float minIntensity = 0.06f;
 
     if (a != 0) {
         // Quadratic equation to find distance at which intensity
