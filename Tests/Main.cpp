@@ -17,6 +17,8 @@
 using namespace SFR;
 
 void run() {
+
+    system("cd");
     /* Initialize the window */
     sf::Window window(sf::VideoMode(1440, 900, 32), "Window");
 

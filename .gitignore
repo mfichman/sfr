@@ -1,6 +1,6 @@
-Debug
+build/Debug
+build/Release
 main
-Release
 ipch
 *.sdf
 *.suo

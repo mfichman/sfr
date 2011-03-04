@@ -5,7 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "AttributeBuffer.hpp"
+#include "SFR/AttributeBuffer.hpp"
 #include <algorithm>
 
 using namespace SFR;

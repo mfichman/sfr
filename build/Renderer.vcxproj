@@ -11,70 +11,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SFR\AttributeBuffer.hpp" />
-    <ClInclude Include="SFR\Camera.hpp" />
-    <ClInclude Include="SFR\Color.hpp" />
-    <ClInclude Include="SFR\Common.hpp" />
-    <ClInclude Include="SFR\DeferredRenderer.hpp" />
-    <ClInclude Include="SFR\HemiLight.hpp" />
-    <ClInclude Include="SFR\IndexBuffer.hpp" />
-    <ClInclude Include="SFR\LightRenderer.hpp" />
-    <ClInclude Include="SFR\Effect.hpp" />
-    <ClInclude Include="SFR\MaterialRenderer.hpp" />
-    <ClInclude Include="SFR\Frustum.hpp" />
-    <ClInclude Include="SFR\Interface.hpp" />
-    <ClInclude Include="SFR\Iterator.hpp" />
-    <ClInclude Include="SFR\List.hpp" />
-    <ClInclude Include="SFR\Material.hpp" />
-    <ClInclude Include="SFR\Matrix.hpp" />
-    <ClInclude Include="SFR\Mesh.hpp" />
-    <ClInclude Include="SFR\DeferredRenderTarget.hpp" />
-    <ClInclude Include="SFR\MeshObject.hpp" />
-    <ClInclude Include="SFR\MeshVertex.hpp" />
-    <ClInclude Include="SFR\Node.hpp" />
-    <ClInclude Include="SFR\PointLight.hpp" />
-    <ClInclude Include="SFR\Ptr.hpp" />
-    <ClInclude Include="SFR\Quaternion.hpp" />
-    <ClInclude Include="SFR\ResourceManager.hpp" />
-    <ClInclude Include="SFR\Shader.hpp" />
-    <ClInclude Include="SFR\EffectLoader.hpp" />
-    <ClInclude Include="SFR\SpotLight.hpp" />
-    <ClInclude Include="SFR\TexCoord.hpp" />
-    <ClInclude Include="SFR\Texture.hpp" />
-    <ClInclude Include="SFR\Transform.hpp" />
-    <ClInclude Include="SFR\Vector.hpp" />
-    <ClInclude Include="SFR\MeshLoader.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="SFR\AttributeBuffer.cpp" />
-    <ClCompile Include="SFR\Camera.cpp" />
-    <ClCompile Include="SFR\Color.cpp" />
-    <ClCompile Include="SFR\DeferredRenderer.cpp" />
-    <ClCompile Include="SFR\Effect.cpp" />
-    <ClCompile Include="SFR\HemiLight.cpp" />
-    <ClCompile Include="SFR\IndexBuffer.cpp" />
-    <ClCompile Include="SFR\LightRenderer.cpp" />
-    <ClCompile Include="SFR\MaterialRenderer.cpp" />
-    <ClCompile Include="SFR\Interface.cpp" />
-    <ClCompile Include="SFR\Material.cpp" />
-    <ClCompile Include="SFR\Matrix.cpp" />
-    <ClCompile Include="SFR\Mesh.cpp" />
-    <ClCompile Include="SFR\DeferredRenderTarget.cpp" />
-    <ClCompile Include="SFR\MeshObject.cpp" />
-    <ClCompile Include="SFR\MeshVertex.cpp" />
-    <ClCompile Include="SFR\Node.cpp" />
-    <ClCompile Include="SFR\PointLight.cpp" />
-    <ClCompile Include="SFR\Quaternion.cpp" />
-    <ClCompile Include="SFR\ResourceManager.cpp" />
-    <ClCompile Include="SFR\Shader.cpp" />
-    <ClCompile Include="SFR\EffectLoader.cpp" />
-    <ClCompile Include="SFR\SpotLight.cpp" />
-    <ClCompile Include="SFR\TexCoord.cpp" />
-    <ClCompile Include="SFR\Texture.cpp" />
-    <ClCompile Include="SFR\Transform.cpp" />
-    <ClCompile Include="SFR\Vector.cpp" />
-    <ClCompile Include="SFR\MeshLoader.cpp" />
-    <ClCompile Include="Tests\Main.cpp" />
+    <ClCompile Include="..\src\AttributeBuffer.cpp" />
+    <ClCompile Include="..\src\Camera.cpp" />
+    <ClCompile Include="..\src\Color.cpp" />
+    <ClCompile Include="..\src\DeferredRenderer.cpp" />
+    <ClCompile Include="..\src\DeferredRenderTarget.cpp" />
+    <ClCompile Include="..\src\Effect.cpp" />
+    <ClCompile Include="..\src\EffectLoader.cpp" />
+    <ClCompile Include="..\src\HemiLight.cpp" />
+    <ClCompile Include="..\src\IndexBuffer.cpp" />
+    <ClCompile Include="..\src\Interface.cpp" />
+    <ClCompile Include="..\src\LightRenderer.cpp" />
+    <ClCompile Include="..\src\Material.cpp" />
+    <ClCompile Include="..\src\MaterialRenderer.cpp" />
+    <ClCompile Include="..\src\Matrix.cpp" />
+    <ClCompile Include="..\src\Mesh.cpp" />
+    <ClCompile Include="..\src\MeshLoader.cpp" />
+    <ClCompile Include="..\src\MeshObject.cpp" />
+    <ClCompile Include="..\src\MeshVertex.cpp" />
+    <ClCompile Include="..\src\Node.cpp" />
+    <ClCompile Include="..\src\PointLight.cpp" />
+    <ClCompile Include="..\src\Quaternion.cpp" />
+    <ClCompile Include="..\src\ResourceManager.cpp" />
+    <ClCompile Include="..\src\Shader.cpp" />
+    <ClCompile Include="..\src\SpotLight.cpp" />
+    <ClCompile Include="..\src\TexCoord.cpp" />
+    <ClCompile Include="..\src\Texture.cpp" />
+    <ClCompile Include="..\src\Transform.cpp" />
+    <ClCompile Include="..\src\Vector.cpp" />
+    <ClCompile Include="..\tests\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\HemiLight.frag" />
@@ -85,6 +50,41 @@
     <None Include="Shaders\PointLight.vert" />
     <None Include="Shaders\SpotLight.frag" />
     <None Include="Shaders\SpotLight.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\SFR\AttributeBuffer.hpp" />
+    <ClInclude Include="..\include\SFR\Camera.hpp" />
+    <ClInclude Include="..\include\SFR\Color.hpp" />
+    <ClInclude Include="..\include\SFR\Common.hpp" />
+    <ClInclude Include="..\include\SFR\DeferredRenderer.hpp" />
+    <ClInclude Include="..\include\SFR\DeferredRenderTarget.hpp" />
+    <ClInclude Include="..\include\SFR\Effect.hpp" />
+    <ClInclude Include="..\include\SFR\EffectLoader.hpp" />
+    <ClInclude Include="..\include\SFR\Frustum.hpp" />
+    <ClInclude Include="..\include\SFR\HemiLight.hpp" />
+    <ClInclude Include="..\include\SFR\IndexBuffer.hpp" />
+    <ClInclude Include="..\include\SFR\Interface.hpp" />
+    <ClInclude Include="..\include\SFR\Iterator.hpp" />
+    <ClInclude Include="..\include\SFR\LightRenderer.hpp" />
+    <ClInclude Include="..\include\SFR\List.hpp" />
+    <ClInclude Include="..\include\SFR\Material.hpp" />
+    <ClInclude Include="..\include\SFR\MaterialRenderer.hpp" />
+    <ClInclude Include="..\include\SFR\Matrix.hpp" />
+    <ClInclude Include="..\include\SFR\Mesh.hpp" />
+    <ClInclude Include="..\include\SFR\MeshLoader.hpp" />
+    <ClInclude Include="..\include\SFR\MeshObject.hpp" />
+    <ClInclude Include="..\include\SFR\MeshVertex.hpp" />
+    <ClInclude Include="..\include\SFR\Node.hpp" />
+    <ClInclude Include="..\include\SFR\PointLight.hpp" />
+    <ClInclude Include="..\include\SFR\Ptr.hpp" />
+    <ClInclude Include="..\include\SFR\Quaternion.hpp" />
+    <ClInclude Include="..\include\SFR\ResourceManager.hpp" />
+    <ClInclude Include="..\include\SFR\Shader.hpp" />
+    <ClInclude Include="..\include\SFR\SpotLight.hpp" />
+    <ClInclude Include="..\include\SFR\TexCoord.hpp" />
+    <ClInclude Include="..\include\SFR\Texture.hpp" />
+    <ClInclude Include="..\include\SFR\Transform.hpp" />
+    <ClInclude Include="..\include\SFR\Vector.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E6904FB7-86D2-4695-B39A-1D1533C333A4}</ProjectGuid>
@@ -120,7 +120,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -135,7 +135,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\..\Include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

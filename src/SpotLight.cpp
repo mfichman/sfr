@@ -12,7 +12,7 @@ using namespace SFR;
 
 SpotLight::SpotLight() {
     constantAttenuation_ = 1.0f;
-    linearAttenuation_ = 0.2;//-0.5f;
+    linearAttenuation_ = 0.2f;//-0.5f;
     quadraticAttenuation_ = 0.0f;
     spotCutoff_ = 30.0f;
     spotPower_ = 20.f;
