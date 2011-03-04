@@ -77,10 +77,14 @@
     <ClCompile Include="Tests\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\HemiLight.frag" />
+    <None Include="Shaders\HemiLight.vert" />
     <None Include="Shaders\Material.frag" />
     <None Include="Shaders\Material.vert" />
     <None Include="Shaders\PointLight.frag" />
     <None Include="Shaders\PointLight.vert" />
+    <None Include="Shaders\SpotLight.frag" />
+    <None Include="Shaders\SpotLight.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E6904FB7-86D2-4695-B39A-1D1533C333A4}</ProjectGuid>

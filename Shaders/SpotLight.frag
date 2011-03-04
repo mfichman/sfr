@@ -16,6 +16,9 @@ uniform float atten1;
 uniform float atten2;
 uniform vec3 Ld;
 uniform vec3 Ls;
+uniform float spotCutoff;
+uniform float spotPower;
+uniform vec3 direction;
 
 uniform mat4 unprojectMatrix; // Back to view coordinates
 uniform mat4 lightMatrix; // From world coordinates to light space
@@ -51,7 +54,10 @@ void main() {
 	L = normalize(L);
 
 	float Rd = dot(N, L);
-	if (Rd > 0.) {
+    float spotEffect = dot(direction, -L);
+
+	if (Rd > 0. && spotEffect > spotCutoff) {
+
 		// Calculate the diffuse color coefficient
 		vec3 diffuse = Kd * Ld * Rd;
 
@@ -61,7 +67,7 @@ void main() {
 		// Calculate the shadow coord
 		//vec4 shadowCoord = ?
 		gl_FragColor = vec4(diffuse + specular, 1.);
-		gl_FragColor.xyz *= atten;
+		gl_FragColor.xyz *= atten * pow(spotEffect, spotPower);
 	} else {
 		gl_FragColor = vec4(0., 0., 0., 1.);
 	}

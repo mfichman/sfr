@@ -23,6 +23,7 @@ public:
     HemiLight();
     const Color& diffuseColor() const;
     const Color& backDiffuseColor() const;
+    const Vector& direction() const;
     float constantAttenuation() const;
     float linearAttenuation() const;
     float quadraticAttenuation() const;
@@ -30,6 +31,7 @@ public:
 
     void diffuseColorIs(const Color& diffuse);
     void backDiffuseColorIs(const Color& color);
+    void directionIs(const Vector& direction);
     void constantAttenuationIs(float atten);
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);
@@ -41,6 +43,7 @@ public:
 private:
     Color diffuseColor_;
     Color backDiffuseColor_;
+    Vector direction_;
     float constantAttenuation_;
     float linearAttenuation_;
     float quadraticAttenuation_;
@@ -51,6 +54,7 @@ class HemiLight::Notifiee : public Interface {
 public:
     virtual void onDiffuseColor() {}
     virtual void onBackDiffuseColor() {}
+    virtual void onDirection() {}
     virtual void onConstantAttenuation() {}
     virtual void onLinearAttenuation() {}
     virtual void onQuadraticAttenuation() {}

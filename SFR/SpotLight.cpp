@@ -12,10 +12,11 @@ using namespace SFR;
 
 SpotLight::SpotLight() {
     constantAttenuation_ = 1.0f;
-    linearAttenuation_ = 1.;//-0.5f;
+    linearAttenuation_ = 0.2;//-0.5f;
     quadraticAttenuation_ = 0.0f;
-    spotCutoff_ = 45.0f;
-    direction_ = Vector(0, 0, -1);
+    spotCutoff_ = 30.0f;
+    spotPower_ = 20.f;
+    direction_ = Vector(0, -1., 0);
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
@@ -46,6 +47,10 @@ float SpotLight::quadraticAttenuation() const {
 
 float SpotLight::spotCutoff() const {
     return spotCutoff_;
+}
+
+float SpotLight::spotPower() const {
+    return spotPower_;
 }
 
 void SpotLight::diffuseColorIs(const Color& diffuse) {
@@ -121,6 +126,17 @@ void SpotLight::spotCutoffIs(float cutoff) {
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onSpotCutoff();
+    }
+}
+
+void SpotLight::spotPowerIs(float power) {
+    if (spotPower_ == power) {
+        return;
+    }
+    spotPower_ = power;
+
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onSpotPower();
     }
 }
 

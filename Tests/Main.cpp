@@ -4,6 +4,8 @@
 #include <SFR/Mesh.hpp>
 #include <SFR/Camera.hpp>
 #include <SFR/PointLight.hpp>
+#include <SFR/HemiLight.hpp>
+#include <SFR/SpotLight.hpp>
 #include <SFR/DeferredRenderer.hpp>
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
@@ -16,7 +18,7 @@ using namespace SFR;
 
 void run() {
     /* Initialize the window */
-    sf::Window window(sf::VideoMode(800, 600, 32), "Window");
+    sf::Window window(sf::VideoMode(1440, 900, 32), "Window");
 
     /* Load OpenGL extensions and check for required features */
 #ifdef SFR_USE_GLEW
@@ -53,12 +55,12 @@ void run() {
     light0->positionIs(SFR::Vector(0.f, -1.f, 2.f));
 
     Ptr<SFR::Transform> light1(new SFR::Transform);
-    light1->childNew(new SFR::PointLight);
+    light1->childNew(new SFR::SpotLight);
     light1->positionIs(SFR::Vector(0.f, 2.f, 0.f));
 
     Ptr<SFR::Transform> light2(new SFR::Transform);
-    light2->childNew(new SFR::PointLight);
-    light2->positionIs(SFR::Vector(-2.f, 0.f, 0.f));
+    light2->childNew(new SFR::HemiLight);
+    light2->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
     Ptr<SFR::Transform> camera(new SFR::Transform);
     camera->childNew(new SFR::Camera);

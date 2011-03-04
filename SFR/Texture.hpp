@@ -17,7 +17,6 @@ namespace SFR {
 class Texture : public Interface {
 public:
     Texture(const std::string& name);
-    ~Texture();
 
     const std::string& name() const;
     GLuint width() const;
@@ -25,10 +24,8 @@ public:
     GLuint id() const;
 
 private:
+    sf::Image image_;
     std::string name_;
-    std::vector<sf::Color> pixels_;
-    GLuint width_;
-    GLuint height_;
     GLuint id_;
 };
 

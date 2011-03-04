@@ -14,8 +14,9 @@ HemiLight::HemiLight() {
     constantAttenuation_ = 1.0f;
     linearAttenuation_ = 1.;//-0.5f;
     quadraticAttenuation_ = 0.0f;
-    diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
-    backDiffuseColor_ = Color(0.f, 0.f, 0.f, 1.f);
+    diffuseColor_ = Color(0.f, 1.f, 0.f, 1.f);
+    backDiffuseColor_ = Color(1.f, 0.f, 0.f, 1.f);
+    direction_ = Vector(-1.f, 0.f, 0.f);
 }
 
 const Color& HemiLight::diffuseColor() const {
@@ -24,6 +25,10 @@ const Color& HemiLight::diffuseColor() const {
 
 const Color& HemiLight::backDiffuseColor() const {
     return backDiffuseColor_;
+}
+
+const Vector& HemiLight::direction() const { 
+    return direction_;
 }
 
 float HemiLight::constantAttenuation() const {
@@ -76,6 +81,17 @@ void HemiLight::backDiffuseColorIs(const Color& backDiffuse) {
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onBackDiffuseColor();
+    }
+}
+
+void HemiLight::directionIs(const Vector& direction) {
+    if (direction_ == direction) {
+        return;
+    }
+    direction_ = direction;
+
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onDirection();
     }
 }
 

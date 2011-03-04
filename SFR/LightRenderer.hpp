@@ -53,7 +53,8 @@ private:
     GLint atten2_;
 
     GLint direction_;
-    GLint cutoff_;
+    GLint spotCutoff_;
+    GLint spotPower_;
 
     GLint position_;
 

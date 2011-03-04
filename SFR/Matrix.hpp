@@ -39,6 +39,8 @@ public:
     Vector operator*(const Vector& other) const;
     Frustum operator*(const Frustum& other) const;
     Vector rotate(const Vector& other) const;
+    Vector normal(const Vector& other) const;
+
 
     operator const float*() const;
     operator float*();

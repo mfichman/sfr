@@ -28,6 +28,7 @@ public:
     float linearAttenuation() const;
     float quadraticAttenuation() const;
     float spotCutoff() const;
+    float spotPower() const;
 
     void diffuseColorIs(const Color& diffuse);
     void specularColorIs(const Color& specular);
@@ -36,6 +37,7 @@ public:
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);
     void spotCutoffIs(float cutoff);
+    void spotPowerIs(float power);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
@@ -48,6 +50,7 @@ private:
     float linearAttenuation_;
     float quadraticAttenuation_;
     float spotCutoff_;
+    float spotPower_;
     Vector direction_;
     std::vector<Notifiee*> notifiee_;
 };
@@ -61,6 +64,7 @@ public:
     virtual void onLinearAttenuation() {}
     virtual void onQuadraticAttenuation() {}
     virtual void onSpotCutoff() {}
+    virtual void onSpotPower() {}
 };
 
 }

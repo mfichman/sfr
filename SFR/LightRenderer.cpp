@@ -9,15 +9,22 @@
 #include "SFR/Effect.hpp"
 #include "SFR/Transform.hpp"
 #include "SFR/PointLight.hpp"
+#include "SFR/HemiLight.hpp"
+#include "SFR/SpotLight.hpp"
 #include "SFR/ResourceManager.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Camera.hpp"
+
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 using namespace SFR;
 
 LightRenderer::LightRenderer(ResourceManager* manager) {
     unitSphere_ = manager->meshNew("meshes/Sphere.obj");
     pointLight_ = manager->effectNew("shaders/PointLight");
+    hemiLight_ = manager->effectNew("shaders/HemiLight");
+    spotLight_ = manager->effectNew("shaders/SpotLight");
 }
 
 void LightRenderer::operator()(Transform* transform) {
@@ -37,7 +44,7 @@ void LightRenderer::operator()(Transform* transform) {
 void LightRenderer::operator()(PointLight* light) {
     operator()(pointLight_.ptr());
 
-    // Set the light color, attenuation, and direction properties.
+    // Set the light color, attenuation, and position properties.
     if (diffuse_ != -1) {
         glUniform3fv(diffuse_, 1, light->diffuseColor());
     }
@@ -66,9 +73,79 @@ void LightRenderer::operator()(PointLight* light) {
 }
 
 void LightRenderer::operator()(HemiLight* light) {
+    operator()(hemiLight_.ptr());
+
+    // Set the light color, attenuation, and direction properties
+    if (diffuse_ != -1) {
+        glUniform3fv(diffuse_, 1, light->diffuseColor());
+    } 
+    if (backDiffuse_ != -1) {
+        glUniform3fv(backDiffuse_, 1, light->backDiffuseColor());
+    }
+    if (atten0_ != -1) {
+        glUniform1f(atten0_, light->constantAttenuation());
+    }
+    if (atten1_ != -1) {
+        glUniform1f(atten1_, light->linearAttenuation());
+    }
+    if (atten2_ != -1) {
+        glUniform1f(atten2_, light->quadraticAttenuation());
+    }
+    if (direction_ != -1) {
+        Matrix transform = viewTransform_ * modelTransform_;
+        Vector direction = transform.normal(light->direction());
+        glUniform3fv(direction_, 1, direction);
+    }
+
+    // Calculate the model transform, and scale the model to cover the light's 
+    // area of effect.
+    Matrix previous = modelTransform_;
+    float radius = light->radiusOfEffect();
+    modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
+    
+    // This renders the light's bounding volume (usually a sphere)
+    operator()(unitSphere_.ptr());
+    modelTransform_ = previous;
 }
 
 void LightRenderer::operator()(SpotLight* light) {
+    operator()(spotLight_.ptr());
+
+    // Set the light color, attenuation, and direction properties
+    if (diffuse_ != -1) {
+        glUniform3fv(diffuse_, 1, light->diffuseColor());
+    } 
+    if (atten0_ != -1) {
+        glUniform1f(atten0_, light->constantAttenuation());
+    }
+    if (atten1_ != -1) {
+        glUniform1f(atten1_, light->linearAttenuation());
+    }
+    if (atten2_ != -1) {
+        glUniform1f(atten2_, light->quadraticAttenuation());
+    }
+    if (spotCutoff_ != -1) {
+        float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
+        glUniform1f(spotCutoff_, cosCutoff);
+    }
+    if (spotPower_ != -1) {
+        glUniform1f(spotPower_, light->spotPower());
+    }
+    if (direction_ != -1) {
+        Matrix transform = viewTransform_ * modelTransform_;
+        Vector direction = transform.normal(light->direction());
+        glUniform3fv(direction_, 1, direction);
+    }
+
+    // Calculate the model transform, and scale the model to cover the light's 
+    // area of effect.
+    Matrix previous = modelTransform_;
+    float radius = 5.f; // TODO: HACK HACK HACK
+    modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
+    
+    // This renders the light's bounding volume (usually a sphere)
+    operator()(unitSphere_.ptr());
+    modelTransform_ = previous;
 }
 
 void LightRenderer::operator()(Mesh* mesh) {
@@ -136,8 +213,9 @@ void LightRenderer::operator()(Effect* effect) {
     atten0_ = glGetUniformLocation(effect_->id(), "atten0");
     atten1_ = glGetUniformLocation(effect_->id(), "atten1");
     atten2_ = glGetUniformLocation(effect_->id(), "atten2");
-    cutoff_ = glGetUniformLocation(effect_->id(), "cutoff");
-    direction_ = glGetUniformLocation(effect_->id(), "lightDirection");
+    spotCutoff_ = glGetUniformLocation(effect_->id(), "spotCutoff");
+    spotPower_ = glGetUniformLocation(effect_->id(), "spotPower");
+    direction_ = glGetUniformLocation(effect_->id(), "direction");
     model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
     view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
     projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");

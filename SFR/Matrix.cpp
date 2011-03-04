@@ -233,6 +233,16 @@ Matrix Matrix::operator*(const Matrix& other) const {
     return out;
 }
 
+Vector Matrix::normal(const Vector& v) const {
+    Vector out;
+    
+    out.x = data[0]*v.x + data[4]*v.y + data[8]*v.z;
+    out.y = data[1]*v.x + data[5]*v.y + data[9]*v.z;
+    out.z = data[2]*v.x + data[6]*v.y + data[10]*v.z;
+    
+    return out;
+}
+
 Vector Matrix::operator*(const Vector& v) const {
     Vector out;
     
