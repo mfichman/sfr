@@ -16,19 +16,21 @@
 
 using namespace SFR;
 
+void MaterialRenderer::operator()(World* world) {
+    world_ = world;
+    operator()(world_->root());
+}
+
 void MaterialRenderer::operator()(Transform* transform) {
     Matrix previous = modelTransform_;
-
-    // Compute the transform for all children of the current node
-    modelTransform_ =  modelTransform_ * transform->transform();
+    modelTransform_ = transform->worldTransform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
-
     modelTransform_ = previous;
 
     // Clear out the previous effect
-    operator()(static_cast<Effect*>(0));
+    operator()(static_cast<Effect*>(0)); // TODO: FIX MOVE TO WORLD
 }
 
 void MaterialRenderer::operator()(MeshObject* object) {
@@ -71,11 +73,16 @@ void MaterialRenderer::operator()(AttributeBuffer* buffer) {
 }
 
 void MaterialRenderer::operator()(IndexBuffer* buffer) {
+    if (!world_ || !world_->camera()) {
+        return;
+    }
+    Camera* camera = world_->camera();
+
     // Pass the model matrix to the vertex shader
     glUniformMatrix4fv(model_, 1, 0, modelTransform_);
 
     // Calculate the normal matrix and pass it to the vertex shader
-    Matrix normalMatrix = viewTransform_ * modelTransform_;
+    Matrix normalMatrix = camera->viewTransform() * modelTransform_;
     normalMatrix = normalMatrix.inverse();
     normalMatrix = normalMatrix.transpose();
 
@@ -86,8 +93,8 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
     };
 
     glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
-    glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
-    glUniformMatrix4fv(view_, 1, 0, viewTransform_);
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 
     // Draw the attribute buffer
     buffer->statusIs(IndexBuffer::SYNCED);
@@ -132,11 +139,6 @@ void MaterialRenderer::operator()(Texture* texture) {
     }
 } 
 
-void MaterialRenderer::operator()(Camera* camera) {
-    projectionTransform_ = camera->projectionMatrix();
-    viewTransform_ = modelTransform_;
-}
-
 void MaterialRenderer::operator()(Effect* effect) {
     if (effect_.ptr() == effect) {
         return;
@@ -161,7 +163,7 @@ void MaterialRenderer::operator()(Effect* effect) {
         return;
     }
 
-     // Activate the shader by querying for uniform variables and attributes 
+    // Activate the shader by querying for uniform variables and attributes 
     effect_->statusIs(Effect::LINKED);
     glUseProgram(effect_->id());
     diffuseMap_ = glGetUniformLocation(effect_->id(), "diffuseMap");

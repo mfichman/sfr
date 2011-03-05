@@ -8,6 +8,7 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
+#include "SFR/DepthRenderTarget.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
 #include "SFR/Vector.hpp"
@@ -29,6 +30,7 @@ public:
     float quadraticAttenuation() const;
     float spotCutoff() const;
     float spotPower() const;
+    DepthRenderTarget* shadowMap() const;
 
     void diffuseColorIs(const Color& diffuse);
     void specularColorIs(const Color& specular);
@@ -38,6 +40,7 @@ public:
     void quadraticAttenuationIs(float atten);
     void spotCutoffIs(float cutoff);
     void spotPowerIs(float power);
+    void shadowMapIs(DepthRenderTarget* target);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
@@ -53,6 +56,7 @@ private:
     float spotPower_;
     Vector direction_;
     std::vector<Notifiee*> notifiee_;
+    Ptr<DepthRenderTarget> shadowMap_;
 };
 
 class SpotLight::Notifiee : public Interface {
@@ -65,6 +69,7 @@ public:
     virtual void onQuadraticAttenuation() {}
     virtual void onSpotCutoff() {}
     virtual void onSpotPower() {}
+    virtual void onShadowMap() {}
 };
 
 }

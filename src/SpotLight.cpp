@@ -53,6 +53,10 @@ float SpotLight::spotPower() const {
     return spotPower_;
 }
 
+DepthRenderTarget* SpotLight::shadowMap() const {
+    return shadowMap_.ptr();
+}
+
 void SpotLight::diffuseColorIs(const Color& diffuse) {
     if (diffuseColor_ == diffuse) {
         return;
@@ -137,6 +141,17 @@ void SpotLight::spotPowerIs(float power) {
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onSpotPower();
+    }
+}
+
+void SpotLight::shadowMapIs(DepthRenderTarget* target) {
+    if (shadowMap_ == target) {
+        return;
+    }
+    shadowMap_ = target;
+    
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onShadowMap();
     }
 }
 

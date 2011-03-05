@@ -28,14 +28,17 @@ LightRenderer::LightRenderer(ResourceManager* manager) {
     spotLight_ = manager->effectNew("shaders/SpotLight");
 }
 
+void LightRenderer::operator()(World* world) {
+    world_ = world;
+    operator()(world_->root());
+}
+
 void LightRenderer::operator()(Transform* transform) {
     Matrix previous = modelTransform_;
-
-    modelTransform_ = modelTransform_ * transform->transform();
+    modelTransform_ = transform->worldTransform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
-
     modelTransform_ = previous;
 
     // Clear out the current effect
@@ -70,10 +73,13 @@ void LightRenderer::operator()(PointLight* light) {
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_.ptr());
-    modelTransform_ = previous;
 }
 
 void LightRenderer::operator()(HemiLight* light) {
+    if (!world_ && !world_->camera()) {
+        return;
+    }
+
     operator()(hemiLight_.ptr());
 
     // Set the light color, attenuation, and direction properties
@@ -93,7 +99,7 @@ void LightRenderer::operator()(HemiLight* light) {
         glUniform1f(atten2_, light->quadraticAttenuation());
     }
     if (direction_ != -1) {
-        Matrix transform = viewTransform_ * modelTransform_;
+        Matrix transform = world_->camera()->viewTransform() * modelTransform_;
         Vector direction = transform.normal(light->direction());
         glUniform3fv(direction_, 1, direction);
     }
@@ -110,6 +116,10 @@ void LightRenderer::operator()(HemiLight* light) {
 }
 
 void LightRenderer::operator()(SpotLight* light) {
+    if (!world_ && !world_->camera()) {
+        return;
+    }
+
     operator()(spotLight_.ptr());
 
     // Set the light color, attenuation, and direction properties
@@ -133,9 +143,13 @@ void LightRenderer::operator()(SpotLight* light) {
         glUniform1f(spotPower_, light->spotPower());
     }
     if (direction_ != -1) {
-        Matrix transform = viewTransform_ * modelTransform_;
+        Matrix transform = world_->camera()->viewTransform() * modelTransform_;
         Vector direction = transform.normal(light->direction());
         glUniform3fv(direction_, 1, direction);
+    }
+    if (shadowMap_ != -1 && light->shadowMap()) {
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
     }
 
     // Calculate the model transform, and scale the model to cover the light's 
@@ -167,11 +181,16 @@ void LightRenderer::operator()(AttributeBuffer* buffer) {
 }
 
 void LightRenderer::operator()(IndexBuffer* buffer) {
+    if (!world_ && !world_->camera()) {
+        return;
+    }
+    Camera* camera = world_->camera();
+
     // Set up the view, projection, and inverse projection transforms
-    Matrix inverseProjection = projectionTransform_.inverse();
+    Matrix inverseProjection = camera->projectionTransform().inverse();
     glUniformMatrix4fv(model_, 1, 0, modelTransform_);
-    glUniformMatrix4fv(projection_, 1, 0, projectionTransform_);
-    glUniformMatrix4fv(view_, 1, 0, viewTransform_);
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
     glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
 
     // Render the indices of the light's bounding volume
@@ -180,11 +199,6 @@ void LightRenderer::operator()(IndexBuffer* buffer) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void LightRenderer::operator()(Camera* camera) {
-    projectionTransform_ = camera->projectionMatrix();
-    viewTransform_ = modelTransform_;
 }
 
 void LightRenderer::operator()(Effect* effect) {

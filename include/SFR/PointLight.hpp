@@ -11,6 +11,7 @@
 #include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
 #include "SFR/Vector.hpp"
+#include "SFR/Matrix.hpp"
 #include <vector>
 
 namespace SFR {

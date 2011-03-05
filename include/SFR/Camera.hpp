@@ -33,7 +33,8 @@ public:
     State state() const;
     Type type() const;
     Frustum viewFrustum() const;
-    Matrix projectionMatrix() const;
+    Matrix projectionTransform() const;
+    const Matrix& viewTransform() const;
 
     void farIs(float distance);
     void nearIs(float distance);
@@ -44,10 +45,12 @@ public:
     void fieldOfViewIs(float view);
     void stateIs(State state);
     void typeIs(Type type);
+    void viewTransformIs(const Matrix& transform);
 
     void operator()(Functor* functor);
 
 private:
+    Matrix viewTransform_;
     float far_;
     float near_;
     float left_;
@@ -71,6 +74,7 @@ public:
     virtual void onFieldOfView() {}
     virtual void onState() {}
     virtual void onType() {}
+    virtual void onViewTransform() {}
 };
 
 }

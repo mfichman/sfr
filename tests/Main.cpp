@@ -10,6 +10,7 @@
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
 #include <SFR/MeshObject.hpp>
+#include <SFR/TransformUpdater.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -34,7 +35,11 @@ void run() {
 
     Ptr<SFR::ResourceManager> manager(new SFR::ResourceManager);
     Ptr<SFR::DeferredRenderer> renderer(new SFR::DeferredRenderer(manager.ptr()));
+    Ptr<SFR::TransformUpdater> updater(new SFR::TransformUpdater);
     Ptr<SFR::Effect> effect = manager->effectNew("shaders/Material");
+
+    Ptr<SFR::World> world(new World);
+    world->cameraIs(new SFR::Camera);
 
     Ptr<SFR::Material> material(new SFR::Material("Test"));
     material->textureIs("diffuse", manager->textureNew("textures/MetalDiffuse.png"));
@@ -64,19 +69,18 @@ void run() {
     light2->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
     Ptr<SFR::Transform> camera(new SFR::Transform);
-    camera->childNew(new SFR::Camera);
+    camera->childNew(world->camera());
 
     Ptr<SFR::Transform> planeNode(new SFR::Transform);
     planeNode->childNew(plane.ptr());
     planeNode->positionIs(SFR::Vector(0.f, -2.f, 0.f));
 
-    Ptr<SFR::Transform> root(new SFR::Transform);
-    root->childNew(light0.ptr());
-    root->childNew(light1.ptr());
-    root->childNew(light2.ptr());
-    root->childNew(object.ptr());
-    root->childNew(planeNode.ptr());
-    root->childNew(camera.ptr());
+    world->root()->childNew(light0.ptr());
+    world->root()->childNew(light1.ptr());
+    world->root()->childNew(light2.ptr());
+    world->root()->childNew(object.ptr());
+    world->root()->childNew(planeNode.ptr());
+    world->root()->childNew(camera.ptr());
 
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
 
@@ -124,7 +128,8 @@ void run() {
             SFR::Vector(0.f, 0.f, 0.f),
             SFR::Vector(0.f, 1.f, 0.f)));
 
-        root(renderer.ptr());
+        updater(world.ptr());
+        renderer(world.ptr());
 
         window.Display();
     }

@@ -58,6 +58,7 @@ public:
     virtual void onConstantAttenuation() {}
     virtual void onLinearAttenuation() {}
     virtual void onQuadraticAttenuation() {}
+    virtual void onTransform() {}
 };
 
 }

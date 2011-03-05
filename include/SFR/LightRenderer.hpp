@@ -9,6 +9,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/Matrix.hpp"
+#include "SFR/World.hpp"
 
 namespace SFR {
 
@@ -16,10 +17,10 @@ namespace SFR {
 class LightRenderer : public Node::Functor {
 public:
     LightRenderer(ResourceManager* manager);
+    void operator()(World* world);
     void operator()(Transform* transform);
     void operator()(PointLight* light);
     void operator()(Effect* effect);
-    void operator()(Camera* camera);
     void operator()(HemiLight* light);
     void operator()(SpotLight* light);
     void operator()(Mesh* mesh);
@@ -27,6 +28,7 @@ public:
     void operator()(IndexBuffer* buffer);
 
 private:
+    Ptr<World> world_;
     Ptr<Mesh> unitSphere_;
     Ptr<Effect> effect_;
     Ptr<Effect> directionalLight_;
@@ -35,8 +37,6 @@ private:
     Ptr<Effect> spotLight_;
 
     Matrix modelTransform_;
-    Matrix projectionTransform_;
-    Matrix viewTransform_;
 
     GLint shadowMap_;
     GLint diffuseBuffer_;

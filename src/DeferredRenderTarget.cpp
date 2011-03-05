@@ -11,7 +11,7 @@
 
 using namespace SFR;
 
-DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint width, GLuint height) {
+DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
     target_.resize(n);
     
     // Initialize the framebuffer, which will hold all of the target textures
@@ -26,7 +26,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint width, GLuint height
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, width, height, 0, 
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, w, h, 0, 
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
             GL_TEXTURE_2D, target_[i], 0);
@@ -41,7 +41,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint width, GLuint height
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, w, h, 0,
         GL_DEPTH_COMPONENT, GL_FLOAT, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D, depthBuffer_, 0);

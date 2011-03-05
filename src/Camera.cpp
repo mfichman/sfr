@@ -122,7 +122,7 @@ Frustum Camera::viewFrustum() const {
     }
 }
 
-Matrix Camera::projectionMatrix() const {
+Matrix Camera::projectionTransform() const {
 
     if (ORTHOGRAPHIC == type_) {
         return Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
@@ -132,6 +132,10 @@ Matrix Camera::projectionMatrix() const {
         float aspectRatio = viewport[2]/viewport[3];
         return Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
     }
+}
+
+const Matrix& Camera::viewTransform() const {
+    return viewTransform_;
 }
 
 void Camera::farIs(float distance) {
@@ -201,6 +205,16 @@ void Camera::fieldOfViewIs(float view) {
     fieldOfView_ = view;
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onFieldOfView();
+    }
+}
+
+void Camera::viewTransformIs(const Matrix& transform) {
+    if (viewTransform_ == transform) {
+        return;
+    }
+    viewTransform_ = transform;
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onViewTransform();
     }
 }
 

@@ -25,6 +25,8 @@
 
 namespace SFR {
 
+class ShadowRenderer;
+class FlatRenderer;
 class Interface;
 class Node;
 class Transform;
@@ -49,7 +51,9 @@ class MaterialLoader;
 class EffectLoader;
 class Camera;
 class ResourceManager;
+class DepthRenderTarget;
 class MeshObject;
+class World;
 
 }
 
