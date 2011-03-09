@@ -12,9 +12,14 @@
 #include "SFR/Texture.hpp"
 #include "SFR/Material.hpp"
 #include "SFR/Effect.hpp"
-#include "SFR/MeshObject.hpp"
+#include "SFR/Model.hpp"
+#include "SFR/ResourceManager.hpp"
 
 using namespace SFR;
+
+MaterialRenderer::MaterialRenderer(ResourceManager* manager) {
+    modelEffect_ = manager->effectNew("shaders/Model");
+}
 
 void MaterialRenderer::operator()(World* world) {
     world_ = world;
@@ -33,10 +38,10 @@ void MaterialRenderer::operator()(Transform* transform) {
     operator()(static_cast<Effect*>(0)); // TODO: FIX MOVE TO WORLD
 }
 
-void MaterialRenderer::operator()(MeshObject* object) {
+void MaterialRenderer::operator()(Model* object) {
 
     // Set the material parameters for this mesh
-    operator()(object->effect());
+    operator()(modelEffect_.ptr());
     operator()(object->material());
     operator()(object->mesh());
 }

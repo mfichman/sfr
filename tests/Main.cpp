@@ -9,7 +9,7 @@
 #include <SFR/DeferredRenderer.hpp>
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
-#include <SFR/MeshObject.hpp>
+#include <SFR/Model.hpp>
 #include <SFR/TransformUpdater.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
@@ -36,25 +36,24 @@ void run() {
     Ptr<SFR::ResourceManager> manager(new SFR::ResourceManager);
     Ptr<SFR::DeferredRenderer> renderer(new SFR::DeferredRenderer(manager.ptr()));
     Ptr<SFR::TransformUpdater> updater(new SFR::TransformUpdater);
-    Ptr<SFR::Effect> effect = manager->effectNew("shaders/Material");
 
     Ptr<SFR::World> world(new World);
     world->cameraIs(new SFR::Camera);
 
     Ptr<SFR::Material> material(new SFR::Material("Test"));
-    material->textureIs("diffuse", manager->textureNew("textures/MetalDiffuse.png"));
-    material->textureIs("normal", manager->textureNew("textures/MetalNormal.png"));
-    material->textureIs("specular", manager->textureNew("textures/MetalSpecular.png"));
+    material->textureIs("diffuse", manager->textureNew("textures/RockDiffuse.png"));
+    material->textureIs("normal", manager->textureNew("textures/RockNormal.png"));
+    material->textureIs("specular", manager->textureNew("textures/RockSpecular.png"));
+    material->shininessIs(1.f);
+    material->specularColorIs(SFR::Color(0.0f, 0.0f, 0.0f, 1.0f));
 
-    Ptr<SFR::MeshObject> object(new MeshObject);
+    Ptr<SFR::Model> object(new Model);
     object->meshIs(manager->meshNew("meshes/SmoothSphere.obj"));
     object->materialIs(material.ptr());
-    object->effectIs(effect.ptr());
 
-    Ptr<SFR::MeshObject> plane(new MeshObject);
+    Ptr<SFR::Model> plane(new Model);
     plane->meshIs(manager->meshNew("meshes/Plane.obj"));
     plane->materialIs(material.ptr());
-    plane->effectIs(effect.ptr());
 
     Ptr<SFR::Transform> light0(new SFR::Transform);
     light0->childNew(new SFR::PointLight);
@@ -62,12 +61,12 @@ void run() {
 
     Ptr<SFR::Transform> light1(new SFR::Transform);
     light1->childNew(new SFR::SpotLight);
-    light1->positionIs(SFR::Vector(0.f, 2.f, 0.f));
+    light1->positionIs(SFR::Vector(0.f, 2.f, -1.f));
 
     Ptr<SFR::Transform> light2(new SFR::Transform);
     light2->childNew(new SFR::HemiLight);
     light2->positionIs(SFR::Vector(0.f, 0.f, 0.f));
-
+       
     Ptr<SFR::Transform> camera(new SFR::Transform);
     camera->childNew(world->camera());
 
@@ -75,12 +74,12 @@ void run() {
     planeNode->childNew(plane.ptr());
     planeNode->positionIs(SFR::Vector(0.f, -2.f, 0.f));
 
+    world->root()->childNew(camera.ptr());
     world->root()->childNew(light0.ptr());
     world->root()->childNew(light1.ptr());
     world->root()->childNew(light2.ptr());
     world->root()->childNew(object.ptr());
     world->root()->childNew(planeNode.ptr());
-    world->root()->childNew(camera.ptr());
 
     glViewport(0, 0, window.GetWidth(), window.GetHeight());
 

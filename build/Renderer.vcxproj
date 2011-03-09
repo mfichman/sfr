@@ -29,7 +29,7 @@
     <ClCompile Include="..\src\Matrix.cpp" />
     <ClCompile Include="..\src\Mesh.cpp" />
     <ClCompile Include="..\src\MeshLoader.cpp" />
-    <ClCompile Include="..\src\MeshObject.cpp" />
+    <ClCompile Include="..\src\Model.cpp" />
     <ClCompile Include="..\src\MeshVertex.cpp" />
     <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\PointLight.cpp" />
@@ -51,8 +51,8 @@
     <None Include="..\shaders\Flat.vert" />
     <None Include="..\shaders\HemiLight.frag" />
     <None Include="..\shaders\HemiLight.vert" />
-    <None Include="..\shaders\Material.frag" />
-    <None Include="..\shaders\Material.vert" />
+    <None Include="..\shaders\Model.frag" />
+    <None Include="..\shaders\Model.vert" />
     <None Include="..\shaders\PointLight.frag" />
     <None Include="..\shaders\PointLight.vert" />
     <None Include="..\shaders\SpotLight.frag" />
@@ -81,7 +81,7 @@
     <ClInclude Include="..\include\SFR\Matrix.hpp" />
     <ClInclude Include="..\include\SFR\Mesh.hpp" />
     <ClInclude Include="..\include\SFR\MeshLoader.hpp" />
-    <ClInclude Include="..\include\SFR\MeshObject.hpp" />
+    <ClInclude Include="..\include\SFR\Model.hpp" />
     <ClInclude Include="..\include\SFR\MeshVertex.hpp" />
     <ClInclude Include="..\include\SFR\Node.hpp" />
     <ClInclude Include="..\include\SFR\PointLight.hpp" />

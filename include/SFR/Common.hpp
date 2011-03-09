@@ -52,7 +52,7 @@ class EffectLoader;
 class Camera;
 class ResourceManager;
 class DepthRenderTarget;
-class MeshObject;
+class Model;
 class World;
 
 }

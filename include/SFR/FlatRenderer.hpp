@@ -20,7 +20,7 @@ public:
     FlatRenderer(ResourceManager* manager);
     void operator()(World* world);
     void operator()(Transform* transform);
-    void operator()(MeshObject* object);
+    void operator()(Model* object);
     void operator()(Mesh* mesh);
     void operator()(Effect* effect);
     void operator()(AttributeBuffer* buffer);

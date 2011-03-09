@@ -9,7 +9,7 @@
 #include "SFR/Camera.hpp"
 #include "SFR/Transform.hpp"
 #include "SFR/Mesh.hpp"
-#include "SFR/MeshObject.hpp"
+#include "SFR/Model.hpp"
 #include "SFR/ResourceManager.hpp"
 
 using namespace SFR;
@@ -35,7 +35,7 @@ void FlatRenderer::operator()(Transform* transform) {
     operator()(static_cast<Effect*>(0)); // TODO: FIX MOVE TO WORLD
 }
 
-void FlatRenderer::operator()(MeshObject* object) {
+void FlatRenderer::operator()(Model* object) {
     operator()(flatShader_.ptr());
     operator()(object->mesh());
 }

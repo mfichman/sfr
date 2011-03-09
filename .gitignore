@@ -1,5 +1,6 @@
 build/Debug
 build/Release
+build
 main
 ipch
 *.sdf
@@ -10,3 +11,4 @@ ipch
 *~
 *.o
 *.swp
+

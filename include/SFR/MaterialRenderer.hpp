@@ -15,9 +15,10 @@ namespace SFR {
 /* Simple renderer.  Passes vertex, texture, and material info to a shader. */
 class MaterialRenderer : public Node::Functor {
 public:
+    MaterialRenderer(ResourceManager* manager);
     void operator()(World* world);
     void operator()(Transform* transform);
-    void operator()(MeshObject* object);
+    void operator()(Model* object);
     void operator()(Mesh* mesh);
     void operator()(Material* material);
     void operator()(Texture* texture);
@@ -28,6 +29,7 @@ public:
 private:
     Matrix modelTransform_;
     Ptr<Effect> effect_;
+    Ptr<Effect> modelEffect_;
     Ptr<World> world_;
     
     GLint attrib_;

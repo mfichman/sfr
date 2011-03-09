@@ -17,7 +17,7 @@ DeferredRenderer::DeferredRenderer(ResourceManager* manager) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    materialPass_ = new MaterialRenderer;
+    materialPass_ = new MaterialRenderer(manager);
     lightPass_ = new LightRenderer(manager);
     renderTarget_ = new DeferredRenderTarget(3, viewport[2], viewport[3]);
 }
