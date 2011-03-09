@@ -22,8 +22,20 @@ MaterialRenderer::MaterialRenderer(ResourceManager* manager) {
 }
 
 void MaterialRenderer::operator()(World* world) {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CW);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     world_ = world;
     operator()(world_->root());
+   
+    // Clear out the effect
+    operator()(static_cast<Effect*>(0));
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
 }
 
 void MaterialRenderer::operator()(Transform* transform) {
@@ -33,9 +45,6 @@ void MaterialRenderer::operator()(Transform* transform) {
         node(this);
     }
     modelTransform_ = previous;
-
-    // Clear out the previous effect
-    operator()(static_cast<Effect*>(0)); // TODO: FIX MOVE TO WORLD
 }
 
 void MaterialRenderer::operator()(Model* object) {

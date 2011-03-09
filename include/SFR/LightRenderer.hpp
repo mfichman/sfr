@@ -30,6 +30,7 @@ public:
 private:
     Ptr<World> world_;
     Ptr<Mesh> unitSphere_;
+    Ptr<Mesh> unitCone_;
     Ptr<Effect> effect_;
     Ptr<Effect> directionalLight_;
     Ptr<Effect> pointLight_;

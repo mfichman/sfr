@@ -41,9 +41,9 @@ void run() {
     world->cameraIs(new SFR::Camera);
 
     Ptr<SFR::Material> material(new SFR::Material("Test"));
-    material->textureIs("diffuse", manager->textureNew("textures/RockDiffuse.png"));
-    material->textureIs("normal", manager->textureNew("textures/RockNormal.png"));
-    material->textureIs("specular", manager->textureNew("textures/RockSpecular.png"));
+    material->textureIs("diffuse", manager->textureNew("textures/MetalDiffuse.png"));
+    material->textureIs("normal", manager->textureNew("textures/MetalNormal.png"));
+    material->textureIs("specular", manager->textureNew("textures/MetalSpecular.png"));
     material->shininessIs(1.f);
     material->specularColorIs(SFR::Color(0.0f, 0.0f, 0.0f, 1.0f));
 

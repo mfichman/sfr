@@ -30,6 +30,7 @@ public:
     float quadraticAttenuation() const;
     float spotCutoff() const;
     float spotPower() const;
+    float radiusOfEffect() const;
     DepthRenderTarget* shadowMap() const;
 
     void diffuseColorIs(const Color& diffuse);

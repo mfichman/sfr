@@ -23,14 +23,26 @@ using namespace SFR;
 
 LightRenderer::LightRenderer(ResourceManager* manager) {
     unitSphere_ = manager->meshNew("meshes/Sphere.obj");
+    unitCone_ = manager->meshNew("meshes/Cone.obj");
     pointLight_ = manager->effectNew("shaders/PointLight");
     hemiLight_ = manager->effectNew("shaders/HemiLight");
     spotLight_ = manager->effectNew("shaders/SpotLight");
 }
 
 void LightRenderer::operator()(World* world) {
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     world_ = world;
     operator()(world_->root());
+
+    // Clear out the current effect
+    operator()(static_cast<Effect*>(0));
+    glDisable(GL_BLEND);
+    glDisable(GL_CULL_FACE);
 }
 
 void LightRenderer::operator()(Transform* transform) {
@@ -40,9 +52,6 @@ void LightRenderer::operator()(Transform* transform) {
         node(this);
     }
     modelTransform_ = previous;
-
-    // Clear out the current effect
-    operator()(static_cast<Effect*>(0));
 }
 
 void LightRenderer::operator()(PointLight* light) {
@@ -144,7 +153,7 @@ void LightRenderer::operator()(SpotLight* light) {
     }
     if (direction_ != -1) {
         Matrix transform = world_->camera()->viewTransform() * modelTransform_;
-        Vector direction = transform.normal(light->direction());
+        Vector direction = transform.normal(light->direction().unit());
         glUniform3fv(direction_, 1, direction);
     }
     if (shadowMap_ != -1 && light->shadowMap()) {
@@ -152,14 +161,27 @@ void LightRenderer::operator()(SpotLight* light) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
     }
 
-    // Calculate the model transform, and scale the model to cover the light's 
-    // area of effect.
+    // Save the old model matrix
     Matrix previous = modelTransform_;
-    float radius = 5.f; // TODO: HACK HACK HACK
-    modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
     
+    // Transform the light to point in the correct direction
+    Vector forward = light->direction().unit();
+    Vector right = forward.orthogonal();
+    Vector up = right.cross(forward);
+    modelTransform_ = modelTransform_ * Matrix(right, up, forward);
+
+    // Scale model to cover the light's area of effect.
+    static const float margin = 2.f;
+    float radius = light->radiusOfEffect();
+    float cutoff = light->spotCutoff() + margin;
+    float scale = std::tan((float)M_PI * cutoff / 180.f);
+    float sx = scale * radius;
+    float sy = scale * radius;
+    float sz = radius;
+    modelTransform_ = modelTransform_ * Matrix::scale(sx, sy, sz);
+
     // This renders the light's bounding volume (usually a sphere)
-    operator()(unitSphere_.ptr());
+    operator()(unitCone_.ptr());
     modelTransform_ = previous;
 }
 

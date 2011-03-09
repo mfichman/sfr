@@ -19,12 +19,12 @@ public:
     void operator()(World* world);
     void operator()(Transform* transform);
     void operator()(PointLight* light);
-    void operator()(HemiLight* light);
     void operator()(SpotLight* light);
 
 private:
-    Matrix modelTransform_;
+    Matrix transform_;
     Ptr<FlatRenderer> flatRenderer_;
+    Ptr<World> world_;
 };
 
 }
