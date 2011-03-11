@@ -23,8 +23,8 @@ MaterialRenderer::MaterialRenderer(ResourceManager* manager) {
 
 void MaterialRenderer::operator()(World* world) {
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glFrontFace(GL_CW);
+    //glEnable(GL_CULL_FACE);
+    //glFrontFace(GL_CW);
     glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -34,8 +34,8 @@ void MaterialRenderer::operator()(World* world) {
     // Clear out the effect
     operator()(static_cast<Effect*>(0));
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-    glFrontFace(GL_CCW);
+    //glDisable(GL_CULL_FACE);
+    //glFrontFace(GL_CCW);
 }
 
 void MaterialRenderer::operator()(Transform* transform) {
@@ -149,7 +149,7 @@ void MaterialRenderer::operator()(Texture* texture) {
     if (texture) {
         glBindTexture(GL_TEXTURE_2D, texture->id());
     } else {
-        glBindTexture(GL_TEXTURE_2D, 0);
+        
     }
 } 
 

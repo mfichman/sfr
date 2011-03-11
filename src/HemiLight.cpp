@@ -15,7 +15,7 @@ HemiLight::HemiLight() {
     linearAttenuation_ = 1.;//-0.5f;
     quadraticAttenuation_ = 0.0f;
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
-    backDiffuseColor_ = Color(0.4f, 0.4f, .6f, 1.f);
+    backDiffuseColor_ = Color(0.2f, 0.2f, .3f, 1.f);
     direction_ = Vector(-1.f, 0.f, 0.f);
 }
 

@@ -22,8 +22,9 @@
 using namespace SFR;
 
 LightRenderer::LightRenderer(ResourceManager* manager) {
-    unitSphere_ = manager->meshNew("meshes/Sphere.obj");
-    unitCone_ = manager->meshNew("meshes/Cone.obj");
+    manager->nodeNew("meshes/LightShapes.obj");
+    unitSphere_ = manager->meshNew("meshes/LightShapes.obj/Sphere");
+    unitCone_ = manager->meshNew("meshes/LightShapes.obj/Cone");
     pointLight_ = manager->effectNew("shaders/PointLight");
     hemiLight_ = manager->effectNew("shaders/HemiLight");
     spotLight_ = manager->effectNew("shaders/SpotLight");
@@ -32,6 +33,7 @@ LightRenderer::LightRenderer(ResourceManager* manager) {
 void LightRenderer::operator()(World* world) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_CLAMP);
     glBlendFunc(GL_ONE, GL_ONE);
     glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -41,8 +43,11 @@ void LightRenderer::operator()(World* world) {
 
     // Clear out the current effect
     operator()(static_cast<Effect*>(0));
-    glDisable(GL_BLEND);
+    
     glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_CLAMP);
+
 }
 
 void LightRenderer::operator()(Transform* transform) {
@@ -85,7 +90,7 @@ void LightRenderer::operator()(PointLight* light) {
 }
 
 void LightRenderer::operator()(HemiLight* light) {
-    if (!world_ && !world_->camera()) {
+    if (!world_ || !world_->camera()) {
         return;
     }
 
@@ -109,7 +114,7 @@ void LightRenderer::operator()(HemiLight* light) {
     }
     if (direction_ != -1) {
         Matrix transform = world_->camera()->viewTransform() * modelTransform_;
-        Vector direction = transform.normal(light->direction());
+        Vector direction = transform.normal(light->direction().unit());
         glUniform3fv(direction_, 1, direction);
     }
 
@@ -125,7 +130,7 @@ void LightRenderer::operator()(HemiLight* light) {
 }
 
 void LightRenderer::operator()(SpotLight* light) {
-    if (!world_ && !world_->camera()) {
+    if (!world_ || !world_->camera()) {
         return;
     }
 
@@ -166,8 +171,8 @@ void LightRenderer::operator()(SpotLight* light) {
     
     // Transform the light to point in the correct direction
     Vector forward = light->direction().unit();
-    Vector right = forward.orthogonal();
-    Vector up = right.cross(forward);
+    Vector up = forward.orthogonal();
+    Vector right = up.cross(forward);
     modelTransform_ = modelTransform_ * Matrix(right, up, forward);
 
     // Scale model to cover the light's area of effect.
@@ -203,7 +208,7 @@ void LightRenderer::operator()(AttributeBuffer* buffer) {
 }
 
 void LightRenderer::operator()(IndexBuffer* buffer) {
-    if (!world_ && !world_->camera()) {
+    if (!world_ || !world_->camera() || !buffer) {
         return;
     }
     Camera* camera = world_->camera();

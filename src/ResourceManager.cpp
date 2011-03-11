@@ -6,7 +6,7 @@
  *****************************************************************************/
 
 #include "SFR/ResourceManager.hpp"
-#include "SFR/MeshLoader.hpp"
+#include "SFR/WavefrontLoader.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Material.hpp"
 #include "SFR/Texture.hpp"
@@ -17,7 +17,7 @@
 using namespace SFR;
 
 ResourceManager::ResourceManager() {
-    meshLoader_ = new MeshLoader;
+    meshLoader_ = new WavefrontLoader(this);
     effectLoader_ = new EffectLoader;
     notifieeNew(meshLoader_.ptr());
     notifieeNew(effectLoader_.ptr());
@@ -26,6 +26,7 @@ ResourceManager::ResourceManager() {
 Mesh* ResourceManager::meshNew(const std::string& name) {
     Mesh* mesh = mesh_[name].ptr();
     if (!mesh) {
+        std::cout << "Loading " << name << std::endl;
         mesh_[name] = mesh = new Mesh(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onMeshNew(mesh);
@@ -38,6 +39,8 @@ Material* ResourceManager::materialNew(const std::string& name) {
     Material* material = material_[name].ptr();
     if (!material) {
         material_[name] = material = new Material(name);
+        
+        std::cout << "Loading " << name << std::endl;
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onMaterialNew(material);
         }
@@ -60,6 +63,7 @@ Transform* ResourceManager::nodeNew(const std::string& name) {
     Transform* node = node_[name].ptr();
     if (!node) {
         node_[name] = node = new Transform();
+        node_[name]->nameIs(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onNodeNew(node);
         }

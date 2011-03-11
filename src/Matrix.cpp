@@ -39,14 +39,38 @@ Matrix Matrix::perspective(float fov, float aspect, float n, float f) {
 }
 
 Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& up) {
+
+    Vector realpos = pos;
     Vector zaxis = (at - pos).unit();
-    Vector xaxis = (zaxis.cross(up)).unit();
+    Vector xaxis = (zaxis.cross(up.unit())).unit();
+    Vector yaxis = (xaxis.cross(zaxis)).unit();
 
+    Matrix data;
+    // Right
+    data[0] = xaxis.x;
+    data[4] = xaxis.y;
+    data[8] = xaxis.z;
+    data[12] = 0.0f;
+    
+    // Up
+    data[1] = yaxis.x;
+    data[5] = yaxis.y;
+    data[9] = yaxis.z;
+    data[13] = 0.0f;
+    
+    // Forward
+    data[2] = zaxis.x;
+    data[6] = zaxis.y;
+    data[10] = zaxis.z;
+    data[14] = 0.0f;
 
-    Matrix R = Matrix(xaxis, up, zaxis);
-    Matrix T = Matrix(pos);
-    Matrix M =  R * T;
-    return M;
+    
+    data[3] = 0.0f;
+    data[7] = 0.0f;
+    data[11] = 0.0f;
+    data[15] = 1.0f;
+
+    return data * Matrix(pos);
 }
 
 Matrix Matrix::scale(float sx, float sy, float sz) {

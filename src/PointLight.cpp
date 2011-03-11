@@ -13,7 +13,7 @@ using namespace SFR;
 
 PointLight::PointLight() {
     constantAttenuation_ = 1.0f;
-    linearAttenuation_ = 0.1f;//1.;//-0.5f;
+    linearAttenuation_ = 1.;
     quadraticAttenuation_ = 0.0f;
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);

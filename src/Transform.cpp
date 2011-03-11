@@ -39,6 +39,10 @@ Iterator<Node> Transform::children() const {
     return children_.elements();
 }
 
+const std::string& Transform::name() const {
+    return name_;
+}
+
 void Transform::transformIs(const Matrix& transform) {
     if (transform_ == transform) {
         return;
@@ -74,6 +78,18 @@ void Transform::rotationIs(const Quaternion& rotation) {
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onRotation();
+    }
+}
+
+void Transform::nameIs(const std::string& name) {
+    if (name == name_) {
+        return;
+    }
+
+    name_ = name;
+
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onName();
     }
 }
 

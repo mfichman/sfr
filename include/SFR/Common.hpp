@@ -46,7 +46,7 @@ class Vector;
 class Frustum;
 class TexCoord;
 class Color;
-class MeshLoader;
+class WavefrontLoader;
 class MaterialLoader;
 class EffectLoader;
 class Camera;

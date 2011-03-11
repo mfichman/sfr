@@ -26,6 +26,7 @@ void main() {
 
 	// Get the normal from the normal map texture and unpack it
 	vec3 Tn = normalize((texture2D(normalMap, texCoord) * 2. - 1.).xyz);
+	Tn = vec3(0, 0, 1.);
 
 	// Create the TBN matrix from the normalized T and N vectors
 	vec3 N = normalize(normal);
@@ -39,7 +40,7 @@ void main() {
 
 	// Save diffuse material parameters
 	gl_FragData[0].rgb = Td * Kd;
-	gl_FragData[0].a = 1.;// position.z;
+	gl_FragData[0].a = position.z;
 
 	// Save the specular material parameters (with shininess)
 	gl_FragData[1].rgb = Ts * Ks;

@@ -12,6 +12,7 @@ using namespace SFR;
 
 World::World() {
     root_ = new Transform;
+    camera_ = new SFR::Camera;
 }
 
 Transform* World::root() const {

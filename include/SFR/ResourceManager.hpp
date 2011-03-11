@@ -40,9 +40,9 @@ private:
     std::map<std::string, Ptr<Texture> > texture_;
     std::map<std::string, Ptr<Transform> > node_;
     std::map<std::string, Ptr<Effect> > effect_;
-    std::vector<Ptr<Notifiee> > notifiee_;
+    std::vector<Notifiee*> notifiee_;
 
-    Ptr<MeshLoader> meshLoader_;
+    Ptr<WavefrontLoader> meshLoader_;
     Ptr<MaterialLoader> materialLoader_;
     Ptr<EffectLoader> effectLoader_;
 };

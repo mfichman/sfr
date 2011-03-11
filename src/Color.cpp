@@ -39,6 +39,5 @@ std::ostream& operator<<(std::ostream& out, const Color& color) {
 }
 
 std::istream& operator>>(std::istream& in, Color& color) {
-    return in >> color.red >> color.blue >> color.green 
-        >> color.alpha;
+    return in >> color.red >> color.blue >> color.green;
 }

@@ -33,11 +33,13 @@ public:
     Vector worldPosition() const;
     Quaternion worldRotation() const;
     Iterator<Node> children() const;
+    const std::string& name() const;
 
     void transformIs(const Matrix& transform);
     void worldTransformIs(const Matrix& transform);
     void positionIs(const Vector& position);
     void rotationIs(const Quaternion& rotation);
+    void nameIs(const std::string& name);
     void childNew(Node* child);
     void childDel(Node* child);
     void notifieeNew(Notifiee* notifiee);
@@ -50,6 +52,7 @@ private:
     Matrix transform_;
     Matrix worldTransform_;
     std::vector<Notifiee*> notifiee_;
+    std::string name_;
 };
 
 class Transform::Notifiee : public Interface {
@@ -58,6 +61,7 @@ public:
     virtual void onWorldTransform() {}
     virtual void onPosition() {}
     virtual void onRotation() {}
+    virtual void onName() {}
     virtual void onChildNew(Node* child) {}
     virtual void onChildDel(Node* child) {}
 };

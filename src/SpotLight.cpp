@@ -12,9 +12,9 @@ using namespace SFR;
 
 SpotLight::SpotLight() {
     constantAttenuation_ = 1.0f;
-    linearAttenuation_ = 0.2f;//-0.5f;
+    linearAttenuation_ = 1.f;
     quadraticAttenuation_ = 0.0f;
-    spotCutoff_ = 15.0f;
+    spotCutoff_ = 30.0f;
     spotPower_ = 20.f;
     direction_ = Vector(0, -1., 0);
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
@@ -102,6 +102,7 @@ void SpotLight::directionIs(const Vector& direction) {
     if (direction_ == direction) {
         return;
     }
+    direction_ = direction;
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onDirection();
