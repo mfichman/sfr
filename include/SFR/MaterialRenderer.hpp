@@ -8,7 +8,6 @@
 
 #include "SFR/Node.hpp"
 #include "SFR/Matrix.hpp"
-#include "SFR/World.hpp"
 
 namespace SFR {
 

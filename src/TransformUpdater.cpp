@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/TransformUpdater.hpp"
 #include "SFR/Camera.hpp"
 #include "SFR/Transform.hpp"

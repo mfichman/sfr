@@ -6,15 +6,12 @@
  *****************************************************************************/
 #pragma once
 
+#include "SFR/Common.hpp"
 #include "SFR/ResourceManager.hpp"
 #include "SFR/Vector.hpp"
 #include "SFR/TexCoord.hpp"
-#include "SFR/AttributeBuffer.hpp"
 #include "SFR/MeshVertex.hpp"
-#include "SFR/Mesh.hpp"
-#include "SFR/IndexBuffer.hpp"
-#include "SFR/Material.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/AttributeBuffer.hpp"
 #include <fstream>
 #include <map>
 #include <memory>

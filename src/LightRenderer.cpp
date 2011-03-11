@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/LightRenderer.hpp"
 #include "SFR/Effect.hpp"
 #include "SFR/Transform.hpp"
@@ -12,8 +13,12 @@
 #include "SFR/HemiLight.hpp"
 #include "SFR/SpotLight.hpp"
 #include "SFR/ResourceManager.hpp"
+#include "SFR/AttributeBuffer.hpp"
+#include "SFR/IndexBuffer.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Camera.hpp"
+#include "SFR/World.hpp"
+#include "SFR/DepthRenderTarget.hpp"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -34,9 +39,9 @@ void LightRenderer::operator()(World* world) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_CLAMP);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
     glBlendFunc(GL_ONE, GL_ONE);
-    glClearColor(0.f, 0.f, 0.f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     world_ = world;
     operator()(world_->root());
@@ -46,7 +51,9 @@ void LightRenderer::operator()(World* world) {
     
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_CLAMP);
+    glDepthFunc(GL_LESS);
 
 }
 
@@ -139,6 +146,9 @@ void LightRenderer::operator()(SpotLight* light) {
     // Set the light color, attenuation, and direction properties
     if (diffuse_ != -1) {
         glUniform3fv(diffuse_, 1, light->diffuseColor());
+    }
+    if (specular_ != -1) {
+        glUniform3fv(specular_, 1, light->specularColor());
     } 
     if (atten0_ != -1) {
         glUniform1f(atten0_, light->constantAttenuation());
@@ -250,8 +260,8 @@ void LightRenderer::operator()(Effect* effect) {
     normalBuffer_ = glGetUniformLocation(effect_->id(), "normalBuffer");
     depthBuffer_ = glGetUniformLocation(effect_->id(), "depthBuffer");
     diffuse_ = glGetUniformLocation(effect_->id(), "Ld");
-    backDiffuse_ = glGetUniformLocation(effect_->id(), "Ldb");
     specular_ = glGetUniformLocation(effect_->id(), "Ls");
+    backDiffuse_ = glGetUniformLocation(effect_->id(), "Ldb");
     atten0_ = glGetUniformLocation(effect_->id(), "atten0");
     atten1_ = glGetUniformLocation(effect_->id(), "atten1");
     atten2_ = glGetUniformLocation(effect_->id(), "atten2");

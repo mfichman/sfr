@@ -8,7 +8,6 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
-#include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
 #include <map>
 #include <vector>
@@ -29,12 +28,14 @@ public:
     const Color& diffuseColor() const;
     const Color& specularColor() const;
     float shininess() const;
+    float opacity() const;
 
     void textureIs(const std::string& name, Texture* texture);
     void ambientColorIs(const Color& color);
     void diffuseColorIs(const Color& color);
     void specularColorIs(const Color& color);
     void shininessIs(float shininess);
+    void opacityIs(float opacity);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
@@ -45,6 +46,7 @@ private:
     Color diffuseColor_;
     Color specularColor_;
     float shininess_;
+    float opacity_;
     std::vector<Notifiee*> notifiee_;
 };
 
@@ -55,6 +57,7 @@ public:
     virtual void onDiffuseColor() {}
     virtual void onSpecularColor() {}
     virtual void onShininess() {}
+    virtual void onOpacity() {}
 };
 
 }

@@ -7,30 +7,33 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
 #include "SFR/Matrix.hpp"
+#include "SFR/Node.hpp"
 
 namespace SFR {
 
-/* Shadow map renderer. */
-class FlatRenderer : public Node::Functor {
+/* Renders transparent meshes with a flat shading technique. */
+class TransparencyRenderer : public Node::Functor {
 public:
-    FlatRenderer(ResourceManager* manager);
+    TransparencyRenderer(ResourceManager* manager);
     void operator()(World* world);
     void operator()(Transform* transform);
-    void operator()(Model* object);
+    void operator()(Model* model);
     void operator()(Mesh* mesh);
+    void operator()(Material* material);
     void operator()(Effect* effect);
     void operator()(AttributeBuffer* buffer);
     void operator()(IndexBuffer* buffer);
 
 private:
-    Matrix transform_;
-    Ptr<World> world_;
+    Matrix modelTransform_;
     Ptr<Effect> effect_;
-    Ptr<Effect> flatShader_;
+    Ptr<Effect> transparencyEffect_;
+    Ptr<World> world_;
 
     GLint attrib_;
+    GLint diffuse_;
+    GLint opacity_;
     GLint position_;
 
     GLint model_;

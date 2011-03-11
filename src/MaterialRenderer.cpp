@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/MaterialRenderer.hpp"
 #include "SFR/Camera.hpp"
 #include "SFR/Transform.hpp"
@@ -14,6 +15,9 @@
 #include "SFR/Effect.hpp"
 #include "SFR/Model.hpp"
 #include "SFR/ResourceManager.hpp"
+#include "SFR/AttributeBuffer.hpp"
+#include "SFR/IndexBuffer.hpp"
+#include "SFR/World.hpp"
 
 using namespace SFR;
 
@@ -23,10 +27,8 @@ MaterialRenderer::MaterialRenderer(ResourceManager* manager) {
 
 void MaterialRenderer::operator()(World* world) {
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
-    //glFrontFace(GL_CW);
-    glClearColor(0.f, 0.f, 0.f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CW);
 
     world_ = world;
     operator()(world_->root());
@@ -34,8 +36,8 @@ void MaterialRenderer::operator()(World* world) {
     // Clear out the effect
     operator()(static_cast<Effect*>(0));
     glDisable(GL_DEPTH_TEST);
-    //glDisable(GL_CULL_FACE);
-    //glFrontFace(GL_CCW);
+    glDisable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
 }
 
 void MaterialRenderer::operator()(Transform* transform) {
@@ -47,12 +49,16 @@ void MaterialRenderer::operator()(Transform* transform) {
     modelTransform_ = previous;
 }
 
-void MaterialRenderer::operator()(Model* object) {
+void MaterialRenderer::operator()(Model* model) {
+    // Skip transparent objects and objects without materials
+    if (!model->material() || model->material()->opacity() < 1.f) {
+        return;
+    }
 
     // Set the material parameters for this mesh
     operator()(modelEffect_.ptr());
-    operator()(object->material());
-    operator()(object->mesh());
+    operator()(model->material());
+    operator()(model->mesh());
 }
 
 void MaterialRenderer::operator()(Mesh* mesh) {
@@ -118,31 +124,17 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
 }
 
 void MaterialRenderer::operator()(Material* material) {
-    if (material) {
-        glUniform3fv(ambient_, 1, material->ambientColor());
-        glUniform3fv(diffuse_, 1, material->diffuseColor());
-        glUniform3fv(specular_, 1, material->specularColor());
-        glUniform1f(shininess_, material->shininess());
+    glUniform3fv(ambient_, 1, material->ambientColor());
+    glUniform3fv(diffuse_, 1, material->diffuseColor());
+    glUniform3fv(specular_, 1, material->specularColor());
+    glUniform1f(shininess_, material->shininess());
 
-        glActiveTexture(GL_TEXTURE0);
-        operator()(material->texture("diffuse"));
-        glActiveTexture(GL_TEXTURE1);
-        operator()(material->texture("specular"));
-        glActiveTexture(GL_TEXTURE2);
-        operator()(material->texture("normal"));
-    } else {
-        glUniform3f(ambient_, 1.f, 1.f, 1.f);
-        glUniform3f(diffuse_, 1.f, 1.f, 1.f);
-        glUniform3f(specular_, 1.f, 1.f, 1.f);
-        glUniform1f(shininess_, 0.f);
-        
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
+    glActiveTexture(GL_TEXTURE0);
+    operator()(material->texture("diffuse"));
+    glActiveTexture(GL_TEXTURE1);
+    operator()(material->texture("specular"));
+    glActiveTexture(GL_TEXTURE2);
+    operator()(material->texture("normal"));
 }
 
 void MaterialRenderer::operator()(Texture* texture) {

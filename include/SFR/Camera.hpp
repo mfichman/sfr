@@ -6,6 +6,7 @@
  *****************************************************************************/
 #pragma once
 
+#include "SFR/Common.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/Frustum.hpp"
 #include "SFR/Matrix.hpp"
@@ -22,7 +23,10 @@ public:
     enum Type { PERSPECTIVE, ORTHOGRAPHIC };
 
     Camera();
-
+    
+    Frustum viewFrustum() const;
+    Matrix projectionTransform() const;
+    const Matrix& viewTransform() const;
     float far() const;
     float near() const;
     float left() const;
@@ -32,9 +36,6 @@ public:
     float fieldOfView() const;
     State state() const;
     Type type() const;
-    Frustum viewFrustum() const;
-    Matrix projectionTransform() const;
-    const Matrix& viewTransform() const;
 
     void farIs(float distance);
     void nearIs(float distance);

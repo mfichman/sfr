@@ -5,12 +5,15 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/ShadowRenderer.hpp"
 #include "SFR/FlatRenderer.hpp"
+#include "SFR/Camera.hpp"
+#include "SFR/World.hpp"
 #include "SFR/PointLight.hpp"
 #include "SFR/SpotLight.hpp"
 #include "SFR/HemiLight.hpp"
-#include "SFR/Camera.hpp"
+#include "SFR/DepthRenderTarget.hpp"
 
 using namespace SFR;
 

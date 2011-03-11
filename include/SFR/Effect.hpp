@@ -8,8 +8,6 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Shader.hpp"
 #include <string>
 #include <vector>
 
@@ -37,8 +35,6 @@ public:
     void notifieeDel(Notifiee* notifiee);
 
 private:
-    class ShaderReactor;
-
     std::string name_;
     Ptr<Shader> fragmentShader_;
     Ptr<Shader> vertexShader_;
@@ -52,15 +48,6 @@ public:
     virtual void onFragmentShader() {}
     virtual void onVertexShader() {}
     virtual void onStatus() {}
-};
-
-class Effect::ShaderReactor : public Shader::Notifiee {
-public:
-    ShaderReactor(Effect* effect);
-    void onStatus();
-
-private:
-    Effect* notifier_;
 };
 
 }

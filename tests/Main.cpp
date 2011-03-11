@@ -11,6 +11,7 @@
 #include <SFR/Transform.hpp>
 #include <SFR/Model.hpp>
 #include <SFR/TransformUpdater.hpp>
+#include <SFR/World.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -30,7 +31,7 @@ float z = -2.f;
 
 void initWindow() {
     // Initialize the window
-    window.reset(new sf::Window(sf::VideoMode(1440, 900, 32), "Window"));
+    window.reset(new sf::Window(sf::VideoMode(1200, 800, 32), "Window"));
     timer.reset(new sf::Clock);
 
     // Load OpenGL extensions and check for required features
@@ -81,9 +82,10 @@ void initLights() {
     light0->linearAttenuationIs(0.01f);
     light0->spotCutoffIs(40.f);
     light0->spotPowerIs(30.f);
+    light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
 
     Ptr<SFR::Transform> node(new SFR::Transform);
-    node->positionIs(SFR::Vector(1.f, 10.f, 0.f));
+    node->positionIs(SFR::Vector(2.f, 10.f, 0.f));
     node->childNew(light0.ptr());
 
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);

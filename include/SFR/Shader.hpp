@@ -7,7 +7,6 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
 #include <string>
 #include <vector>
 
@@ -42,7 +41,7 @@ private:
     std::vector<Notifiee*> notifiee_;
 };
 
-class Shader::Notifiee : public Node {
+class Shader::Notifiee : public Interface {
 public:
     virtual void onSource() {}
     virtual void onStatus() {}

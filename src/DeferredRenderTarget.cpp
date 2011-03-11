@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/DeferredRenderTarget.hpp"
 #include <algorithm>
 #include <stdexcept>
@@ -13,11 +14,13 @@ using namespace SFR;
 
 DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
     target_.resize(n);
-    
+
+    status_ = DISABLED;
+            
     // Initialize the framebuffer, which will hold all of the target textures
     glGenFramebuffers(1, &id_);
     glBindFramebuffer(GL_FRAMEBUFFER, id_);
-    
+
     // Initialize all the render target textures, and bind them to the FBO
     glGenTextures(target_.size(), &target_[0]);
     for (size_t i = 0; i < target_.size(); i++) {
@@ -48,8 +51,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
 
     // Test the framebuffer configuration
     statusIs(ENABLED);
-    GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (GL_FRAMEBUFFER_COMPLETE != status) {
+    if (GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
         throw std::runtime_error("Invalid framebuffer configuration");
     }
     statusIs(DISABLED);

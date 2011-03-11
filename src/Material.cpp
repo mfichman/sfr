@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/Material.hpp"
 #include "SFR/Texture.hpp"
 #include <algorithm>
@@ -14,6 +15,7 @@ using namespace SFR;
 Material::Material(const std::string& name) {
     name_ = name;
     shininess_ = 40.f;
+    opacity_ = 1.f;
     ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
@@ -48,6 +50,10 @@ const Color& Material::specularColor() const {
 
 float Material::shininess() const {
     return shininess_;
+}
+
+float Material::opacity() const {
+    return opacity_;
 }
 
 void Material::textureIs(const std::string& name, Texture* texture) {
@@ -102,6 +108,17 @@ void Material::shininessIs(float shininess) {
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onShininess();
+    }
+}
+
+void Material::opacityIs(float opacity) {
+    if (opacity_ == opacity) {
+        return;
+    }
+    opacity_ = opacity;
+
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onOpacity();
     }
 }
 

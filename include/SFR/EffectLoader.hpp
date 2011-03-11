@@ -6,8 +6,8 @@
  *****************************************************************************/
 #pragma once
 
+#include "SFR/Common.hpp"
 #include "SFR/ResourceManager.hpp"
-#include "SFR/Effect.hpp"
 
 namespace SFR {
 

@@ -4,17 +4,17 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
+  
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+attribute vec3 positionIn;
 
-using namespace SFR;
+/* Deferred render point light shader */
+void main() {
+	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 
-Node* Node::next() const {
-    return next_.ptr();
-
-}
-
-void Node::nextIs(Node* node) {
-    next_ = node;
+	// Transform the vertex to get the clip-space position of the vertex
+	gl_Position = transform * vec4(positionIn, 1);
 }

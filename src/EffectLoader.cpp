@@ -5,7 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/ 
 
+#include "SFR/Common.hpp"
 #include "SFR/EffectLoader.hpp"
+#include "SFR/Effect.hpp"
+#include "SFR/Shader.hpp"
 #include <iostream>
 #include <fstream>
 

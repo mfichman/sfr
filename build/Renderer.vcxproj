@@ -28,6 +28,11 @@
     <ClCompile Include="..\src\MaterialRenderer.cpp" />
     <ClCompile Include="..\src\Matrix.cpp" />
     <ClCompile Include="..\src\Mesh.cpp" />
+    <ClCompile Include="..\src\Common.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="..\src\TransparencyRenderer.cpp" />
     <ClCompile Include="..\src\WavefrontLoader.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
     <ClCompile Include="..\src\MeshVertex.cpp" />
@@ -57,6 +62,8 @@
     <None Include="..\shaders\PointLight.vert" />
     <None Include="..\shaders\SpotLight.frag" />
     <None Include="..\shaders\SpotLight.vert" />
+    <None Include="..\shaders\Transparency.frag" />
+    <None Include="..\shaders\Transparency.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\SFR\AttributeBuffer.hpp" />
@@ -80,6 +87,7 @@
     <ClInclude Include="..\include\SFR\MaterialRenderer.hpp" />
     <ClInclude Include="..\include\SFR\Matrix.hpp" />
     <ClInclude Include="..\include\SFR\Mesh.hpp" />
+    <ClInclude Include="..\include\SFR\TransparencyRenderer.hpp" />
     <ClInclude Include="..\include\SFR\WavefrontLoader.hpp" />
     <ClInclude Include="..\include\SFR\Model.hpp" />
     <ClInclude Include="..\include\SFR\MeshVertex.hpp" />
@@ -133,6 +141,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\include;</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SFR/Common.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -5,9 +5,15 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Vector.hpp"
 #include "SFR/TexCoord.hpp"
+#include "SFR/AttributeBuffer.hpp"
+#include "SFR/IndexBuffer.hpp"
+#include "SFR/Node.hpp"
+#include "SFR/Effect.hpp"
+#include "SFR/Material.hpp"
 #include <algorithm>
 
 using namespace SFR;

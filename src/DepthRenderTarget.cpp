@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/DepthRenderTarget.hpp"
 #include <algorithm>
 #include <stdexcept>

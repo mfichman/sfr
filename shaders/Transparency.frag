@@ -5,16 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+ uniform vec3 Kd;
+ uniform float alpha;
 
-using namespace SFR;
-
-Node* Node::next() const {
-    return next_.ptr();
-
-}
-
-void Node::nextIs(Node* node) {
-    next_ = node;
-}
+ /* Transparency forward-rendered shader (no lighting :( ) */
+ void main() {
+	gl_FragColor = vec4(Kd, alpha);
+ }

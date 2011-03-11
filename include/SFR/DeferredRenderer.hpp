@@ -7,11 +7,7 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/MaterialRenderer.hpp"
-#include "SFR/LightRenderer.hpp"
 #include "SFR/Node.hpp"
-#include "SFR/Matrix.hpp"
-#include "SFR/DeferredRenderTarget.hpp"
 
 namespace SFR {
 
@@ -24,6 +20,7 @@ public:
 private:
     Ptr<MaterialRenderer> materialPass_;
     Ptr<LightRenderer> lightPass_;
+    Ptr<TransparencyRenderer> transparencyPass_;
     Ptr<DeferredRenderTarget> renderTarget_;
 };
 

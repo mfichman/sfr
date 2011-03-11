@@ -7,12 +7,7 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
-#include "SFR/AttributeBuffer.hpp"
-#include "SFR/IndexBuffer.hpp"
 #include "SFR/Node.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Material.hpp"
 #include "SFR/Mesh.hpp"
 #include <string>
 #include <map>

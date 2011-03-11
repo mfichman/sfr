@@ -7,16 +7,12 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/List.hpp"
 #include "SFR/Quaternion.hpp"
 #include "SFR/Matrix.hpp"
 #include "SFR/Vector.hpp"
 #include "SFR/Iterator.hpp"
-#include "SFR/Matrix.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/Quaternion.hpp"
 #include <vector>
 
 namespace SFR {

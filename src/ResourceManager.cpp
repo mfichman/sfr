@@ -5,6 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/ResourceManager.hpp"
 #include "SFR/WavefrontLoader.hpp"
 #include "SFR/Mesh.hpp"
@@ -12,6 +13,7 @@
 #include "SFR/Texture.hpp"
 #include "SFR/Transform.hpp"
 #include "SFR/EffectLoader.hpp"
+#include "SFR/Effect.hpp"
 #include <algorithm>
 
 using namespace SFR;

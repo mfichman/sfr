@@ -7,8 +7,6 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
-#include "SFR/DepthRenderTarget.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
 #include "SFR/Vector.hpp"

@@ -5,7 +5,9 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/Effect.hpp"
+#include "SFR/Shader.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -129,12 +131,4 @@ void Effect::notifieeNew(Notifiee* notifiee) {
 
 void Effect::notifieeDel(Notifiee* notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-Effect::ShaderReactor::ShaderReactor(Effect* effect) {
-    notifier_ = effect;
-}
-
-void Effect::ShaderReactor::onStatus() {
-    notifier_->statusIs(Effect::DIRTY);
 }

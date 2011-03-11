@@ -34,8 +34,8 @@ void main() {
 	// Make sure the depth is unpacked into clip coordinates.
 	vec2 normalized = position.xy/position.w;
 	vec2 viewport = vec2((normalized.x + 1.)/2., (normalized.y + 1.)/2.);
-	float depth = texture2D(depthBuffer, viewport).r * 2. - 1.;
-	vec4 eyePosition = unprojectMatrix * vec4(normalized, depth, 1.);
+	float depth = texture2D(depthBuffer, viewport).r;
+	vec4 eyePosition = unprojectMatrix * vec4(normalized, 2. * depth - 1., 1.);
 	eyePosition = eyePosition/eyePosition.w;
 	
 	// Sample the materials using the screen position
@@ -62,15 +62,16 @@ void main() {
 		vec3 diffuse = Kd * Ld * Rd;
 
 		// Calculate the specular color coefficient
-		vec3 specular = Ks * Ls * pow(max(0., dot(L, R)), 20.);
+		vec3 specular = Ks * Ls * pow(max(0., dot(L, R)), alpha);
 
 		// Calculate the shadow coord
 		//vec4 shadowCoord = ?
 		gl_FragColor = vec4(diffuse + specular, 1.);
 		gl_FragColor.xyz *= atten * pow(spotEffect, spotPower);
+		//gl_FragColor = vec4(Ls, 1.);
 	} else {
 		gl_FragColor = vec4(0., 0., 0., 1.);
 	}
 
-	//gl_FragColor += vec4(0.1f);
+	gl_FragDepth = depth;
 }

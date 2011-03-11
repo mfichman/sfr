@@ -5,9 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-
-#include "SFR/Camera.hpp"
 #include "SFR/Common.hpp"
+#include "SFR/Camera.hpp"
 #include "SFR/Vector.hpp"
 #include <cmath>
 

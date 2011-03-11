@@ -5,7 +5,9 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#include "SFR/Common.hpp"
 #include "SFR/World.hpp"
+#include "SFR/Camera.hpp"
 #include <algorithm>
 
 using namespace SFR;

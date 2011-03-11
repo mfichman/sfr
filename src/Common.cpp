@@ -5,16 +5,6 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+// This file exists soley to generate precompiled headers for the rest of 
+// the project
 #include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-
-using namespace SFR;
-
-Node* Node::next() const {
-    return next_.ptr();
-
-}
-
-void Node::nextIs(Node* node) {
-    next_ = node;
-}

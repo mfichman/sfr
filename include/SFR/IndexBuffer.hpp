@@ -7,7 +7,7 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+#include "SFR/Interface.hpp"
 #include <string>
 #include <vector>
 
