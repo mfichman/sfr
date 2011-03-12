@@ -1,5 +1,5 @@
 #include <SFR/Common.hpp>
-#include <SFR/DeferredRenderTarget.hpp>
+#include <SFR/DepthRenderTarget.hpp>
 #include <SFR/ResourceManager.hpp>
 #include <SFR/Mesh.hpp>
 #include <SFR/Camera.hpp>
@@ -7,6 +7,7 @@
 #include <SFR/HemiLight.hpp>
 #include <SFR/SpotLight.hpp>
 #include <SFR/DeferredRenderer.hpp>
+#include <SFR/ShadowRenderer.hpp>
 #include <SFR/Material.hpp>
 #include <SFR/Transform.hpp>
 #include <SFR/Model.hpp>
@@ -21,8 +22,9 @@ using namespace SFR;
 std::auto_ptr<sf::Window> window;
 std::auto_ptr<sf::Clock> timer;
 Ptr<SFR::ResourceManager> manager;
-Ptr<SFR::DeferredRenderer> renderer;
+Ptr<SFR::DeferredRenderer> deferredRenderer;
 Ptr<SFR::TransformUpdater> updater;
+Ptr<SFR::ShadowRenderer> shadowRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::Transform> camera;
 float elapsedTime = 0.f;
@@ -48,7 +50,8 @@ void initWindow() {
 
     // Set up the renderer, resources, manager, etc.
     manager = new SFR::ResourceManager;
-    renderer = new SFR::DeferredRenderer(manager.ptr());
+    deferredRenderer = new SFR::DeferredRenderer(manager.ptr());
+    shadowRenderer = new SFR::ShadowRenderer(manager.ptr());
     updater = new SFR::TransformUpdater;
     world = new SFR::World;
 }
@@ -77,12 +80,13 @@ void initCamera() {
 
 void initLights() {
 
-    
+    Ptr<SFR::DepthRenderTarget> shadowMap(new DepthRenderTarget(512, 512));
     Ptr<SFR::SpotLight> light0(new SFR::SpotLight);
     light0->linearAttenuationIs(0.01f);
     light0->spotCutoffIs(40.f);
     light0->spotPowerIs(30.f);
     light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
+    light0->shadowMapIs(shadowMap.ptr());
 
     Ptr<SFR::Transform> node(new SFR::Transform);
     node->positionIs(SFR::Vector(2.f, 10.f, 0.f));
@@ -105,6 +109,8 @@ void initLights() {
 
     
     
+
+
     /*
     Ptr<SFR::Transform> light0(new SFR::Transform);
     light0->childNew(new SFR::PointLight);
@@ -122,6 +128,9 @@ void initLights() {
     world->root()->childNew(light0.ptr());
     world->root()->childNew(light1.ptr());
     //world->root()->childNew(light2.ptr());*/
+
+    updater(world.ptr());
+    shadowRenderer(world.ptr());
 }
 
 void handleInput() {
@@ -165,7 +174,7 @@ void runRenderLoop() {
         handleInput();
 
         updater(world.ptr());
-        renderer(world.ptr());
+        deferredRenderer(world.ptr());
         window->Display();
     }
 }
@@ -175,8 +184,8 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-        initLights();
         initModels();
+        initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;

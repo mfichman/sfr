@@ -120,7 +120,7 @@ void LightRenderer::operator()(HemiLight* light) {
         glUniform1f(atten2_, light->quadraticAttenuation());
     }
     if (direction_ != -1) {
-        Matrix transform = world_->camera()->viewTransform() * modelTransform_;
+        Matrix transform = modelTransform_ * world_->camera()->viewTransform();
         Vector direction = transform.normal(light->direction().unit());
         glUniform3fv(direction_, 1, direction);
     }
@@ -167,7 +167,8 @@ void LightRenderer::operator()(SpotLight* light) {
         glUniform1f(spotPower_, light->spotPower());
     }
     if (direction_ != -1) {
-        Matrix transform = world_->camera()->viewTransform() * modelTransform_;
+        Matrix transform = modelTransform_ * world_->camera()->viewTransform();
+        //* modelTransform_;
         Vector direction = transform.normal(light->direction().unit());
         glUniform3fv(direction_, 1, direction);
     }
@@ -183,7 +184,7 @@ void LightRenderer::operator()(SpotLight* light) {
     Vector forward = light->direction().unit();
     Vector up = forward.orthogonal();
     Vector right = up.cross(forward);
-    modelTransform_ = modelTransform_ * Matrix(right, up, forward);
+    modelTransform_ =  modelTransform_ * Matrix(right, up, forward);
 
     // Scale model to cover the light's area of effect.
     static const float margin = 2.f;

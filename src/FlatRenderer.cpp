@@ -20,12 +20,16 @@
 using namespace SFR;
 
 FlatRenderer::FlatRenderer(ResourceManager* manager) {
-    flatShader_ = manager->effect("shaders/Flat");
+    flatShader_ = manager->effectNew("shaders/Flat");
 }
 
 void FlatRenderer::operator()(World* world) {
+    glEnable(GL_DEPTH_TEST);
+
     world_ = world;
     operator()(world_->root());
+
+    glDisable(GL_DEPTH_TEST);
 }
 
 void FlatRenderer::operator()(Transform* transform) {

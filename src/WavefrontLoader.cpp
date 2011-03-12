@@ -184,7 +184,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
         // Process the texCoord of the vertex
         in >> index;
         if (in.fail() || (index-1) >= texCoord_.size()) {
-            //throw std::runtime_error("Invalid mesh: " + mesh_->name());
+            throw std::runtime_error("Invalid mesh: " + mesh_->name());
         } else {
             face[i].texCoord = texCoord_[index-1];
         }

@@ -85,11 +85,12 @@ void ShadowRenderer::operator()(SpotLight* light) {
         return;
     }
 
+    
     // Set up the view matrix for the virtual light camera
     Vector forward = light->direction().unit();
-    Vector right = forward.orthogonal();
-    Vector up = right.cross(forward);
-    Matrix lightTransform = Matrix(right, up, forward) * transform_;
+    Vector up = forward.orthogonal();
+    Vector right = up.cross(forward);
+    Matrix lightTransform = transform_ * Matrix(right, up, forward);
     
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
@@ -99,11 +100,20 @@ void ShadowRenderer::operator()(SpotLight* light) {
     lightCamera->farIs(light->radiusOfEffect());
     lightCamera->typeIs(Camera::PERSPECTIVE);
 
+    lightCamera->nearIs(-10.f);
+    lightCamera->farIs(10.f);
+    lightCamera->leftIs(-10.f);
+    lightCamera->rightIs(10.f);
+    lightCamera->bottomIs(-10.f);
+    lightCamera->topIs(10.f);
+    lightCamera->typeIs(Camera::ORTHOGRAPHIC);
+    
     // Save the current view camera
     Ptr<Camera> sceneCamera = world_->camera();
 
     // Render the scene into the shadow map from light perspective
     light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
+    glClear(GL_DEPTH_BUFFER_BIT);
     world_->cameraIs(lightCamera.ptr());
     flatRenderer_(world_.ptr());
     world_->cameraIs(sceneCamera.ptr());
