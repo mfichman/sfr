@@ -30,6 +30,7 @@ public:
     float spotPower() const;
     float radiusOfEffect() const;
     DepthRenderTarget* shadowMap() const;
+    Camera* camera() const;
 
     void diffuseColorIs(const Color& diffuse);
     void specularColorIs(const Color& specular);
@@ -56,6 +57,7 @@ private:
     Vector direction_;
     std::vector<Notifiee*> notifiee_;
     Ptr<DepthRenderTarget> shadowMap_;
+    Ptr<Camera> camera_;
 };
 
 class SpotLight::Notifiee : public Interface {

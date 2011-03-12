@@ -28,8 +28,8 @@ Ptr<SFR::ShadowRenderer> shadowRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::Transform> camera;
 float elapsedTime = 0.f;
-float x = -4.f;
-float z = -2.f;
+float x = 3.1f;
+float z = 1.8f;
 
 void initWindow() {
     // Initialize the window
@@ -60,15 +60,11 @@ void initModels() {
     // Initialize the models that are part of the scene
     Ptr<SFR::Transform> plane = manager->nodeNew("meshes/Plane.obj");
     plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
-
-    Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
-    sphere->positionIs(SFR::Vector(0.f, 2.f, 0.f));   
     
     Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
     car->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
     world->root()->childNew(plane.ptr());
-    //world->root()->childNew(sphere.ptr());
     world->root()->childNew(car.ptr());
 }
 
@@ -95,39 +91,17 @@ void initLights() {
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
     light1->backDiffuseColorIs(SFR::Color(0.f, 0.f, 0.1f, 1.f));
-    light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
+    light1->directionIs(SFR::Vector(-1.f, 0.f, 0.f));
 
     Ptr<SFR::HemiLight> light2(new SFR::HemiLight);
     light2->linearAttenuationIs(0.1f);
     light2->backDiffuseColorIs(SFR::Color(0.f, 0.f, 0.1f, 1.f));
     light2->diffuseColorIs(SFR::Color(0.3f, 0.3f, 0.3f, 1.f));
-    light2->directionIs(SFR::Vector(0.f, 1.f, 0.f));
+    light2->directionIs(SFR::Vector(0.f, -1.f, 0.f));
 
     world->root()->childNew(light1.ptr());
-    //world->root()->childNew(light2.ptr());
+    world->root()->childNew(light2.ptr());
     world->root()->childNew(node.ptr());
-
-    
-    
-
-
-    /*
-    Ptr<SFR::Transform> light0(new SFR::Transform);
-    light0->childNew(new SFR::PointLight);
-    light0->positionIs(SFR::Vector(0.f, 3.f, 2.f));
-
-    Ptr<SFR::Transform> light1(new SFR::Transform);
-    light1->childNew(new SFR::SpotLight);
-    light1->positionIs(SFR::Vector(0.f, 6.f, 0.f));
-
-    Ptr<SFR::Transform> light2(new SFR::Transform);
-    light2->childNew(new SFR::HemiLight);
-    light2->positionIs(SFR::Vector(0.f, 0.f, 0.f));
-       
-
-    world->root()->childNew(light0.ptr());
-    world->root()->childNew(light1.ptr());
-    //world->root()->childNew(light2.ptr());*/
 
     updater(world.ptr());
     shadowRenderer(world.ptr());
@@ -147,10 +121,10 @@ void handleInput() {
     }
 
     if (window->GetInput().IsKeyDown(sf::Key::Left)) {
-        x -= 2.f * elapsedTime;
+        x += 2.f * elapsedTime;
     } 
     if (window->GetInput().IsKeyDown(sf::Key::Right)) {
-        x += 2.f * elapsedTime;
+        x -= 2.f * elapsedTime;
     }
     if (window->GetInput().IsKeyDown(sf::Key::Up)) {
         z -= 2.f * elapsedTime;
@@ -160,8 +134,8 @@ void handleInput() {
     }
 
     camera->transformIs(SFR::Matrix::look(
-        SFR::Vector(x, -1., z),
-        SFR::Vector(0.f, -0.5f, 0.f),
+        SFR::Vector(x, .9f, z),
+        SFR::Vector(0.f, -0.3f, 0.f),
         SFR::Vector(0.f, 1.f, 0.f)));
 }
 

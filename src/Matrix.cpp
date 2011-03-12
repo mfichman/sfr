@@ -42,7 +42,7 @@ Matrix Matrix::perspective(float fov, float aspect, float n, float f) {
 Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& up) {
 
     Vector realpos = pos;
-    Vector zaxis = (at - pos).unit();
+    Vector zaxis = (at + pos).unit();
     Vector xaxis = (zaxis.cross(up.unit())).unit();
     Vector yaxis = (xaxis.cross(zaxis)).unit();
 
@@ -71,7 +71,7 @@ Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& up) {
     data[11] = 0.0f;
     data[15] = 1.0f;
 
-    return data * Matrix(pos);
+    return data * Matrix(-pos);
 }
 
 Matrix Matrix::scale(float sx, float sy, float sz) {

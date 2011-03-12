@@ -11,7 +11,7 @@ uniform sampler2D specularBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D depthBuffer;
 
-uniform float atten0;
+uniform float atten0; 
 uniform float atten1;
 uniform float atten2;
 uniform vec3 Ld;
@@ -21,7 +21,7 @@ uniform float spotPower;
 uniform vec3 direction;
 
 uniform mat4 unprojectMatrix; // Back to view coordinates
-uniform mat4 lightMatrix; // From world coordinates to light space
+uniform mat4 lightMatrix; // From eye coordinates to light space
 
 varying vec3 lightPosition;
 varying vec4 position;

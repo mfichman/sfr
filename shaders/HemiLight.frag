@@ -39,7 +39,7 @@ void main() {
 
 	// Sample the normal and the view vector
 	vec3 N = texture2D(normalBuffer, viewport).xyz * 2. - 1.;
-	vec3 L = -direction;
+	vec3 L = direction;
 	float D = length(lightPosition - eyePosition.xyz);
 	float atten = 1./(atten0 + atten1 * D + atten2 * D * D);
 
