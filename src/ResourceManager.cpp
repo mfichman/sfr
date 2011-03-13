@@ -8,6 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/ResourceManager.hpp"
 #include "SFR/WavefrontLoader.hpp"
+#include "SFR/TextureLoader.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Material.hpp"
 #include "SFR/Texture.hpp"
@@ -21,8 +22,10 @@ using namespace SFR;
 ResourceManager::ResourceManager() {
     meshLoader_ = new WavefrontLoader(this);
     effectLoader_ = new EffectLoader;
+    textureLoader_ = new TextureLoader;
     notifieeNew(meshLoader_.ptr());
     notifieeNew(effectLoader_.ptr());
+    notifieeNew(textureLoader_.ptr());
 }
 
 Mesh* ResourceManager::meshNew(const std::string& name) {

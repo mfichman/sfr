@@ -44,7 +44,7 @@ private:
 
 class Mesh::Notifiee : public Interface {
 public:
-    virtual void onAttributeBuffer(const std::string& name);
+    virtual void onAttributeBuffer(const std::string& name) {}
     virtual void onIndexBuffer() {}
     virtual void onStatus() {}
 };

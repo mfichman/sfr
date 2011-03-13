@@ -16,13 +16,16 @@
 #define NOMINMAX
 #include <windows.h>
 #include <GL/glew.h>
+#include <GL/GL.h>
 #endif
 #ifdef __linux__
 #define SFR_USE_GLEW
 #include <GL/glew.h>
+#include <GL/GL.h>
 #endif
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
+#ifdef __APPLE__
+#include <OpenGL/GL.h>
+#endif
 
 #include "SFR/Ptr.hpp"
 
@@ -58,6 +61,7 @@ class Color;
 class WavefrontLoader;
 class MaterialLoader;
 class EffectLoader;
+class TextureLoader;
 class Camera;
 class ResourceManager;
 class DepthRenderTarget;

@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include <stdexcept>
+#include <vector>
 
 namespace SFR {
 
@@ -45,6 +46,7 @@ private:
     Ptr<WavefrontLoader> meshLoader_;
     Ptr<MaterialLoader> materialLoader_;
     Ptr<EffectLoader> effectLoader_;
+    Ptr<TextureLoader> textureLoader_;
 };
 
 class ResourceManager::Notifiee : public Interface {
