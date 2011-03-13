@@ -46,7 +46,7 @@ void main() {
 	float Rd = dot(N, L);
 
 	// Calculate the diffuse color coefficient by mixing front & back
-	vec3 diffuse = Kd * mix(Ld, Ldb, (Rd + 1.)/2.) * abs(Rd);
+	vec3 diffuse = Kd * mix(Ld, Ldb, (Rd + 1.)/2.);// * abs(Rd);
 
 	gl_FragColor = vec4(diffuse, 1.);
 	gl_FragColor.xyz *= atten;

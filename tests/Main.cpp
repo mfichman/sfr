@@ -74,24 +74,24 @@ void initLights() {
     light0->shadowMapIs(shadowMap.ptr());
     light0->directionIs(SFR::Vector(0, -1, 0));
 
-    Ptr<SFR::Transform> node(new SFR::Transform);
-    node->positionIs(SFR::Vector(-3.f, 10.f, 0.f));
-    node->childNew(light0.ptr());
+    Ptr<SFR::Transform> node0(new SFR::Transform);
+    node0->positionIs(SFR::Vector(-2.f, 8.f, 0.f));
+    node0->childNew(light0.ptr());
     
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
-    light1->backDiffuseColorIs(SFR::Color(0.f, 0.f, 0.1f, 1.f));
+    light1->backDiffuseColorIs(SFR::Color(0.2f, 0.2f, 0.2f, 1.f));
     light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
 
     Ptr<SFR::HemiLight> light2(new SFR::HemiLight);
     light2->linearAttenuationIs(0.1f);
     light2->backDiffuseColorIs(SFR::Color(0.f, 0.f, 0.1f, 1.f));
-    light2->diffuseColorIs(SFR::Color(0.3f, 0.3f, 0.3f, 1.f));
+    light2->diffuseColorIs(SFR::Color(0.1f, 0.1f, 0.1f, 1.f));
     light2->directionIs(SFR::Vector(0.f, -1.f, 0.f));
 
     world->root()->childNew(light1.ptr());
     world->root()->childNew(light2.ptr());
-    world->root()->childNew(node.ptr());
+    world->root()->childNew(node0.ptr());
 
     updater(world.ptr());
     shadowRenderer(world.ptr());
