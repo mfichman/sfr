@@ -40,6 +40,7 @@ void LightRenderer::operator()(World* world) {
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_CLAMP);
     glEnable(GL_DEPTH_TEST);
+    glCullFace(GL_FRONT);
     glDepthFunc(GL_ALWAYS);
     glBlendFunc(GL_ONE, GL_ONE);
 
@@ -53,6 +54,7 @@ void LightRenderer::operator()(World* world) {
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_DEPTH_CLAMP);
+    glCullFace(GL_BACK);
     glDepthFunc(GL_LESS);
 
 }
@@ -167,8 +169,7 @@ void LightRenderer::operator()(SpotLight* light) {
         glUniform1f(spotPower_, light->spotPower());
     }
     if (direction_ != -1) {
-        Matrix transform = modelTransform_ * world_->camera()->viewTransform();
-        //* modelTransform_;
+        Matrix transform = world_->camera()->viewTransform() * modelTransform_;
         Vector direction = transform.normal(light->direction().unit());
         glUniform3fv(direction_, 1, direction);
     }
@@ -179,22 +180,20 @@ void LightRenderer::operator()(SpotLight* light) {
 
     // Save the old model matrix
     Matrix previous = modelTransform_;
-    
-    // Transform the light to point in the correct direction
-    Vector forward = light->direction().unit();
-    Vector up = forward.orthogonal();
-    Vector right = up.cross(forward);
-    modelTransform_ =  modelTransform_ * Matrix(right, up, forward);
 
     // Scale model to cover the light's area of effect.
     static const float margin = 2.f;
     float radius = light->radiusOfEffect();
     float cutoff = light->spotCutoff() + margin;
-    float scale = std::tan((float)M_PI * cutoff / 180.f);
-    float sx = scale * radius;
-    float sy = scale * radius;
+    float width = std::tan((float)M_PI * cutoff / 180.f);
+    float sx = width * radius;
+    float sy = width * radius;
     float sz = radius;
-    modelTransform_ = modelTransform_ * Matrix::scale(sx, sy, sz);
+    
+    // Transform the light to point in the correct direction
+    Matrix rotate = Matrix::look(light->direction());
+    Matrix scale = Matrix::scale(sx, sy, sz);
+    modelTransform_ = modelTransform_ * rotate * scale;
 
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitCone_.ptr());

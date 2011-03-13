@@ -28,8 +28,8 @@ Ptr<SFR::ShadowRenderer> shadowRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::Transform> camera;
 float elapsedTime = 0.f;
-float x = 3.1f;
-float z = 1.8f;
+float z = 3.1f;
+float x = -1.8f;
 
 void initWindow() {
     // Initialize the window
@@ -56,17 +56,6 @@ void initWindow() {
     world = new SFR::World;
 }
 
-void initModels() {
-    // Initialize the models that are part of the scene
-    Ptr<SFR::Transform> plane = manager->nodeNew("meshes/Plane.obj");
-    plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
-    
-    Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
-    car->positionIs(SFR::Vector(0.f, 0.f, 0.f));
-
-    world->root()->childNew(plane.ptr());
-    world->root()->childNew(car.ptr());
-}
 
 void initCamera() {
     camera = new SFR::Transform;
@@ -79,19 +68,20 @@ void initLights() {
     Ptr<SFR::DepthRenderTarget> shadowMap(new DepthRenderTarget(512, 512));
     Ptr<SFR::SpotLight> light0(new SFR::SpotLight);
     light0->linearAttenuationIs(0.01f);
-    light0->spotCutoffIs(40.f);
-    light0->spotPowerIs(30.f);
+    light0->spotCutoffIs(30.f);
+    light0->spotPowerIs(40.f);
     light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
     light0->shadowMapIs(shadowMap.ptr());
+    light0->directionIs(SFR::Vector(0, -1, 0));
 
     Ptr<SFR::Transform> node(new SFR::Transform);
-    node->positionIs(SFR::Vector(2.f, 10.f, 0.f));
+    node->positionIs(SFR::Vector(-3.f, 10.f, 0.f));
     node->childNew(light0.ptr());
-
+    
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
     light1->backDiffuseColorIs(SFR::Color(0.f, 0.f, 0.1f, 1.f));
-    light1->directionIs(SFR::Vector(-1.f, 0.f, 0.f));
+    light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
 
     Ptr<SFR::HemiLight> light2(new SFR::HemiLight);
     light2->linearAttenuationIs(0.1f);
@@ -135,8 +125,31 @@ void handleInput() {
 
     camera->transformIs(SFR::Matrix::look(
         SFR::Vector(x, .9f, z),
-        SFR::Vector(0.f, -0.3f, 0.f),
+        SFR::Vector(0.f, 0.3f, 0.f),
         SFR::Vector(0.f, 1.f, 0.f)));
+
+   // SFR::Matrix translate = SFR::Matrix::translate(SFR::Vector(0, 0, 5.f));
+
+    //SFR::Matrix rotate = SFR::Matrix::look(SFR::Vector(0, 0, 0)); 
+
+
+   // camera->transformIs(translate);
+}
+
+void initModels() {
+    // Initialize the models that are part of the scene
+    Ptr<SFR::Transform> plane = manager->nodeNew("meshes/Plane.obj");
+    plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
+
+    Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
+    sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
+    
+    Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
+    car->positionIs(SFR::Vector(0.f, 0.f, 0.f));
+
+    world->root()->childNew(sphere.ptr());
+    world->root()->childNew(plane.ptr());
+    world->root()->childNew(car.ptr());
 }
 
 void runRenderLoop() {

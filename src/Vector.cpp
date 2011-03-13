@@ -111,7 +111,7 @@ Vector Vector::unit() const {
 Vector Vector::orthogonal() const {
     
     Vector ortho = cross(Vector(1.0f, 0.0f, 0.0f));
-    if (ortho.lengthSquared() < 1e-12) {
+    if (ortho.lengthSquared() < 1e-8) {
         ortho = cross(Vector(0.0f, 1.0f, 0.0f));
     }
     

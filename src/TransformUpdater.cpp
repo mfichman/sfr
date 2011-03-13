@@ -31,5 +31,5 @@ void TransformUpdater::operator()(Transform* transform) {
 }
 
 void TransformUpdater::operator()(Camera* camera) {
-    camera->viewTransformIs(transform_);
+    camera->viewTransformIs(transform_.inverse());
 }

@@ -68,8 +68,8 @@ void ShadowRenderer::operator()(PointLight* light) {
         Vector up = right.cross(forward[i]);
 
         // Set up virtual light camera
-        Matrix lightTransform = Matrix(right, up, forward[i]) * transform_;
-        lightCamera->viewTransformIs(lightTransform);
+        //Matrix lightTransform = Matrix(right, up, forward[i]) * transform_;
+        //lightCamera->viewTransformIs(lightTransform);
 
         // Render the scene into the cube map face
         //light->shadowMap()->statusIs(axis[i]);
@@ -87,10 +87,7 @@ void ShadowRenderer::operator()(SpotLight* light) {
 
     
     // Set up the view matrix for the virtual light camera
-    Vector forward = light->direction().unit();
-    Vector up = forward.orthogonal();
-    Vector right = up.cross(forward);
-    Matrix lightTransform = transform_ * Matrix(right, up, forward);
+    Matrix lightTransform = transform_ * Matrix::look(light->direction());
     
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);

@@ -39,67 +39,48 @@ Matrix Matrix::perspective(float fov, float aspect, float n, float f) {
 	return Matrix::frustum(left, right, bottom, top, n, f);
 }
 
-Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& up) {
+Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& sky) {
+    Vector forward = (pos - at).unit();
+    Vector right = sky.unit().cross(forward);
+    Vector up = forward.cross(right);
 
-    Vector realpos = pos;
-    Vector zaxis = (at + pos).unit();
-    Vector xaxis = (zaxis.cross(up.unit())).unit();
-    Vector yaxis = (xaxis.cross(zaxis)).unit();
+    return Matrix::translate(pos) * Matrix::rotate(right, up, forward);
+  /*
+    //INVERSE:
+    Vector forward = (pos - at).unit();
+    Vector right = sky.unit().cross(forward);
+    Vector up = forward.cross(right);
 
     Matrix data;
-    // Right
-    data[0] = xaxis.x;
-    data[4] = xaxis.y;
-    data[8] = xaxis.z;
-    data[12] = 0.0f;
+    data[0] = right.x;
+    data[1] = up.x;
+    data[2] = forward.x;
+    data[3] = 0;
     
-    // Up
-    data[1] = yaxis.x;
-    data[5] = yaxis.y;
-    data[9] = yaxis.z;
-    data[13] = 0.0f;
-    
-    // Forward
-    data[2] = zaxis.x;
-    data[6] = zaxis.y;
-    data[10] = zaxis.z;
-    data[14] = 0.0f;
+    data[4] = right.y;
+    data[5] = up.y;
+    data[6] = forward.y;
+    data[7] = 0;
 
-    
-    data[3] = 0.0f;
-    data[7] = 0.0f;
-    data[11] = 0.0f;
-    data[15] = 1.0f;
+    data[8] = right.z;
+    data[9] = up.z;
+    data[10] = forward.z;
+    data[11] = 0;
 
-    return data * Matrix(-pos);
+    return data * Matrix::translate(-pos);*/
+
 }
 
-Matrix Matrix::scale(float sx, float sy, float sz) {
-    return Matrix(
-        sx,     0,      0,      0, 
-        0,      sy,     0,      0,
-        0,      0,      sz,     0, 
-        0,      0,      0,      1);
+Matrix Matrix::look(const Vector& direction) {
+    Vector forward = direction.unit();
+    Vector up = forward.orthogonal();
+    Vector right = up.cross(forward);
+
+    return Matrix::rotate(right, up, forward);
 }
 
-
-Matrix::Matrix(const float data[16]) {
-    std::copy(data, data+16, this->data);
-}
-
-Matrix::Matrix(float m00, float m01, float m02, float m03,
-    float m10, float m11, float m12, float m13,
-    float m20, float m21, float m22, float m23,
-    float m30, float m31, float m32, float m33) {
-    
-    data[0] = m00; data[4] = m01; data[8] = m02; data[12] = m03;
-    data[1] = m10; data[5] = m11; data[9] = m12; data[13] = m13;
-    data[2] = m20; data[6] = m21; data[10] = m22; data[14] = m23;
-    data[3] = m30; data[7] = m31; data[11] = m32; data[15] = m33;
-}
-
-Matrix::Matrix(const Vector& x, const Vector& y, const Vector& z) {
-    
+Matrix Matrix::rotate(const Vector& x, const Vector& y, const Vector& z) {
+    Matrix data;
     // Right
     data[0] = x.x;
     data[1] = x.y;
@@ -117,12 +98,80 @@ Matrix::Matrix(const Vector& x, const Vector& y, const Vector& z) {
     data[9] = z.y;
     data[10] = z.z;
     data[11] = 0.0f;
-
     
     data[12] = 0.0f;
     data[13] = 0.0f;
     data[14] = 0.0f;
     data[15] = 1.0f;
+
+    return data;
+}
+
+Matrix Matrix::rotate(const Quaternion& rotation) {
+    Matrix data;
+
+    // This routine is borrowed from Ogre 3D
+    float fTx  = 2.0f*rotation.x;
+    float fTy  = 2.0f*rotation.y;
+    float fTz  = 2.0f*rotation.z;
+    float fTwx = fTx*rotation.w;
+    float fTwy = fTy*rotation.w;
+    float fTwz = fTz*rotation.w;
+    float fTxx = fTx*rotation.x;
+    float fTxy = fTy*rotation.x;
+    float fTxz = fTz*rotation.x;
+    float fTyy = fTy*rotation.y;
+    float fTyz = fTz*rotation.y;
+    float fTzz = fTz*rotation.z;
+
+    data[0] = 1.0f-(fTyy+fTzz);
+    data[4] = fTxy-fTwz;
+    data[8] = fTxz+fTwy;
+    data[12] = 0.0f;
+    
+    data[1] = fTxy+fTwz;
+    data[5] = 1.0f-(fTxx+fTzz);
+    data[9] = fTyz-fTwx;
+    data[13] = 0.0f;
+    
+    data[2] = fTxz-fTwy;
+    data[6] = fTyz+fTwx;
+    data[10] = 1.0f-(fTxx+fTyy);
+    data[14] = 0.0f;
+    
+    return data;
+}
+
+Matrix Matrix::scale(float sx, float sy, float sz) {
+    return Matrix(
+        sx,     0,      0,      0, 
+        0,      sy,     0,      0,
+        0,      0,      sz,     0, 
+        0,      0,      0,      1);
+}
+
+Matrix Matrix::translate(const Vector& trans) {
+    Matrix data;
+    data[12] = trans.x;
+    data[13] = trans.y;
+    data[14] = trans.z;
+
+    return data;
+}
+
+Matrix::Matrix(const float data[16]) {
+    std::copy(data, data+16, this->data);
+}
+
+Matrix::Matrix(float m00, float m01, float m02, float m03,
+    float m10, float m11, float m12, float m13,
+    float m20, float m21, float m22, float m23,
+    float m30, float m31, float m32, float m33) {
+    
+    data[0] = m00; data[4] = m01; data[8] = m02; data[12] = m03;
+    data[1] = m10; data[5] = m11; data[9] = m12; data[13] = m13;
+    data[2] = m20; data[6] = m21; data[10] = m22; data[14] = m23;
+    data[3] = m30; data[7] = m31; data[11] = m32; data[15] = m33;
 }
 
 Matrix::Matrix(const Quaternion& rotation, const Vector& trans) {
@@ -159,54 +208,6 @@ Matrix::Matrix(const Quaternion& rotation, const Vector& trans) {
     data[7] = 0.0f;
     data[11] = 0.0f;
     data[15] = 1.0f;
-}
-
-Matrix::Matrix(const Quaternion& rotation) {
-    // This routine is borrowed from Ogre 3D
-    float fTx  = 2.0f*rotation.x;
-    float fTy  = 2.0f*rotation.y;
-    float fTz  = 2.0f*rotation.z;
-    float fTwx = fTx*rotation.w;
-    float fTwy = fTy*rotation.w;
-    float fTwz = fTz*rotation.w;
-    float fTxx = fTx*rotation.x;
-    float fTxy = fTy*rotation.x;
-    float fTxz = fTz*rotation.x;
-    float fTyy = fTy*rotation.y;
-    float fTyz = fTz*rotation.y;
-    float fTzz = fTz*rotation.z;
-
-    data[0] = 1.0f-(fTyy+fTzz);
-    data[4] = fTxy-fTwz;
-    data[8] = fTxz+fTwy;
-    data[12] = 0.0f;
-    
-    data[1] = fTxy+fTwz;
-    data[5] = 1.0f-(fTxx+fTzz);
-    data[9] = fTyz-fTwx;
-    data[13] = 0.0f;
-    
-    data[2] = fTxz-fTwy;
-    data[6] = fTyz+fTwx;
-    data[10] = 1.0f-(fTxx+fTyy);
-    data[14] = 0.0f;
-    
-    data[3] = 0.0f;
-    data[7] = 0.0f;
-    data[11] = 0.0f;
-    data[15] = 1.0f;
-}
-
-Matrix::Matrix(const Vector& trans) {
-    std::fill_n(data, 16, 0.0f);
-    
-    data[0] = 1.0f;
-    data[5] = 1.0f;
-    data[10] = 1.0f;
-    data[15] = 1.0f;
-    data[12] = trans.x;
-    data[13] = trans.y;
-    data[14] = trans.z;
 }
 
 Matrix::Matrix() {

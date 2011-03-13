@@ -42,12 +42,8 @@ void main() {
 	gl_FragData[0].a = position.z;
 
 	// Save the specular material parameters (with shininess)
-	gl_FragData[1].rgb = vec3(1);//Ts * Ks;
+	gl_FragData[1].rgb = Ts * Ks;
 	gl_FragData[1].a = alpha;
-
-	//Tn.x = 0.f;
-	//Tn.y = 0.f;
-	//Tn.z = 1.f;
 
 	// Save the normal vector in view space
 	gl_FragData[2].xyz = (TBN * Tn + 1.) / 2.;
