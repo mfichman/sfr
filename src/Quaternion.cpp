@@ -8,6 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/Quaternion.hpp"
 #include "SFR/Vector.hpp"
+#include <cmath>
 
 using namespace SFR;
 
@@ -165,11 +166,11 @@ Quaternion Quaternion::slerp(const Quaternion& other, float alpha) const {
     }
 
     if (abs(cos) < 1 - 1e-03) {
-        float sin = sqrtf(1 - cos*cos);
-        float angle = atan2f(sin, cos);
+        float sin = std::sqrt(1 - cos*cos);
+        float angle = std::atan2(sin, cos);
         float inv_sin = 1/sin;
-        float coeff0 = sinf((1-alpha) * angle) * inv_sin;
-        float coeff1 = sinf(alpha * angle) * inv_sin;
+        float coeff0 = std::sin((1-alpha) * angle) * inv_sin;
+        float coeff1 = std::sin(alpha * angle) * inv_sin;
         return (*this)*coeff0 + rkt*coeff1;
     } else {
         rkt = (*this)*(1-alpha) + rkt*alpha;

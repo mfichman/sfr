@@ -8,6 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/HemiLight.hpp"
 #include <algorithm>
+#include <cmath>
 
 using namespace SFR;
 
@@ -53,8 +54,8 @@ float HemiLight::radiusOfEffect() const {
     if (a != 0) {
         // Quadratic equation to find distance at which intensity
         // is below the threshold
-        float d1 = -b + sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
-        float d2 = -b - sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        float d1 = -b + std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        float d2 = -b - std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
 
         return std::max(d1, d2);
     } else {
