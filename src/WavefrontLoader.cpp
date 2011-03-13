@@ -242,7 +242,7 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
     }
 
     // Open the file for the current material library
-    std::ifstream in(prefix + name);
+    std::ifstream in((prefix + name).c_str());
 
     Ptr<Texture> white = resourceManager_->textureNew("textures/White.png");
     Ptr<Texture> blue = resourceManager_->textureNew("textures/Blue.png");

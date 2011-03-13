@@ -38,7 +38,6 @@ LightRenderer::LightRenderer(ResourceManager* manager) {
 void LightRenderer::operator()(World* world) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_CLAMP);
     glEnable(GL_DEPTH_TEST);
     glCullFace(GL_FRONT);
     glDepthFunc(GL_ALWAYS);
@@ -53,7 +52,6 @@ void LightRenderer::operator()(World* world) {
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_DEPTH_CLAMP);
     glCullFace(GL_BACK);
     glDepthFunc(GL_LESS);
 
@@ -88,11 +86,15 @@ void LightRenderer::operator()(PointLight* light) {
         glUniform1f(atten2_, light->quadraticAttenuation());
     }
 
-    // Calculate the model transform, and scale the model to cover the light's 
-    // area of effect.
+    // Save old model matrix
     Matrix previous = modelTransform_;
+
+    // Scale model to cover the light's area of effect
     float radius = light->radiusOfEffect();
-    modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
+    
+    // Scale the light geometry to the correct size
+    Matrix scale = Matrix::scale(radius, radius, radius);
+    modelTransform_ = modelTransform_ * scale;
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_.ptr());
@@ -123,7 +125,7 @@ void LightRenderer::operator()(HemiLight* light) {
     }
     if (direction_ != -1) {
         Matrix transform = modelTransform_ * world_->camera()->viewTransform();
-        Vector direction = transform.normal(light->direction().unit());
+        Vector direction = transform.normal(light->direction()).unit();
         glUniform3fv(direction_, 1, direction);
     }
 
@@ -170,7 +172,7 @@ void LightRenderer::operator()(SpotLight* light) {
     }
     if (direction_ != -1) {
         Matrix transform = world_->camera()->viewTransform() * modelTransform_;
-        Vector direction = transform.normal(light->direction().unit());
+        Vector direction = transform.normal(light->direction()).unit();
         glUniform3fv(direction_, 1, direction);
     }
     if (shadowMap_ != -1 && light->shadowMap()) {

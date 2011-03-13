@@ -67,7 +67,7 @@ void initLights() {
 
     Ptr<SFR::DepthRenderTarget> shadowMap(new DepthRenderTarget(512, 512));
     Ptr<SFR::SpotLight> light0(new SFR::SpotLight);
-    light0->linearAttenuationIs(0.01f);
+    light0->linearAttenuationIs(0.05f);
     light0->spotCutoffIs(30.f);
     light0->spotPowerIs(40.f);
     light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
@@ -103,8 +103,8 @@ void handleInput() {
     while (window->GetEvent(evt)) {
         switch (evt.Type) {
         case sf::Event::Closed:
-            window->Close();
-            break;
+            std::cout << "Exiting" << std::endl;
+            exit(0);
         default:
             break;
         }
@@ -141,13 +141,13 @@ void initModels() {
     Ptr<SFR::Transform> plane = manager->nodeNew("meshes/Plane.obj");
     plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
-    Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
-    sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
+    //Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
+    //sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
     
     Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
     car->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
-    world->root()->childNew(sphere.ptr());
+    //world->root()->childNew(sphere.ptr());
     world->root()->childNew(plane.ptr());
     world->root()->childNew(car.ptr());
 }

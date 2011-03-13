@@ -54,7 +54,7 @@ void main() {
 	L = normalize(L);
 
 	float Rd = dot(N, L);
-    float spotEffect = dot(direction, -L);
+    float spotEffect = clamp(dot(direction, -L), 0., 1.);
 
 	if (Rd > 0. && spotEffect > spotCutoff) {
 
@@ -66,12 +66,11 @@ void main() {
 
 		// Calculate the shadow coord
 		//vec4 shadowCoord = ?
-		gl_FragColor = vec4(diffuse, 1.);
+		gl_FragColor = vec4(diffuse + specular, 1.);
 		gl_FragColor.xyz *= atten * pow(spotEffect, spotPower);
 	} else {
 		gl_FragColor = vec4(0., 0., 0., 1.);
 	}
 
-	//gl_FragColor = spotEffect;
 	gl_FragDepth = depth;
 }

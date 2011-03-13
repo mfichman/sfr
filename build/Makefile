@@ -1,5 +1,5 @@
 CXXFLAGS := -g -Wall -Werror -I../include
-CXX := g++
+CXX := clang++
 UNAME := $(shell uname)
 
 
