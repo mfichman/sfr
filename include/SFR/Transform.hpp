@@ -28,7 +28,7 @@ public:
     Quaternion rotation() const;
     Vector worldPosition() const;
     Quaternion worldRotation() const;
-    Iterator<Node> children() const;
+    Iterator<Node> children();
     const std::string& name() const;
 
     void transformIs(const Matrix& transform);
@@ -44,7 +44,7 @@ public:
     void operator()(Functor* functor);
 
 private:
-    List<Node> children_;
+    std::vector<Ptr<Node> > children_;
     Matrix transform_;
     Matrix worldTransform_;
     std::vector<Notifiee*> notifiee_;

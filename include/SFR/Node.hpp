@@ -16,14 +16,8 @@ namespace SFR {
 class Node : public Interface {
 public:
     class Functor;
-        
-    Node* next() const;
-    void nextIs(Node* node);
-    
     virtual void operator()(Functor* functor)=0;
 
-private:
-    Ptr<Node> next_;
 };
 
 /* Implement this interface to perform processing on the scene. */

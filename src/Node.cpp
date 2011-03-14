@@ -10,11 +10,3 @@
 
 using namespace SFR;
 
-Node* Node::next() const {
-    return next_.ptr();
-
-}
-
-void Node::nextIs(Node* node) {
-    next_ = node;
-}

@@ -41,9 +41,11 @@ void MaterialRenderer::operator()(World* world) {
 void MaterialRenderer::operator()(Transform* transform) {
     Matrix previous = modelTransform_;
     modelTransform_ = transform->worldTransform();
+
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
+
     modelTransform_ = previous;
 }
 

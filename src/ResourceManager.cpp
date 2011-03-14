@@ -31,7 +31,6 @@ ResourceManager::ResourceManager() {
 Mesh* ResourceManager::meshNew(const std::string& name) {
     Mesh* mesh = mesh_[name].ptr();
     if (!mesh) {
-        std::cout << "Loading " << name << std::endl;
         mesh_[name] = mesh = new Mesh(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onMeshNew(mesh);
@@ -44,8 +43,6 @@ Material* ResourceManager::materialNew(const std::string& name) {
     Material* material = material_[name].ptr();
     if (!material) {
         material_[name] = material = new Material(name);
-        
-        std::cout << "Loading " << name << std::endl;
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onMaterialNew(material);
         }
@@ -67,6 +64,7 @@ Texture* ResourceManager::textureNew(const std::string& name) {
 Transform* ResourceManager::nodeNew(const std::string& name) {
     Transform* node = node_[name].ptr();
     if (!node) {
+        std::cout << "Loading node: " << name << std::endl;
         node_[name] = node = new Transform();
         node_[name]->nameIs(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {

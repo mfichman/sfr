@@ -30,6 +30,8 @@ Ptr<SFR::Transform> camera;
 float elapsedTime = 0.f;
 float z = 3.1f;
 float x = -1.8f;
+float totalTime = 0.f;
+float totalFrames = 0.f;
 
 void initWindow() {
     // Initialize the window
@@ -89,6 +91,22 @@ void initLights() {
     light2->diffuseColorIs(SFR::Color(0.1f, 0.1f, 0.1f, 1.f));
     light2->directionIs(SFR::Vector(0.f, -1.f, 0.f));
 
+/*
+    for (int i = -2; i < 3; i++) {
+        Ptr<SFR::SpotLight> light(new SFR::SpotLight);
+        light->spotCutoffIs(15.f);
+        light->spotPowerIs(40.f);
+        light->specularColorIs(SFR::Color(.4f, .4f, 1.f, 1.f));
+        light->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
+        light->directionIs(SFR::Vector(0, -1, 0));
+
+        Ptr<SFR::Transform> node(new SFR::Transform);
+        node->positionIs(SFR::Vector(i * 2.f, 8.f, 0.f));
+        node->childNew(light.ptr());
+        world->root()->childNew(node.ptr());
+    }
+*/
+
     world->root()->childNew(light1.ptr());
     world->root()->childNew(light2.ptr());
     world->root()->childNew(node0.ptr());
@@ -143,16 +161,22 @@ void initModels() {
 
     //Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
     //sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
-    
     Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
-    car->positionIs(SFR::Vector(0.f, 0.f, 0.f));
+    
+    for (int i = -1; i < 2; i += 2) {
+        Ptr<SFR::Transform> node(new SFR::Transform);
+        node->positionIs(SFR::Vector(i, 0.f, 0.f));
+        node->childNew(car.ptr());
+        world->root()->childNew(node.ptr());
+        
+    }
 
-    //world->root()->childNew(sphere.ptr());
     world->root()->childNew(plane.ptr());
-    world->root()->childNew(car.ptr());
 }
 
 void runRenderLoop() {
+    sf::Clock perfClock;
+
     // Run the game loop while the window is still open
     while (window->IsOpened()) {
         elapsedTime = timer->GetElapsedTime();
@@ -160,8 +184,22 @@ void runRenderLoop() {
 
         handleInput();
 
+        
         updater(world.ptr());
         deferredRenderer(world.ptr());
+        totalTime += perfClock.GetElapsedTime();
+        perfClock.Reset();
+        totalFrames++;
+
+        if (totalTime >= .1f) {
+            std::cout << totalTime/totalFrames * 1000.f;
+            std::cout << " ms/frame" << std::endl;
+            totalTime = 0.f;
+            totalFrames = 0;
+        }
+
+
+
         window->Display();
     }
 }

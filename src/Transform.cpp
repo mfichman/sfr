@@ -36,8 +36,8 @@ Quaternion Transform::worldRotation() const {
     return worldTransform_.rotation();
 }
 
-Iterator<Node> Transform::children() const {
-    return children_.elements();
+Iterator<Node> Transform::children() {
+    return Iterator<Node>(children_);
 }
 
 const std::string& Transform::name() const {
@@ -95,7 +95,7 @@ void Transform::nameIs(const std::string& name) {
 }
 
 void Transform::childNew(Node* child) {
-    children_.elementNew(child);
+    children_.push_back(child);
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onChildNew(child);
@@ -103,7 +103,7 @@ void Transform::childNew(Node* child) {
 }
 
 void Transform::childDel(Node* child) {
-    children_.elementDel(child);
+    std::remove(children_.begin(), children_.end(), child);
 
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onChildDel(child);

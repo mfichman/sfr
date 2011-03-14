@@ -12,6 +12,8 @@
 namespace SFR {
 
 /* Intrusive singly-linked list support. */
+
+/*
 template <typename T>
 class List {
 public:
@@ -45,5 +47,5 @@ public:
 private:
     Ptr<T> head_;
 };
-
+*/
 }
