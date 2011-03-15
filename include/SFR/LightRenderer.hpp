@@ -36,7 +36,7 @@ private:
     Ptr<Effect> hemiLight_;
     Ptr<Effect> spotLight_;
 
-    Matrix modelTransform_;
+    Matrix transform_;
 
     GLint shadowMap_;
     GLint diffuseBuffer_;

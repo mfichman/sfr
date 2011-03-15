@@ -26,7 +26,7 @@ public:
     void operator()(IndexBuffer* buffer);
 
 private:
-    Matrix modelTransform_;
+    Matrix transform_;
     Ptr<Effect> effect_;
     Ptr<Effect> transparencyEffect_;
     Ptr<World> world_;

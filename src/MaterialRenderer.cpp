@@ -27,7 +27,6 @@ MaterialRenderer::MaterialRenderer(ResourceManager* manager) {
 
 void MaterialRenderer::operator()(World* world) {
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
 
     world_ = world;
     operator()(world_->root());
@@ -35,18 +34,17 @@ void MaterialRenderer::operator()(World* world) {
     // Clear out the effect
     operator()(static_cast<Effect*>(0));
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
 }
 
 void MaterialRenderer::operator()(Transform* transform) {
-    Matrix previous = modelTransform_;
-    modelTransform_ = transform->worldTransform();
+    Matrix previous = transform_;
+    transform_ = transform_ * transform->transform();
 
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
 
-    modelTransform_ = previous;
+    transform_ = previous;
 }
 
 void MaterialRenderer::operator()(Model* model) {
@@ -99,7 +97,7 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
     Camera* camera = world_->camera();
 
     // Calculate the normal matrix and pass it to the vertex shader
-    Matrix normalMatrix = camera->viewTransform() * modelTransform_;
+    Matrix normalMatrix = camera->viewTransform() * transform_;
     normalMatrix = normalMatrix.inverse();
     normalMatrix = normalMatrix.transpose();
 
@@ -110,7 +108,7 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
     };
     
     // Pass the model matrix to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, modelTransform_);
+    glUniformMatrix4fv(model_, 1, 0, transform_);
     glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());

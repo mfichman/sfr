@@ -41,12 +41,12 @@ void TransparencyRenderer::operator()(World* world) {
 }
 
 void TransparencyRenderer::operator()(Transform* transform) {
-    Matrix previous = modelTransform_;
-    modelTransform_ = transform->worldTransform();
+    Matrix previous = transform_;
+    transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
-    modelTransform_ = previous;
+    transform_ = previous;
 }
 
 void TransparencyRenderer::operator()(Model* model) {
@@ -124,7 +124,7 @@ void TransparencyRenderer::operator()(IndexBuffer* buffer) {
     Camera* camera = world_->camera();
 
     // Pass the matrices to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, modelTransform_);
+    glUniformMatrix4fv(model_, 1, 0, transform_);
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 

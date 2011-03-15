@@ -58,12 +58,12 @@ void LightRenderer::operator()(World* world) {
 }
 
 void LightRenderer::operator()(Transform* transform) {
-    Matrix previous = modelTransform_;
-    modelTransform_ = transform->worldTransform();
+    Matrix previous = transform_;
+    transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
-    modelTransform_ = previous;
+    transform_ = previous;
 }
 
 void LightRenderer::operator()(PointLight* light) {
@@ -87,14 +87,14 @@ void LightRenderer::operator()(PointLight* light) {
     }
 
     // Save old model matrix
-    Matrix previous = modelTransform_;
+    Matrix previous = transform_;
 
     // Scale model to cover the light's area of effect
     float radius = light->radiusOfEffect();
     
     // Scale the light geometry to the correct size
     Matrix scale = Matrix::scale(radius, radius, radius);
-    modelTransform_ = modelTransform_ * scale;
+    transform_ = transform_ * scale;
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_.ptr());
@@ -124,20 +124,20 @@ void LightRenderer::operator()(HemiLight* light) {
         glUniform1f(atten2_, light->quadraticAttenuation());
     }
     if (direction_ != -1) {
-        Matrix transform = modelTransform_ * world_->camera()->viewTransform();
+        Matrix transform = transform_ * world_->camera()->viewTransform();
         Vector direction = transform.normal(light->direction()).unit();
         glUniform3fv(direction_, 1, direction);
     }
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
-    Matrix previous = modelTransform_;
+    Matrix previous = transform_;
     float radius = light->radiusOfEffect();
-    modelTransform_ = modelTransform_ * Matrix::scale(radius, radius, radius);
+    transform_ = transform_ * Matrix::scale(radius, radius, radius);
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_.ptr());
-    modelTransform_ = previous;
+    transform_ = previous;
 }
 
 void LightRenderer::operator()(SpotLight* light) {
@@ -171,7 +171,7 @@ void LightRenderer::operator()(SpotLight* light) {
         glUniform1f(spotPower_, light->spotPower());
     }
     if (direction_ != -1) {
-        Matrix transform = world_->camera()->viewTransform() * modelTransform_;
+        Matrix transform = world_->camera()->viewTransform() * transform_;
         Vector direction = transform.normal(light->direction()).unit();
         glUniform3fv(direction_, 1, direction);
     }
@@ -181,7 +181,7 @@ void LightRenderer::operator()(SpotLight* light) {
     }
 
     // Save the old model matrix
-    Matrix previous = modelTransform_;
+    Matrix previous = transform_;
 
     // Scale model to cover the light's area of effect.
     static const float margin = 2.f;
@@ -195,11 +195,11 @@ void LightRenderer::operator()(SpotLight* light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    modelTransform_ = modelTransform_ * rotate * scale;
+    transform_ = transform_ * rotate * scale;
 
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitCone_.ptr());
-    modelTransform_ = previous;
+    transform_ = previous;
 }
 
 void LightRenderer::operator()(Mesh* mesh) {
@@ -227,7 +227,7 @@ void LightRenderer::operator()(IndexBuffer* buffer) {
 
     // Set up the view, projection, and inverse projection transforms
     Matrix inverseProjection = camera->projectionTransform().inverse();
-    glUniformMatrix4fv(model_, 1, 0, modelTransform_);
+    glUniformMatrix4fv(model_, 1, 0, transform_);
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
     glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);

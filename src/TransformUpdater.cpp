@@ -23,7 +23,6 @@ void TransformUpdater::operator()(World* world) {
 void TransformUpdater::operator()(Transform* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
-    transform->worldTransformIs(transform_);
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }

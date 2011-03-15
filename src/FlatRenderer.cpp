@@ -34,7 +34,7 @@ void FlatRenderer::operator()(World* world) {
 
 void FlatRenderer::operator()(Transform* transform) {
     Matrix previous = transform_;
-    transform_ =  transform->worldTransform();
+    transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }

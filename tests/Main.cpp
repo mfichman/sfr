@@ -1,5 +1,4 @@
 #include <SFR/Common.hpp>
-#include <SFR/DepthRenderTarget.hpp>
 #include <SFR/ResourceManager.hpp>
 #include <SFR/Mesh.hpp>
 #include <SFR/Camera.hpp>
@@ -67,13 +66,11 @@ void initCamera() {
 
 void initLights() {
 
-    Ptr<SFR::DepthRenderTarget> shadowMap(new DepthRenderTarget(512, 512));
     Ptr<SFR::SpotLight> light0(new SFR::SpotLight);
     light0->linearAttenuationIs(0.05f);
     light0->spotCutoffIs(30.f);
     light0->spotPowerIs(40.f);
     light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
-    light0->shadowMapIs(shadowMap.ptr());
     light0->directionIs(SFR::Vector(0, -1, 0));
 
     Ptr<SFR::Transform> node0(new SFR::Transform);
@@ -82,7 +79,8 @@ void initLights() {
     
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
-    light1->backDiffuseColorIs(SFR::Color(0.2f, 0.2f, 0.2f, 1.f));
+    light1->diffuseColorIs(SFR::Color(.8f, .8f, .8f, 1.f));
+    light1->backDiffuseColorIs(SFR::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
 
     Ptr<SFR::HemiLight> light2(new SFR::HemiLight);
@@ -91,25 +89,24 @@ void initLights() {
     light2->diffuseColorIs(SFR::Color(0.1f, 0.1f, 0.1f, 1.f));
     light2->directionIs(SFR::Vector(0.f, -1.f, 0.f));
 
-/*
-    for (int i = -2; i < 3; i++) {
+    for (int i = -1; i < 3; i++) {
         Ptr<SFR::SpotLight> light(new SFR::SpotLight);
-        light->spotCutoffIs(15.f);
-        light->spotPowerIs(40.f);
+        light->spotCutoffIs(20.f);
+        light->spotPowerIs(200.f);
+        light->linearAttenuationIs(0.04f);
         light->specularColorIs(SFR::Color(.4f, .4f, 1.f, 1.f));
         light->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
         light->directionIs(SFR::Vector(0, -1, 0));
 
         Ptr<SFR::Transform> node(new SFR::Transform);
-        node->positionIs(SFR::Vector(i * 2.f, 8.f, 0.f));
+        node->positionIs(SFR::Vector(i * 2.f, 7.f, 1.f));
         node->childNew(light.ptr());
         world->root()->childNew(node.ptr());
     }
-*/
 
     world->root()->childNew(light1.ptr());
-    world->root()->childNew(light2.ptr());
-    world->root()->childNew(node0.ptr());
+//    world->root()->childNew(light2.ptr());
+//    world->root()->childNew(node0.ptr());
 
     updater(world.ptr());
     shadowRenderer(world.ptr());
@@ -163,12 +160,11 @@ void initModels() {
     //sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
     Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
     
-    for (int i = -1; i < 2; i += 2) {
+    for (int i = -1; i < 3; i ++) {
         Ptr<SFR::Transform> node(new SFR::Transform);
-        node->positionIs(SFR::Vector(i, 0.f, 0.f));
+        node->positionIs(SFR::Vector(i * 2, 0.f, 0.f));
         node->childNew(car.ptr());
         world->root()->childNew(node.ptr());
-        
     }
 
     world->root()->childNew(plane.ptr());

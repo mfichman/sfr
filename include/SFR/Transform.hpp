@@ -23,7 +23,7 @@ public:
     class Notifiee;
 
     const Matrix& transform() const;
-    const Matrix& worldTransform() const;
+    //const Matrix& worldTransform() const;
     Vector position() const;
     Quaternion rotation() const;
     Vector worldPosition() const;

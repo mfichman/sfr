@@ -16,9 +16,11 @@ const Matrix& Transform::transform() const {
     return transform_;
 }
 
+/*
 const Matrix& Transform::worldTransform() const {
     return worldTransform_;
 }
+*/
 
 Vector Transform::position() const {
     return transform_.origin();

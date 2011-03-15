@@ -29,7 +29,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, w, h, 0, 
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, 
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
             GL_TEXTURE_2D, target_[i], 0);
@@ -52,7 +52,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
     // Test the framebuffer configuration
     statusIs(ENABLED);
     if (GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
-        throw std::runtime_error("Invalid framebuffer configuration");
+        throw std::runtime_error("Couldn't create deferred render target");
     }
     statusIs(DISABLED);
 }
