@@ -1,4 +1,4 @@
-CXXFLAGS := -g -Wall -Werror -I../include
+CXXFLAGS := -O3 -Wall -Werror -I../include
 CXX := clang++
 UNAME := $(shell uname)
 
