@@ -1,0 +1,21 @@
+#!/bin/bash
+
+FILES=`find \`pwd\` | grep "hpp$\|cpp$"`
+echo $FILES
+sed -i"~" -e /\<$1\>/s//\<$2\>/ $FILES
+
+for FILE in `find \`pwd\` | grep "$1[.]hpp$"`; do
+    echo $FILE
+    RENAMED=`echo $FILE | sed /$1[.]hpp$/s//$2.hpp/`
+    echo $RENAMED
+    mv $FILE $RENAMED
+done
+
+for FILE in `find \`pwd\` | grep "$1[.]cpp$"`; do
+    echo $FILE
+    RENAMED=`echo $FILE | sed /$1[.]cpp$/s//$2.cpp/`
+    echo $RENAMED
+    mv $FILE $RENAMED
+done
+
+
