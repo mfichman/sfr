@@ -9,9 +9,10 @@
 #include <SFR/ShadowRenderer.hpp>
 #include <SFR/NullFunctor.hpp>
 #include <SFR/Material.hpp>
-#include <SFR/Transform.hpp>
+#include <SFR/TransformNode.hpp>
 #include <SFR/Model.hpp>
 #include <SFR/TransformUpdater.hpp>
+#include <SFR/FlatRenderer.hpp>
 #include <SFR/World.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
@@ -26,11 +27,12 @@ std::auto_ptr<sf::Window> window;
 std::auto_ptr<sf::Clock> timer;
 Ptr<SFR::ResourceManager> manager;
 Ptr<SFR::DeferredRenderer> deferredRenderer;
+Ptr<SFR::FlatRenderer> flatRenderer;
 Ptr<SFR::NullFunctor> nullRenderer;
 Ptr<SFR::TransformUpdater> updater;
 Ptr<SFR::ShadowRenderer> shadowRenderer;
 Ptr<SFR::World> world;
-Ptr<SFR::Transform> camera;
+Ptr<SFR::TransformNode> camera;
 float elapsedTime = 0.f;
 float z = 3.1f;
 float x = -1.8f;
@@ -60,11 +62,12 @@ void initWindow() {
     updater = new SFR::TransformUpdater;
     nullRenderer = new SFR::NullFunctor;
     world = new SFR::World;
+    flatRenderer = new SFR::FlatRenderer(manager.ptr());
 }
 
 
 void initCamera() {
-    camera = new SFR::Transform;
+    camera = new SFR::TransformNode;
     camera->childNew(world->camera());
     world->root()->childNew(camera.ptr());
 }
@@ -78,7 +81,7 @@ void initLights() {
     light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
     light0->directionIs(SFR::Vector(0, -1, 0));
 
-    Ptr<SFR::Transform> node0(new SFR::Transform);
+    Ptr<SFR::TransformNode> node0(new SFR::TransformNode);
     node0->positionIs(SFR::Vector(-2.f, 8.f, 0.f));
     node0->childNew(light0.ptr());
     
@@ -104,7 +107,7 @@ void initLights() {
             light->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
             light->directionIs(SFR::Vector(0, -1, 0));
 
-            Ptr<SFR::Transform> node(new SFR::Transform);
+            Ptr<SFR::TransformNode> node(new SFR::TransformNode);
             node->positionIs(SFR::Vector(i * 2.f, 7.f, j * 5.f + 1.f));
             node->childNew(light.ptr());
             world->root()->childNew(node.ptr());
@@ -158,16 +161,16 @@ void handleInput() {
 
 void initModels() {
     // Initialize the models that are part of the scene
-    Ptr<SFR::Transform> plane = manager->nodeNew("meshes/Plane.obj");
+    Ptr<SFR::TransformNode> plane = manager->nodeNew("meshes/Plane.obj");
     plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
-    //Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
+    //Ptr<SFR::TransformNode> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
     //sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
-    Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
+    Ptr<SFR::TransformNode> car = manager->nodeNew("meshes/Lexus.obj");
     
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
-            Ptr<SFR::Transform> node(new SFR::Transform);
+            Ptr<SFR::TransformNode> node(new SFR::TransformNode);
             node->positionIs(SFR::Vector(i * 2.f, 0.f, j * 5.f));
             node->childNew(car.ptr());
             world->root()->childNew(node.ptr());
@@ -201,7 +204,9 @@ void runRenderLoop() {
             nullRenderer(world.ptr());
         } else {
             updater(world.ptr());
-            deferredRenderer(world.ptr());
+            //deferredRenderer(world.ptr());
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+            flatRenderer(world.ptr());
         }
         perfTime += perfClock.GetElapsedTime();
         perfFrames++;

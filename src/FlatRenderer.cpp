@@ -8,7 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/FlatRenderer.hpp"
 #include "SFR/Camera.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/TransformNode.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Model.hpp"
 #include "SFR/ResourceManager.hpp"
@@ -29,19 +29,19 @@ void FlatRenderer::operator()(World* world) {
     world_ = world;
     operator()(world_->root());
 
+    operator()(static_cast<Effect*>(0));
     glDisable(GL_DEPTH_TEST);
 }
 
-void FlatRenderer::operator()(Transform* transform) {
+void FlatRenderer::operator()(TransformNode* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
+
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
-    transform_ = previous;
 
-    // Clear out the previous effect
-    operator()(static_cast<Effect*>(0)); // TODO: FIX MOVE TO WORLD
+    transform_ = previous;
 }
 
 void FlatRenderer::operator()(Model* object) {
@@ -111,7 +111,7 @@ void FlatRenderer::operator()(Effect* effect) {
     effect_->statusIs(Effect::LINKED);
     glUseProgram(effect_->id());
     position_ = glGetAttribLocation(effect_->id(), "positionIn");
-    model_ = glGetUniformLocation(effect_->id(), "model");
-    view_ = glGetUniformLocation(effect_->id(), "view");
-    projection_ = glGetUniformLocation(effect_->id(), "projection");
+    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
 }

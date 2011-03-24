@@ -8,7 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/LightRenderer.hpp"
 #include "SFR/Effect.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/TransformNode.hpp"
 #include "SFR/PointLight.hpp"
 #include "SFR/HemiLight.hpp"
 #include "SFR/SpotLight.hpp"
@@ -57,7 +57,7 @@ void LightRenderer::operator()(World* world) {
 
 }
 
-void LightRenderer::operator()(Transform* transform) {
+void LightRenderer::operator()(TransformNode* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
@@ -192,7 +192,7 @@ void LightRenderer::operator()(SpotLight* light) {
     float sy = width * radius;
     float sz = radius;
     
-    // Transform the light to point in the correct direction
+    // TransformNode the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
     transform_ = transform_ * rotate * scale;

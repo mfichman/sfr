@@ -18,21 +18,17 @@
 namespace SFR {
 
 /* Rotation, translation, scaling node with children. */
-class Transform : public Node {
+class TransformNode : public Node {
 public:
     class Notifiee;
 
     const Matrix& transform() const;
-    //const Matrix& worldTransform() const;
     Vector position() const;
     Quaternion rotation() const;
-    Vector worldPosition() const;
-    Quaternion worldRotation() const;
     Iterator<Node> children();
     const std::string& name() const;
 
     void transformIs(const Matrix& transform);
-    void worldTransformIs(const Matrix& transform);
     void positionIs(const Vector& position);
     void rotationIs(const Quaternion& rotation);
     void nameIs(const std::string& name);
@@ -46,15 +42,13 @@ public:
 private:
     std::vector<Ptr<Node> > children_;
     Matrix transform_;
-    Matrix worldTransform_;
     std::vector<Notifiee*> notifiee_;
     std::string name_;
 };
 
-class Transform::Notifiee : public Interface {
+class TransformNode::Notifiee : public Interface {
 public:
     virtual void onTransform() {}
-    virtual void onWorldTransform() {}
     virtual void onPosition() {}
     virtual void onRotation() {}
     virtual void onName() {}

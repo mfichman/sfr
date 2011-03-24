@@ -12,7 +12,7 @@
 #include "SFR/Mesh.hpp"
 #include "SFR/Material.hpp"
 #include "SFR/Texture.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/TransformNode.hpp"
 #include "SFR/EffectLoader.hpp"
 #include "SFR/Effect.hpp"
 #include <algorithm>
@@ -61,11 +61,11 @@ Texture* ResourceManager::textureNew(const std::string& name) {
     return texture;
 }
 
-Transform* ResourceManager::nodeNew(const std::string& name) {
-    Transform* node = node_[name].ptr();
+TransformNode* ResourceManager::nodeNew(const std::string& name) {
+    TransformNode* node = node_[name].ptr();
     if (!node) {
         std::cout << "Loading node: " << name << std::endl;
-        node_[name] = node = new Transform();
+        node_[name] = node = new TransformNode();
         node_[name]->nameIs(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onNodeNew(node);
@@ -116,8 +116,8 @@ Texture* ResourceManager::texture(const std::string& name) const {
     }
 }
 
-Transform* ResourceManager::node(const std::string& name) const {
-    std::map<std::string, Ptr<Transform> >
+TransformNode* ResourceManager::node(const std::string& name) const {
+    std::map<std::string, Ptr<TransformNode> >
         ::const_iterator i = node_.find(name);
     if (i == node_.end()) {
         return 0;

@@ -7,7 +7,7 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/TransformNode.hpp"
 #include <vector>
 
 namespace SFR {
@@ -18,16 +18,16 @@ public:
     class Notifiee;
 
     World();
-    Transform* root() const;
+    TransformNode* root() const;
     Camera* camera() const;
 
-    void rootIs(Transform* node);
+    void rootIs(TransformNode* node);
     void cameraIs(Camera* camera);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
 private:
-    Ptr<Transform> root_;
+    Ptr<TransformNode> root_;
     Ptr<Camera> camera_;
     std::vector<Notifiee*> notifiee_;
 };

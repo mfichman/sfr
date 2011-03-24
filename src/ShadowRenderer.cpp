@@ -26,9 +26,9 @@ void ShadowRenderer::operator()(World* world) {
     operator()(world->root());
 }
 
-void ShadowRenderer::operator()(Transform* transform) {
+void ShadowRenderer::operator()(TransformNode* transform) {
     Matrix previous = transform_;
-    transform_ =  transform->transform();
+    transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }
@@ -84,7 +84,6 @@ void ShadowRenderer::operator()(SpotLight* light) {
     if (!light->shadowMap()) {
         return;
     }
-
     
     // Set up the view matrix for the virtual light camera
     Matrix lightTransform = transform_ * Matrix::look(light->direction());
@@ -96,14 +95,6 @@ void ShadowRenderer::operator()(SpotLight* light) {
     lightCamera->nearIs(0.1f);
     lightCamera->farIs(light->radiusOfEffect());
     lightCamera->typeIs(Camera::PERSPECTIVE);
-
-    lightCamera->nearIs(-10.f);
-    lightCamera->farIs(10.f);
-    lightCamera->leftIs(-10.f);
-    lightCamera->rightIs(10.f);
-    lightCamera->bottomIs(-10.f);
-    lightCamera->topIs(10.f);
-    lightCamera->typeIs(Camera::ORTHOGRAPHIC);
     
     // Save the current view camera
     Ptr<Camera> sceneCamera = world_->camera();

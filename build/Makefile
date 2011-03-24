@@ -1,4 +1,4 @@
-CXXFLAGS := -O3 -Wall -Werror -I../include
+CXXFLAGS := -g -Wall -Werror -I../include
 CXX := clang++
 UNAME := $(shell uname)
 
@@ -13,10 +13,12 @@ endif
 
 OBJS += $(patsubst %.cpp, %.o, $(wildcard ../src/*.cpp))
 OBJS += $(patsubst %.cpp, %.o, $(wildcard ../tests/*.cpp))
+TEMP += $(wildcard ../src/*~)
+TEMP += $(wildcard ../tests/*~)
 
 
 ../main: $(OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $^
 
 clean:
-	rm -f ../main $(OBJS) 
+	rm -f ../main $(OBJS) $(TEMP)

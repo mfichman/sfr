@@ -13,11 +13,11 @@
 using namespace SFR;
 
 World::World() {
-    root_ = new Transform;
+    root_ = new TransformNode;
     camera_ = new SFR::Camera;
 }
 
-Transform* World::root() const {
+TransformNode* World::root() const {
     return root_.ptr();
 }
 
@@ -25,7 +25,7 @@ Camera* World::camera() const {
     return camera_.ptr();
 }
 
-void World::rootIs(Transform* node) {
+void World::rootIs(TransformNode* node) {
     if (root_ == node) {
         return;
     }

@@ -16,7 +16,7 @@ class MaterialRenderer : public Node::Functor {
 public:
     MaterialRenderer(ResourceManager* manager);
     void operator()(World* world);
-    void operator()(Transform* transform);
+    void operator()(TransformNode* transform);
     void operator()(Model* object);
     void operator()(Mesh* mesh);
     void operator()(Material* material);

@@ -8,7 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/MaterialRenderer.hpp"
 #include "SFR/Camera.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/TransformNode.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Texture.hpp"
 #include "SFR/Material.hpp"
@@ -36,7 +36,7 @@ void MaterialRenderer::operator()(World* world) {
     glDisable(GL_DEPTH_TEST);
 }
 
-void MaterialRenderer::operator()(Transform* transform) {
+void MaterialRenderer::operator()(TransformNode* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
 
@@ -108,8 +108,8 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
     };
     
     // Pass the model matrix to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, transform_);
     glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
+    glUniformMatrix4fv(model_, 1, 0, transform_);
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 

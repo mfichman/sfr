@@ -40,7 +40,7 @@ void TransparencyRenderer::operator()(World* world) {
     glFrontFace(GL_CCW);
 }
 
-void TransparencyRenderer::operator()(Transform* transform) {
+void TransparencyRenderer::operator()(TransformNode* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {

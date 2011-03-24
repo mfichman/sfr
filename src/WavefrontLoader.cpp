@@ -13,7 +13,7 @@
 #include "SFR/Mesh.hpp"
 #include "SFR/IndexBuffer.hpp"
 #include "SFR/Material.hpp"
-#include "SFR/Transform.hpp"
+#include "SFR/TransformNode.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -24,7 +24,7 @@ WavefrontLoader::WavefrontLoader(ResourceManager* manager) {
     resourceManager_ = manager;
 }
 
-void WavefrontLoader::onNodeNew(Transform* transform) {
+void WavefrontLoader::onNodeNew(TransformNode* transform) {
     static const std::string ext = "obj";
     std::string name = transform->name();
     transform_ = transform;

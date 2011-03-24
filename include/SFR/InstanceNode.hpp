@@ -7,17 +7,32 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/Node.hpp"
+#include <vector>
 
 namespace SFR {
 
-/* Loads GLSL vertex and fragment shader programs */
-class EffectLoader : public ResourceManager::Notifiee {
+/* Manages object instances (can be repeated) */
+class InstanceNode : public Node {
 public:
-    void onEffectNew(Effect* effect);
+    class Notifiee;
+    
+    Node* root() const;
+    
+    void rootIs(TransformNode* root);
+    void notifieeNew(Notifiee* notifiee);
+    void notifieeDel(Notifiee* notifiee);
+
+    operator()(Functor* functor);
 
 private:
-    std::string fileContents(const std::string& path);
+    Ptr<Node> root_;
+    std::vector<Notifiee*> notifiee_;
+};
+
+class InstanceNode::Notifiee : public Interface {
+public:
+    virtual void onRoot();
 };
 
 }

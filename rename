@@ -2,8 +2,8 @@
 
 FILES=`find \`pwd\` | grep "hpp$\|cpp$"`
 echo $FILES
-sed -i~ -E /[[:\<:]]$1[[:\>:]]/s//$2/ $FILES
-sed -i~ -E /$1[.]hpp/s//$2.hpp/ $FILES
+sed -i"~" -e /[[:<:]]$1[[:>]]/s//$2/ $FILES
+sed -i"~" -e /$1[.]hpp/s//$2.hpp/ $FILES
 
 for FILE in `find \`pwd\` | grep "$1[.]hpp$"`; do
     echo $FILE
