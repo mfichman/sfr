@@ -19,7 +19,7 @@ void NullFunctor::operator()(World* world) {
 void NullFunctor::operator()(Camera* camera) {
 }
 
-void NullFunctor::operator()(TransformNode* transform) {
+void NullFunctor::operator()(Transform* transform) {
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(this);
     }

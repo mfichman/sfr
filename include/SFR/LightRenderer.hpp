@@ -17,7 +17,7 @@ class LightRenderer : public Node::Functor {
 public:
     LightRenderer(ResourceManager* manager);
     void operator()(World* world);
-    void operator()(TransformNode* transform);
+    void operator()(Transform* transform);
     void operator()(PointLight* light);
     void operator()(Effect* effect);
     void operator()(HemiLight* light);

@@ -8,7 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/FlatRenderer.hpp"
 #include "SFR/Camera.hpp"
-#include "SFR/TransformNode.hpp"
+#include "SFR/Transform.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Model.hpp"
 #include "SFR/ResourceManager.hpp"
@@ -33,7 +33,7 @@ void FlatRenderer::operator()(World* world) {
     glDisable(GL_DEPTH_TEST);
 }
 
-void FlatRenderer::operator()(TransformNode* transform) {
+void FlatRenderer::operator()(Transform* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
 

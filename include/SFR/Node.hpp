@@ -17,20 +17,14 @@ class Node : public Interface {
 public:
     class Functor;
     virtual void operator()(Functor* functor)=0;
-
-    Node* next() const;
-    void nextIs(Node* next);
-
-private:
-    Ptr<Node> next_;
 };
 
 /* Implement this interface to perform processing on the scene. */
 class Node::Functor : public Interface {
 public:
     virtual void operator()(Camera* camera) {}
-    virtual void operator()(TransformNode* transform) {}
-    virtual void operator()(InstanceNode* instance) {}
+    virtual void operator()(Transform* transform) {}
+    virtual void operator()(Instance* instance) {}
     virtual void operator()(PointLight* light) {}
     virtual void operator()(Model* object) {}
     virtual void operator()(HemiLight* light) {}

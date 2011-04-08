@@ -16,7 +16,7 @@ class NullFunctor : public Node::Functor {
 public:
     void operator()(World* world);
     void operator()(Camera* camera);
-    void operator()(TransformNode* transform);
+    void operator()(Transform* transform);
     void operator()(PointLight* light);
     void operator()(Model* object);
     void operator()(HemiLight* light);

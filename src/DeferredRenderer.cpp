@@ -11,7 +11,7 @@
 #include "SFR/LightRenderer.hpp"
 #include "SFR/DeferredRenderTarget.hpp"
 #include "SFR/TransparencyRenderer.hpp"
-#include "SFR/TransformNode.hpp"
+#include "SFR/Transform.hpp"
 #include "SFR/FlatRenderer.hpp"
 
 using namespace SFR;

@@ -8,7 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/MaterialRenderer.hpp"
 #include "SFR/Camera.hpp"
-#include "SFR/TransformNode.hpp"
+#include "SFR/Transform.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Texture.hpp"
 #include "SFR/Material.hpp"
@@ -36,7 +36,7 @@ void MaterialRenderer::operator()(World* world) {
     glDisable(GL_DEPTH_TEST);
 }
 
-void MaterialRenderer::operator()(TransformNode* transform) {
+void MaterialRenderer::operator()(Transform* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
 

@@ -16,7 +16,7 @@ namespace SFR {
 class TransformUpdater : public Node::Functor {
 public:
     void operator()(World* world);
-    void operator()(TransformNode* transform);
+    void operator()(Transform* transform);
     void operator()(Camera* camera);
 
 private:

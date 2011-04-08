@@ -17,7 +17,7 @@ class FlatRenderer : public Node::Functor {
 public:
     FlatRenderer(ResourceManager* manager);
     void operator()(World* world);
-    void operator()(TransformNode* transform);
+    void operator()(Transform* transform);
     void operator()(Model* object);
     void operator()(Mesh* mesh);
     void operator()(Effect* effect);

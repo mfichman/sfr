@@ -17,7 +17,7 @@ class TransparencyRenderer : public Node::Functor {
 public:
     TransparencyRenderer(ResourceManager* manager);
     void operator()(World* world);
-    void operator()(TransformNode* transform);
+    void operator()(Transform* transform);
     void operator()(Model* model);
     void operator()(Mesh* mesh);
     void operator()(Material* material);

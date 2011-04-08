@@ -22,7 +22,7 @@ namespace SFR {
 class WavefrontLoader : public ResourceManager::Notifiee {
 public:
     WavefrontLoader(ResourceManager* manager);
-    void onNodeNew(TransformNode* transform);
+    void onNodeNew(Transform* transform);
 
 private:
     void newModel(std::istream& in);
@@ -36,7 +36,7 @@ private:
     void newTriangle(MeshVertex face[3]);
 
     Ptr<ResourceManager> resourceManager_;
-    Ptr<TransformNode> transform_;
+    Ptr<Transform> transform_;
     Ptr<Mesh> mesh_;
     Ptr<Material> material_;
     Ptr<MutableAttributeBuffer<Vector> > vertexBuffer_;

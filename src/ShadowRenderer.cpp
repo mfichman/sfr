@@ -26,7 +26,7 @@ void ShadowRenderer::operator()(World* world) {
     operator()(world->root());
 }
 
-void ShadowRenderer::operator()(TransformNode* transform) {
+void ShadowRenderer::operator()(Transform* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {

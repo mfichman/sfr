@@ -10,7 +10,7 @@
 #include <SFR/ShadowRenderer.hpp>
 #include <SFR/NullFunctor.hpp>
 #include <SFR/Material.hpp>
-#include <SFR/TransformNode.hpp>
+#include <SFR/Transform.hpp>
 #include <SFR/Model.hpp>
 #include <SFR/TransformUpdater.hpp>
 #include <SFR/FlatRenderer.hpp>
@@ -36,7 +36,7 @@ Ptr<SFR::TransformUpdater> updater;
 Ptr<SFR::ShadowRenderer> shadowRenderer;
 Ptr<SFR::TextureRenderer> textureRenderer;
 Ptr<SFR::World> world;
-Ptr<SFR::TransformNode> camera;
+Ptr<SFR::Transform> camera;
 float elapsedTime = 0.f;
 float z = 3.1f;
 float x = -1.8f;
@@ -72,7 +72,7 @@ void initWindow() {
 
 
 void initCamera() {
-    camera = new SFR::TransformNode;
+    camera = new SFR::Transform;
     camera->childNew(world->camera());
     world->root()->childNew(camera.ptr());
 }
@@ -99,7 +99,7 @@ void initLights() {
             light->directionIs(SFR::Vector(0, -1, 0));
             light->shadowMapIs(target.ptr());
 
-            Ptr<SFR::TransformNode> node(new SFR::TransformNode);
+            Ptr<SFR::Transform> node(new SFR::Transform);
             node->positionIs(SFR::Vector(i * 2.f, 7.f, j * 5.f + 1.f));
             node->childNew(light.ptr());
             world->root()->childNew(node.ptr());
@@ -149,16 +149,16 @@ void handleInput() {
 
 void initModels() {
     // Initialize the models that are part of the scene
-    Ptr<SFR::TransformNode> plane = manager->nodeNew("meshes/Plane.obj");
+    Ptr<SFR::Transform> plane = manager->nodeNew("meshes/Plane.obj");
     plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
-    //Ptr<SFR::TransformNode> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
+    //Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
     //sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
-    Ptr<SFR::TransformNode> car = manager->nodeNew("meshes/Lexus.obj");
+    Ptr<SFR::Transform> car = manager->nodeNew("meshes/Lexus.obj");
     
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
-            Ptr<SFR::TransformNode> node(new SFR::TransformNode);
+            Ptr<SFR::Transform> node(new SFR::Transform);
             node->positionIs(SFR::Vector(i * 2.f, 0.f, j * 5.f));
             node->childNew(car.ptr());
             world->root()->childNew(node.ptr());

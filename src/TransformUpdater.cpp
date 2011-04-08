@@ -8,7 +8,7 @@
 #include "SFR/Common.hpp"
 #include "SFR/TransformUpdater.hpp"
 #include "SFR/Camera.hpp"
-#include "SFR/TransformNode.hpp"
+#include "SFR/Transform.hpp"
 #include "SFR/PointLight.hpp"
 #include "SFR/SpotLight.hpp"
 #include "SFR/HemiLight.hpp"
@@ -20,7 +20,7 @@ void TransformUpdater::operator()(World* world) {
     operator()(world->root());
 }
 
-void TransformUpdater::operator()(TransformNode* transform) {
+void TransformUpdater::operator()(Transform* transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
