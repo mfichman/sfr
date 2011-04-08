@@ -23,7 +23,7 @@ DeferredRenderer::DeferredRenderer(ResourceManager* manager) {
     materialPass_ = new MaterialRenderer(manager);
     lightPass_ = new LightRenderer(manager);
     transparencyPass_ = new TransparencyRenderer(manager);
-    renderTarget_ = new DeferredRenderTarget(3, viewport[2], viewport[3]);
+    renderTarget_ = new DeferredRenderTarget(4, viewport[2], viewport[3]);
 }
 
 void DeferredRenderer::operator()(World* world) {
@@ -43,6 +43,8 @@ void DeferredRenderer::operator()(World* world) {
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(2));
     glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(3));
+    glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
     lightPass_(world);
 

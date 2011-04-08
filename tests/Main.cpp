@@ -6,6 +6,7 @@
 #include <SFR/HemiLight.hpp>
 #include <SFR/SpotLight.hpp>
 #include <SFR/DeferredRenderer.hpp>
+#include <SFR/DepthRenderTarget.hpp>
 #include <SFR/ShadowRenderer.hpp>
 #include <SFR/NullFunctor.hpp>
 #include <SFR/Material.hpp>
@@ -14,6 +15,8 @@
 #include <SFR/TransformUpdater.hpp>
 #include <SFR/FlatRenderer.hpp>
 #include <SFR/World.hpp>
+#include <SFR/TextureRenderer.hpp>
+#include <SFR/Texture.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -31,6 +34,7 @@ Ptr<SFR::FlatRenderer> flatRenderer;
 Ptr<SFR::NullFunctor> nullRenderer;
 Ptr<SFR::TransformUpdater> updater;
 Ptr<SFR::ShadowRenderer> shadowRenderer;
+Ptr<SFR::TextureRenderer> textureRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::TransformNode> camera;
 float elapsedTime = 0.f;
@@ -63,6 +67,7 @@ void initWindow() {
     nullRenderer = new SFR::NullFunctor;
     world = new SFR::World;
     flatRenderer = new SFR::FlatRenderer(manager.ptr());
+    textureRenderer = new SFR::TextureRenderer(manager.ptr());
 }
 
 
@@ -74,31 +79,17 @@ void initCamera() {
 
 void initLights() {
 
-    Ptr<SFR::SpotLight> light0(new SFR::SpotLight);
-    light0->linearAttenuationIs(0.05f);
-    light0->spotCutoffIs(30.f);
-    light0->spotPowerIs(40.f);
-    light0->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
-    light0->directionIs(SFR::Vector(0, -1, 0));
-
-    Ptr<SFR::TransformNode> node0(new SFR::TransformNode);
-    node0->positionIs(SFR::Vector(-2.f, 8.f, 0.f));
-    node0->childNew(light0.ptr());
-    
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
     light1->diffuseColorIs(SFR::Color(.8f, .8f, .8f, 1.f));
     light1->backDiffuseColorIs(SFR::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
-
-    Ptr<SFR::HemiLight> light2(new SFR::HemiLight);
-    light2->linearAttenuationIs(0.1f);
-    light2->backDiffuseColorIs(SFR::Color(0.f, 0.f, 0.1f, 1.f));
-    light2->diffuseColorIs(SFR::Color(0.1f, 0.1f, 0.1f, 1.f));
-    light2->directionIs(SFR::Vector(0.f, -1.f, 0.f));
+//    world->root()->childNew(light1.ptr());
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
+            Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(512, 512));
+
             Ptr<SFR::SpotLight> light(new SFR::SpotLight);
             light->spotCutoffIs(20.f);
             light->spotPowerIs(200.f);
@@ -106,6 +97,7 @@ void initLights() {
             light->specularColorIs(SFR::Color(.4f, .4f, 1.f, 1.f));
             light->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
             light->directionIs(SFR::Vector(0, -1, 0));
+            light->shadowMapIs(target.ptr());
 
             Ptr<SFR::TransformNode> node(new SFR::TransformNode);
             node->positionIs(SFR::Vector(i * 2.f, 7.f, j * 5.f + 1.f));
@@ -113,10 +105,6 @@ void initLights() {
             world->root()->childNew(node.ptr());
         }
     }
-
-    world->root()->childNew(light1.ptr());
-//    world->root()->childNew(light2.ptr());
-//    world->root()->childNew(node0.ptr());
 
     updater(world.ptr());
     shadowRenderer(world.ptr());
@@ -203,10 +191,12 @@ void runRenderLoop() {
             nullRenderer(world.ptr());
             nullRenderer(world.ptr());
         } else {
+            //static Ptr<SFR::Texture> tex(manager->textureNew("textures/MetalDiffuse.png"));
+            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            //textureRenderer(tex.ptr());
+
             updater(world.ptr());
-            //deferredRenderer(world.ptr());
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-            flatRenderer(world.ptr());
+            deferredRenderer(world.ptr());
         }
         perfTime += perfClock.GetElapsedTime();
         perfFrames++;
@@ -222,6 +212,7 @@ void runRenderLoop() {
             realTime = 0;
         }
 
+        glFlush();
         window->Display();
     }
 }

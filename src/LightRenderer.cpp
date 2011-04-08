@@ -176,8 +176,11 @@ void LightRenderer::operator()(SpotLight* light) {
         glUniform3fv(direction_, 1, direction);
     }
     if (shadowMap_ != -1 && light->shadowMap()) {
-        glActiveTexture(GL_TEXTURE4);
+        glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
+    }
+    if (light_ != -1) {
+        glUniformMatrix4fv(light_, 1, 0, light->transform());
     }
 
     // Save the old model matrix
@@ -260,6 +263,7 @@ void LightRenderer::operator()(Effect* effect) {
     diffuseBuffer_ = glGetUniformLocation(effect_->id(), "diffuseBuffer");
     specularBuffer_ = glGetUniformLocation(effect_->id(), "specularBuffer");
     normalBuffer_ = glGetUniformLocation(effect_->id(), "normalBuffer");
+    positionBuffer_ = glGetUniformLocation(effect_->id(), "positionBuffer");
     depthBuffer_ = glGetUniformLocation(effect_->id(), "depthBuffer");
     diffuse_ = glGetUniformLocation(effect_->id(), "Ld");
     specular_ = glGetUniformLocation(effect_->id(), "Ls");
@@ -274,12 +278,14 @@ void LightRenderer::operator()(Effect* effect) {
     view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
     projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
     unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
+    light_ = glGetUniformLocation(effect_->id(), "lightMatrix");
     position_ = glGetAttribLocation(effect_->id(), "positionIn");
 
     // Set texture samplers
     glUniform1i(diffuseBuffer_, 0);
     glUniform1i(specularBuffer_, 1);
     glUniform1i(normalBuffer_, 2);
-    glUniform1i(depthBuffer_, 3);
-    glUniform1i(shadowMap_, 4);
+    glUniform1i(positionBuffer_, 3);
+    glUniform1i(depthBuffer_, 4);
+    glUniform1i(shadowMap_, 5);
 }

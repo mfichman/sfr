@@ -86,15 +86,24 @@ void ShadowRenderer::operator()(SpotLight* light) {
     }
     
     // Set up the view matrix for the virtual light camera
-    Matrix lightTransform = transform_ * Matrix::look(light->direction());
+    Matrix view = transform_ * Matrix::look(light->direction());
     
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
-    lightCamera->viewTransformIs(lightTransform);
+    lightCamera->viewTransformIs(view);
     lightCamera->fieldOfViewIs(light->spotCutoff() * 2.f);
     lightCamera->nearIs(0.1f);
     lightCamera->farIs(light->radiusOfEffect());
     lightCamera->typeIs(Camera::PERSPECTIVE);
+
+    Matrix projection = lightCamera->projectionTransform();
+    Matrix bias = Matrix(
+        0.5f, 0.f, 0.f, 0.5f,
+        0.f, 0.5f, 0.f, 0.5f,
+        0.f, 0.f, 0.5f, 0.5f,
+        0.f, 0.f, 0.f, 1.f);
+    Matrix lightMatrix = view * projection * bias;
+    light->transformIs(lightMatrix);
     
     // Save the current view camera
     Ptr<Camera> sceneCamera = world_->camera();

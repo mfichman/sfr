@@ -10,6 +10,7 @@
 #include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
 #include "SFR/Vector.hpp"
+#include "SFR/Matrix.hpp"
 #include <vector>
 
 namespace SFR {
@@ -30,7 +31,7 @@ public:
     float spotPower() const;
     float radiusOfEffect() const;
     DepthRenderTarget* shadowMap() const;
-    Camera* camera() const;
+    const Matrix& transform() const;
 
     void diffuseColorIs(const Color& diffuse);
     void specularColorIs(const Color& specular);
@@ -41,6 +42,7 @@ public:
     void spotCutoffIs(float cutoff);
     void spotPowerIs(float power);
     void shadowMapIs(DepthRenderTarget* target);
+    void transformIs(const Matrix& matrix);
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
@@ -57,7 +59,7 @@ private:
     Vector direction_;
     std::vector<Notifiee*> notifiee_;
     Ptr<DepthRenderTarget> shadowMap_;
-    Ptr<Camera> camera_;
+    Matrix transform_;
 };
 
 class SpotLight::Notifiee : public Interface {
@@ -71,6 +73,7 @@ public:
     virtual void onSpotCutoff() {}
     virtual void onSpotPower() {}
     virtual void onShadowMap() {}
+    virtual void onTransform() {}
 };
 
 }

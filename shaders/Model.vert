@@ -15,7 +15,7 @@
  attribute vec3 tangentIn;
  attribute vec2 texCoordIn;
 
- varying vec4 position;
+ varying vec3 position;
  varying vec3 normal;
  varying vec3 tangent;
  varying vec2 texCoord;
@@ -24,7 +24,8 @@
  void main() {
 	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 
-	position = viewMatrix * modelMatrix * vec4(positionIn, 1);
+    // World position
+	position = (modelMatrix * vec4(positionIn, 1)).xyz;
 
 	// Transform the vertex to get the clip-space position of the vertex
 	gl_Position = transform * vec4(positionIn, 1);

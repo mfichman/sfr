@@ -9,6 +9,7 @@ uniform sampler2D shadowMap;
 uniform sampler2D diffuseBuffer;
 uniform sampler2D specularBuffer;
 uniform sampler2D normalBuffer;
+uniform sampler2D positionBuffer;
 uniform sampler2D depthBuffer;
 
 uniform float atten0; 
@@ -26,9 +27,8 @@ uniform mat4 lightMatrix; // From eye coordinates to light space
 varying vec3 lightPosition;
 varying vec4 position;
 
-/* Deferred point light shader */
+/* Deferred spot light shader */
 void main() {
-	
 	// Sample the depth and reconstruct the fragment view coordinates. 
 	// Perform the viewport transform on the clip position. 
 	// Make sure the depth is unpacked into clip coordinates.
@@ -44,6 +44,12 @@ void main() {
 	vec3 Ks = temp.rgb;
 	float alpha = temp.a;
 
+    // Get the world position
+    vec3 world = texture2D(positionBuffer, viewport).xyz * 2. - 1.;
+    vec4 shadow = lightMatrix * vec4(world, 1.);
+    shadow /= shadow.w;
+    float shadowDepth = texture2D(shadowMap, shadow.xy).r;
+
 	// Sample the normal and the view vector
 	vec3 N = texture2D(normalBuffer, viewport).xyz * 2. - 1.;
 	vec3 V = normalize(-eyePosition.xyz);
@@ -56,7 +62,7 @@ void main() {
 	float Rd = dot(N, L);
     float spotEffect = clamp(dot(direction, -L), 0., 1.);
 
-	if (Rd > 0. && spotEffect > spotCutoff) {
+	if (Rd > 0. && spotEffect > spotCutoff /*&& shadow.z <= shadowDepth*/) {
 
 		// Calculate the diffuse color coefficient
 		vec3 diffuse = Kd * Ld * Rd;
@@ -65,7 +71,6 @@ void main() {
 		vec3 specular = Ks * Ls * pow(max(0., dot(L, R)), alpha);
 
 		// Calculate the shadow coord
-		//vec4 shadowCoord = ?
 		gl_FragColor = vec4(diffuse + specular, 1.);
 		gl_FragColor.xyz *= atten * pow(spotEffect, spotPower);
 	} else {

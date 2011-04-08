@@ -79,6 +79,10 @@ DepthRenderTarget* SpotLight::shadowMap() const {
     return shadowMap_.ptr();
 }
 
+const Matrix& SpotLight::transform() const {
+    return transform_;
+}
+
 void SpotLight::diffuseColorIs(const Color& diffuse) {
     if (diffuseColor_ == diffuse) {
         return;
@@ -175,6 +179,14 @@ void SpotLight::shadowMapIs(DepthRenderTarget* target) {
     
     for (size_t i = 0; i < notifiee_.size(); i++) {
         notifiee_[i]->onShadowMap();
+    }
+}
+
+void SpotLight::transformIs(const Matrix& transform) {
+    transform_ = transform;
+    
+    for (size_t i = 0; i < notifiee_.size(); i++) {
+        notifiee_[i]->onTransform();
     }
 }
 

@@ -106,10 +106,30 @@ void Effect::statusIs(Status status) {
             // and throw an exception.
             GLint length = 0;
             std::vector<char> log;
+
+            glGetShaderiv(vertexShader_->id(), GL_INFO_LOG_LENGTH, &length);
+            log.resize(length + 1);
+            if (length) {
+                std::cerr << "Vertex shader error: " << name_ << std::endl;
+                glGetShaderInfoLog(vertexShader_->id(), length, &length, &log[0]);
+                std::cerr << &log[0] << std::endl;
+            }
+
+            glGetShaderiv(fragmentShader_->id(), GL_INFO_LOG_LENGTH, &length);
+            log.resize(length + 1);
+            if (length) {
+                std::cerr << "Fragment shader error: " << name_ << std::endl;
+                glGetShaderInfoLog(fragmentShader_->id(), length, &length, &log[0]);
+                std::cerr << &log[0] << std::endl;
+            }
+
             glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &length);
             log.resize(length + 1);
-            glGetProgramInfoLog(id_, length, &length, &log[0]);
-            std::cerr << &log[0] << std::endl;
+            if (length) {
+                std::cerr << "Shader link error: " << name_ << std::endl;
+                glGetProgramInfoLog(id_, length, &length, &log[0]);
+                std::cerr << &log[0] << std::endl;
+            }
 
             throw std::runtime_error("Shader linker error: " + name_);
         }
