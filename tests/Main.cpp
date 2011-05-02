@@ -84,7 +84,7 @@ void initLights() {
     light1->diffuseColorIs(SFR::Color(.8f, .8f, .8f, 1.f));
     light1->backDiffuseColorIs(SFR::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
-//    world->root()->childNew(light1.ptr());
+    world->root()->childNew(light1.ptr());
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
