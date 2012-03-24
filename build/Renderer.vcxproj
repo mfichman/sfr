@@ -32,7 +32,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="..\src\NullFunctor.cpp" />
     <ClCompile Include="..\src\TextureLoader.cpp" />
+    <ClCompile Include="..\src\TextureRenderer.cpp" />
     <ClCompile Include="..\src\TransparencyRenderer.cpp" />
     <ClCompile Include="..\src\WavefrontLoader.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
@@ -88,7 +90,9 @@
     <ClInclude Include="..\include\SFR\MaterialRenderer.hpp" />
     <ClInclude Include="..\include\SFR\Matrix.hpp" />
     <ClInclude Include="..\include\SFR\Mesh.hpp" />
+    <ClInclude Include="..\include\SFR\NullFunctor.hpp" />
     <ClInclude Include="..\include\SFR\TextureLoader.hpp" />
+    <ClInclude Include="..\include\SFR\TextureRenderer.hpp" />
     <ClInclude Include="..\include\SFR\TransparencyRenderer.hpp" />
     <ClInclude Include="..\include\SFR\WavefrontLoader.hpp" />
     <ClInclude Include="..\include\SFR\Model.hpp" />
@@ -150,7 +154,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>gdi32.lib;user32.lib;glu32.lib;glew32-s-d.lib;sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Lib;D:\Libraries</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
