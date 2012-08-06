@@ -98,6 +98,8 @@ void LightRenderer::operator()(PointLight* light) {
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_.ptr());
+
+    transform_ = previous;
 }
 
 void LightRenderer::operator()(HemiLight* light) {

@@ -62,7 +62,7 @@ void main() {
 	float Rd = dot(N, L);
     float spotEffect = clamp(dot(direction, -L), 0., 1.);
 
-	if (Rd > 0. && spotEffect > spotCutoff && shadow.z <= shadowDepth) {
+	if (Rd > 0. && spotEffect > spotCutoff) {// && shadow.z <= shadowDepth) {
 
 		// Calculate the diffuse color coefficient
 		vec3 diffuse = Kd * Ld * Rd;

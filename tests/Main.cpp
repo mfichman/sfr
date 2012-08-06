@@ -88,7 +88,7 @@ void initLights() {
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
-            Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(512, 512));
+            //Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(512, 512));
 
             Ptr<SFR::SpotLight> light(new SFR::SpotLight);
             light->spotCutoffIs(20.f);
@@ -97,7 +97,7 @@ void initLights() {
             light->specularColorIs(SFR::Color(.4f, .4f, 1.f, 1.f));
             light->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
             light->directionIs(SFR::Vector(0, -1, 0));
-            light->shadowMapIs(target.ptr());
+            //light->shadowMapIs(target.ptr());
 
             Ptr<SFR::Transform> node(new SFR::Transform);
             node->positionIs(SFR::Vector(i * 2.f, 7.f, j * 5.f + 1.f));
@@ -107,7 +107,7 @@ void initLights() {
     }
 
     updater(world.ptr());
-    shadowRenderer(world.ptr());
+    //shadowRenderer(world.ptr());
 }
 
 void handleInput() {
