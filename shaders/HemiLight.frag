@@ -5,6 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
  
+#version 130 
+
 uniform sampler2D diffuseBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D depthBuffer;
@@ -19,8 +21,10 @@ uniform vec3 direction;
 uniform mat4 unprojectMatrix; // Back to view coordinates
 uniform mat4 lightMatrix; // From world coordinates to light space
 
-varying vec3 lightPosition;
-varying vec4 position;
+in vec3 lightPosition;
+in vec4 position;
+
+out vec4 color;
 
 /* Deferred point light shader */
 void main() {
@@ -48,7 +52,7 @@ void main() {
 	// Calculate the diffuse color coefficient by mixing front & back
 	vec3 diffuse = Kd * mix(Ld, Ldb, (Rd + 1.)/2.);// * abs(Rd);
 
-	gl_FragColor = vec4(diffuse, 1.);
-	gl_FragColor.xyz *= atten;
+	color = vec4(diffuse, 1.);
+	color.xyz *= atten;
 	gl_FragDepth = depth;
 }

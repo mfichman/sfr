@@ -5,6 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
  
+#version 130
+
 uniform sampler2D shadowMap;
 uniform sampler2D diffuseBuffer;
 uniform sampler2D specularBuffer;
@@ -20,8 +22,10 @@ uniform vec3 Ls;
 uniform mat4 unprojectMatrix; // Back to view coordinates
 uniform mat4 lightMatrix; // From world coordinates to light space
 
-varying vec3 lightPosition;
-varying vec4 position;
+in vec3 lightPosition;
+in vec4 position;
+
+out vec4 color;
 
 /* Deferred point light shader */
 void main() {
@@ -60,12 +64,12 @@ void main() {
 
 		// Calculate the shadow coord
 		//vec4 shadowCoord = ?
-		gl_FragColor = vec4(diffuse + specular, 1.);
-		gl_FragColor.xyz *= atten;
+		color = vec4(diffuse + specular, 1.);
+		color.xyz *= atten;
 	} else {
-		gl_FragColor = vec4(0., 0., 0., 1.);
+		color = vec4(0., 0., 0., 1.);
 	}
 
-    gl_FragColor += vec4(.1, .1, .1, 1.);
+    color += vec4(.1, .1, .1, 1.);
 	gl_FragDepth = depth;
 }

@@ -5,14 +5,16 @@
  * February, 2011                                                            *
  *****************************************************************************/
   
+#version 130
+
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-attribute vec3 positionIn;
+in vec3 positionIn;
 
-varying vec4 position;
-varying vec3 lightPosition;
+out vec4 position;
+out vec3 lightPosition;
 
 /* Deferred render point light shader */
 void main() {

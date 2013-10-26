@@ -77,8 +77,9 @@ void initCamera() {
     world->root()->childNew(camera.ptr());
 }
 
-void initLights() {
+void handleInput();
 
+void initLights() {
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
     light1->diffuseColorIs(SFR::Color(.8f, .8f, .8f, 1.f));
@@ -88,7 +89,7 @@ void initLights() {
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
-            Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(512, 512));
+            Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(2048, 2048));
 
             Ptr<SFR::SpotLight> light(new SFR::SpotLight);
             light->spotCutoffIs(20.f);
@@ -100,12 +101,11 @@ void initLights() {
             light->shadowMapIs(target.ptr());
 
             Ptr<SFR::Transform> node(new SFR::Transform);
-            node->positionIs(SFR::Vector(i * 2.f, 7.f, j * 5.f + 1.f));
+            node->positionIs(SFR::Vector(i * 2.f, 16.f, j * 5.f + 1.f));
             node->childNew(light.ptr());
             world->root()->childNew(node.ptr());
         }
     }
-
     updater(world.ptr());
     shadowRenderer(world.ptr());
 }
@@ -141,8 +141,10 @@ void handleInput() {
         z += 2.f * elapsedTime;
     }
 
+	//float const y = .9f;
+	float const y = 2.f;
     camera->transformIs(SFR::Matrix::look(
-        SFR::Vector(x, .9f, z),
+        SFR::Vector(x, y, z),
         SFR::Vector(0.f, 0.3f, 0.f),
         SFR::Vector(0.f, 1.f, 0.f)));
 }
@@ -159,7 +161,7 @@ void initModels() {
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
             Ptr<SFR::Transform> node(new SFR::Transform);
-            node->positionIs(SFR::Vector(i * 2.f, 0.f, j * 5.f));
+            node->positionIs(SFR::Vector(i * 2.f+1.f, 0.f, j * 5.f));
             node->childNew(car.ptr());
             world->root()->childNew(node.ptr());
         }
@@ -196,6 +198,7 @@ void runRenderLoop() {
             //textureRenderer(tex.ptr());
 
             updater(world.ptr());
+            shadowRenderer(world.ptr());
             deferredRenderer(world.ptr());
         }
         perfTime += perfClock.GetElapsedTime();
@@ -211,8 +214,6 @@ void runRenderLoop() {
             perfFrames = 0;
             realTime = 0;
         }
-
-        glFlush();
         window->Display();
     }
 }

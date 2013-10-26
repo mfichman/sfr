@@ -30,5 +30,6 @@ void TransformUpdater::operator()(Transform* transform) {
 }
 
 void TransformUpdater::operator()(Camera* camera) {
+	// Why is the view transform the inverse?
     camera->viewTransformIs(transform_.inverse());
 }

@@ -5,10 +5,14 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+ #version 130
+
  uniform vec3 Kd;
  uniform float alpha;
 
+ out vec4 color;
+
  /* Transparency forward-rendered shader (no lighting :( ) */
  void main() {
-	gl_FragColor = vec4(Kd, alpha);
+	color = vec4(Kd, alpha);
  }

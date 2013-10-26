@@ -4,24 +4,26 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-
- uniform mat4 modelMatrix;
- uniform mat4 viewMatrix;
- uniform mat4 projectionMatrix;
- uniform mat3 normalMatrix;
-
- attribute vec3 positionIn;
- attribute vec3 normalIn;
- attribute vec3 tangentIn;
- attribute vec2 texCoordIn;
-
- varying vec3 position;
- varying vec3 normal;
- varying vec3 tangent;
- varying vec2 texCoord;
  
- /* Deferred render shader with normal, specular, and diffuse mapping */
- void main() {
+#version 130
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+uniform mat3 normalMatrix;
+
+in vec3 positionIn;
+in vec3 normalIn;
+in vec3 tangentIn;
+in vec2 texCoordIn;
+
+out vec3 position;
+out vec3 normal;
+out vec3 tangent;
+out vec2 texCoord;
+ 
+/* Deferred render shader with normal, specular, and diffuse mapping */
+void main() {
 	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 
     // World position
@@ -36,4 +38,4 @@
 
 	// Simply copy the texture coordinates over to the fragment shader
 	texCoord = texCoordIn;
- }
+}

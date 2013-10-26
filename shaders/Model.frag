@@ -5,6 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#version 130
+
 uniform mat3 normalMatrix;
 
 uniform sampler2D diffuseMap;
@@ -16,10 +18,15 @@ uniform vec3 Ks;
 uniform vec3 Ka;
 uniform float alpha;
 
-varying vec3 position;
-varying vec3 normal;
-varying vec3 tangent;
-varying vec2 texCoord;
+in vec3 position;
+in vec3 normal;
+in vec3 tangent;
+in vec2 texCoord;
+
+out vec4 material;
+out vec4 specular;
+out vec4 normalOut;
+out vec4 worldPosition;
 
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
@@ -38,18 +45,20 @@ void main() {
 	vec3 Ts = texture2D(specularMap, texCoord).rgb;
 
 	// Save diffuse material parameters
-	gl_FragData[0].rgb = Td * Kd;
-	gl_FragData[0].a = 1.;
+	material.rgb = Td * Kd;
+	material.a = 1.;
 
 	// Save the specular material parameters (with shininess)
-	gl_FragData[1].rgb = Ts * Ks;
-	gl_FragData[1].a = alpha;
+	specular.rgb = Ts * Ks;
+	specular.a = alpha;
 
 	// Save the normal vector in view space
-	gl_FragData[2].xyz = (TBN * Tn + 1.) / 2.;
-	gl_FragData[2].a = 1.;
+	normalOut.xyz = (TBN * Tn + 1.) / 2.;
+	normalOut.a = 1.;
 
-    // Save the world position
-    gl_FragData[3].xyz = (position + 1.) / 2.;
-    gl_FragData[3].a = 1.;
+    // Save the world position.  Note: gl_FragData[3] MUST have be at least a 
+	// 16-bit float per component, otherwise the position will be clipped to
+	// the range [0,1)
+    worldPosition.xyz = position;
+    worldPosition.a = 1.; 
 }
