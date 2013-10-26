@@ -90,7 +90,6 @@ void initLights() {
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
             Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(2048, 2048));
-
             Ptr<SFR::SpotLight> light(new SFR::SpotLight);
             light->spotCutoffIs(20.f);
             light->spotPowerIs(200.f);
@@ -106,8 +105,6 @@ void initLights() {
             world->root()->childNew(node.ptr());
         }
     }
-    updater(world.ptr());
-    shadowRenderer(world.ptr());
 }
 
 void handleInput() {

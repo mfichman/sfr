@@ -40,17 +40,18 @@ void ShadowRenderer::operator()(PointLight* light) {
     //      return;
     // }
 
+/*
     static const Vector forward[] = { 
         Vector(1.f, 0.f, 0.f), Vector(-1.f, 0.f, 0.f),
         Vector(0.f, 1.f, 0.f), Vector(0.f, -1.f, 0.f),
         Vector(0.f, 0.f, 1.f), Vector(0.f, 0.f, -1.f)
     };
-    /*
-    static const CubeDepthRenderTarget::Axis axis[] = {
-        CubeDepthRenderTarget::POSITIVE_X, CubeDepthRenderTarget::NEGATIVE_X,
-        CubeDepthRenderTarget::POSITIVE_Y, CubeDepthRenderTarget::NEGATIVE_Y,
-        CubeDepthRenderTarget::POSITIVE_Z, CubeDepthRenderTarget::NEGATIVE_Z
-    };*/
+    static const DepthRenderTarget::Axis axis[] = {
+        DepthRenderTarget::POSITIVE_X, DepthRenderTarget::NEGATIVE_X,
+        DepthRenderTarget::POSITIVE_Y, DepthRenderTarget::NEGATIVE_Y,
+        DepthRenderTarget::POSITIVE_Z, DepthRenderTarget::NEGATIVE_Z
+    };
+*/
     
     Ptr<Camera> lightCamera(new Camera);
     lightCamera->fieldOfViewIs(90.f);
@@ -63,17 +64,19 @@ void ShadowRenderer::operator()(PointLight* light) {
     world_->cameraIs(lightCamera.ptr());
 
     for (int i = 0; i < 6; i++) {
+/*
         // Set up the view matrix for the current face of the cube map
         Vector right = forward[i].orthogonal();
         Vector up = right.cross(forward[i]);
 
         // Set up virtual light camera
-        //Matrix lightTransform = Matrix(right, up, forward[i]) * transform_;
-        //lightCamera->viewTransformIs(lightTransform);
+        Matrix lightTransform = Matrix(right, up, forward[i]) * transform_;
+        lightCamera->viewTransformIs(lightTransform);
 
         // Render the scene into the cube map face
-        //light->shadowMap()->statusIs(axis[i]);
+        light->shadowMap()->statusIs(axis[i]);
         flatRenderer_(world_.ptr());
+*/
     }
 
     //light->shadowMap()->statusIs(CubeDepthRenderTarget::DISABLED);
