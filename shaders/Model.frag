@@ -23,10 +23,10 @@ in vec3 normal;
 in vec3 tangent;
 in vec2 texCoord;
 
-out vec4 material;
+out vec3 material;
 out vec4 specular;
-out vec4 normalOut;
-out vec4 worldPosition;
+out vec3 normalOut;
+out vec3 worldPosition;
 
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
@@ -45,20 +45,17 @@ void main() {
 	vec3 Ts = texture2D(specularMap, texCoord).rgb;
 
 	// Save diffuse material parameters
-	material.rgb = Td * Kd;
-	material.a = 1.;
+	material = Td * Kd;
 
 	// Save the specular material parameters (with shininess)
 	specular.rgb = Ts * Ks;
 	specular.a = alpha;
 
 	// Save the normal vector in view space
-	normalOut.xyz = (TBN * Tn + 1.) / 2.;
-	normalOut.a = 1.;
+	normalOut = (TBN * Tn + 1.) / 2.;
 
     // Save the world position.  Note: gl_FragData[3] MUST have be at least a 
 	// 16-bit float per component, otherwise the position will be clipped to
 	// the range [0,1)
-    worldPosition.xyz = position;
-    worldPosition.a = 1.; 
+    worldPosition = position;
 }

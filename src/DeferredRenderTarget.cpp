@@ -12,10 +12,16 @@
 
 using namespace SFR;
 
-DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
-    target_.resize(n);
-
+DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
+    target_.resize(4);
     status_ = DISABLED;
+
+	GLuint formats[] = {
+		GL_RGB, // Material
+		GL_RGBA, // Specular
+		GL_RGB16F, // Normal
+		GL_RGB16F, // Position
+	};
             
     // Initialize the framebuffer, which will hold all of the target textures
     glGenFramebuffers(1, &id_);
@@ -30,7 +36,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint n, GLuint w, GLuint h) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, 
+		glTexImage2D(GL_TEXTURE_2D, 0, formats[i], w, h, 0, 
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
 		
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w, h, 0, 

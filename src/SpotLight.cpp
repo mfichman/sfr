@@ -69,10 +69,13 @@ float SpotLight::radiusOfEffect() const {
         float d2 = -b - std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
 
         return std::max(d1, d2);
-    } else {
+    } else if (b != 0) {
         // If a == 0, then we use the slope instead.
         return (1 - minIntensity*c)/(minIntensity*b);
-    }
+    } else {
+		// Choose a reasonable distance at which the light should be cut off.
+		return 1000.f;
+	}
 }
 
 DepthRenderTarget* SpotLight::shadowMap() const {

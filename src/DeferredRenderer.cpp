@@ -23,7 +23,7 @@ DeferredRenderer::DeferredRenderer(ResourceManager* manager) {
     materialPass_ = new MaterialRenderer(manager);
     lightPass_ = new LightRenderer(manager);
     transparencyPass_ = new TransparencyRenderer(manager);
-    renderTarget_ = new DeferredRenderTarget(4, viewport[2], viewport[3]);
+    renderTarget_ = new DeferredRenderTarget(viewport[2], viewport[3]);
 }
 
 void DeferredRenderer::operator()(World* world) {

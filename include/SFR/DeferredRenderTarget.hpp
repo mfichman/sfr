@@ -18,7 +18,7 @@ public:
     enum Status { ENABLED, DISABLED };
     class Notifiee;
 
-    DeferredRenderTarget(GLuint targetCount, GLuint width, GLuint height);
+    DeferredRenderTarget(GLuint width, GLuint height);
     ~DeferredRenderTarget();
 
     GLuint targetCount() const;

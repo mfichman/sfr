@@ -87,7 +87,11 @@ void ShadowRenderer::operator()(SpotLight* light) {
     if (!light->shadowMap()) {
         return;
     }
-    
+
+	// Camera projectionTransform uses glViewport to calculate itself...hence, the 
+	// viewport must be set before calling it by enabling the shadow render target 
+	// here.
+	light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
     // Set up the view matrix for the virtual light camera
 
 	// Transform to the center of the light, then point in the reverse of the light 
@@ -95,7 +99,6 @@ void ShadowRenderer::operator()(SpotLight* light) {
     // FIXME: This doesn't seem quite right.
 	Matrix view = (transform_ * Matrix::look(-light->direction())).inverse();
 
-    
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
     lightCamera->viewTransformIs(view);
@@ -110,15 +113,15 @@ void ShadowRenderer::operator()(SpotLight* light) {
         0.f, 0.5f, 0.f, 0.5f,
         0.f, 0.f, 0.5f, 0.5f,
         0.f, 0.f, 0.f, 1.f);
-    Matrix lightMatrix = bias * projection * view;//.inverse();// * projection;//inverse();// * bias;
+    Matrix lightMatrix = bias * projection * view;
     light->transformIs(lightMatrix);
     
     // Save the current view camera
     Ptr<Camera> sceneCamera = world_->camera();
 
     // Render the scene into the shadow map from light perspective
-    light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT); 
+	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
     world_->cameraIs(lightCamera.ptr());
     flatRenderer_(world_.ptr());

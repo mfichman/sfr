@@ -39,7 +39,7 @@ void LightRenderer::operator()(World* world) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
-    glCullFace(GL_FRONT);
+	glCullFace(GL_FRONT);
     glDepthFunc(GL_ALWAYS);
     glBlendFunc(GL_ONE, GL_ONE);
 
@@ -52,9 +52,8 @@ void LightRenderer::operator()(World* world) {
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
-    glCullFace(GL_BACK);
     glDepthFunc(GL_LESS);
-
+	glCullFace(GL_BACK);
 }
 
 void LightRenderer::operator()(Transform* transform) {
@@ -190,7 +189,8 @@ void LightRenderer::operator()(SpotLight* light) {
 
     // Scale model to cover the light's area of effect.
     static const float margin = 2.f;
-    float radius = light->radiusOfEffect();
+	static const float maxRadius = 500.f;
+	float radius = std::min(maxRadius, light->radiusOfEffect());
     float cutoff = light->spotCutoff() + margin;
     float width = std::tan((float)M_PI * cutoff / 180.f);
     float sx = width * radius;

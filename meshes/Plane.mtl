@@ -6,5 +6,5 @@ Ks 0.0 0.0 0.0
 Ka 1.0 1.0 1.0
 Ns 1.
 map_Kd textures/SandDiffuse.png
-map_bump textures/SandNormal.png
+map_bump textures/MetalNormal.png
 

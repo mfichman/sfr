@@ -37,6 +37,7 @@ Ptr<SFR::ShadowRenderer> shadowRenderer;
 Ptr<SFR::TextureRenderer> textureRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::Transform> camera;
+Ptr<SFR::Transform> lightNode;
 float elapsedTime = 0.f;
 float z = 3.1f;
 float x = -1.8f;
@@ -92,10 +93,13 @@ void initLights() {
             Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(2048, 2048));
             Ptr<SFR::SpotLight> light(new SFR::SpotLight);
             light->spotCutoffIs(20.f);
-            light->spotPowerIs(200.f);
-            light->linearAttenuationIs(0.04f);
+            light->spotPowerIs(40.f);
+			light->constantAttenuationIs(1.f);
+            light->linearAttenuationIs(0.f);
+			light->quadraticAttenuationIs(0.f);
             light->specularColorIs(SFR::Color(.4f, .4f, 1.f, 1.f));
             light->specularColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
+			light->diffuseColorIs(SFR::Color(1.f, 1.f, 1.f, 1.f));
             light->directionIs(SFR::Vector(0, -1, 0));
             light->shadowMapIs(target.ptr());
 
@@ -103,6 +107,7 @@ void initLights() {
             node->positionIs(SFR::Vector(i * 2.f, 16.f, j * 5.f + 1.f));
             node->childNew(light.ptr());
             world->root()->childNew(node.ptr());
+			lightNode = node;
         }
     }
 }
@@ -137,8 +142,21 @@ void handleInput() {
     if (window->GetInput().IsKeyDown(sf::Key::Down)) {
         z += 2.f * elapsedTime;
     }
+	SFR::Vector pos = lightNode->position();
+	if (window->GetInput().IsKeyDown(sf::Key::W)) {
+		pos.x += 2.f * elapsedTime;
+	}
+	if (window->GetInput().IsKeyDown(sf::Key::S)) {
+		pos.x -= 2.f * elapsedTime;
+	}
+	if (window->GetInput().IsKeyDown(sf::Key::A)) {
+		pos.z += 2.f * elapsedTime;
+	}
+	if (window->GetInput().IsKeyDown(sf::Key::D)) {
+		pos.z -= 2.f * elapsedTime;
+	}
+    lightNode->positionIs(pos);
 
-	//float const y = .9f;
 	float const y = 2.f;
     camera->transformIs(SFR::Matrix::look(
         SFR::Vector(x, y, z),

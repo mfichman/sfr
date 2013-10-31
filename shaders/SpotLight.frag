@@ -44,7 +44,7 @@ float shadowLookup(vec4 coord) {
 	);
 	float shadowIntensity = 0.8;
 	float shadowMapSize = 2048.;
-	float bias = 0.0005;
+	float bias = 0.00005;
 	float shadow = 0.f;
 	float z = coord.z/coord.w;
 	for(int i = 0; i < 4; i++) {
