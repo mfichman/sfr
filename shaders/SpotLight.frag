@@ -8,6 +8,7 @@
 #version 130
 #pragma include "shaders/Light.frag"
 
+uniform sampler2D shadowMap;
 uniform float atten0; 
 uniform float atten1;
 uniform float atten2;
@@ -21,11 +22,21 @@ in vec3 lightPosition;
 
 out vec4 color; // Output to color buffer
 
-float shadowLookup(vec4 coord) {
-	// PCF shadow lookup using poission disk distribution for samples. Assumes 
+float shadowPoissonPcf(in LightingInfo li) {
+	// PCF shadow lookup using poisson disk distribution for samples. Assumes 
 	// that the shadow map size is 2048x2048.  Input: Coordinates in light clip 
 	// space (including perspective divide by w).  Output: A value from 1-0, 
 	// where 1 is fully lit and 0 is in full shadow.
+
+    // Get the world position from the position G-buffer.  Note that this 
+	// requires the position G-buffer to have a decent amount of precision
+	// per component (preferrably 16-bit float or higher)
+    vec3 world = texture2D(positionBuffer, li.viewport).xyz;
+
+	// Transform the world coordinates to light space and renormalize
+    vec4 shadowCoord = lightMatrix * vec4(world, 1.);
+	shadowCoord = shadowCoord/shadowCoord.w;
+
 	vec2 poisson[4] = vec2[](
 	    vec2(-0.94201624, -0.39906216),
 		vec2(0.94558609, -0.76890725),
@@ -36,12 +47,11 @@ float shadowLookup(vec4 coord) {
 	float shadowMapSize = 1024.;
 	float bias = 0.00005;
 	float shadow = 0.;
-	float z = coord.z/coord.w;
 	for(int i = 0; i < 4; i++) {
-	    vec2 sample = coord.xy + poisson[i]/shadowMapSize;
+	    vec2 sample = shadowCoord.xy + poisson[i]/shadowMapSize;
 		float shadowDepth = texture2D(shadowMap, sample).z;
-		
-		if(z > shadowDepth + bias) {
+	
+		if(shadowCoord.z > shadowDepth + bias) {
 			shadow += .25;
 		}
 	}
@@ -51,13 +61,7 @@ float shadowLookup(vec4 coord) {
 /* Deferred spot light shader */
 void main() {
 	LightingInfo li = lightingInfo();
-
-    // Get the world position from the position G-buffer.  Note that this 
-	// requires the position G-buffer to have a decent amount of precision
-	// per component (preferrably 16-bit float or higher)
-    vec3 world = texture2D(positionBuffer, li.viewport).xyz;
-    vec4 shadowCoord = lightMatrix * vec4(world, 1.);
-    float shadow = shadowLookup(shadowCoord/shadowCoord.w);
+	float shadow = shadowPoissonPcf(li);
 
 	// Sample the normal and the view vector
 	vec3 V = normalize(-li.view); // View vec

@@ -137,6 +137,7 @@ void LightRenderer::operator()(HemiLight* light) {
     transform_ = transform_ * Matrix::scale(radius, radius, radius);
     
     // This renders the light's bounding volume (usually a sphere)
+	// FIXME: If attenuation is 0, then render a fullscreen quad instead
     operator()(unitSphere_.ptr());
     transform_ = previous;
 }

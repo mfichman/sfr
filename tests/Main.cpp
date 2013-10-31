@@ -83,7 +83,7 @@ void handleInput();
 void initLights() {
     Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
     light1->linearAttenuationIs(0.1f);
-    light1->diffuseColorIs(SFR::Color(.8f, .8f, .8f, 1.f));
+    light1->diffuseColorIs(SFR::Color(0.8f, .8f, .8f, 1.f));
     light1->backDiffuseColorIs(SFR::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
     world->root()->childNew(light1.ptr());

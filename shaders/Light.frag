@@ -5,7 +5,6 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-uniform sampler2D shadowMap;
 uniform sampler2D diffuseBuffer;
 uniform sampler2D specularBuffer;
 uniform sampler2D normalBuffer;
