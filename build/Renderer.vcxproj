@@ -59,12 +59,15 @@
     <None Include="..\shaders\Flat.vert" />
     <None Include="..\shaders\HemiLight.frag" />
     <None Include="..\shaders\HemiLight.vert" />
+    <None Include="..\shaders\Light.frag" />
     <None Include="..\shaders\Model.frag" />
     <None Include="..\shaders\Model.vert" />
     <None Include="..\shaders\PointLight.frag" />
     <None Include="..\shaders\PointLight.vert" />
     <None Include="..\shaders\SpotLight.frag" />
     <None Include="..\shaders\SpotLight.vert" />
+    <None Include="..\shaders\Texture.frag" />
+    <None Include="..\shaders\Texture.vert" />
     <None Include="..\shaders\Transparency.frag" />
     <None Include="..\shaders\Transparency.vert" />
   </ItemGroup>
@@ -150,10 +153,11 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>SFR/Common.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdi32.lib;user32.lib;glu32.lib;glew32-s-d.lib;sfml-main-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib</AdditionalDependencies>
+      <AdditionalDependencies>gdi32.lib;user32.lib;glu32.lib;glew32-s.lib;sfml-main.lib;sfml-system-s.lib;sfml-graphics-s.lib;sfml-window-s.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>Lib;D:\Libraries</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>

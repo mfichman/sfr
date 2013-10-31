@@ -18,7 +18,7 @@ public:
     class Notifiee;
     enum Status { COMPILED, DIRTY };
 
-    Shader(GLenum type, const std::string& name);
+    Shader(const std::string& name, GLenum type);
     ~Shader(); 
 
     const std::string& name() const;

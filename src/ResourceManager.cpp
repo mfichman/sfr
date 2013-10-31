@@ -15,14 +15,15 @@
 #include "SFR/Transform.hpp"
 #include "SFR/EffectLoader.hpp"
 #include "SFR/Effect.hpp"
+#include "SFR/Shader.hpp"
 #include <algorithm>
 
 using namespace SFR;
 
 ResourceManager::ResourceManager() {
     meshLoader_ = new WavefrontLoader(this);
-    effectLoader_ = new EffectLoader;
-    textureLoader_ = new TextureLoader;
+    effectLoader_ = new EffectLoader(this);
+    textureLoader_ = new TextureLoader(this);
     notifieeNew(meshLoader_.ptr());
     notifieeNew(effectLoader_.ptr());
     notifieeNew(textureLoader_.ptr());
@@ -84,6 +85,17 @@ Effect* ResourceManager::effectNew(const std::string& name) {
         }
     }
     return effect;
+}
+
+Shader* ResourceManager::shaderNew(const std::string& name, GLenum type) {
+    Shader* shader = shader_[name].ptr();
+    if (!shader) {
+        shader_[name] = shader = new Shader(name, type);
+        for (size_t i = 0; i < notifiee_.size(); i++) {
+            notifiee_[i]->onShaderNew(shader);
+        }
+    }
+    return shader;
 }
 
 Mesh* ResourceManager::mesh(const std::string& name) const {

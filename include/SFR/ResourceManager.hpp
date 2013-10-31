@@ -27,12 +27,14 @@ public:
     Transform* nodeNew(const std::string& name);
     Instance* instanceNew(const std::string& name);
     Effect* effectNew(const std::string& name);
+	Shader* shaderNew(const std::string& name, GLenum type);
 
     Mesh* mesh(const std::string& name) const;
     Material* material(const std::string& name) const;
     Texture* texture(const std::string& name) const;
     Transform* node(const std::string& name) const;
     Effect* effect(const std::string& name) const;
+	Shader* shader(const std::string& name) const;
     void notifieeNew(Notifiee* notifiee);
     void notifieeDel(Notifiee* notifiee);
 
@@ -42,6 +44,7 @@ private:
     std::map<std::string, Ptr<Texture> > texture_;
     std::map<std::string, Ptr<Transform> > node_;
     std::map<std::string, Ptr<Effect> > effect_;
+	std::map<std::string, Ptr<Shader> > shader_;
     std::vector<Notifiee*> notifiee_;
 
     Ptr<WavefrontLoader> meshLoader_;
@@ -52,11 +55,15 @@ private:
 
 class ResourceManager::Notifiee : public Interface {
 public:
+	Notifiee::Notifiee(ResourceManager* notifier) : notifier_(notifier) {}
     virtual void onMeshNew(Mesh* mesh) {}
     virtual void onMaterialNew(Material* material) {}
     virtual void onTextureNew(Texture* texture) {}
     virtual void onNodeNew(Transform* transform) {}
     virtual void onEffectNew(Effect* effect) {}
+	virtual void onShaderNew(Shader* shader) {}
+
+ 	Ptr<ResourceManager> notifier_;
 };
 
 }

@@ -20,10 +20,6 @@
 
 using namespace SFR;
 
-WavefrontLoader::WavefrontLoader(ResourceManager* manager) {
-    resourceManager_ = manager;
-}
-
 void WavefrontLoader::onNodeNew(Transform* transform) {
     static const std::string ext = "obj";
     std::string name = transform->name();
@@ -69,7 +65,7 @@ void WavefrontLoader::newModel(std::istream& in) {
             std::string name;
             in >> name;
             name = transform_->name() + "/" + name;
-            material_ = resourceManager_->material(name);
+            material_ = notifier_->material(name);
         } else if (command == "o") {
             std::string name;
             in >> name;
@@ -131,9 +127,9 @@ void WavefrontLoader::newMesh() {
         Ptr<Model> model(new Model);
         model->meshIs(mesh_.ptr());
         if (!material_) {
-            Ptr<Texture> white = resourceManager_->textureNew("textures/White.png");
-            Ptr<Texture> blue = resourceManager_->textureNew("textures/Blue.png");
-            material_ = resourceManager_->materialNew("Default");
+            Ptr<Texture> white = notifier_->textureNew("textures/White.png");
+            Ptr<Texture> blue = notifier_->textureNew("textures/Blue.png");
+            material_ = notifier_->materialNew("Default");
             material_->textureIs("diffuse", white.ptr());
             material_->textureIs("specular", white.ptr());
             material_->textureIs("normal", blue.ptr());
@@ -150,7 +146,7 @@ void WavefrontLoader::newMesh(const std::string& name) {
     // Each OBJ file may have multiple meshes inside of it, specified
     // by the "o" command.  Read in each mesh separately and then add it to 
     // the scene graph.
-    mesh_ = resourceManager_->meshNew(transform_->name() + "/" + name);
+    mesh_ = notifier_->meshNew(transform_->name() + "/" + name);
     vertexBuffer_ = new MutableAttributeBuffer<Vector>("position");
     normalBuffer_ = new MutableAttributeBuffer<Vector>("normal");
     texCoordBuffer_ = new MutableAttributeBuffer<TexCoord>("texCoord");
@@ -244,8 +240,8 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
     // Open the file for the current material library
     std::ifstream in((prefix + name).c_str());
 
-    Ptr<Texture> white = resourceManager_->textureNew("textures/White.png");
-    Ptr<Texture> blue = resourceManager_->textureNew("textures/Blue.png");
+    Ptr<Texture> white = notifier_->textureNew("textures/White.png");
+    Ptr<Texture> blue = notifier_->textureNew("textures/Blue.png");
     
     // Read in the whole file, one command at a time.  Each line starts
 	// with a command word or "#" if the line is a comment.
@@ -262,7 +258,7 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             std::string name;
             in >> name;
             name = transform_->name() + "/" + name;
-            material_ = resourceManager_->materialNew(name);
+            material_ = notifier_->materialNew(name);
             material_->textureIs("diffuse", white.ptr());
             material_->textureIs("specular", white.ptr());
             material_->textureIs("normal", blue.ptr());
@@ -272,7 +268,7 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
         } else if (command == "map_bump" || command == "bump") {
             std::string name;
             in >> name;
-            Ptr<Texture> texture = resourceManager_->textureNew(name);
+            Ptr<Texture> texture = notifier_->textureNew(name);
             material_->textureIs("normal", texture.ptr());
         } else if (command == "Ka") {
             Color ambient;
@@ -293,12 +289,12 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
         } else if (command == "map_Kd") {
             std::string name;
             in >> name;
-            Ptr<Texture> texture = resourceManager_->textureNew(name);
+            Ptr<Texture> texture = notifier_->textureNew(name);
             material_->textureIs("diffuse", texture.ptr());
         } else if (command == "map_Ks") {
             std::string name;
             in >> name;
-            Ptr<Texture> texture = resourceManager_->textureNew(name);
+            Ptr<Texture> texture = notifier_->textureNew(name);
             material_->textureIs("specular", texture.ptr());
         } else if (command == "d") {
             float opacity;

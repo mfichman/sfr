@@ -21,7 +21,7 @@ namespace SFR {
 /* Loads Wavefront OBJ files */
 class WavefrontLoader : public ResourceManager::Notifiee {
 public:
-    WavefrontLoader(ResourceManager* manager);
+	WavefrontLoader(ResourceManager* notifier) : ResourceManager::Notifiee(notifier) {};
     void onNodeNew(Transform* transform);
 
 private:

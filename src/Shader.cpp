@@ -10,7 +10,7 @@
 
 using namespace SFR;
 
-Shader::Shader(GLenum type, const std::string& name) {
+Shader::Shader(const std::string& name, GLenum type) {
     name_ = name;
     id_ = 0;
     status_ = DIRTY;

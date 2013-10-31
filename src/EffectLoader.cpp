@@ -15,16 +15,43 @@
 using namespace SFR;
 
 void EffectLoader::onEffectNew(Effect* effect) {
-    Ptr<Shader> vertShader(new Shader(GL_VERTEX_SHADER, effect->name()));
-    Ptr<Shader> fragShader(new Shader(GL_FRAGMENT_SHADER, effect->name()));
-
-    vertShader->sourceIs(fileContents(effect->name() + ".vert"));
-    fragShader->sourceIs(fileContents(effect->name() + ".frag"));
+	Ptr<Shader> fragShader = notifier_->shaderNew(effect->name() + ".frag", GL_FRAGMENT_SHADER);
+	Ptr<Shader> vertShader = notifier_->shaderNew(effect->name() + ".vert", GL_VERTEX_SHADER);
 
     effect->fragmentShaderIs(fragShader.ptr());
     effect->vertexShaderIs(vertShader.ptr());
 
     effect->statusIs(Effect::LINKED);
+}
+
+void EffectLoader::onShaderNew(Shader* shader) {
+	std::string source = fileContents(shader->name());
+
+	size_t i = 0;
+	while (i != std::string::npos) {
+		std::string include;
+		std::string const pragma = "#pragma include";
+		size_t start = i = source.find(pragma, i);
+		if (i == std::string::npos) { continue; }
+		i = i + pragma.size();
+		while (i != std::string::npos && source[i] == ' ') { 
+			++i; // Skip whitespace
+		} 
+		if (i != std::string::npos && source[i] == '"') { 
+			++i;
+		} else {
+			continue;
+		}
+		while (i != std::string::npos && source[i] != '"' && source[i] != '\n') {
+			include += source[i];
+			++i;
+		}
+		i += 1;
+		Ptr<Shader> inc = notifier_->shaderNew(include, shader->type());
+		source.replace(start, i-start, inc->source());
+	}
+	
+	shader->sourceIs(source);
 }
 
 std::string EffectLoader::fileContents(const std::string& path) {
