@@ -7,7 +7,6 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include <iostream>
 
 std::ostream& operator<<(std::ostream& out, const SFR::Vector& vector);
 std::istream& operator>>(std::istream& in, SFR::Vector& vector);

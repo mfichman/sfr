@@ -7,7 +7,6 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include <vector>
 
 namespace SFR {
 

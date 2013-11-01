@@ -8,7 +8,6 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
-#include <vector>
 
 namespace SFR {
 

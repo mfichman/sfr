@@ -7,7 +7,6 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include <iostream>
 
 std::ostream& operator<<(std::ostream& out, const SFR::Quaternion& quaternion);
 std::istream& operator>>(std::istream& in, SFR::Quaternion& quaternion);

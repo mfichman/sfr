@@ -13,7 +13,6 @@
 #include "SFR/Matrix.hpp"
 #include "SFR/Vector.hpp"
 #include "SFR/Iterator.hpp"
-#include <vector>
 
 namespace SFR {
 

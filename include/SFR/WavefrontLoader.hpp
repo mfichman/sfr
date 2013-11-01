@@ -12,9 +12,6 @@
 #include "SFR/TexCoord.hpp"
 #include "SFR/MeshVertex.hpp"
 #include "SFR/AttributeBuffer.hpp"
-#include <fstream>
-#include <map>
-#include <memory>
 
 namespace SFR {
 

@@ -10,7 +10,6 @@
 #include "SFR/Node.hpp"
 #include "SFR/Color.hpp"
 #include "SFR/Vector.hpp"
-#include <vector>
 
 namespace SFR {
 

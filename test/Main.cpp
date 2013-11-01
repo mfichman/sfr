@@ -38,7 +38,7 @@ Ptr<SFR::TextureRenderer> textureRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::Transform> camera;
 Ptr<SFR::Transform> lightNode;
-float elapsedTime = 0.f;
+sf::Time elapsedTime = sf::seconds(0.f);
 float z = 3.1f;
 float x = -1.8f;
 bool useNullRenderer = false;
@@ -58,7 +58,7 @@ void initWindow() {
         throw std::runtime_error("This program requires OpenGL 3.0");
     }
 #endif
-    glViewport(0, 0, window->GetWidth(), window->GetHeight());
+    glViewport(0, 0, window->getSize().x, window->getSize().y);
 
     // Set up the renderer, resources, manager, etc.
     manager = new SFR::ResourceManager;
@@ -90,7 +90,7 @@ void initLights() {
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
-            Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(1024, 1024));
+            Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(2048, 2048));
             Ptr<SFR::SpotLight> light(new SFR::SpotLight);
             light->spotCutoffIs(20.f);
             light->spotPowerIs(40.f);
@@ -115,13 +115,13 @@ void initLights() {
 void handleInput() {
     // Loop until the event queue is empty, and then poll for keys
     sf::Event evt;
-    while (window->GetEvent(evt)) {
-        switch (evt.Type) {
+    while (window->pollEvent(evt)) {
+        switch (evt.type) {
         case sf::Event::Closed:
             std::cout << "Exiting" << std::endl;
             exit(0);
         case sf::Event::KeyPressed:
-            if (evt.Key.Code == sf::Key::N) {
+            if (evt.key.code == sf::Keyboard::N) {
                 useNullRenderer = !useNullRenderer;
             }
             break;
@@ -130,30 +130,30 @@ void handleInput() {
         }
     }
 
-    if (window->GetInput().IsKeyDown(sf::Key::Left)) {
-        x += 2.f * elapsedTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        x += 2.f * elapsedTime.asSeconds();
     } 
-    if (window->GetInput().IsKeyDown(sf::Key::Right)) {
-        x -= 2.f * elapsedTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        x -= 2.f * elapsedTime.asSeconds();
     }
-    if (window->GetInput().IsKeyDown(sf::Key::Up)) {
-        z -= 2.f * elapsedTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        z -= 2.f * elapsedTime.asSeconds();
     } 
-    if (window->GetInput().IsKeyDown(sf::Key::Down)) {
-        z += 2.f * elapsedTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        z += 2.f * elapsedTime.asSeconds();
     }
 	SFR::Vector pos = lightNode->position();
-	if (window->GetInput().IsKeyDown(sf::Key::W)) {
-		pos.x += 2.f * elapsedTime;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		pos.x += 2.f * elapsedTime.asSeconds();
 	}
-	if (window->GetInput().IsKeyDown(sf::Key::S)) {
-		pos.x -= 2.f * elapsedTime;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		pos.x -= 2.f * elapsedTime.asSeconds();
 	}
-	if (window->GetInput().IsKeyDown(sf::Key::A)) {
-		pos.z += 2.f * elapsedTime;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		pos.z += 2.f * elapsedTime.asSeconds();
 	}
-	if (window->GetInput().IsKeyDown(sf::Key::D)) {
-		pos.z -= 2.f * elapsedTime;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		pos.z -= 2.f * elapsedTime.asSeconds();
 	}
     lightNode->positionIs(pos);
 
@@ -192,17 +192,17 @@ void runRenderLoop() {
     float perfFrames = 0.f;
 
     // Run the game loop while the window is still open
-    while (window->IsOpened()) {
-        elapsedTime = timer->GetElapsedTime();
-        realTime += elapsedTime;
-        timer->Reset();
+    while (window->isOpen()) {
+        elapsedTime = timer->getElapsedTime();
+        realTime += elapsedTime.asSeconds();
+        timer->restart();
 
         handleInput();
         
         // Record the CPU time used while traversing the scene graph.  Don't
         // include time processing input or running the Display() function,
         // because that causes the CPU to wait for the GPU to finish rendering.
-        perfClock.Reset();
+        perfClock.restart();
         if (useNullRenderer) {
             // Traverse scene twice, just like the other renderer...
             nullRenderer(world.ptr());
@@ -216,7 +216,7 @@ void runRenderLoop() {
             shadowRenderer(world.ptr());
             deferredRenderer(world.ptr());
         }
-        perfTime += perfClock.GetElapsedTime();
+        perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;
 
         // Display the time every couple of seconds.  This is not the total
@@ -229,7 +229,7 @@ void runRenderLoop() {
             perfFrames = 0;
             realTime = 0;
         }
-        window->Display();
+        window->display();
     }
 }
 

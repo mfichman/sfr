@@ -9,9 +9,6 @@
 #include "SFR/Common.hpp"
 #include "SFR/Node.hpp"
 #include "SFR/Mesh.hpp"
-#include <string>
-#include <map>
-#include <vector>
 
 namespace SFR {
 

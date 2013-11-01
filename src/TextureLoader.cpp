@@ -16,11 +16,11 @@ using namespace SFR;
 void TextureLoader::onTextureNew(Texture* texture) {
 
     sf::Image image;
-    if (!image.LoadFromFile(texture->name())) {
+    if (!image.loadFromFile(texture->name())) {
         throw std::runtime_error("Couldn't load image: " + texture->name());
     }
 
-    texture->widthIs(image.GetWidth());
-    texture->heightIs(image.GetHeight());
-    texture->dataIs(image.GetPixelsPtr());
+    texture->widthIs(image.getSize().x);
+    texture->heightIs(image.getSize().y);
+    texture->dataIs(image.getPixelsPtr());
 }

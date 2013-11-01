@@ -28,6 +28,17 @@
 #endif
 
 #include "SFR/Ptr.hpp"
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <stdexcept>
+#include <fstream>
+#include <memory>
+
 
 #endif
 

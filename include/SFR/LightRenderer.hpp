@@ -64,6 +64,8 @@ private:
     GLint projection_;
     GLint unproject_;
     GLint light_;
+    
+    GLint shadowMapSize_;
 };
 
 }

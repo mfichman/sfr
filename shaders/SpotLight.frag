@@ -17,6 +17,7 @@ uniform vec3 Ls;
 uniform float spotCutoff;
 uniform float spotPower;
 uniform vec3 direction;
+uniform float shadowMapSize;
 
 in vec3 lightPosition;
 
@@ -44,7 +45,6 @@ float shadowPoissonPcf(in LightingInfo li) {
 		vec2(0.34495938, 0.29387760)
 	);
 	float shadowIntensity = 0.8;
-	float shadowMapSize = 1024.;
 	float bias = 0.00005;
 	float shadow = 0.;
 	for(int i = 0; i < 4; i++) {

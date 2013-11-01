@@ -9,9 +9,6 @@
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
 #include "SFR/Color.hpp"
-#include <map>
-#include <vector>
-#include <string>
 
 namespace SFR {
 

@@ -8,7 +8,6 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/Interface.hpp"
-#include <vector>
 
 namespace SFR {
 
@@ -24,6 +23,8 @@ public:
     GLuint id() const;
     GLuint depthBuffer() const;
     Status status() const;
+    GLuint width() const { return width_; }
+    GLuint height() const { return height_; }
 
     void statusIs(Status status);
     void notifieeNew(Notifiee* notifiee);

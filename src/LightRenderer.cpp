@@ -20,10 +20,6 @@
 #include "SFR/World.hpp"
 #include "SFR/DepthRenderTarget.hpp"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-#include <cmath>
-
 using namespace SFR;
 
 LightRenderer::LightRenderer(ResourceManager* manager) {
@@ -180,10 +176,13 @@ void LightRenderer::operator()(SpotLight* light) {
     if (shadowMap_ != -1 && light->shadowMap()) {
         glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
+        glUniform1f(shadowMapSize_, light->shadowMap()->width());
     }
     if (light_ != -1) {
         glUniformMatrix4fv(light_, 1, 0, light->transform());
     }
+
+
 
     // Save the old model matrix
     Matrix previous = transform_;
@@ -283,6 +282,7 @@ void LightRenderer::operator()(Effect* effect) {
     unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
     light_ = glGetUniformLocation(effect_->id(), "lightMatrix");
     position_ = glGetAttribLocation(effect_->id(), "positionIn");
+    shadowMapSize_ = glGetUniformLocation(effect_->id(), "shadowMapSize"); 
 
     // Set texture samplers
     glUniform1i(diffuseBuffer_, 0);

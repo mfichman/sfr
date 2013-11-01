@@ -10,7 +10,6 @@
 #include "SFR/Node.hpp"
 #include "SFR/Frustum.hpp"
 #include "SFR/Matrix.hpp"
-#include <vector>
 
 namespace SFR {
 
