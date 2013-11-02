@@ -92,18 +92,5 @@ void DepthRenderTarget::statusIs(Status status) {
         glDrawBuffer(GL_BACK);
         glReadBuffer(GL_BACK);
     }
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onStatus();
-    }
 }
 
-void DepthRenderTarget::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void DepthRenderTarget::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}

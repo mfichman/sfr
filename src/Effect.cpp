@@ -30,20 +30,20 @@ const std::string& Effect::name() const {
     return name_;
 }
 
-Shader* Effect::fragmentShader() const {
-    return fragmentShader_.ptr();
+Ptr<Shader> Effect::fragmentShader() const {
+    return fragmentShader_;
 }
 
-Shader* Effect::vertexShader() const {
-    return vertexShader_.ptr();
+Ptr<Shader> Effect::vertexShader() const {
+    return vertexShader_;
 }
 
 GLuint Effect::id() const {
     return id_;
 }
 
-void Effect::fragmentShaderIs(Shader* shader) {
-    if (fragmentShader_ == shader) {
+void Effect::fragmentShaderIs(Ptr<Shader> shader) {
+    if (fragmentShader_ == Ptr<Shader>(shader)) {
         return;
     }
     if (GL_FRAGMENT_SHADER != shader->type()) {
@@ -58,14 +58,10 @@ void Effect::fragmentShaderIs(Shader* shader) {
         glAttachShader(id_, fragmentShader_->id());
     }
     statusIs(DIRTY);
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onFragmentShader();
-    }
 }
 
-void Effect::vertexShaderIs(Shader* shader) {
-    if (vertexShader_ == shader) {
+void Effect::vertexShaderIs(Ptr<Shader> shader) {
+    if (vertexShader_ == Ptr<Shader>(shader)) {
         return;
     }
     if (GL_VERTEX_SHADER != shader->type()) {
@@ -80,10 +76,6 @@ void Effect::vertexShaderIs(Shader* shader) {
         glAttachShader(id_, vertexShader_->id());
     }
     statusIs(DIRTY);
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onVertexShader();
-    }
 }
 
 void Effect::statusIs(Status status) {
@@ -136,19 +128,4 @@ void Effect::statusIs(Status status) {
     }
 
     status_ = status;
-
-   
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onStatus();
-    }
-}
-
-void Effect::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void Effect::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }

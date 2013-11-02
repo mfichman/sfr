@@ -8,7 +8,6 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/Node.hpp"
-#include "SFR/List.hpp"
 #include "SFR/Quaternion.hpp"
 #include "SFR/Matrix.hpp"
 #include "SFR/Vector.hpp"
@@ -19,8 +18,6 @@ namespace SFR {
 /* Rotation, translation, scaling node with children. */
 class Transform : public Node {
 public:
-    class Notifiee;
-
     const Matrix& transform() const;
     Vector position() const;
     Quaternion rotation() const;
@@ -31,28 +28,15 @@ public:
     void positionIs(const Vector& position);
     void rotationIs(const Quaternion& rotation);
     void nameIs(const std::string& name);
-    void childNew(Node* child);
-    void childDel(Node* child);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
+    void childNew(Ptr<Node> child);
+    void childDel(Ptr<Node> child);
 
-    void operator()(Functor* functor);
+    void operator()(Ptr<Functor> functor);
 
 private:
     std::vector<Ptr<Node> > children_;
     Matrix transform_;
-    std::vector<Notifiee*> notifiee_;
     std::string name_;
-};
-
-class Transform::Notifiee : public Interface {
-public:
-    virtual void onTransform() {}
-    virtual void onPosition() {}
-    virtual void onRotation() {}
-    virtual void onName() {}
-    virtual void onChildNew(Node* child) {}
-    virtual void onChildDel(Node* child) {}
 };
 
 }

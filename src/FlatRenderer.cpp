@@ -19,37 +19,37 @@
 
 using namespace SFR;
 
-FlatRenderer::FlatRenderer(ResourceManager* manager) {
+FlatRenderer::FlatRenderer(Ptr<ResourceManager> manager) {
     flatShader_ = manager->effectNew("shaders/Flat");
 }
 
-void FlatRenderer::operator()(World* world) {
+void FlatRenderer::operator()(Ptr<World> world) {
     glEnable(GL_DEPTH_TEST);
 
     world_ = world;
     operator()(world_->root());
 
-    operator()(static_cast<Effect*>(0));
+    operator()(static_cast<Ptr<Effect>>(0));
     glDisable(GL_DEPTH_TEST);
 }
 
-void FlatRenderer::operator()(Transform* transform) {
+void FlatRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
 
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node->operator()(shared_from_this());
     }
 
     transform_ = previous;
 }
 
-void FlatRenderer::operator()(Model* object) {
-    operator()(flatShader_.ptr());
+void FlatRenderer::operator()(Ptr<Model> object) {
+    operator()(flatShader_);
     operator()(object->mesh());
 }
 
-void FlatRenderer::operator()(Mesh* mesh) {
+void FlatRenderer::operator()(Ptr<Mesh> mesh) {
     if (!mesh || !mesh->indexBuffer()) {
         return;
     }
@@ -62,7 +62,7 @@ void FlatRenderer::operator()(Mesh* mesh) {
     operator()(mesh->indexBuffer());
 }
 
-void FlatRenderer::operator()(AttributeBuffer* buffer) {
+void FlatRenderer::operator()(Ptr<AttributeBuffer> buffer) {
     if (buffer && attrib_ != -1) {
         buffer->statusIs(AttributeBuffer::SYNCED);
         glEnableVertexAttribArray(attrib_);
@@ -74,11 +74,11 @@ void FlatRenderer::operator()(AttributeBuffer* buffer) {
     }
 }
 
-void FlatRenderer::operator()(IndexBuffer* buffer) {
+void FlatRenderer::operator()(Ptr<IndexBuffer> buffer) {
     if (!world_ || !world_->camera()) {
         return;
     }
-    Camera* camera = world_->camera();
+    Ptr<Camera> camera = world_->camera();
 
     // Pass the model matrix to the vertex shader
     glUniformMatrix4fv(model_, 1, 0, transform_);
@@ -92,8 +92,8 @@ void FlatRenderer::operator()(IndexBuffer* buffer) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void FlatRenderer::operator()(Effect* effect) {
-    if (effect_.ptr() == effect) {
+void FlatRenderer::operator()(Ptr<Effect> effect) {
+    if (effect_ == effect) {
         return;
     }
     if (effect_) {

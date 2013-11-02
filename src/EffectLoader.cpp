@@ -14,17 +14,17 @@
 
 using namespace SFR;
 
-void EffectLoader::onEffectNew(Effect* effect) {
-	Ptr<Shader> fragShader = notifier_->shaderNew(effect->name() + ".frag", GL_FRAGMENT_SHADER);
-	Ptr<Shader> vertShader = notifier_->shaderNew(effect->name() + ".vert", GL_VERTEX_SHADER);
+void EffectLoader::onEffectNew(Ptr<Effect> effect) {
+	Ptr<Shader> fragShader(notifier_->shaderNew(effect->name() + ".frag", GL_FRAGMENT_SHADER));
+	Ptr<Shader> vertShader(notifier_->shaderNew(effect->name() + ".vert", GL_VERTEX_SHADER));
 
-    effect->fragmentShaderIs(fragShader.ptr());
-    effect->vertexShaderIs(vertShader.ptr());
+    effect->fragmentShaderIs(fragShader);
+    effect->vertexShaderIs(vertShader);
 
     effect->statusIs(Effect::LINKED);
 }
 
-void EffectLoader::onShaderNew(Shader* shader) {
+void EffectLoader::onShaderNew(Ptr<Shader> shader) {
 	std::string source = fileContents(shader->name());
 
 	size_t i = 0;
@@ -47,7 +47,7 @@ void EffectLoader::onShaderNew(Shader* shader) {
 			++i;
 		}
 		i += 1;
-		Ptr<Shader> inc = notifier_->shaderNew(include, shader->type());
+		Ptr<Shader> inc(notifier_->shaderNew(include, shader->type()));
 		source.replace(start, i-start, inc->source());
 	}
 	

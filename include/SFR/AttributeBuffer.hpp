@@ -11,9 +11,8 @@
 namespace SFR {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
-class AttributeBuffer : public Interface {
+class AttributeBuffer : public Interface<AttributeBuffer> {
 public:
-    class Notifiee;
     enum Status { SYNCED, DIRTY };
 
     AttributeBuffer(const std::string& name);
@@ -24,11 +23,8 @@ public:
     virtual GLuint elementCount() const=0;
     virtual GLuint elementSize() const=0;
     Status status() const;
-    Notifiee* notifiee() const;
 
     void statusIs(Status status);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
     virtual const void* data() const=0;
@@ -38,15 +34,6 @@ private:
     GLuint id_;
     Status status_;
 
-protected: 
-    std::vector<Notifiee*> notifiee_;
-};
-
-class AttributeBuffer::Notifiee : public Interface {
-public:
-    virtual void onStatus() {}
-    virtual void onElementCount() {}
-    virtual void onElement(GLuint index) {}
 };
 
 template <typename T>
@@ -74,9 +61,6 @@ public:
         }
         element_.resize(count);
         statusIs(DIRTY);
-        for (size_t i = 0; i < notifiee_.size(); i++) {
-            notifiee_[i]->onElementCount();
-        }
     }
 
     void elementIs(GLuint index, T element) {
@@ -85,9 +69,6 @@ public:
         }
         element_[index] = element;
         statusIs(DIRTY);
-        for (size_t i = 0; i < notifiee_.size(); i++) {
-            notifiee_[i]->onElement(index);
-        }
     }
 
 private:

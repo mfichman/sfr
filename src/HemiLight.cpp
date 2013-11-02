@@ -69,10 +69,6 @@ void HemiLight::diffuseColorIs(const Color& diffuse) {
         return;
     }
     diffuseColor_ = diffuse;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDiffuseColor();
-    }
 }
 
 void HemiLight::backDiffuseColorIs(const Color& backDiffuse) {
@@ -80,10 +76,6 @@ void HemiLight::backDiffuseColorIs(const Color& backDiffuse) {
         return;
     }
     backDiffuseColor_ = backDiffuse;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onBackDiffuseColor();
-    }
 }
 
 void HemiLight::directionIs(const Vector& direction) {
@@ -91,10 +83,6 @@ void HemiLight::directionIs(const Vector& direction) {
         return;
     }
     direction_ = direction;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDirection();
-    }
 }
 
 void HemiLight::constantAttenuationIs(float atten) {
@@ -102,10 +90,6 @@ void HemiLight::constantAttenuationIs(float atten) {
         return;
     }
     constantAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onConstantAttenuation();
-    }
 }
 
 void HemiLight::linearAttenuationIs(float atten) {
@@ -113,10 +97,6 @@ void HemiLight::linearAttenuationIs(float atten) {
         return;
     }
     linearAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onLinearAttenuation();
-    }
 }
 
 void HemiLight::quadraticAttenuationIs(float atten) {
@@ -124,22 +104,8 @@ void HemiLight::quadraticAttenuationIs(float atten) {
         return;
     }
     quadraticAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onQuadraticAttenuation();
-    }
 }
 
-void HemiLight::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void HemiLight::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-void HemiLight::operator()(Functor* functor) {
-    functor->operator()(this);
+void HemiLight::operator()(Ptr<Functor> functor) {
+    functor->operator()(std::static_pointer_cast<HemiLight>(shared_from_this()));
 }

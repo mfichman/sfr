@@ -16,8 +16,6 @@ namespace SFR {
 /* Simple point light with attenuation */
 class HemiLight : public Node {
 public:
-    class Notifiee;
-
     HemiLight();
     const Color& diffuseColor() const;
     const Color& backDiffuseColor() const;
@@ -33,10 +31,8 @@ public:
     void constantAttenuationIs(float atten);
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
-    void operator()(Functor* functor);
+    void operator()(Ptr<Functor> functor);
 
 private:
     Color diffuseColor_;
@@ -45,18 +41,6 @@ private:
     float constantAttenuation_;
     float linearAttenuation_;
     float quadraticAttenuation_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class HemiLight::Notifiee : public Interface {
-public:
-    virtual void onDiffuseColor() {}
-    virtual void onBackDiffuseColor() {}
-    virtual void onDirection() {}
-    virtual void onConstantAttenuation() {}
-    virtual void onLinearAttenuation() {}
-    virtual void onQuadraticAttenuation() {}
-    virtual void onTransform() {}
 };
 
 }

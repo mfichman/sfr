@@ -12,22 +12,19 @@
 namespace SFR {
 
 /* Geometric mesh node (with attached textures) */
-class Mesh : public Interface {
+class Mesh : public Interface<Mesh> {
 public:
-    class Notifiee;
     enum Status { SYNCED, DIRTY };
 
     Mesh(const std::string& name);
     const std::string& name() const;
-    AttributeBuffer* attributeBuffer(const std::string& name) const;
-    IndexBuffer* indexBuffer() const;
+    Ptr<AttributeBuffer> attributeBuffer(const std::string& name) const;
+    Ptr<IndexBuffer> indexBuffer() const;
     Status status() const;
 
-    void attributeBufferIs(const std::string& name, AttributeBuffer* buffer);
-    void indexBufferIs(IndexBuffer* indices);
+    void attributeBufferIs(const std::string& name, Ptr<AttributeBuffer> buffer);
+    void indexBufferIs(Ptr<IndexBuffer> indices);
     void statusIs(Status status);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
     void updateTangents();
@@ -35,15 +32,7 @@ private:
     std::string name_;
     std::map<std::string, Ptr<AttributeBuffer> > attributeBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
-    std::vector<Notifiee*> notifiee_;
     Status status_;
-};
-
-class Mesh::Notifiee : public Interface {
-public:
-    virtual void onAttributeBuffer(const std::string& name) {}
-    virtual void onIndexBuffer() {}
-    virtual void onStatus() {}
 };
 
 }

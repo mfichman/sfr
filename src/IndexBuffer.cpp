@@ -52,20 +52,6 @@ void IndexBuffer::statusIs(Status status) {
     }
 
     status_ = status;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onStatus();
-    }
-}
-
-void IndexBuffer::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void IndexBuffer::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
 
 void IndexBuffer::elementCountIs(GLuint count) {
@@ -74,9 +60,6 @@ void IndexBuffer::elementCountIs(GLuint count) {
     }
     element_.resize(count);
     statusIs(DIRTY);
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onElementCount();
-    } 
 }
 
 void IndexBuffer::elementIs(GLuint index, GLuint element) {
@@ -85,9 +68,6 @@ void IndexBuffer::elementIs(GLuint index, GLuint element) {
     }
     element_[index] = element;
     statusIs(DIRTY);
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onElement(index);
-    }
 }
 
 void IndexBuffer::syncHardwareBuffers() {

@@ -14,16 +14,16 @@ namespace SFR {
 /* Simple renderer.  Passes vertex, texture, and material info to a shader. */
 class MaterialRenderer : public Node::Functor {
 public:
-    MaterialRenderer(ResourceManager* manager);
-    void operator()(World* world);
-    void operator()(Transform* transform);
-    void operator()(Model* object);
-    void operator()(Mesh* mesh);
-    void operator()(Material* material);
-    void operator()(Texture* texture);
-    void operator()(Effect* effect);
-    void operator()(AttributeBuffer* buffer);
-    void operator()(IndexBuffer* buffer);
+    MaterialRenderer(Ptr<ResourceManager> manager);
+    void operator()(Ptr<World> world);
+    void operator()(Ptr<Transform> transform);
+    void operator()(Ptr<Model> object);
+    void operator()(Ptr<Mesh> mesh);
+    void operator()(Ptr<Material> material);
+    void operator()(Ptr<Texture> texture);
+    void operator()(Ptr<Effect> effect);
+    void operator()(Ptr<AttributeBuffer> buffer);
+    void operator()(Ptr<IndexBuffer> buffer);
 
 private:
     Matrix transform_;

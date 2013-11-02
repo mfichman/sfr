@@ -40,20 +40,6 @@ void AttributeBuffer::statusIs(Status status) {
     }
 
     status_ = status;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onStatus();
-    }
-}
-
-void AttributeBuffer::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void AttributeBuffer::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
 
 void AttributeBuffer::syncHardwareBuffers() {

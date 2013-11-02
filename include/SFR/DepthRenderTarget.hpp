@@ -12,10 +12,9 @@
 namespace SFR {
 
 /* Enables render-to-depth texture techniques (i.e., shadow mapping) */
-class DepthRenderTarget : public Interface {
+class DepthRenderTarget : public Interface<DepthRenderTarget> {
 public:
     enum Status { ENABLED, DISABLED };
-    class Notifiee;
 
     DepthRenderTarget(GLuint width, GLuint height);
     ~DepthRenderTarget();
@@ -27,11 +26,8 @@ public:
     GLuint height() const { return height_; }
 
     void statusIs(Status status);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
-    std::vector<Notifiee*> notifiee_;
     GLuint id_;
     GLuint width_;
     GLuint height_;
@@ -39,11 +35,6 @@ private:
     GLuint saveHeight_;
     GLuint depthBuffer_;
     Status status_;
-};
-
-class DepthRenderTarget::Notifiee : public Interface {
-public:
-    virtual void onStatus() {}
 };
 
 }

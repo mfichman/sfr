@@ -15,28 +15,17 @@ namespace SFR {
 /* Geometric mesh node (with attached textures) */
 class Model : public Node {
 public:
-    class Notifiee;
+    Ptr<Material> material() const;
+    Ptr<Mesh> mesh() const;
 
-    Material* material() const;
-    Mesh* mesh() const;
+    void materialIs(Ptr<Material> material);
+    void meshIs(Ptr<Mesh> mesh);
 
-    void materialIs(Material* material);
-    void meshIs(Mesh* mesh);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
-
-    virtual void operator()(Functor* functor);
+    virtual void operator()(Ptr<Functor> functor);
 
 private:
     Ptr<Material> material_;
     Ptr<Mesh> mesh_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class Model::Notifiee : public Interface {
-public:
-    virtual void onMesh() {}
-    virtual void onMaterial() {}
 };
 
 }

@@ -16,22 +16,22 @@
 
 using namespace SFR;
 
-DeferredRenderer::DeferredRenderer(ResourceManager* manager) {
+DeferredRenderer::DeferredRenderer(Ptr<ResourceManager> manager) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    materialPass_ = new MaterialRenderer(manager);
-    lightPass_ = new LightRenderer(manager);
-    transparencyPass_ = new TransparencyRenderer(manager);
-    renderTarget_ = new DeferredRenderTarget(viewport[2], viewport[3]);
+    materialPass_ = std::make_shared<MaterialRenderer>(manager);
+    lightPass_ = std::make_shared<LightRenderer>(manager);
+    transparencyPass_ = std::make_shared<TransparencyRenderer>(manager);
+    renderTarget_ = std::make_shared<DeferredRenderTarget>(viewport[2], viewport[3]);
 }
 
-void DeferredRenderer::operator()(World* world) {
+void DeferredRenderer::operator()(Ptr<World> world) {
 
     // Pass 1: Write material properties into the material G-Buffers
     renderTarget_->statusIs(DeferredRenderTarget::ENABLED);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    materialPass_(world);
+    materialPass_->operator()(world);
     renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
     
     // Pass 2: Render lighting using light bounding boxes
@@ -46,8 +46,8 @@ void DeferredRenderer::operator()(World* world) {
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(3));
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
-    lightPass_(world);
+    lightPass_->operator()(world);
 
     // Pass 3: Render transparent objects
-    transparencyPass_(world);
+    transparencyPass_->operator()(world);
 }

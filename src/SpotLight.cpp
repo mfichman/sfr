@@ -78,8 +78,8 @@ float SpotLight::radiusOfEffect() const {
 	}
 }
 
-DepthRenderTarget* SpotLight::shadowMap() const {
-    return shadowMap_.ptr();
+Ptr<DepthRenderTarget> SpotLight::shadowMap() const {
+    return shadowMap_;
 }
 
 const Matrix& SpotLight::transform() const {
@@ -91,10 +91,6 @@ void SpotLight::diffuseColorIs(const Color& diffuse) {
         return;
     }
     diffuseColor_ = diffuse;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDiffuseColor();
-    }
 }
 
 void SpotLight::specularColorIs(const Color& specular) {
@@ -102,10 +98,6 @@ void SpotLight::specularColorIs(const Color& specular) {
         return;
     }
     specularColor_ = specular;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpecularColor();
-    }
 }
 
 void SpotLight::directionIs(const Vector& direction) {
@@ -113,10 +105,6 @@ void SpotLight::directionIs(const Vector& direction) {
         return;
     }
     direction_ = direction;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDirection();
-    }
 }
 
 void SpotLight::constantAttenuationIs(float atten) {
@@ -124,10 +112,6 @@ void SpotLight::constantAttenuationIs(float atten) {
         return;
     }
     constantAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onConstantAttenuation();
-    }
 }
 
 void SpotLight::linearAttenuationIs(float atten) {
@@ -135,10 +119,6 @@ void SpotLight::linearAttenuationIs(float atten) {
         return;
     }
     linearAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onLinearAttenuation();
-    }
 }
 
 void SpotLight::quadraticAttenuationIs(float atten) {
@@ -146,10 +126,6 @@ void SpotLight::quadraticAttenuationIs(float atten) {
         return;
     }
     quadraticAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onQuadraticAttenuation();
-    }
 }
 
 void SpotLight::spotCutoffIs(float cutoff) {
@@ -157,10 +133,6 @@ void SpotLight::spotCutoffIs(float cutoff) {
         return;
     }
     spotCutoff_ = cutoff;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpotCutoff();
-    }
 }
 
 void SpotLight::spotPowerIs(float power) {
@@ -168,41 +140,19 @@ void SpotLight::spotPowerIs(float power) {
         return;
     }
     spotPower_ = power;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpotPower();
-    }
 }
 
-void SpotLight::shadowMapIs(DepthRenderTarget* target) {
+void SpotLight::shadowMapIs(Ptr<DepthRenderTarget> target) {
     if (shadowMap_ == target) {
         return;
     }
     shadowMap_ = target;
-    
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onShadowMap();
-    }
 }
 
 void SpotLight::transformIs(const Matrix& transform) {
     transform_ = transform;
-    
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onTransform();
-    }
 }
 
-void SpotLight::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void SpotLight::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-void SpotLight::operator()(Functor* functor) {
-    functor->operator()(this);
+void SpotLight::operator()(Ptr<Functor> functor) {
+    functor->operator()(std::static_pointer_cast<SpotLight>(shared_from_this()));
 }

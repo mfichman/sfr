@@ -15,12 +15,12 @@
 
 using namespace SFR;
 
-TextureRenderer::TextureRenderer(ResourceManager* manager) {
+TextureRenderer::TextureRenderer(Ptr<ResourceManager> manager) {
     texture_ = manager->effectNew("shaders/Texture");
 }
 
-void TextureRenderer::operator()(Texture* texture) {
-    operator()(texture_.ptr());
+void TextureRenderer::operator()(Ptr<Texture> texture) {
+    operator()(texture_);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
@@ -42,11 +42,11 @@ void TextureRenderer::operator()(Texture* texture) {
     glDisableVertexAttribArray(position_);
     glDisableVertexAttribArray(texCoord_);
     
-    operator()(static_cast<Effect*>(0));
+    operator()(static_cast<Ptr<Effect>>(0));
 }
 
-void TextureRenderer::operator()(Effect* effect) {
-    if (effect_.ptr() == effect) {
+void TextureRenderer::operator()(Ptr<Effect> effect) {
+    if (effect_ == effect) {
         return;
     }
     effect_ = effect;

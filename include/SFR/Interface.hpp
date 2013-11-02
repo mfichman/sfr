@@ -9,17 +9,8 @@
 namespace SFR {
 
 /* Provides intrusive smart-pointer support. */
-class Interface {
-public:
-    Interface();
-    virtual ~Interface();
-
-    void refCountInc();
-    void refCountDec();
-    int refCount() const;
-
-private:
-    int refCount_;
+template <typename T>
+class Interface : public std::enable_shared_from_this<T> {
 };
 
 }

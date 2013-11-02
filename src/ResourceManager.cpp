@@ -21,18 +21,13 @@
 using namespace SFR;
 
 ResourceManager::ResourceManager() {
-    meshLoader_ = new WavefrontLoader(this);
-    effectLoader_ = new EffectLoader(this);
-    textureLoader_ = new TextureLoader(this);
-    notifieeNew(meshLoader_.ptr());
-    notifieeNew(effectLoader_.ptr());
-    notifieeNew(textureLoader_.ptr());
+
 }
 
-Mesh* ResourceManager::meshNew(const std::string& name) {
-    Mesh* mesh = mesh_[name].ptr();
+Ptr<Mesh> ResourceManager::meshNew(const std::string& name) {
+    Ptr<Mesh> mesh = mesh_[name];
     if (!mesh) {
-        mesh_[name] = mesh = new Mesh(name);
+        mesh_[name] = mesh = std::make_shared<Mesh>(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onMeshNew(mesh);
         }
@@ -40,10 +35,10 @@ Mesh* ResourceManager::meshNew(const std::string& name) {
     return mesh;
 }
 
-Material* ResourceManager::materialNew(const std::string& name) {
-    Material* material = material_[name].ptr();
+Ptr<Material> ResourceManager::materialNew(const std::string& name) {
+    Ptr<Material> material = material_[name];
     if (!material) {
-        material_[name] = material = new Material(name);
+        material_[name] = material = std::make_shared<Material>(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onMaterialNew(material);
         }
@@ -51,10 +46,10 @@ Material* ResourceManager::materialNew(const std::string& name) {
     return material;
 }
 
-Texture* ResourceManager::textureNew(const std::string& name) {
-    Texture* texture = texture_[name].ptr();
+Ptr<Texture> ResourceManager::textureNew(const std::string& name) {
+    Ptr<Texture> texture = texture_[name];
     if (!texture) {
-        texture_[name] = texture = new Texture(name);
+        texture_[name] = texture = std::make_shared<Texture>(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onTextureNew(texture);
         }
@@ -62,11 +57,11 @@ Texture* ResourceManager::textureNew(const std::string& name) {
     return texture;
 }
 
-Transform* ResourceManager::nodeNew(const std::string& name) {
-    Transform* node = node_[name].ptr();
+Ptr<Transform> ResourceManager::nodeNew(const std::string& name) {
+    Ptr<Transform> node = node_[name];
     if (!node) {
         std::cout << "Loading node: " << name << std::endl;
-        node_[name] = node = new Transform();
+        node_[name] = node = std::make_shared<Transform>();
         node_[name]->nameIs(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onNodeNew(node);
@@ -76,10 +71,10 @@ Transform* ResourceManager::nodeNew(const std::string& name) {
 }
 
 
-Effect* ResourceManager::effectNew(const std::string& name) {
-    Effect* effect = effect_[name].ptr();
+Ptr<Effect> ResourceManager::effectNew(const std::string& name) {
+    Ptr<Effect> effect = effect_[name];
     if (!effect) {
-        effect_[name] = effect = new Effect(name);
+        effect_[name] = effect = std::make_shared<Effect>(name);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onEffectNew(effect);
         }
@@ -87,10 +82,10 @@ Effect* ResourceManager::effectNew(const std::string& name) {
     return effect;
 }
 
-Shader* ResourceManager::shaderNew(const std::string& name, GLenum type) {
-    Shader* shader = shader_[name].ptr();
+Ptr<Shader> ResourceManager::shaderNew(const std::string& name, GLenum type) {
+    Ptr<Shader> shader = shader_[name];
     if (!shader) {
-        shader_[name] = shader = new Shader(name, type);
+        shader_[name] = shader = std::make_shared<Shader>(name, type);
         for (size_t i = 0; i < notifiee_.size(); i++) {
             notifiee_[i]->onShaderNew(shader);
         }
@@ -98,62 +93,62 @@ Shader* ResourceManager::shaderNew(const std::string& name, GLenum type) {
     return shader;
 }
 
-Mesh* ResourceManager::mesh(const std::string& name) const {
+Ptr<Mesh> ResourceManager::mesh(const std::string& name) const {
     std::map<std::string, Ptr<Mesh> >
         ::const_iterator i = mesh_.find(name);
     if (i == mesh_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
-Material* ResourceManager::material(const std::string& name) const {
+Ptr<Material> ResourceManager::material(const std::string& name) const {
     std::map<std::string, Ptr<Material> >
         ::const_iterator i = material_.find(name);
     if (i == material_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
-Texture* ResourceManager::texture(const std::string& name) const {
+Ptr<Texture> ResourceManager::texture(const std::string& name) const {
     std::map<std::string, Ptr<Texture> >
         ::const_iterator i = texture_.find(name);
     if (i == texture_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
-Transform* ResourceManager::node(const std::string& name) const {
+Ptr<Transform> ResourceManager::node(const std::string& name) const {
     std::map<std::string, Ptr<Transform> >
         ::const_iterator i = node_.find(name);
     if (i == node_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
-Effect* ResourceManager::effect(const std::string& name) const {
+Ptr<Effect> ResourceManager::effect(const std::string& name) const {
     std::map<std::string, Ptr<Effect> >
         ::const_iterator i = effect_.find(name);
     if (i == effect_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
-void ResourceManager::notifieeNew(Notifiee* notifiee) {
+void ResourceManager::notifieeNew(Ptr<Notifiee> notifiee) {
     if (notifiee) {
         notifiee_.push_back(notifiee);
     }
 }
 
-void ResourceManager::notifieeDel(Notifiee* notifiee) {
+void ResourceManager::notifieeDel(Ptr<Notifiee> notifiee) {
     std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }

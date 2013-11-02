@@ -142,9 +142,6 @@ void Camera::farIs(float distance) {
         return;
     }
     far_ = distance;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onFar();
-    }
 }
 
 void Camera::nearIs(float distance) {
@@ -152,9 +149,6 @@ void Camera::nearIs(float distance) {
         return;
     }
     near_ = distance;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onNear();
-    }
 }
 
 void Camera::leftIs(float distance) {
@@ -162,9 +156,6 @@ void Camera::leftIs(float distance) {
         return;
     }
     left_ = distance;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onLeft();
-    }
 }
 
 void Camera::rightIs(float distance) {
@@ -172,9 +163,6 @@ void Camera::rightIs(float distance) {
         return;
     }
     right_ = distance;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onRight();
-    }
 }
 
 void Camera::topIs(float distance) {
@@ -182,9 +170,6 @@ void Camera::topIs(float distance) {
         return;
     }
     top_ = distance;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onTop();
-    }
 }
 
 void Camera::bottomIs(float distance) {
@@ -192,9 +177,6 @@ void Camera::bottomIs(float distance) {
         return;
     }
     bottom_ = distance;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onBottom();
-    }
 }
 
 void Camera::fieldOfViewIs(float view) {
@@ -202,9 +184,6 @@ void Camera::fieldOfViewIs(float view) {
         return;
     }
     fieldOfView_ = view;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onFieldOfView();
-    }
 }
 
 void Camera::viewTransformIs(const Matrix& transform) {
@@ -212,9 +191,6 @@ void Camera::viewTransformIs(const Matrix& transform) {
         return;
     }
     viewTransform_ = transform;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onViewTransform();
-    }
 }
 
 void Camera::stateIs(State state) {
@@ -222,9 +198,6 @@ void Camera::stateIs(State state) {
         return;
     }
     state_ = state;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onState();
-    }
 }
 
 void Camera::typeIs(Type type) {
@@ -232,11 +205,8 @@ void Camera::typeIs(Type type) {
         return;
     }
     type_ = type;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onType();
-    }
 }
 
-void Camera::operator()(Functor* functor) {
-    functor->operator()(this);
+void Camera::operator()(Ptr<Functor> functor) {
+    functor->operator()(std::static_pointer_cast<Camera>(shared_from_this()));
 }

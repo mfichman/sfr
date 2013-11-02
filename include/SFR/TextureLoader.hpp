@@ -14,8 +14,8 @@ namespace SFR {
 /* Loads images using SFML */
 class TextureLoader : public ResourceManager::Notifiee {
 public:
-	TextureLoader(ResourceManager* notifier) : ResourceManager::Notifiee(notifier) {}
-    void onTextureNew(Texture* texture);
+	TextureLoader(Ptr<ResourceManager> notifier) : ResourceManager::Notifiee(notifier) {}
+    void onTextureNew(Ptr<Texture> texture);
 };
 
 }

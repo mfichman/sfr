@@ -18,11 +18,11 @@
 
 using namespace SFR;
 
-TransparencyRenderer::TransparencyRenderer(ResourceManager* manager) {
+TransparencyRenderer::TransparencyRenderer(Ptr<ResourceManager> manager) {
     transparencyEffect_ = manager->effectNew("shaders/Transparency");
 }
 
-void TransparencyRenderer::operator()(World* world) {
+void TransparencyRenderer::operator()(Ptr<World> world) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -33,35 +33,35 @@ void TransparencyRenderer::operator()(World* world) {
     operator()(world_->root());
 
     // Clear out the effect
-    operator()(static_cast<Effect*>(0));
+    operator()(Ptr<Effect>());
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
     glFrontFace(GL_CCW);
 }
 
-void TransparencyRenderer::operator()(Transform* transform) {
+void TransparencyRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node(shared_from_this());
     }
     transform_ = previous;
 }
 
-void TransparencyRenderer::operator()(Model* model) {
+void TransparencyRenderer::operator()(Ptr<Model> model) {
     // Skip non-transparent objects and objects w/o materials
     if (!model->material() || model->material()->opacity() >= 1.f) {
         return;
     }
 
     // Set the material parameters and render mesh
-    operator()(transparencyEffect_.ptr());
+    operator()(transparencyEffect_);
     operator()(model->material());
     operator()(model->mesh());
 }
 
-void TransparencyRenderer::operator()(Mesh* mesh) {
+void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
     if (!mesh || !mesh->indexBuffer()) {
         return;
     }
@@ -74,13 +74,13 @@ void TransparencyRenderer::operator()(Mesh* mesh) {
     operator()(mesh->indexBuffer());
 }
 
-void TransparencyRenderer::operator()(Material* material) {
+void TransparencyRenderer::operator()(Ptr<Material> material) {
     glUniform3fv(diffuse_, 1, material->diffuseColor());
     glUniform1f(opacity_, material->opacity());
 }
 
-void TransparencyRenderer::operator()(Effect* effect) {
-    if (effect_.ptr() == effect) {
+void TransparencyRenderer::operator()(Ptr<Effect> effect) {
+    if (effect_ == effect) {
         return;
     }
     if (effect_) {
@@ -105,7 +105,7 @@ void TransparencyRenderer::operator()(Effect* effect) {
     position_ = glGetAttribLocation(effect_->id(), "positionIn");
 }
 
-void TransparencyRenderer::operator()(AttributeBuffer* buffer) {
+void TransparencyRenderer::operator()(Ptr<AttributeBuffer> buffer) {
     if (buffer && attrib_ != -1) {
         buffer->statusIs(AttributeBuffer::SYNCED);
         glEnableVertexAttribArray(attrib_);
@@ -117,11 +117,11 @@ void TransparencyRenderer::operator()(AttributeBuffer* buffer) {
     }
 }
 
-void TransparencyRenderer::operator()(IndexBuffer* buffer) {
+void TransparencyRenderer::operator()(Ptr<IndexBuffer> buffer) {
     if (!world_ || !world_->camera()) {
         return;
     }
-    Camera* camera = world_->camera();
+    Ptr<Camera> camera = world_->camera();
 
     // Pass the matrices to the vertex shader
     glUniformMatrix4fv(model_, 1, 0, transform_);

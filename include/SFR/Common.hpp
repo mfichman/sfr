@@ -6,7 +6,6 @@
  *****************************************************************************/
 #pragma once
 
-
 #ifndef SFR_DEPS_INCLUDED
 #define SFR_DEPS_INLUCDED
 
@@ -27,7 +26,6 @@
 #include <OpenGL/GL.h>
 #endif
 
-#include "SFR/Ptr.hpp"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
@@ -39,6 +37,7 @@
 #include <fstream>
 #include <memory>
 
+#include "SFR/Ptr.hpp"
 
 #endif
 
@@ -50,7 +49,6 @@ class DeferredRenderer;
 class MaterialRenderer;
 class LightRenderer;
 class TransparencyRenderer;
-class Interface;
 class Node;
 class Transform;
 class Instance;

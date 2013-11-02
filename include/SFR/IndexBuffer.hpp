@@ -12,9 +12,8 @@
 namespace SFR {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
-class IndexBuffer : public Interface {
+class IndexBuffer : public Interface<IndexBuffer> {
 public:
-    class Notifiee;
     enum Status { SYNCED, DIRTY };
 
     IndexBuffer(const std::string& name);
@@ -30,8 +29,6 @@ public:
     void elementCountIs(GLuint count);
     void elementIs(GLuint offset, GLuint element);
     void statusIs(Status status);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
     void syncHardwareBuffers();
@@ -40,15 +37,7 @@ private:
     std::string name_; 
     GLuint id_;
     Status status_;
-    std::vector<Notifiee*> notifiee_;
     std::vector<GLuint> element_;
-};
-
-class IndexBuffer::Notifiee : public Interface {
-public:
-    virtual void onStatus() {}
-    virtual void onElementCount() {}
-    virtual void onElement(GLuint index) {}
 };
 
 }

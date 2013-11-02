@@ -15,14 +15,14 @@ namespace SFR {
 /* Shadow map renderer. */
 class FlatRenderer : public Node::Functor {
 public:
-    FlatRenderer(ResourceManager* manager);
-    void operator()(World* world);
-    void operator()(Transform* transform);
-    void operator()(Model* object);
-    void operator()(Mesh* mesh);
-    void operator()(Effect* effect);
-    void operator()(AttributeBuffer* buffer);
-    void operator()(IndexBuffer* buffer);
+    FlatRenderer(Ptr<ResourceManager> manager);
+    void operator()(Ptr<World> world);
+    void operator()(Ptr<Transform> transform);
+    void operator()(Ptr<Model> object);
+    void operator()(Ptr<Mesh> mesh);
+    void operator()(Ptr<Effect> effect);
+    void operator()(Ptr<AttributeBuffer> buffer);
+    void operator()(Ptr<IndexBuffer> buffer);
 
 private:
     Matrix transform_;

@@ -25,14 +25,14 @@ const std::string& Material::name() const {
     return name_;
 }
 
-Texture* Material::texture(const std::string& name) const {
+Ptr<Texture> Material::texture(const std::string& name) const {
     std::map<std::string, Ptr<Texture> >
         ::const_iterator i = texture_.find(name);
 
     if (i == texture_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
@@ -56,15 +56,11 @@ float Material::opacity() const {
     return opacity_;
 }
 
-void Material::textureIs(const std::string& name, Texture* texture) {
+void Material::textureIs(const std::string& name, Ptr<Texture> texture) {
     if (texture_[name] == texture) {
         return;
     }
     texture_[name] = texture;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onTexture(name);
-    }
 }
 
 void Material::ambientColorIs(const Color& color) {
@@ -72,10 +68,6 @@ void Material::ambientColorIs(const Color& color) {
         return;
     }
     ambientColor_ = color;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onAmbientColor();
-    }
 }
 
 void Material::diffuseColorIs(const Color& color) {
@@ -83,10 +75,6 @@ void Material::diffuseColorIs(const Color& color) {
         return;
     }
     diffuseColor_ = color;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDiffuseColor();
-    }
 }
 
 void Material::specularColorIs(const Color& color) {
@@ -94,10 +82,6 @@ void Material::specularColorIs(const Color& color) {
         return;
     }
     specularColor_ = color;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpecularColor();
-    }
 }
 
 void Material::shininessIs(float shininess) {
@@ -105,10 +89,6 @@ void Material::shininessIs(float shininess) {
         return;
     }
     shininess_ = shininess;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onShininess();
-    }
 }
 
 void Material::opacityIs(float opacity) {
@@ -116,18 +96,5 @@ void Material::opacityIs(float opacity) {
         return;
     }
     opacity_ = opacity;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onOpacity();
-    }
 }
 
-void Material::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void Material::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}

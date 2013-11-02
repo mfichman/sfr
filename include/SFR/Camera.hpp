@@ -17,7 +17,6 @@ namespace SFR {
 /* Contains parameters for the view camera. */
 class Camera : public Node {
 public:
-    class Notifiee;
     enum State { ACTIVE, INACTIVE };
     enum Type { PERSPECTIVE, ORTHOGRAPHIC };
 
@@ -47,7 +46,7 @@ public:
     void typeIs(Type type);
     void viewTransformIs(const Matrix& transform);
 
-    void operator()(Functor* functor);
+    void operator()(Ptr<Functor> functor);
 
 private:
     Matrix viewTransform_;
@@ -60,21 +59,6 @@ private:
     float fieldOfView_;
     State state_;
     Type type_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class Camera::Notifiee : public Interface {
-public:
-    virtual void onFar() {}
-    virtual void onNear() {}
-    virtual void onLeft() {}
-    virtual void onRight() {}
-    virtual void onTop() {}
-    virtual void onBottom() {}
-    virtual void onFieldOfView() {}
-    virtual void onState() {}
-    virtual void onType() {}
-    virtual void onViewTransform() {}
 };
 
 }

@@ -15,11 +15,11 @@ namespace SFR {
 /* Shadow map renderer. */
 class ShadowRenderer : public Node::Functor {
 public:
-    ShadowRenderer(ResourceManager* manager);
-    void operator()(World* world);
-    void operator()(Transform* transform);
-    void operator()(PointLight* light);
-    void operator()(SpotLight* light);
+    ShadowRenderer(Ptr<ResourceManager> manager);
+    void operator()(Ptr<World> world);
+    void operator()(Ptr<Transform> transform);
+    void operator()(Ptr<PointLight> light);
+    void operator()(Ptr<SpotLight> light);
 
 private:
     Matrix transform_;

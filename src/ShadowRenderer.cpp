@@ -17,25 +17,25 @@
 
 using namespace SFR;
 
-ShadowRenderer::ShadowRenderer(ResourceManager* manager) {
-    flatRenderer_ = new FlatRenderer(manager);
+ShadowRenderer::ShadowRenderer(Ptr<ResourceManager> manager) {
+    flatRenderer_ = std::make_shared<FlatRenderer>(manager);
 }
 
-void ShadowRenderer::operator()(World* world) {
+void ShadowRenderer::operator()(Ptr<World> world) {
     world_ = world;
     operator()(world->root());
 }
 
-void ShadowRenderer::operator()(Transform* transform) {
+void ShadowRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node(shared_from_this());
     }
     transform_ = previous;
 }
 
-void ShadowRenderer::operator()(PointLight* light) {
+void ShadowRenderer::operator()(Ptr<PointLight> light) {
     // if (!light->shadowMap()) {
     //      return;
     // }
@@ -61,7 +61,7 @@ void ShadowRenderer::operator()(PointLight* light) {
 
     // Save current camera
     Ptr<Camera> sceneCamera = world_->camera();
-    world_->cameraIs(lightCamera.ptr());
+    world_->cameraIs(lightCamera);
 
     for (int i = 0; i < 6; i++) {
 /*
@@ -75,15 +75,15 @@ void ShadowRenderer::operator()(PointLight* light) {
 
         // Render the scene into the cube map face
         light->shadowMap()->statusIs(axis[i]);
-        flatRenderer_(world_.ptr());
+        flatRenderer_(world_);
 */
     }
 
     //light->shadowMap()->statusIs(CubeDepthRenderTarget::DISABLED);
-    world_->cameraIs(sceneCamera.ptr());
+    world_->cameraIs(sceneCamera);
 }
 
-void ShadowRenderer::operator()(SpotLight* light) {
+void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     if (!light->shadowMap()) {
         return;
     }
@@ -123,9 +123,9 @@ void ShadowRenderer::operator()(SpotLight* light) {
     glClear(GL_DEPTH_BUFFER_BIT); 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-    world_->cameraIs(lightCamera.ptr());
-    flatRenderer_(world_.ptr());
-    world_->cameraIs(sceneCamera.ptr());
+    world_->cameraIs(lightCamera);
+    flatRenderer_->operator()(world_);
+    world_->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
 	glCullFace(GL_BACK);
 }

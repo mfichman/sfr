@@ -12,10 +12,9 @@
 namespace SFR {
 
 /* Enables multiple-texture render-to-texture techniques */
-class DeferredRenderTarget : public Interface {
+class DeferredRenderTarget : public Interface<DeferredRenderTarget> {
 public:
     enum Status { ENABLED, DISABLED };
-    class Notifiee;
 
     DeferredRenderTarget(GLuint width, GLuint height);
     ~DeferredRenderTarget();
@@ -27,22 +26,13 @@ public:
     Status status() const;
 
     void statusIs(Status status);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
     std::vector<GLuint> target_;
     GLuint id_;
     GLuint depthBuffer_;
     Status status_;
-    std::vector<Notifiee*> notifiee_;
     std::vector<GLenum> buffers_;
-};
-
-
-class DeferredRenderTarget::Notifiee : public Interface {
-public:
-    virtual void onStatus() {}
 };
 
 }

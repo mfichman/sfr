@@ -22,7 +22,7 @@
 
 using namespace SFR;
 
-LightRenderer::LightRenderer(ResourceManager* manager) {
+LightRenderer::LightRenderer(Ptr<ResourceManager> manager) {
     manager->nodeNew("meshes/LightShapes.obj");
     unitSphere_ = manager->meshNew("meshes/LightShapes.obj/Sphere");
     unitCone_ = manager->meshNew("meshes/LightShapes.obj/Cone");
@@ -31,7 +31,7 @@ LightRenderer::LightRenderer(ResourceManager* manager) {
     spotLight_ = manager->effectNew("shaders/SpotLight");
 }
 
-void LightRenderer::operator()(World* world) {
+void LightRenderer::operator()(Ptr<World> world) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -43,7 +43,7 @@ void LightRenderer::operator()(World* world) {
     operator()(world_->root());
 
     // Clear out the current effect
-    operator()(static_cast<Effect*>(0));
+    operator()(Ptr<Effect>());
     
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
@@ -52,17 +52,17 @@ void LightRenderer::operator()(World* world) {
 	glCullFace(GL_BACK);
 }
 
-void LightRenderer::operator()(Transform* transform) {
+void LightRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node(shared_from_this());
     }
     transform_ = previous;
 }
 
-void LightRenderer::operator()(PointLight* light) {
-    operator()(pointLight_.ptr());
+void LightRenderer::operator()(Ptr<PointLight> light) {
+    operator()(pointLight_);
 
     // Set the light color, attenuation, and position properties.
     if (diffuse_ != -1) {
@@ -92,17 +92,17 @@ void LightRenderer::operator()(PointLight* light) {
     transform_ = transform_ * scale;
     
     // This renders the light's bounding volume (usually a sphere)
-    operator()(unitSphere_.ptr());
+    operator()(unitSphere_);
 
     transform_ = previous;
 }
 
-void LightRenderer::operator()(HemiLight* light) {
+void LightRenderer::operator()(Ptr<HemiLight> light) {
     if (!world_ || !world_->camera()) {
         return;
     }
 
-    operator()(hemiLight_.ptr());
+    operator()(hemiLight_);
 
     // Set the light color, attenuation, and direction properties
     if (diffuse_ != -1) {
@@ -134,16 +134,16 @@ void LightRenderer::operator()(HemiLight* light) {
     
     // This renders the light's bounding volume (usually a sphere)
 	// FIXME: If attenuation is 0, then render a fullscreen quad instead
-    operator()(unitSphere_.ptr());
+    operator()(unitSphere_);
     transform_ = previous;
 }
 
-void LightRenderer::operator()(SpotLight* light) {
+void LightRenderer::operator()(Ptr<SpotLight> light) {
     if (!world_ || !world_->camera()) {
         return;
     }
 
-    operator()(spotLight_.ptr());
+    operator()(spotLight_);
 
     // Set the light color, attenuation, and direction properties
     if (diffuse_ != -1) {
@@ -203,16 +203,16 @@ void LightRenderer::operator()(SpotLight* light) {
     transform_ = transform_ * rotate * scale;
 
     // This renders the light's bounding volume (usually a sphere)
-    operator()(unitCone_.ptr());
+    operator()(unitCone_);
     transform_ = previous;
 }
 
-void LightRenderer::operator()(Mesh* mesh) {
+void LightRenderer::operator()(Ptr<Mesh> mesh) {
     operator()(mesh->attributeBuffer("position"));
     operator()(mesh->indexBuffer());
 }
 
-void LightRenderer::operator()(AttributeBuffer* buffer) {
+void LightRenderer::operator()(Ptr<AttributeBuffer> buffer) {
     if (buffer && position_ != -1) {
         buffer->statusIs(AttributeBuffer::SYNCED);
         glEnableVertexAttribArray(position_);
@@ -224,11 +224,11 @@ void LightRenderer::operator()(AttributeBuffer* buffer) {
     }
 }
 
-void LightRenderer::operator()(IndexBuffer* buffer) {
+void LightRenderer::operator()(Ptr<IndexBuffer> buffer) {
     if (!world_ || !world_->camera() || !buffer) {
         return;
     }
-    Camera* camera = world_->camera();
+    Ptr<Camera> camera = world_->camera();
 
     // Set up the view, projection, and inverse projection transforms
     Matrix inverseProjection = camera->projectionTransform().inverse();
@@ -238,15 +238,15 @@ void LightRenderer::operator()(IndexBuffer* buffer) {
     glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
 
     // Render the indices of the light's bounding volume
-    IndexBuffer* indices = unitSphere_->indexBuffer();
+    Ptr<IndexBuffer> indices = unitSphere_->indexBuffer();
     indices->statusIs(IndexBuffer::SYNCED);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void LightRenderer::operator()(Effect* effect) {
-    if (effect_.ptr() == effect) {
+void LightRenderer::operator()(Ptr<Effect> effect) {
+    if (effect_ == effect) {
         return;
     }
     if (effect_) {

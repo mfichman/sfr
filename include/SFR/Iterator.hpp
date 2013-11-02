@@ -66,24 +66,16 @@ private:
     }
 
     template <typename F>
-    void operator()(F* functor) {
-        begin_->operator()(functor);
+    void operator()(Ptr<F> functor) {
+        (*begin_)->operator()(functor);
     }
 
     operator bool() const {
         return begin_ != end_;
     }
 
-    T* ptr() const {
-        return begin_->ptr();
-    }
-
     T* operator->() const {
-        return begin_->ptr();
-    }
-
-    operator T*() const {
-        return begin_->ptr();
+        return begin_->get();
     }
 
     bool operator==(const Ptr<T>& other) {

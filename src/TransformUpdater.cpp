@@ -16,20 +16,20 @@
 
 using namespace SFR;
 
-void TransformUpdater::operator()(World* world) {
+void TransformUpdater::operator()(Ptr<World> world) {
     operator()(world->root());
 }
 
-void TransformUpdater::operator()(Transform* transform) {
+void TransformUpdater::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node(shared_from_this());
     }
     transform_ = previous;
 }
 
-void TransformUpdater::operator()(Camera* camera) {
+void TransformUpdater::operator()(Ptr<Camera> camera) {
 	// Why is the view transform the inverse?
     camera->viewTransformIs(transform_.inverse());
 }

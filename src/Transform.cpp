@@ -37,26 +37,14 @@ void Transform::transformIs(const Matrix& transform) {
         return;
     }
     transform_ = transform;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onTransform();
-    }
 }
 
 void Transform::positionIs(const Vector& position) {
     transformIs(Matrix(transform_.rotation(), position));
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onPosition();
-    }
 }
 
 void Transform::rotationIs(const Quaternion& rotation) {
     transformIs(Matrix(rotation, transform_.origin()));
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onRotation();
-    }
 }
 
 void Transform::nameIs(const std::string& name) {
@@ -65,37 +53,16 @@ void Transform::nameIs(const std::string& name) {
     }
 
     name_ = name;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onName();
-    }
 }
 
-void Transform::childNew(Node* child) {
+void Transform::childNew(Ptr<Node> child) {
     children_.push_back(child);
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onChildNew(child);
-    }
 }
 
-void Transform::childDel(Node* child) {
+void Transform::childDel(Ptr<Node> child) {
     std::remove(children_.begin(), children_.end(), child);
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onChildDel(child);
-    }
 }
 
-void Transform::notifieeNew(Notifiee* notifiee) {
-    notifiee_.push_back(notifiee);
-}
-
-void Transform::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-
-void Transform::operator()(Functor* functor) {
-    functor->operator()(this);
+void Transform::operator()(Ptr<Functor> functor) {
+    functor->operator()(std::static_pointer_cast<Transform>(shared_from_this()));
 }

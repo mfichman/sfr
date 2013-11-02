@@ -11,10 +11,8 @@
 namespace SFR {
 
 /* Manages texture data */
-class Texture : public Interface {
+class Texture : public Interface<Texture> {
 public:
-    class Notifiee;
-
     Texture(const std::string& name);
     ~Texture();
     const std::string& name() const;
@@ -25,22 +23,12 @@ public:
     void widthIs(GLuint width);
     void heightIs(GLuint height);
     void dataIs(const GLubyte* pixels);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
     std::string name_;
     GLuint id_;
     GLuint width_;
     GLuint height_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class Texture::Notifiee : public Interface {
-public:
-    virtual void onWidth() {}
-    virtual void onHeight() {}
-    virtual void onData() {}
 };
 
 };

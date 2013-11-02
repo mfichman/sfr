@@ -20,7 +20,7 @@
 
 using namespace SFR;
 
-void WavefrontLoader::onNodeNew(Transform* transform) {
+void WavefrontLoader::onNodeNew(Ptr<Transform> transform) {
     static const std::string ext = "obj";
     std::string name = transform->name();
     transform_ = transform;
@@ -125,17 +125,17 @@ void WavefrontLoader::newMesh() {
 
     if (transform_) {
         Ptr<Model> model(new Model);
-        model->meshIs(mesh_.ptr());
+        model->meshIs(mesh_);
         if (!material_) {
             Ptr<Texture> white = notifier_->textureNew("textures/White.png");
             Ptr<Texture> blue = notifier_->textureNew("textures/Blue.png");
             material_ = notifier_->materialNew("Default");
-            material_->textureIs("diffuse", white.ptr());
-            material_->textureIs("specular", white.ptr());
-            material_->textureIs("normal", blue.ptr());
+            material_->textureIs("diffuse", white);
+            material_->textureIs("specular", white);
+            material_->textureIs("normal", blue);
         }
-        model->materialIs(material_.ptr());
-        transform_->childNew(model.ptr());
+        model->materialIs(material_);
+        transform_->childNew(model);
     }
     mesh_ = 0;
 }
@@ -147,17 +147,17 @@ void WavefrontLoader::newMesh(const std::string& name) {
     // by the "o" command.  Read in each mesh separately and then add it to 
     // the scene graph.
     mesh_ = notifier_->meshNew(transform_->name() + "/" + name);
-    vertexBuffer_ = new MutableAttributeBuffer<Vector>("position");
-    normalBuffer_ = new MutableAttributeBuffer<Vector>("normal");
-    texCoordBuffer_ = new MutableAttributeBuffer<TexCoord>("texCoord");
-    tangentBuffer_ = new MutableAttributeBuffer<Vector>("tangent");
-    indexBuffer_ = new IndexBuffer(mesh_->name());
+    vertexBuffer_ = std::make_shared<MutableAttributeBuffer<Vector>>("position");
+    normalBuffer_ = std::make_shared<MutableAttributeBuffer<Vector>>("normal");
+    texCoordBuffer_ = std::make_shared<MutableAttributeBuffer<TexCoord>>("texCoord");
+    tangentBuffer_ = std::make_shared<MutableAttributeBuffer<Vector>>("tangent");
+    indexBuffer_ = std::make_shared<IndexBuffer>(mesh_->name());
 
-    mesh_->attributeBufferIs("position", vertexBuffer_.ptr());
-    mesh_->attributeBufferIs("normal", normalBuffer_.ptr());
-    mesh_->attributeBufferIs("texCoord", texCoordBuffer_.ptr());
-    mesh_->attributeBufferIs("tangent", tangentBuffer_.ptr());
-    mesh_->indexBufferIs(indexBuffer_.ptr());
+    mesh_->attributeBufferIs("position", vertexBuffer_);
+    mesh_->attributeBufferIs("normal", normalBuffer_);
+    mesh_->attributeBufferIs("texCoord", texCoordBuffer_);
+    mesh_->attributeBufferIs("tangent", tangentBuffer_);
+    mesh_->indexBufferIs(indexBuffer_);
 }
 
 void WavefrontLoader::newTriangle(std::istream& in) {
@@ -259,9 +259,9 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             in >> name;
             name = transform_->name() + "/" + name;
             material_ = notifier_->materialNew(name);
-            material_->textureIs("diffuse", white.ptr());
-            material_->textureIs("specular", white.ptr());
-            material_->textureIs("normal", blue.ptr());
+            material_->textureIs("diffuse", white);
+            material_->textureIs("specular", white);
+            material_->textureIs("normal", blue);
         } else if (!material_) {
             std::string line;
             std::getline(in, line);
@@ -269,7 +269,7 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->textureNew(name);
-            material_->textureIs("normal", texture.ptr());
+            material_->textureIs("normal", texture);
         } else if (command == "Ka") {
             Color ambient;
             in >> ambient;
@@ -290,12 +290,12 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->textureNew(name);
-            material_->textureIs("diffuse", texture.ptr());
+            material_->textureIs("diffuse", texture);
         } else if (command == "map_Ks") {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->textureNew(name);
-            material_->textureIs("specular", texture.ptr());
+            material_->textureIs("specular", texture);
         } else if (command == "d") {
             float opacity;
             in >> opacity;

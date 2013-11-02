@@ -12,30 +12,17 @@
 namespace SFR {
 
 /* Holds the root node and global scene data. */
-class World : public Interface {
+class World : public Interface<World> {
 public:
-    class Notifiee;
-
     World();
-    Transform* root() const;
-    Camera* camera() const;
+    Ptr<Transform> root() const;
+    Ptr<Camera> camera() const;
 
-    void rootIs(Transform* node);
-    void cameraIs(Camera* camera);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
+    void cameraIs(Ptr<Camera> camera);
 
 private:
     Ptr<Transform> root_;
     Ptr<Camera> camera_;
-    std::vector<Notifiee*> notifiee_;
 };
-
-class World::Notifiee : public Interface {
-public:
-    virtual void onRoot() {}
-    virtual void onCamera() {}
-};
-
 
 }

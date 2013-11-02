@@ -64,10 +64,6 @@ void PointLight::diffuseColorIs(const Color& diffuse) {
         return;
     }
     diffuseColor_ = diffuse;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onDiffuseColor();
-    }
 }
 
 void PointLight::specularColorIs(const Color& specular) {
@@ -75,10 +71,6 @@ void PointLight::specularColorIs(const Color& specular) {
         return;
     }
     specularColor_ = specular;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSpecularColor();
-    }
 }
 
 void PointLight::constantAttenuationIs(float atten) {
@@ -86,10 +78,6 @@ void PointLight::constantAttenuationIs(float atten) {
         return;
     }
     constantAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onConstantAttenuation();
-    }
 }
 
 void PointLight::linearAttenuationIs(float atten) {
@@ -97,10 +85,6 @@ void PointLight::linearAttenuationIs(float atten) {
         return;
     }
     linearAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onLinearAttenuation();
-    }
 }
 
 void PointLight::quadraticAttenuationIs(float atten) {
@@ -108,22 +92,8 @@ void PointLight::quadraticAttenuationIs(float atten) {
         return;
     }
     quadraticAttenuation_ = atten;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onQuadraticAttenuation();
-    }
 }
 
-void PointLight::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void PointLight::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-void PointLight::operator()(Functor* functor) {
-    functor->operator()(this);
+void PointLight::operator()(Ptr<Functor> functor) {
+    functor->operator()(std::static_pointer_cast<PointLight>(shared_from_this()));
 }

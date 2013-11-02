@@ -12,27 +12,27 @@
 using namespace SFR;
 
 
-void NullFunctor::operator()(World* world) {
-    world->root()->operator()(this);
+void NullFunctor::operator()(Ptr<World> world) {
+    world->root()->operator()(shared_from_this());
 }
 
-void NullFunctor::operator()(Camera* camera) {
+void NullFunctor::operator()(Ptr<Camera> camera) {
 }
 
-void NullFunctor::operator()(Transform* transform) {
+void NullFunctor::operator()(Ptr<Transform> transform) {
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node(shared_from_this());
     }
 }
 
-void NullFunctor::operator()(PointLight* light) {
+void NullFunctor::operator()(Ptr<PointLight> light) {
 }
 
-void NullFunctor::operator()(Model* object) {
+void NullFunctor::operator()(Ptr<Model> object) {
 }
 
-void NullFunctor::operator()(HemiLight* light) {
+void NullFunctor::operator()(Ptr<HemiLight> light) {
 }
 
-void NullFunctor::operator()(SpotLight* light) {
+void NullFunctor::operator()(Ptr<SpotLight> light) {
 }

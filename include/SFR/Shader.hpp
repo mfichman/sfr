@@ -11,9 +11,8 @@
 namespace SFR {
 
 /* Single GPU shader source file. */
-class Shader : public Interface {
+class Shader : public Interface<Shader> {
 public:
-    class Notifiee;
     enum Status { COMPILED, DIRTY };
 
     Shader(const std::string& name, GLenum type);
@@ -27,8 +26,6 @@ public:
 
     void sourceIs(const std::string& name);
     void statusIs(Status status);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
 private:
     std::string name_;
@@ -36,13 +33,6 @@ private:
     GLenum type_;
     Status status_;
     GLuint id_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class Shader::Notifiee : public Interface {
-public:
-    virtual void onSource() {}
-    virtual void onStatus() {}
 };
 
 }

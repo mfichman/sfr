@@ -71,7 +71,7 @@ class Package:
         self.env.Append(LIBS=self.libs)
 
         if self.env['PLATFORM'] == 'win32':
-            self.env.Append(CXXFLAGS='/MT /EHsc /Zi /Gm')
+            self.env.Append(CXXFLAGS='/MT /EHsc /Zi /Gm /FS')
             self.env.Append(CXXFLAGS='/Fpbuild/Common.pch')
             self.env.Append(LINKFLAGS='/DEBUG')
             self.env.Append(CXXFLAGS='/Yu%s' % self.pch)
@@ -84,7 +84,7 @@ class Package:
         src = filter(lambda x: 'Common.cpp' not in x.name, src)
         self.env.Depends(src, pch) # Wait for pch to build
 
-        self.lib = self.env.StaticLibrary('lib/jet2', (src, pch))
+        self.lib = self.env.StaticLibrary('lib/%s' % self.name, (src, pch))
 
         self.env.Append(BUILDERS={'Test': Builder(action=run_test)})
         self.tests = []

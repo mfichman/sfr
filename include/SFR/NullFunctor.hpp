@@ -14,13 +14,13 @@ namespace SFR {
 /* Empty functor implementation for performance testing */
 class NullFunctor : public Node::Functor {
 public:
-    void operator()(World* world);
-    void operator()(Camera* camera);
-    void operator()(Transform* transform);
-    void operator()(PointLight* light);
-    void operator()(Model* object);
-    void operator()(HemiLight* light);
-    void operator()(SpotLight* light);
+    void operator()(Ptr<World> world);
+    void operator()(Ptr<Camera> camera);
+    void operator()(Ptr<Transform> transform);
+    void operator()(Ptr<PointLight> light);
+    void operator()(Ptr<Model> object);
+    void operator()(Ptr<HemiLight> light);
+    void operator()(Ptr<SpotLight> light);
 };
 
 

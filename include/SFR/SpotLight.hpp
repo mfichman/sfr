@@ -17,8 +17,6 @@ namespace SFR {
 /* Simple point light with attenuation */
 class SpotLight : public Node {
 public:
-    class Notifiee;
-
     SpotLight();
     const Color& diffuseColor() const;
     const Color& specularColor() const;
@@ -29,7 +27,7 @@ public:
     float spotCutoff() const;
     float spotPower() const;
     float radiusOfEffect() const;
-    DepthRenderTarget* shadowMap() const;
+    Ptr<DepthRenderTarget> shadowMap() const;
     const Matrix& transform() const;
 
     void diffuseColorIs(const Color& diffuse);
@@ -40,12 +38,10 @@ public:
     void quadraticAttenuationIs(float atten);
     void spotCutoffIs(float cutoff);
     void spotPowerIs(float power);
-    void shadowMapIs(DepthRenderTarget* target);
+    void shadowMapIs(Ptr<DepthRenderTarget> target);
     void transformIs(const Matrix& matrix);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
-    void operator()(Functor* functor);
+    void operator()(Ptr<Functor> functor);
 
 private:
     Color diffuseColor_;
@@ -56,23 +52,8 @@ private:
     float spotCutoff_;
     float spotPower_;
     Vector direction_;
-    std::vector<Notifiee*> notifiee_;
     Ptr<DepthRenderTarget> shadowMap_;
     Matrix transform_;
-};
-
-class SpotLight::Notifiee : public Interface {
-public:
-    virtual void onDiffuseColor() {}
-    virtual void onSpecularColor() {}
-    virtual void onDirection() {}
-    virtual void onConstantAttenuation() {}
-    virtual void onLinearAttenuation() {}
-    virtual void onQuadraticAttenuation() {}
-    virtual void onSpotCutoff() {}
-    virtual void onSpotPower() {}
-    virtual void onShadowMap() {}
-    virtual void onTransform() {}
 };
 
 }

@@ -14,9 +14,9 @@ namespace SFR {
 /* Loads GLSL vertex and fragment shader programs */
 class EffectLoader : public ResourceManager::Notifiee {
 public:
-	EffectLoader(ResourceManager* notifier) : ResourceManager::Notifiee(notifier) {}
-    void onEffectNew(Effect* effect);
-	void onShaderNew(Shader* shader);
+	EffectLoader(Ptr<ResourceManager> notifier) : ResourceManager::Notifiee(notifier) {}
+    void onEffectNew(Ptr<Effect> effect);
+	void onShaderNew(Ptr<Shader> shader);
 private:
     std::string fileContents(const std::string& path);
 };

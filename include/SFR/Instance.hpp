@@ -14,24 +14,13 @@ namespace SFR {
 /* Manages object instances (can be repeated) */
 class Instance : public Node {
 public:
-    class Notifiee;
-    
-    Node* root() const;
-    
-    void rootIs(Transform* root);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
+    Ptr<Node> root() const;
+    void rootIs(Ptr<Transform> root);
 
-    operator()(Functor* functor);
+    operator()(Ptr<Functor> functor);
 
 private:
     Ptr<Node> root_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class Instance::Notifiee : public Interface {
-public:
-    virtual void onRoot();
 };
 
 }

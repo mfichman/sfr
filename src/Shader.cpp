@@ -49,16 +49,6 @@ void Shader::sourceIs(const std::string& source) {
     }
     source_ = source;
     statusIs(DIRTY);
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onSource();
-    }
-}
-
-void Shader::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
 }
 
 void Shader::statusIs(Status status) {
@@ -72,8 +62,4 @@ void Shader::statusIs(Status status) {
         glCompileShader(id_);
     }
     status_ = status;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onStatus();
-    }
 }

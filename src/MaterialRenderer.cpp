@@ -21,45 +21,45 @@
 
 using namespace SFR;
 
-MaterialRenderer::MaterialRenderer(ResourceManager* manager) {
+MaterialRenderer::MaterialRenderer(Ptr<ResourceManager> manager) {
     modelEffect_ = manager->effectNew("shaders/Model");
 }
 
-void MaterialRenderer::operator()(World* world) {
+void MaterialRenderer::operator()(Ptr<World> world) {
     glEnable(GL_DEPTH_TEST);
 
     world_ = world;
     operator()(world_->root());
    
     // Clear out the effect
-    operator()(static_cast<Effect*>(0));
+    operator()(static_cast<Ptr<Effect>>(0));
     glDisable(GL_DEPTH_TEST);
 }
 
-void MaterialRenderer::operator()(Transform* transform) {
+void MaterialRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
 
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(this);
+        node(shared_from_this());
     }
 
     transform_ = previous;
 }
 
-void MaterialRenderer::operator()(Model* model) {
+void MaterialRenderer::operator()(Ptr<Model> model) {
     // Skip transparent objects and objects without materials
     if (!model->material() || model->material()->opacity() < 1.f) {
         return;
     }
 
     // Set the material parameters for this mesh
-    operator()(modelEffect_.ptr());
+    operator()(modelEffect_);
     operator()(model->material());
     operator()(model->mesh());
 }
 
-void MaterialRenderer::operator()(Mesh* mesh) {
+void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
     if (!mesh || !mesh->indexBuffer()) {
         return;
     }
@@ -78,7 +78,7 @@ void MaterialRenderer::operator()(Mesh* mesh) {
     operator()(mesh->indexBuffer());
 }
 
-void MaterialRenderer::operator()(AttributeBuffer* buffer) {
+void MaterialRenderer::operator()(Ptr<AttributeBuffer> buffer) {
     if (buffer && attrib_ != -1) {
         buffer->statusIs(AttributeBuffer::SYNCED);
         glEnableVertexAttribArray(attrib_);
@@ -90,11 +90,11 @@ void MaterialRenderer::operator()(AttributeBuffer* buffer) {
     }
 }
 
-void MaterialRenderer::operator()(IndexBuffer* buffer) {
+void MaterialRenderer::operator()(Ptr<IndexBuffer> buffer) {
     if (!world_ || !world_->camera()) {
         return;
     }
-    Camera* camera = world_->camera();
+    Ptr<Camera> camera = world_->camera();
 
     // Calculate the normal matrix and pass it to the vertex shader
     Matrix normalMatrix = camera->viewTransform() * transform_;
@@ -120,7 +120,7 @@ void MaterialRenderer::operator()(IndexBuffer* buffer) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void MaterialRenderer::operator()(Material* material) {
+void MaterialRenderer::operator()(Ptr<Material> material) {
     glUniform3fv(ambient_, 1, material->ambientColor());
     glUniform3fv(diffuse_, 1, material->diffuseColor());
     glUniform3fv(specular_, 1, material->specularColor());
@@ -134,7 +134,7 @@ void MaterialRenderer::operator()(Material* material) {
     operator()(material->texture("normal"));
 }
 
-void MaterialRenderer::operator()(Texture* texture) {
+void MaterialRenderer::operator()(Ptr<Texture> texture) {
     if (texture) {
         glBindTexture(GL_TEXTURE_2D, texture->id());
     } else {
@@ -142,8 +142,8 @@ void MaterialRenderer::operator()(Texture* texture) {
     }
 } 
 
-void MaterialRenderer::operator()(Effect* effect) {
-    if (effect_.ptr() == effect) {
+void MaterialRenderer::operator()(Ptr<Effect> effect) {
+    if (effect_ == effect) {
         return;
     }
     if (effect_) {

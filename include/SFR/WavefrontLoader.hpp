@@ -18,8 +18,8 @@ namespace SFR {
 /* Loads Wavefront OBJ files */
 class WavefrontLoader : public ResourceManager::Notifiee {
 public:
-	WavefrontLoader(ResourceManager* notifier) : ResourceManager::Notifiee(notifier) {};
-    void onNodeNew(Transform* transform);
+	WavefrontLoader(Ptr<ResourceManager> notifier) : ResourceManager::Notifiee(notifier) {};
+    void onNodeNew(Ptr<Transform> transform);
 
 private:
     void newModel(std::istream& in);

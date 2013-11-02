@@ -51,9 +51,6 @@ void Texture::widthIs(GLuint width) {
         return;
     }
     width_ = width;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onWidth();
-    }
 }
 
 void Texture::heightIs(GLuint height) {
@@ -61,9 +58,6 @@ void Texture::heightIs(GLuint height) {
         return;
     }
     height_ = height;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onHeight();
-    }
 }
 
 void Texture::dataIs(const GLubyte* pixels) {
@@ -71,18 +65,5 @@ void Texture::dataIs(const GLubyte* pixels) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_, 0, GL_RGBA, 
         GL_UNSIGNED_BYTE, pixels);
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onData();
-    }
 }
 
-void Texture::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void Texture::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}

@@ -17,8 +17,6 @@ namespace SFR {
 /* Simple point light with attenuation */
 class PointLight : public Node {
 public:
-    class Notifiee;
-
     PointLight();
     const Color& diffuseColor() const;
     const Color& specularColor() const;
@@ -32,10 +30,8 @@ public:
     void constantAttenuationIs(float atten);
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);
-    void notifieeNew(Notifiee* notifiee);
-    void notifieeDel(Notifiee* notifiee);
 
-    void operator()(Functor* functor);
+    void operator()(Ptr<Functor> functor);
 
 private:
     Color diffuseColor_;
@@ -43,16 +39,6 @@ private:
     float constantAttenuation_;
     float linearAttenuation_;
     float quadraticAttenuation_;
-    std::vector<Notifiee*> notifiee_;
-};
-
-class PointLight::Notifiee : public Interface {
-public:
-    virtual void onDiffuseColor() {}
-    virtual void onSpecularColor() {}
-    virtual void onConstantAttenuation() {}
-    virtual void onLinearAttenuation() {}
-    virtual void onQuadraticAttenuation() {}
 };
 
 }

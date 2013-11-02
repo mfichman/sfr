@@ -15,45 +15,28 @@
 
 using namespace SFR;
 
-Material* Model::material() const {
-    return material_.ptr();
+Ptr<Material> Model::material() const {
+    return material_;
 }
 
-Mesh* Model::mesh() const {
-    return mesh_.ptr();
+Ptr<Mesh> Model::mesh() const {
+    return mesh_;
 }
 
-void Model::materialIs(Material* material) {
+void Model::materialIs(Ptr<Material> material) {
     if (material_ == material) {
         return;
     }
     material_ = material;
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onMaterial();
-    }
 }
 
-void Model::meshIs(Mesh* mesh) {
+void Model::meshIs(Ptr<Mesh> mesh) {
     if (mesh_ == mesh) {
         return;
     }
     mesh_ = mesh;
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onMesh();
-    }
 }
 
-void Model::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void Model::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
-}
-
-void Model::operator()(Functor* functor) {
-    functor->operator()(this);
+void Model::operator()(Ptr<Functor> functor) {
+    functor->operator()(std::static_pointer_cast<Model>(shared_from_this()));
 }

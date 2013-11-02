@@ -27,41 +27,35 @@ const std::string& Mesh::name() const {
     return name_;
 }
 
-AttributeBuffer* Mesh::attributeBuffer(const std::string& name) const {
+Ptr<AttributeBuffer> Mesh::attributeBuffer(const std::string& name) const {
     std::map<std::string, Ptr<AttributeBuffer> >
         ::const_iterator i = attributeBuffer_.find(name);
     if (i == attributeBuffer_.end()) {
         return 0;
     } else {
-        return i->second.ptr();
+        return i->second;
     }
 }
 
-IndexBuffer* Mesh::indexBuffer() const {
-    return indexBuffer_.ptr();
+Ptr<IndexBuffer> Mesh::indexBuffer() const {
+    return indexBuffer_;
 }
 
 Mesh::Status Mesh::status() const {
     return status_;
 }
 
-void Mesh::attributeBufferIs(const std::string& name, AttributeBuffer* buf) {
+void Mesh::attributeBufferIs(const std::string& name, Ptr<AttributeBuffer> buf) {
     attributeBuffer_[name] = buf;
     statusIs(DIRTY);
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onAttributeBuffer(name);
-    }
 }
 
-void Mesh::indexBufferIs(IndexBuffer* indices) {
-    if (static_cast<IndexBuffer*>(indexBuffer_.ptr()) == indices) {
+void Mesh::indexBufferIs(Ptr<IndexBuffer> indices) {
+    if (indexBuffer_ == indices) {
         return;
     }
     indexBuffer_ = indices;
     statusIs(DIRTY);
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onIndexBuffer();
-    }
 }
 
 void Mesh::statusIs(Status status) {
@@ -73,34 +67,20 @@ void Mesh::statusIs(Status status) {
     if (SYNCED == status) {
         updateTangents();
     }
-
-    for (size_t i = 0; i < notifiee_.size(); i++) {
-        notifiee_[i]->onStatus();
-    }
-}
-
-void Mesh::notifieeNew(Notifiee* notifiee) {
-    if (notifiee) {
-        notifiee_.push_back(notifiee);
-    }
-}
-
-void Mesh::notifieeDel(Notifiee* notifiee) {
-    std::remove(notifiee_.begin(), notifiee_.end(), notifiee);
 }
 
 void Mesh::updateTangents() {
-     Ptr<MutableAttributeBuffer<Vector> > tangents = dynamic_cast<
-        MutableAttributeBuffer<Vector>*>(
-        attributeBuffer("tangent"));
+     Ptr<MutableAttributeBuffer<Vector> > tangents(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<Vector>>(
+        attributeBuffer("tangent")));
 
-    Ptr<MutableAttributeBuffer<Vector> > positions = dynamic_cast<
-        MutableAttributeBuffer<Vector>*>(
-        attributeBuffer("position"));
+    Ptr<MutableAttributeBuffer<Vector> > positions(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<Vector>>(
+        attributeBuffer("position")));
 
-    Ptr<MutableAttributeBuffer<TexCoord> > texCoords = dynamic_cast<
-        MutableAttributeBuffer<TexCoord>*>(
-        attributeBuffer("texCoord"));
+    Ptr<MutableAttributeBuffer<TexCoord> > texCoords(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<TexCoord>>(
+        attributeBuffer("texCoord")));
 
     if (tangents && positions && texCoords) {
         // Initialize all tangents to zero for the whole mesh to set up 
