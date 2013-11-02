@@ -6,12 +6,12 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-std::ostream& operator<<(std::ostream& out, const SFR::TexCoord& vector);
-std::istream& operator>>(std::istream& in, SFR::TexCoord& vector);
+std::ostream& operator<<(std::ostream& out, const sfr::TexCoord& vector);
+std::istream& operator>>(std::istream& in, sfr::TexCoord& vector);
 
-namespace SFR {
+namespace sfr {
 
 class TexCoord {
 public:

@@ -5,16 +5,16 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/DeferredRenderer.hpp"
-#include "SFR/MaterialRenderer.hpp"
-#include "SFR/LightRenderer.hpp"
-#include "SFR/DeferredRenderTarget.hpp"
-#include "SFR/TransparencyRenderer.hpp"
-#include "SFR/Transform.hpp"
-#include "SFR/FlatRenderer.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/DeferredRenderer.hpp"
+#include "sfr/MaterialRenderer.hpp"
+#include "sfr/LightRenderer.hpp"
+#include "sfr/DeferredRenderTarget.hpp"
+#include "sfr/TransparencyRenderer.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/FlatRenderer.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 DeferredRenderer::DeferredRenderer(Ptr<AssetTable> manager) {
     GLint viewport[4];

@@ -5,13 +5,13 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/TextureLoader.hpp"
-#include "SFR/Texture.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/TextureLoader.hpp"
+#include "sfr/Texture.hpp"
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 
-using namespace SFR;
+using namespace sfr;
 
 void TextureLoader::onAsset(Ptr<Texture> texture) {
 

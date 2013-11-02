@@ -5,10 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Vector.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Vector.hpp"
 
-namespace SFR {
+namespace sfr {
 
 class Frustum {
 public:

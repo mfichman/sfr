@@ -6,19 +6,19 @@
  *****************************************************************************/
 #pragma once
 
-#ifndef SFR_DEPS_INCLUDED
-#define SFR_DEPS_INLUCDED
+#ifndef sfr_DEPS_INCLUDED
+#define sfr_DEPS_INLUCDED
 
 #define GLEW_STATIC
 #ifdef _WIN32
-#define SFR_USE_GLEW
+#define sfr_USE_GLEW
 #define NOMINMAX
 #include <windows.h>
 #include <GL/glew.h>
 #include <GL/GL.h>
 #endif
 #ifdef __linux__
-#define SFR_USE_GLEW
+#define sfr_USE_GLEW
 #include <GL/glew.h>
 #include <GL/GL.h>
 #endif
@@ -37,11 +37,11 @@
 #include <fstream>
 #include <memory>
 
-#include "SFR/Ptr.hpp"
+#include "sfr/Ptr.hpp"
 
 #endif
 
-namespace SFR {
+namespace sfr {
 
 class ShadowRenderer;
 class FlatRenderer;

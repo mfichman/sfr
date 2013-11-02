@@ -6,9 +6,9 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
 class AttributeBuffer : public Interface {

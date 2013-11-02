@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Interface.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
 class IndexBuffer : public Interface {

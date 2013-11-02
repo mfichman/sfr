@@ -6,11 +6,11 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
-#include "SFR/Color.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Interface.hpp"
+#include "sfr/Color.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Mesh color and texture properties */
 class Material : public Interface {

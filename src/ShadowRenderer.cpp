@@ -5,17 +5,17 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/ShadowRenderer.hpp"
-#include "SFR/FlatRenderer.hpp"
-#include "SFR/Camera.hpp"
-#include "SFR/World.hpp"
-#include "SFR/PointLight.hpp"
-#include "SFR/SpotLight.hpp"
-#include "SFR/HemiLight.hpp"
-#include "SFR/DepthRenderTarget.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/ShadowRenderer.hpp"
+#include "sfr/FlatRenderer.hpp"
+#include "sfr/Camera.hpp"
+#include "sfr/World.hpp"
+#include "sfr/PointLight.hpp"
+#include "sfr/SpotLight.hpp"
+#include "sfr/HemiLight.hpp"
+#include "sfr/DepthRenderTarget.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 ShadowRenderer::ShadowRenderer(Ptr<AssetTable> manager) {
     flatRenderer_ = std::make_shared<FlatRenderer>(manager);

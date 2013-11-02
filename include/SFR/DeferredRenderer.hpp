@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Deferred shading renderer (1st and 2nd pass). */
 class DeferredRenderer : public Node::Functor {

@@ -5,21 +5,21 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/MaterialRenderer.hpp"
-#include "SFR/Camera.hpp"
-#include "SFR/Transform.hpp"
-#include "SFR/Mesh.hpp"
-#include "SFR/Texture.hpp"
-#include "SFR/Material.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Model.hpp"
-#include "SFR/AssetTable.hpp"
-#include "SFR/AttributeBuffer.hpp"
-#include "SFR/IndexBuffer.hpp"
-#include "SFR/World.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/MaterialRenderer.hpp"
+#include "sfr/Camera.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Texture.hpp"
+#include "sfr/Material.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/AssetTable.hpp"
+#include "sfr/AttributeBuffer.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/World.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
     modelEffect_ = manager->assetIs<Effect>("shaders/Model");

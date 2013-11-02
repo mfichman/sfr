@@ -5,10 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Shader.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Shader.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 Shader::Shader(const std::string& name, GLenum type) {
     name_ = name;

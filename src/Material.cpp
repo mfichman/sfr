@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Material.hpp"
-#include "SFR/Texture.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Material.hpp"
+#include "sfr/Texture.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 Material::Material(const std::string& name) {
     name_ = name;

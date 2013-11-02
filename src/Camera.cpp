@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Camera.hpp"
-#include "SFR/Vector.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Camera.hpp"
+#include "sfr/Vector.hpp"
 #include <cmath>
 
-using namespace SFR;
+using namespace sfr;
 
 #define RADIANS(x) ((x)*3.14f/180.0f)
 

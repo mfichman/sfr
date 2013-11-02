@@ -6,13 +6,13 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Color.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/Matrix.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Color.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/Matrix.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Simple point light with attenuation */
 class SpotLight : public Node {

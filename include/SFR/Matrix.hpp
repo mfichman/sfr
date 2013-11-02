@@ -6,9 +6,9 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* 4x4 transformation matrix value type. */
 class Matrix {

@@ -5,10 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/TexCoord.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/TexCoord.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 TexCoord::TexCoord(float u, float v) : u(u), v(v) {
 }

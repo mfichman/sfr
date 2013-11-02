@@ -6,14 +6,14 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Quaternion.hpp"
-#include "SFR/Matrix.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/Iterator.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Quaternion.hpp"
+#include "sfr/Matrix.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/Iterator.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Rotation, translation, scaling node with children. */
 class Transform : public Node {

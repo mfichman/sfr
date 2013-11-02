@@ -6,9 +6,9 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Interface.hpp"
+#include "sfr/Interface.hpp"
 
-namespace SFR {
+namespace sfr {
 
 template <typename T>
 using Ptr = std::shared_ptr<T>;

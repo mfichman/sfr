@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Transform.hpp"
-#include "SFR/Mesh.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/Mesh.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 Transform::Transform(std::string const& name) {
     name_ = name;

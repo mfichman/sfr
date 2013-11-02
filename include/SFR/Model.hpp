@@ -6,11 +6,11 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Mesh.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Mesh.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Geometric mesh node (with attached textures) */
 class Model : public Node {

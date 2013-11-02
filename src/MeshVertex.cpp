@@ -5,10 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/MeshVertex.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/MeshVertex.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 bool MeshVertex::operator<(const MeshVertex& other) const {
     if (position != other.position) {

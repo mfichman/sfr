@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Interface.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Provides functor support for the classes in the scene graph. */
 class Node : public Interface {

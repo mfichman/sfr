@@ -6,12 +6,12 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-std::ostream& operator<<(std::ostream& out, const SFR::Vector& vector);
-std::istream& operator>>(std::istream& in, SFR::Vector& vector);
+std::ostream& operator<<(std::ostream& out, const sfr::Vector& vector);
+std::istream& operator>>(std::istream& in, sfr::Vector& vector);
 
-namespace SFR {
+namespace sfr {
 
 /* 3-dimensional vector utility class */
 class Vector {

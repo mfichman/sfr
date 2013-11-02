@@ -5,14 +5,14 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Matrix.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/Quaternion.hpp"
-#include "SFR/Frustum.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Matrix.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/Quaternion.hpp"
+#include "sfr/Frustum.hpp"
 #include <cmath>
 
-using namespace SFR;
+using namespace sfr;
 
 
 Matrix Matrix::frustum(float l, float r, float b, float t, float n, float f) {

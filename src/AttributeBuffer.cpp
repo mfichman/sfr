@@ -5,11 +5,11 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/AttributeBuffer.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/AttributeBuffer.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 AttributeBuffer::AttributeBuffer(const std::string& name) {
     name_ = name;

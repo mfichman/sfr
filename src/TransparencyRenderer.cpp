@@ -5,18 +5,18 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/TransparencyRenderer.hpp"
-#include "SFR/AssetTable.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/World.hpp"
-#include "SFR/Model.hpp"
-#include "SFR/Material.hpp"
-#include "SFR/AttributeBuffer.hpp"
-#include "SFR/IndexBuffer.hpp"
-#include "SFR/Camera.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/TransparencyRenderer.hpp"
+#include "sfr/AssetTable.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/World.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/Material.hpp"
+#include "sfr/AttributeBuffer.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/Camera.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
     transparencyEffect_ = manager->assetIs<Effect>("shaders/Transparency");

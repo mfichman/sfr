@@ -6,7 +6,7 @@
  *****************************************************************************/
 #pragma once
 
-namespace SFR {
+namespace sfr {
 
 /* Provides intrusive smart-pointer support. */
 class Interface : public std::enable_shared_from_this<Interface> {

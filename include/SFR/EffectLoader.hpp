@@ -6,15 +6,15 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/AssetTable.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/AssetTable.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Loads GLSL vertex and fragment shader programs */
-class EffectLoader : public AssetTable::Notifiee {
+class EffectLoader : public AssetTable::Listener {
 public:
-	EffectLoader(Ptr<AssetTable> notifier) : AssetTable::Notifiee(notifier) {}
+	EffectLoader(Ptr<AssetTable> notifier) : AssetTable::Listener(notifier) {}
     void onAsset(Ptr<Effect> effect);
 	void onAsset(Ptr<Shader> shader);
 private:

@@ -6,12 +6,12 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-std::ostream& operator<<(std::ostream& out, const SFR::Color& color);
-std::istream& operator>>(std::istream& in, SFR::Color& color);
+std::ostream& operator<<(std::ostream& out, const sfr::Color& color);
+std::istream& operator>>(std::istream& in, sfr::Color& color);
 
-namespace SFR {
+namespace sfr {
 
 class Color {
 public:

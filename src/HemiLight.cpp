@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/HemiLight.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/HemiLight.hpp"
 #include <algorithm>
 #include <cmath>
 
-using namespace SFR;
+using namespace sfr;
 
 HemiLight::HemiLight() {
     constantAttenuation_ = 1.0f;

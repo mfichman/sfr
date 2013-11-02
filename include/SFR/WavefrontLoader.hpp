@@ -6,19 +6,19 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/AssetTable.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/TexCoord.hpp"
-#include "SFR/MeshVertex.hpp"
-#include "SFR/AttributeBuffer.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/AssetTable.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/TexCoord.hpp"
+#include "sfr/MeshVertex.hpp"
+#include "sfr/AttributeBuffer.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Loads Wavefront OBJ files */
-class WavefrontLoader : public AssetTable::Notifiee {
+class WavefrontLoader : public AssetTable::Listener {
 public:
-	WavefrontLoader(Ptr<AssetTable> notifier) : AssetTable::Notifiee(notifier) {};
+	WavefrontLoader(Ptr<AssetTable> notifier) : AssetTable::Listener(notifier) {};
     void onAsset(Ptr<Transform> transform);
 
 private:

@@ -5,16 +5,16 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/TransformUpdater.hpp"
-#include "SFR/Camera.hpp"
-#include "SFR/Transform.hpp"
-#include "SFR/PointLight.hpp"
-#include "SFR/SpotLight.hpp"
-#include "SFR/HemiLight.hpp"
-#include "SFR/World.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/TransformUpdater.hpp"
+#include "sfr/Camera.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/PointLight.hpp"
+#include "sfr/SpotLight.hpp"
+#include "sfr/HemiLight.hpp"
+#include "sfr/World.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 void TransformUpdater::operator()(Ptr<World> world) {
     operator()(world->root());

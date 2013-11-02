@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/DepthRenderTarget.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/DepthRenderTarget.hpp"
 #include <algorithm>
 #include <stdexcept>
 
-using namespace SFR;
+using namespace sfr;
 
 DepthRenderTarget::DepthRenderTarget(GLuint width, GLuint height) {
     width_ = width;

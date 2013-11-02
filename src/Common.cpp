@@ -7,4 +7,4 @@
 
 // This file exists solely to generate precompiled headers for the rest of 
 // the project
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"

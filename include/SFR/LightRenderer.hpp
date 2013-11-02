@@ -6,11 +6,11 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Matrix.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Matrix.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Deferred shading renderer (2nd pass). */
 class LightRenderer : public Node::Functor {

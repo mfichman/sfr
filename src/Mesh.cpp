@@ -5,18 +5,18 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Mesh.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/TexCoord.hpp"
-#include "SFR/AttributeBuffer.hpp"
-#include "SFR/IndexBuffer.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Material.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/TexCoord.hpp"
+#include "sfr/AttributeBuffer.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/Material.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 Mesh::Mesh(const std::string& name) {
     name_ = name;

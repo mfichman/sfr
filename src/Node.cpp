@@ -5,8 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
 
-using namespace SFR;
+using namespace sfr;
 

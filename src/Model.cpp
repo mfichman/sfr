@@ -5,15 +5,15 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Model.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/TexCoord.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Material.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/TexCoord.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/Material.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 Ptr<Material> Model::material() const {
     return material_;

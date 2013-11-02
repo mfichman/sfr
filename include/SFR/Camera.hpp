@@ -6,12 +6,12 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Frustum.hpp"
-#include "SFR/Matrix.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Frustum.hpp"
+#include "sfr/Matrix.hpp"
 
-namespace SFR {
+namespace sfr {
 
 
 /* Contains parameters for the view camera. */

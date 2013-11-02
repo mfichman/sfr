@@ -31,12 +31,12 @@ class Package:
     major_version = '0'
     minor_version = '0'
     patch = '0'
-    pch = 'Common.hpp'
 
     def __init__(self):
 
         (system, _, release, version, machine, proc) = platform.uname()
         self.name = self.__class__.__name__.lower()
+        self.pch = '%s/Common.hpp' % self.name
         self.build_mode = ARGUMENTS.get('mode', 'debug')
         self.version = '.'.join((self.major_version, self.minor_version, self.patch))
         self.branch = os.popen('git rev-parse --abbrev-ref HEAD').read().strip()

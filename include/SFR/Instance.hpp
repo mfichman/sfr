@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Manages object instances (can be repeated) */
 class Instance : public Node {

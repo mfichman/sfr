@@ -5,11 +5,11 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Texture.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Texture.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 Texture::Texture(const std::string& name) {
     name_ = name;

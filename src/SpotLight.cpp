@@ -5,13 +5,13 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/SpotLight.hpp"
-#include "SFR/DepthRenderTarget.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/SpotLight.hpp"
+#include "sfr/DepthRenderTarget.hpp"
 #include <algorithm>
 #include <cmath>
 
-using namespace SFR;
+using namespace sfr;
 
 SpotLight::SpotLight() {
     constantAttenuation_ = 1.0f;

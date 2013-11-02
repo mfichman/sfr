@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/DeferredRenderTarget.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/DeferredRenderTarget.hpp"
 #include <algorithm>
 #include <stdexcept>
 
-using namespace SFR;
+using namespace sfr;
 
 DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
     target_.resize(4);

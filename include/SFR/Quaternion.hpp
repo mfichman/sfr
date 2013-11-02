@@ -6,12 +6,12 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-std::ostream& operator<<(std::ostream& out, const SFR::Quaternion& quaternion);
-std::istream& operator>>(std::istream& in, SFR::Quaternion& quaternion);
+std::ostream& operator<<(std::ostream& out, const sfr::Quaternion& quaternion);
+std::istream& operator>>(std::istream& in, sfr::Quaternion& quaternion);
 
-namespace SFR {
+namespace sfr {
 
 class Quaternion {
 public:

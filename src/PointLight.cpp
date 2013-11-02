@@ -5,12 +5,12 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/PointLight.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/PointLight.hpp"
 #include <algorithm>
 #include <cmath>
 
-using namespace SFR;
+using namespace sfr;
 
 PointLight::PointLight() {
     constantAttenuation_ = 1.0f;

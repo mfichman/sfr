@@ -5,11 +5,11 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/IndexBuffer.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/IndexBuffer.hpp"
 #include <algorithm>
 
-using namespace SFR;
+using namespace sfr;
 
 IndexBuffer::IndexBuffer(const std::string& name) {
     name_ = name;

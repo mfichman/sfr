@@ -5,20 +5,20 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/WavefrontLoader.hpp"
-#include "SFR/Model.hpp"
-#include "SFR/Texture.hpp"
-#include "SFR/AttributeBuffer.hpp"
-#include "SFR/Mesh.hpp"
-#include "SFR/IndexBuffer.hpp"
-#include "SFR/Material.hpp"
-#include "SFR/Transform.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/WavefrontLoader.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/Texture.hpp"
+#include "sfr/AttributeBuffer.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/Material.hpp"
+#include "sfr/Transform.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
 
-using namespace SFR;
+using namespace sfr;
 
 void WavefrontLoader::onAsset(Ptr<Transform> transform) {
     static const std::string ext = "obj";

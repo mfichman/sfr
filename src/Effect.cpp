@@ -5,15 +5,15 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Shader.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/Shader.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
 
-using namespace SFR;
+using namespace sfr;
 using namespace std;
 
 Effect::Effect(const std::string& name) {

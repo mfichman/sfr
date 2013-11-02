@@ -5,22 +5,22 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/FlatRenderer.hpp"
-#include "SFR/Camera.hpp"
-#include "SFR/Transform.hpp"
-#include "SFR/Mesh.hpp"
-#include "SFR/Model.hpp"
-#include "SFR/AssetTable.hpp"
-#include "SFR/AttributeBuffer.hpp"
-#include "SFR/IndexBuffer.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/World.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/FlatRenderer.hpp"
+#include "sfr/Camera.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/AssetTable.hpp"
+#include "sfr/AttributeBuffer.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/World.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 FlatRenderer::FlatRenderer(Ptr<AssetTable> manager) {
-    flatShader_ = manager->assetIs<SFR::Effect>("shaders/Flat");
+    flatShader_ = manager->assetIs<sfr::Effect>("shaders/Flat");
 }
 
 void FlatRenderer::operator()(Ptr<World> world) {

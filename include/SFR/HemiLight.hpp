@@ -6,12 +6,12 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
-#include "SFR/Color.hpp"
-#include "SFR/Vector.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Color.hpp"
+#include "sfr/Vector.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Simple point light with attenuation */
 class HemiLight : public Node {

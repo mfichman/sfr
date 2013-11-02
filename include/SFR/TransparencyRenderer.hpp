@@ -6,11 +6,11 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Matrix.hpp"
-#include "SFR/Node.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Matrix.hpp"
+#include "sfr/Node.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Renders transparent meshes with a flat shading technique. */
 class TransparencyRenderer : public Node::Functor {

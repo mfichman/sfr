@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Transform.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Transform.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Holds the root node and global scene data. */
 class World : public Interface {

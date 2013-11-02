@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Node.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Node.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Empty functor implementation for performance testing */
 class NullFunctor : public Node::Functor {

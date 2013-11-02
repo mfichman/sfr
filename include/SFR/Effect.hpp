@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Interface.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Interface.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Manages a GPU program, which may have multiple shaders attached. */
 class Effect : public Interface {

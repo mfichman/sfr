@@ -5,14 +5,14 @@
  * February, 2011                                                            *
  *****************************************************************************/ 
 
-#include "SFR/Common.hpp"
-#include "SFR/EffectLoader.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Shader.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/EffectLoader.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/Shader.hpp"
 #include <iostream>
 #include <fstream>
 
-using namespace SFR;
+using namespace sfr;
 
 void EffectLoader::onAsset(Ptr<Effect> effect) {
 	Ptr<Shader> fragShader(notifier_->assetIs<Shader>(effect->name() + ".frag", GL_FRAGMENT_SHADER));

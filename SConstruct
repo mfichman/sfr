@@ -14,6 +14,5 @@ class Sfr(pkgboot.Package):
     major_version = '0'
     minor_version = '0'
     patch = '0'
-    pch = 'SFR/Common.hpp'
 
 Sfr()

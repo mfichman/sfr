@@ -5,11 +5,11 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/NullFunctor.hpp"
-#include "SFR/World.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/NullFunctor.hpp"
+#include "sfr/World.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 
 void NullFunctor::operator()(Ptr<World> world) {

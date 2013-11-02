@@ -5,15 +5,15 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/TextureRenderer.hpp"
-#include "SFR/AssetTable.hpp"
-#include "SFR/Effect.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/Texture.hpp"
-#include "SFR/TexCoord.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/TextureRenderer.hpp"
+#include "sfr/AssetTable.hpp"
+#include "sfr/Effect.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/Texture.hpp"
+#include "sfr/TexCoord.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 TextureRenderer::TextureRenderer(Ptr<AssetTable> manager) {
     texture_ = manager->assetIs<Effect>("shaders/Texture");

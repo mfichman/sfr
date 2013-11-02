@@ -6,11 +6,11 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
-#include "SFR/Vector.hpp"
-#include "SFR/TexCoord.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Vector.hpp"
+#include "sfr/TexCoord.hpp"
 
-namespace SFR {
+namespace sfr {
 
 class MeshVertex {
 public:

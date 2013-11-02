@@ -6,10 +6,10 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Node.hpp"
-#include "SFR/Matrix.hpp"
+#include "sfr/Node.hpp"
+#include "sfr/Matrix.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Simple renderer.  Passes vertex, texture, and material info to a shader. */
 class MaterialRenderer : public Node::Functor {

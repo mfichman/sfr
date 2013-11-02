@@ -5,10 +5,10 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#include "SFR/Common.hpp"
-#include "SFR/Color.hpp"
+#include "sfr/Common.hpp"
+#include "sfr/Color.hpp"
 
-using namespace SFR;
+using namespace sfr;
 
 Color::Color() :
     red(0.0f),

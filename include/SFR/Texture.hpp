@@ -6,9 +6,9 @@
  *****************************************************************************/
 #pragma once
 
-#include "SFR/Common.hpp"
+#include "sfr/Common.hpp"
 
-namespace SFR {
+namespace sfr {
 
 /* Manages texture data */
 class Texture : public Interface {
