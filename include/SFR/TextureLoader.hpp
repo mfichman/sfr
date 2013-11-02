@@ -7,15 +7,15 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 
 namespace SFR {
 
 /* Loads images using SFML */
-class TextureLoader : public ResourceManager::Notifiee {
+class TextureLoader : public AssetTable::Notifiee {
 public:
-	TextureLoader(Ptr<ResourceManager> notifier) : ResourceManager::Notifiee(notifier) {}
-    void onTextureNew(Ptr<Texture> texture);
+	TextureLoader(Ptr<AssetTable> notifier) : AssetTable::Notifiee(notifier) {}
+    void onAsset(Ptr<Texture> texture);
 };
 
 }

@@ -13,8 +13,7 @@
 using namespace SFR;
 
 World::World() {
-    root_ = std::make_shared<Transform>();
-    camera_ = std::make_shared<Camera>();
+    root_ = std::make_shared<Transform>("root");
 }
 
 Ptr<Transform> World::root() const {

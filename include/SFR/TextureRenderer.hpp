@@ -12,9 +12,9 @@
 namespace SFR {
 
 /* Renders a texture to a full-screen quad */
-class TextureRenderer : public Interface<TextureRenderer> {
+class TextureRenderer : public Interface {
 public:
-    TextureRenderer(Ptr<ResourceManager> manager);
+    TextureRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<Texture> texture);
     void operator()(Ptr<Effect> effect); 
 

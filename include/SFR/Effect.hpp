@@ -12,7 +12,7 @@
 namespace SFR {
 
 /* Manages a GPU program, which may have multiple shaders attached. */
-class Effect : public Interface<Effect> {
+class Effect : public Interface {
 public:
     enum Status { LINKED, DIRTY };
 

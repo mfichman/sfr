@@ -14,7 +14,7 @@ namespace SFR {
 /* Simple renderer.  Passes vertex, texture, and material info to a shader. */
 class MaterialRenderer : public Node::Functor {
 public:
-    MaterialRenderer(Ptr<ResourceManager> manager);
+    MaterialRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Model> object);

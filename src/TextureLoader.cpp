@@ -13,7 +13,7 @@
 
 using namespace SFR;
 
-void TextureLoader::onTextureNew(Ptr<Texture> texture) {
+void TextureLoader::onAsset(Ptr<Texture> texture) {
 
     sf::Image image;
     if (!image.loadFromFile(texture->name())) {

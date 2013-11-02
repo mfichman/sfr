@@ -11,7 +11,7 @@
 #include "SFR/Transform.hpp"
 #include "SFR/Mesh.hpp"
 #include "SFR/Model.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 #include "SFR/AttributeBuffer.hpp"
 #include "SFR/IndexBuffer.hpp"
 #include "SFR/Effect.hpp"
@@ -19,8 +19,8 @@
 
 using namespace SFR;
 
-FlatRenderer::FlatRenderer(Ptr<ResourceManager> manager) {
-    flatShader_ = manager->effectNew("shaders/Flat");
+FlatRenderer::FlatRenderer(Ptr<AssetTable> manager) {
+    flatShader_ = manager->assetIs<SFR::Effect>("shaders/Flat");
 }
 
 void FlatRenderer::operator()(Ptr<World> world) {
@@ -38,15 +38,15 @@ void FlatRenderer::operator()(Ptr<Transform> transform) {
     transform_ = transform_ * transform->transform();
 
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node->operator()(shared_from_this());
+        node->operator()(std::static_pointer_cast<FlatRenderer>(shared_from_this()));
     }
 
     transform_ = previous;
 }
 
-void FlatRenderer::operator()(Ptr<Model> object) {
+void FlatRenderer::operator()(Ptr<Model> model) {
     operator()(flatShader_);
-    operator()(object->mesh());
+    operator()(model->mesh());
 }
 
 void FlatRenderer::operator()(Ptr<Mesh> mesh) {

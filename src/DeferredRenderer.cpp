@@ -16,7 +16,7 @@
 
 using namespace SFR;
 
-DeferredRenderer::DeferredRenderer(Ptr<ResourceManager> manager) {
+DeferredRenderer::DeferredRenderer(Ptr<AssetTable> manager) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 

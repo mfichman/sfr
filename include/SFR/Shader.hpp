@@ -11,7 +11,7 @@
 namespace SFR {
 
 /* Single GPU shader source file. */
-class Shader : public Interface<Shader> {
+class Shader : public Interface {
 public:
     enum Status { COMPILED, DIRTY };
 

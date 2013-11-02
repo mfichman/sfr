@@ -15,7 +15,7 @@ namespace SFR {
 /* Renders transparent meshes with a flat shading technique. */
 class TransparencyRenderer : public Node::Functor {
 public:
-    TransparencyRenderer(Ptr<ResourceManager> manager);
+    TransparencyRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Model> model);

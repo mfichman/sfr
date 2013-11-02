@@ -12,7 +12,7 @@
 namespace SFR {
 
 /* Geometric mesh node (with attached textures) */
-class Mesh : public Interface<Mesh> {
+class Mesh : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
 

@@ -17,7 +17,7 @@
 
 using namespace SFR;
 
-ShadowRenderer::ShadowRenderer(Ptr<ResourceManager> manager) {
+ShadowRenderer::ShadowRenderer(Ptr<AssetTable> manager) {
     flatRenderer_ = std::make_shared<FlatRenderer>(manager);
 }
 
@@ -30,7 +30,7 @@ void ShadowRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(shared_from_this());
+        node(std::static_pointer_cast<ShadowRenderer>(shared_from_this()));
     }
     transform_ = previous;
 }

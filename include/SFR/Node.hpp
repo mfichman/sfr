@@ -12,14 +12,14 @@
 namespace SFR {
 
 /* Provides functor support for the classes in the scene graph. */
-class Node : public Interface<Node> {
+class Node : public Interface {
 public:
     class Functor;
     virtual void operator()(Ptr<Functor> functor)=0;
 };
 
 /* Implement this interface to perform processing on the scene. */
-class Node::Functor : public Interface<Node::Functor> {
+class Node::Functor : public Interface {
 public:
     virtual void operator()(Ptr<Camera> camera) {}
     virtual void operator()(Ptr<Transform> transform) {}

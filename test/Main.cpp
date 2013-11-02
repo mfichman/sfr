@@ -1,5 +1,5 @@
 #include <SFR/Common.hpp>
-#include <SFR/ResourceManager.hpp>
+#include <SFR/AssetTable.hpp>
 #include <SFR/Mesh.hpp>
 #include <SFR/Camera.hpp>
 #include <SFR/PointLight.hpp>
@@ -31,7 +31,7 @@ using namespace SFR;
 
 std::auto_ptr<sf::Window> window;
 std::auto_ptr<sf::Clock> timer;
-Ptr<SFR::ResourceManager> manager;
+Ptr<SFR::AssetTable> assets;
 Ptr<SFR::DeferredRenderer> deferredRenderer;
 Ptr<SFR::FlatRenderer> flatRenderer;
 Ptr<SFR::NullFunctor> nullRenderer;
@@ -41,6 +41,7 @@ Ptr<SFR::TextureRenderer> textureRenderer;
 Ptr<SFR::World> world;
 Ptr<SFR::Transform> camera;
 Ptr<SFR::Transform> lightNode;
+Ptr<SFR::Transform> root;
 sf::Time elapsedTime = sf::seconds(0.f);
 float z = 3.1f;
 float x = -1.8f;
@@ -63,45 +64,48 @@ void initWindow() {
 #endif
     glViewport(0, 0, window->getSize().x, window->getSize().y);
 
-    // Set up the renderer, resources, manager, etc.
-    manager = std::make_shared<SFR::ResourceManager>();
-	Ptr<WavefrontLoader> meshLoader = std::make_shared<WavefrontLoader>(manager);
-	Ptr<EffectLoader> effectLoader = std::make_shared<EffectLoader>(manager);
-	Ptr<TextureLoader> textureLoader = std::make_shared<TextureLoader>(manager);
-	manager->notifieeNew(meshLoader);
-	manager->notifieeNew(effectLoader);
-	manager->notifieeNew(textureLoader);
+    // Set up the renderer, resources, assets, etc.
+    assets = std::make_shared<SFR::AssetTable>();
+	Ptr<WavefrontLoader> meshLoader = std::make_shared<WavefrontLoader>(assets);
+	Ptr<EffectLoader> effectLoader = std::make_shared<EffectLoader>(assets);
+	Ptr<TextureLoader> textureLoader = std::make_shared<TextureLoader>(assets);
+	assets->notifieeIs(meshLoader);
+	assets->notifieeIs(effectLoader);
+	assets->notifieeIs(textureLoader);
 
-    deferredRenderer = std::make_shared<SFR::DeferredRenderer>(manager);
-    shadowRenderer = std::make_shared<SFR::ShadowRenderer>(manager);
+    deferredRenderer = std::make_shared<SFR::DeferredRenderer>(assets);
+    shadowRenderer = std::make_shared<SFR::ShadowRenderer>(assets);
     updater = std::make_shared<SFR::TransformUpdater>();
     nullRenderer = std::make_shared<SFR::NullFunctor>();
     world = std::make_shared<SFR::World>();
-    flatRenderer = std::make_shared<SFR::FlatRenderer>(manager);
-    textureRenderer = std::make_shared<SFR::TextureRenderer>(manager);
+    root = world->root();
+    flatRenderer = std::make_shared<SFR::FlatRenderer>(assets);
+    textureRenderer = std::make_shared<SFR::TextureRenderer>(assets);
 }
 
 
 void initCamera() {
-    camera = std::make_shared<SFR::Transform>();
-    camera->childNew(world->camera());
-    world->root()->childNew(camera);
+    camera = root->childIs<SFR::Transform>("camera");
+    world->cameraIs(camera->childIs<SFR::Camera>());
 }
 
 void handleInput();
 
 void initLights() {
-    Ptr<SFR::HemiLight> light1(new SFR::HemiLight);
+    Ptr<SFR::HemiLight> light1 = root->childIs<SFR::HemiLight>();
     light1->linearAttenuationIs(0.1f);
     light1->diffuseColorIs(SFR::Color(0.8f, .8f, .8f, 1.f));
     light1->backDiffuseColorIs(SFR::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(SFR::Vector(1.f, 0.f, 0.f));
-    world->root()->childNew(light1);
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
             Ptr<SFR::DepthRenderTarget> target(new SFR::DepthRenderTarget(2048, 2048));
-            Ptr<SFR::SpotLight> light(new SFR::SpotLight);
+
+            Ptr<SFR::Transform> node = root->childIs<SFR::Transform>("light");
+            node->positionIs(SFR::Vector(i * 2.f, 16.f, j * 5.f + 1.f));
+
+            Ptr<SFR::SpotLight> light = node->childIs<SFR::SpotLight>();
             light->spotCutoffIs(20.f);
             light->spotPowerIs(40.f);
 			light->constantAttenuationIs(1.f);
@@ -113,10 +117,6 @@ void initLights() {
             light->directionIs(SFR::Vector(0, -1, 0));
             light->shadowMapIs(target);
 
-            Ptr<SFR::Transform> node(new SFR::Transform);
-            node->positionIs(SFR::Vector(i * 2.f, 16.f, j * 5.f + 1.f));
-            node->childNew(light);
-            world->root()->childNew(node);
 			lightNode = node;
         }
     }
@@ -176,23 +176,22 @@ void handleInput() {
 
 void initModels() {
     // Initialize the models that are part of the scene
-    Ptr<SFR::Transform> plane(manager->nodeNew("meshes/Plane.obj"));
+    Ptr<SFR::Transform> plane(assets->assetIs<SFR::Transform>("meshes/Plane.obj"));
     plane->positionIs(SFR::Vector(0.f, 0.f, 0.f));
 
-    //Ptr<SFR::Transform> sphere = manager->nodeNew("meshes/SmoothSphere.obj");
+    //Ptr<SFR::Transform> sphere = assets->nodeIs("meshes/SmoothSphere.obj");
     //sphere->positionIs(SFR::Vector(0.f, 0.f, 5.f));
-    Ptr<SFR::Transform> car(manager->nodeNew("meshes/Lexus.obj"));
+    Ptr<SFR::Transform> car(assets->assetIs<SFR::Transform>("meshes/Lexus.obj"));
     
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
-            Ptr<SFR::Transform> node(new SFR::Transform);
+            Ptr<SFR::Transform> node = root->childIs<SFR::Transform>("car");
             node->positionIs(SFR::Vector(i * 2.f+1.f, 0.f, j * 5.f));
-            node->childNew(car);
-            world->root()->childNew(node);
+            node->childIs(car);
         }
     }
 
-    world->root()->childNew(plane);
+    root->childIs(plane);
 }
 
 void runRenderLoop() {
@@ -218,7 +217,7 @@ void runRenderLoop() {
             nullRenderer->operator()(world);
             nullRenderer->operator()(world);
         } else {
-            //static Ptr<SFR::Texture> tex(manager->textureNew("textures/MetalDiffuse.png"));
+            //static Ptr<SFR::Texture> tex(assets->textureIs("textures/MetalDiffuse.png"));
             //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             //textureRenderer(tex);
 

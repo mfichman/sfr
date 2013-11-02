@@ -14,15 +14,15 @@
 #include "SFR/Material.hpp"
 #include "SFR/Effect.hpp"
 #include "SFR/Model.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 #include "SFR/AttributeBuffer.hpp"
 #include "SFR/IndexBuffer.hpp"
 #include "SFR/World.hpp"
 
 using namespace SFR;
 
-MaterialRenderer::MaterialRenderer(Ptr<ResourceManager> manager) {
-    modelEffect_ = manager->effectNew("shaders/Model");
+MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
+    modelEffect_ = manager->assetIs<Effect>("shaders/Model");
 }
 
 void MaterialRenderer::operator()(Ptr<World> world) {
@@ -41,7 +41,7 @@ void MaterialRenderer::operator()(Ptr<Transform> transform) {
     transform_ = transform_ * transform->transform();
 
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(shared_from_this());
+        node(std::static_pointer_cast<MaterialRenderer>(shared_from_this()));
     }
 
     transform_ = previous;
@@ -121,6 +121,7 @@ void MaterialRenderer::operator()(Ptr<IndexBuffer> buffer) {
 }
 
 void MaterialRenderer::operator()(Ptr<Material> material) {
+
     glUniform3fv(ambient_, 1, material->ambientColor());
     glUniform3fv(diffuse_, 1, material->diffuseColor());
     glUniform3fv(specular_, 1, material->specularColor());

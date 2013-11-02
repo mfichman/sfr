@@ -7,7 +7,7 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/TransparencyRenderer.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 #include "SFR/Effect.hpp"
 #include "SFR/World.hpp"
 #include "SFR/Model.hpp"
@@ -18,8 +18,8 @@
 
 using namespace SFR;
 
-TransparencyRenderer::TransparencyRenderer(Ptr<ResourceManager> manager) {
-    transparencyEffect_ = manager->effectNew("shaders/Transparency");
+TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
+    transparencyEffect_ = manager->assetIs<Effect>("shaders/Transparency");
 }
 
 void TransparencyRenderer::operator()(Ptr<World> world) {
@@ -44,7 +44,7 @@ void TransparencyRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(shared_from_this());
+        node(std::static_pointer_cast<TransparencyRenderer>(shared_from_this()));
     }
     transform_ = previous;
 }

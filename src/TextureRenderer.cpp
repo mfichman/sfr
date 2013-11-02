@@ -7,7 +7,7 @@
 
 #include "SFR/Common.hpp"
 #include "SFR/TextureRenderer.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 #include "SFR/Effect.hpp"
 #include "SFR/Vector.hpp"
 #include "SFR/Texture.hpp"
@@ -15,8 +15,8 @@
 
 using namespace SFR;
 
-TextureRenderer::TextureRenderer(Ptr<ResourceManager> manager) {
-    texture_ = manager->effectNew("shaders/Texture");
+TextureRenderer::TextureRenderer(Ptr<AssetTable> manager) {
+    texture_ = manager->assetIs<Effect>("shaders/Texture");
 }
 
 void TextureRenderer::operator()(Ptr<Texture> texture) {

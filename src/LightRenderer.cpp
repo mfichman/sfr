@@ -12,7 +12,7 @@
 #include "SFR/PointLight.hpp"
 #include "SFR/HemiLight.hpp"
 #include "SFR/SpotLight.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 #include "SFR/AttributeBuffer.hpp"
 #include "SFR/IndexBuffer.hpp"
 #include "SFR/Mesh.hpp"
@@ -22,13 +22,13 @@
 
 using namespace SFR;
 
-LightRenderer::LightRenderer(Ptr<ResourceManager> manager) {
-    manager->nodeNew("meshes/LightShapes.obj");
-    unitSphere_ = manager->meshNew("meshes/LightShapes.obj/Sphere");
-    unitCone_ = manager->meshNew("meshes/LightShapes.obj/Cone");
-    pointLight_ = manager->effectNew("shaders/PointLight");
-    hemiLight_ = manager->effectNew("shaders/HemiLight");
-    spotLight_ = manager->effectNew("shaders/SpotLight");
+LightRenderer::LightRenderer(Ptr<AssetTable> manager) {
+    manager->assetIs<Transform>("meshes/LightShapes.obj");
+    unitSphere_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Sphere");
+    unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
+    pointLight_ = manager->assetIs<Effect>("shaders/PointLight");
+    hemiLight_ = manager->assetIs<Effect>("shaders/HemiLight");
+    spotLight_ = manager->assetIs<Effect>("shaders/SpotLight");
 }
 
 void LightRenderer::operator()(Ptr<World> world) {
@@ -56,7 +56,7 @@ void LightRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
     transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
-        node(shared_from_this());
+        node(std::static_pointer_cast<LightRenderer>(shared_from_this()));
     }
     transform_ = previous;
 }

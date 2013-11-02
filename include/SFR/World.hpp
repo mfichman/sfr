@@ -12,7 +12,7 @@
 namespace SFR {
 
 /* Holds the root node and global scene data. */
-class World : public Interface<World> {
+class World : public Interface {
 public:
     World();
     Ptr<Transform> root() const;

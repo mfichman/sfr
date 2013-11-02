@@ -15,7 +15,7 @@ namespace SFR {
 /* Shadow map renderer. */
 class FlatRenderer : public Node::Functor {
 public:
-    FlatRenderer(Ptr<ResourceManager> manager);
+    FlatRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Model> object);

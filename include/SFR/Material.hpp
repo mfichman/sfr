@@ -13,7 +13,7 @@
 namespace SFR {
 
 /* Mesh color and texture properties */
-class Material : public Interface<Material> {
+class Material : public Interface {
 public:
     Material(const std::string& name);
 

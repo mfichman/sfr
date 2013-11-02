@@ -9,8 +9,9 @@
 namespace SFR {
 
 /* Provides intrusive smart-pointer support. */
-template <typename T>
-class Interface : public std::enable_shared_from_this<T> {
+class Interface : public std::enable_shared_from_this<Interface> {
+public:
+    virtual ~Interface() {}
 };
 
 }

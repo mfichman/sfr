@@ -12,7 +12,7 @@
 namespace SFR {
 
 /* Enables multiple-texture render-to-texture techniques */
-class DeferredRenderTarget : public Interface<DeferredRenderTarget> {
+class DeferredRenderTarget : public Interface {
 public:
     enum Status { ENABLED, DISABLED };
 

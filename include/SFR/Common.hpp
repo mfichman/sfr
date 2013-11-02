@@ -73,7 +73,7 @@ class MaterialLoader;
 class EffectLoader;
 class TextureLoader;
 class Camera;
-class ResourceManager;
+class AssetTable;
 class DepthRenderTarget;
 class DeferredRenderTarget;
 class Model;

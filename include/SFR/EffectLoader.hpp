@@ -7,16 +7,16 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 
 namespace SFR {
 
 /* Loads GLSL vertex and fragment shader programs */
-class EffectLoader : public ResourceManager::Notifiee {
+class EffectLoader : public AssetTable::Notifiee {
 public:
-	EffectLoader(Ptr<ResourceManager> notifier) : ResourceManager::Notifiee(notifier) {}
-    void onEffectNew(Ptr<Effect> effect);
-	void onShaderNew(Ptr<Shader> shader);
+	EffectLoader(Ptr<AssetTable> notifier) : AssetTable::Notifiee(notifier) {}
+    void onAsset(Ptr<Effect> effect);
+	void onAsset(Ptr<Shader> shader);
 private:
     std::string fileContents(const std::string& path);
 };

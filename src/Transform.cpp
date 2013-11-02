@@ -12,6 +12,10 @@
 
 using namespace SFR;
 
+Transform::Transform(std::string const& name) {
+    name_ = name;
+}
+
 const Matrix& Transform::transform() const {
     return transform_;
 }
@@ -47,15 +51,7 @@ void Transform::rotationIs(const Quaternion& rotation) {
     transformIs(Matrix(rotation, transform_.origin()));
 }
 
-void Transform::nameIs(const std::string& name) {
-    if (name == name_) {
-        return;
-    }
-
-    name_ = name;
-}
-
-void Transform::childNew(Ptr<Node> child) {
+void Transform::childIs(Ptr<Node> child) {
     children_.push_back(child);
 }
 

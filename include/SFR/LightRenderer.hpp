@@ -15,7 +15,7 @@ namespace SFR {
 /* Deferred shading renderer (2nd pass). */
 class LightRenderer : public Node::Functor {
 public:
-    LightRenderer(Ptr<ResourceManager> manager);
+    LightRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<PointLight> light);

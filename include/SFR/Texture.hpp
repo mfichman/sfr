@@ -11,7 +11,7 @@
 namespace SFR {
 
 /* Manages texture data */
-class Texture : public Interface<Texture> {
+class Texture : public Interface {
 public:
     Texture(const std::string& name);
     ~Texture();

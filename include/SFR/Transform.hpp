@@ -18,6 +18,8 @@ namespace SFR {
 /* Rotation, translation, scaling node with children. */
 class Transform : public Node {
 public:
+    Transform(std::string const& name);
+
     const Matrix& transform() const;
     Vector position() const;
     Quaternion rotation() const;
@@ -27,8 +29,15 @@ public:
     void transformIs(const Matrix& transform);
     void positionIs(const Vector& position);
     void rotationIs(const Quaternion& rotation);
-    void nameIs(const std::string& name);
-    void childNew(Ptr<Node> child);
+
+    template <typename T, typename ...Arg>
+    Ptr<T> childIs(Arg... arg) {
+        Ptr<T> child = std::make_shared<T>(arg...);
+        children_.push_back(child);
+        return child;
+    }
+
+    void childIs(Ptr<Node> child);
     void childDel(Ptr<Node> child);
 
     void operator()(Ptr<Functor> functor);
@@ -38,5 +47,6 @@ private:
     Matrix transform_;
     std::string name_;
 };
+
 
 }

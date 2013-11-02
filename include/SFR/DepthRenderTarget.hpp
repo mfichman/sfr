@@ -12,7 +12,7 @@
 namespace SFR {
 
 /* Enables render-to-depth texture techniques (i.e., shadow mapping) */
-class DepthRenderTarget : public Interface<DepthRenderTarget> {
+class DepthRenderTarget : public Interface {
 public:
     enum Status { ENABLED, DISABLED };
 

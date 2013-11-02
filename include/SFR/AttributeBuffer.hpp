@@ -11,7 +11,7 @@
 namespace SFR {
 
 /* Contains one attribute array (e.g., normals, indices, etc.) for a mesh. */
-class AttributeBuffer : public Interface<AttributeBuffer> {
+class AttributeBuffer : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
 

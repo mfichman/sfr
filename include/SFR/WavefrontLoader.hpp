@@ -7,7 +7,7 @@
 #pragma once
 
 #include "SFR/Common.hpp"
-#include "SFR/ResourceManager.hpp"
+#include "SFR/AssetTable.hpp"
 #include "SFR/Vector.hpp"
 #include "SFR/TexCoord.hpp"
 #include "SFR/MeshVertex.hpp"
@@ -16,10 +16,10 @@
 namespace SFR {
 
 /* Loads Wavefront OBJ files */
-class WavefrontLoader : public ResourceManager::Notifiee {
+class WavefrontLoader : public AssetTable::Notifiee {
 public:
-	WavefrontLoader(Ptr<ResourceManager> notifier) : ResourceManager::Notifiee(notifier) {};
-    void onNodeNew(Ptr<Transform> transform);
+	WavefrontLoader(Ptr<AssetTable> notifier) : AssetTable::Notifiee(notifier) {};
+    void onAsset(Ptr<Transform> transform);
 
 private:
     void newModel(std::istream& in);
@@ -32,7 +32,7 @@ private:
     void newTriangle(std::istream& in);
     void newTriangle(MeshVertex face[3]);
 
-    Ptr<ResourceManager> resourceManager_;
+    Ptr<AssetTable> assetManager_;
     Ptr<Transform> transform_;
     Ptr<Mesh> mesh_;
     Ptr<Material> material_;
