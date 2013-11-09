@@ -177,12 +177,11 @@ void handleInput() {
 void initModels() {
     // Initialize the models that are part of the scene
     Ptr<sfr::Transform> plane(assets->assetIs<sfr::Transform>("meshes/Plane.obj"));
-    plane->positionIs(sfr::Vector(0.f, 0.f, 0.f));
+    root->childIs(plane);
 
     //Ptr<sfr::Transform> sphere = assets->nodeIs("meshes/SmoothSphere.obj");
     //sphere->positionIs(sfr::Vector(0.f, 0.f, 5.f));
     Ptr<sfr::Transform> car(assets->assetIs<sfr::Transform>("meshes/Lexus.obj"));
-    
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
             Ptr<sfr::Transform> node = root->childIs<sfr::Transform>("car");
@@ -190,8 +189,6 @@ void initModels() {
             node->childIs(car);
         }
     }
-
-    root->childIs(plane);
 }
 
 void runRenderLoop() {

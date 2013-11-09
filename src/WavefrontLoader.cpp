@@ -163,6 +163,10 @@ void WavefrontLoader::newTriangle(std::istream& in) {
     MeshVertex face[3];
     size_t index;
 
+	if (!mesh_) {
+		newMesh("root");
+	}
+
     // Read in the face.  The format looks like this:
     // f position/texCoord/normal
     for (int i = 0; i < 3; i++) {
@@ -173,7 +177,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
             throw std::runtime_error("Invalid mesh: " + mesh_->name());
         } else {
             face[i].position = position_[index-1];
-        }
+        }rz90
         in.ignore(INT_MAX, '/');
         
         // Process the texCoord of the vertex
@@ -188,7 +192,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
         // Process the normal of the vertex
         in >> index;
         if (in.fail() || (index-1) >= normal_.size()) {
-            throw std::runtime_error("Invalid mesh: " + mesh_->name());
+	            throw std::runtime_error("Invalid mesh: " + mesh_->name());
         } else {
             face[i].normal = normal_[index-1];
         }

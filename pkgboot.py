@@ -31,6 +31,7 @@ class Package:
     major_version = '0'
     minor_version = '0'
     patch = '0'
+    kind = 'lib'
 
     def __init__(self):
 
@@ -47,9 +48,9 @@ class Package:
             'BRANCH': self.branch,
         })
         self.includes.extend([
-            'C:\\WinBrew\\include',
             'include',
             'src', 
+            'C:\\WinBrew\\include',
         ])
         self.lib_path.extend([
             'C:\\WinBrew\\lib',
@@ -85,6 +86,9 @@ class Package:
         self.env.Depends(src, pch) # Wait for pch to build
 
         self.lib = self.env.StaticLibrary('lib/%s' % self.name, (src, pch))
+        if self.kind == 'bin':
+            main = self.env.Glob('Main.cpp')
+            self.program = self.env.Program('bin/%s' % self.name, (self.lib, main))
 
         self.env.Append(BUILDERS={'Test': Builder(action=run_test)})
         self.tests = []

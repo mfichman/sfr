@@ -36,7 +36,6 @@
 #include "Frustum.hpp"
 #include "HemiLight.hpp"
 #include "IndexBuffer.hpp"
-#include "Instance.hpp"
 #include "Interface.hpp"
 #include "Iterator.hpp"
 #include "LightRenderer.hpp"
