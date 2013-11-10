@@ -32,7 +32,7 @@ public:
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {
-        Ptr<T> child = std::make_shared<T>(arg...);
+        Ptr<T> child(new T(arg...));
         children_.push_back(child);
         return child;
     }

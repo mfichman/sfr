@@ -5,11 +5,11 @@
  * February, 2011                                                            *
  *****************************************************************************/
  
- #version 130
+ #version 330
 
- out vec4 color;
+out vec4 color;
 
  /* Very fast simple solid-color shader for rendering to depth */
  void main() {
-	gl_FragColor = vec4(1., 1., 1., 1.);
+	color = vec4(1., 1., 1., 1.);
  }

@@ -32,10 +32,6 @@ DepthRenderTarget::DepthRenderTarget(GLuint width, GLuint height) {
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, 
         GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-	/*
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0,
-		GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-		*/
     // Generate a framebuffer
     glGenFramebuffers(1, &id_);
     glBindFramebuffer(GL_FRAMEBUFFER, id_);

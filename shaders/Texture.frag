@@ -6,11 +6,17 @@
  *****************************************************************************/
 
 
+#version 330
+
 uniform sampler2D diffuseMap;
 
-varying vec2 texCoord;
+in vec2 texCoord;
+
+out vec4 color;
+
+
 
 void main() {
-    gl_FragColor = texture2D(diffuseMap, texCoord);
-    gl_FragColor = vec4(1., 0., 0., 1.);
+    color = texture(diffuseMap, texCoord);
+    color = vec4(1., 0., 0., 1.);
 }

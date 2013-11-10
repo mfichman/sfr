@@ -43,9 +43,9 @@ void WavefrontLoader::onAsset(Ptr<Transform> transform) {
 
     newModel(in);
 
-    transform_ = 0;
-    mesh_ = 0;
-    material_ = 0;
+    transform_.reset();
+    mesh_.reset();
+    material_.reset();
 }
 
 void WavefrontLoader::newModel(std::istream& in) {
@@ -136,7 +136,7 @@ void WavefrontLoader::newMesh() {
         }
         model->materialIs(material_);
     }
-    mesh_ = 0;
+    mesh_.reset();
 }
 
 void WavefrontLoader::newMesh(const std::string& name) {
@@ -146,11 +146,11 @@ void WavefrontLoader::newMesh(const std::string& name) {
     // by the "o" command.  Read in each mesh separately and then add it to 
     // the scene graph.
     mesh_ = notifier_->assetIs<Mesh>(transform_->name() + "/" + name);
-    vertexBuffer_ = std::make_shared<MutableAttributeBuffer<Vector>>("position");
-    normalBuffer_ = std::make_shared<MutableAttributeBuffer<Vector>>("normal");
-    texCoordBuffer_ = std::make_shared<MutableAttributeBuffer<TexCoord>>("texCoord");
-    tangentBuffer_ = std::make_shared<MutableAttributeBuffer<Vector>>("tangent");
-    indexBuffer_ = std::make_shared<IndexBuffer>(mesh_->name());
+    vertexBuffer_.reset(new MutableAttributeBuffer<Vector> ("position"));
+    normalBuffer_.reset(new MutableAttributeBuffer<Vector> ("normal"));
+    texCoordBuffer_.reset(new MutableAttributeBuffer<TexCoord> ("texCoord"));
+    tangentBuffer_.reset(new MutableAttributeBuffer<Vector> ("tangent"));
+    indexBuffer_.reset(new IndexBuffer(mesh_->name()));
 
     mesh_->attributeBufferIs("position", vertexBuffer_);
     mesh_->attributeBufferIs("normal", normalBuffer_);
@@ -177,7 +177,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
             throw std::runtime_error("Invalid mesh: " + mesh_->name());
         } else {
             face[i].position = position_[index-1];
-        }rz90
+        }
         in.ignore(INT_MAX, '/');
         
         // Process the texCoord of the vertex

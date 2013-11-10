@@ -65,21 +65,11 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     operator()(pointLight_);
 
     // Set the light color, attenuation, and position properties.
-    if (diffuse_ != -1) {
-        glUniform3fv(diffuse_, 1, light->diffuseColor());
-    }
-    if (specular_ != -1) {
-        glUniform3fv(specular_, 1, light->specularColor());
-    }
-    if (atten0_ != -1) {
-        glUniform1f(atten0_, light->constantAttenuation());
-    }
-    if (atten1_ != -1) {
-        glUniform1f(atten1_, light->linearAttenuation());
-    }
-    if (atten2_ != -1) {
-        glUniform1f(atten2_, light->quadraticAttenuation());
-    }
+    glUniform3fv(diffuse_, 1, light->diffuseColor());
+    glUniform3fv(specular_, 1, light->specularColor());
+    glUniform1f(atten0_, light->constantAttenuation());
+    glUniform1f(atten1_, light->linearAttenuation());
+    glUniform1f(atten2_, light->quadraticAttenuation());
 
     // Save old model matrix
     Matrix previous = transform_;
@@ -105,26 +95,14 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     operator()(hemiLight_);
 
     // Set the light color, attenuation, and direction properties
-    if (diffuse_ != -1) {
-        glUniform3fv(diffuse_, 1, light->diffuseColor());
-    } 
-    if (backDiffuse_ != -1) {
-        glUniform3fv(backDiffuse_, 1, light->backDiffuseColor());
-    }
-    if (atten0_ != -1) {
-        glUniform1f(atten0_, light->constantAttenuation());
-    }
-    if (atten1_ != -1) {
-        glUniform1f(atten1_, light->linearAttenuation());
-    }
-    if (atten2_ != -1) {
-        glUniform1f(atten2_, light->quadraticAttenuation());
-    }
-    if (direction_ != -1) {
-        Matrix transform = transform_ * world_->camera()->viewTransform();
-        Vector direction = transform.normal(light->direction()).unit();
-        glUniform3fv(direction_, 1, direction);
-    }
+    glUniform3fv(diffuse_, 1, light->diffuseColor());
+    glUniform3fv(backDiffuse_, 1, light->backDiffuseColor());
+    glUniform1f(atten0_, light->constantAttenuation());
+    glUniform1f(atten1_, light->linearAttenuation());
+    glUniform1f(atten2_, light->quadraticAttenuation());
+    Matrix transform = transform_ * world_->camera()->viewTransform();
+    Vector direction = transform.normal(light->direction()).unit();
+    glUniform3fv(direction_, 1, direction);
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
@@ -146,43 +124,23 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     operator()(spotLight_);
 
     // Set the light color, attenuation, and direction properties
-    if (diffuse_ != -1) {
-        glUniform3fv(diffuse_, 1, light->diffuseColor());
-    }
-    if (specular_ != -1) {
-        glUniform3fv(specular_, 1, light->specularColor());
-    } 
-    if (atten0_ != -1) {
-        glUniform1f(atten0_, light->constantAttenuation());
-    }
-    if (atten1_ != -1) {
-        glUniform1f(atten1_, light->linearAttenuation());
-    }
-    if (atten2_ != -1) {
-        glUniform1f(atten2_, light->quadraticAttenuation());
-    }
-    if (spotCutoff_ != -1) {
-        float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
-        glUniform1f(spotCutoff_, cosCutoff);
-    }
-    if (spotPower_ != -1) {
-        glUniform1f(spotPower_, light->spotPower());
-    }
-    if (direction_ != -1) {
-        Matrix transform = world_->camera()->viewTransform() * transform_;
-        Vector direction = transform.normal(light->direction()).unit();
-        glUniform3fv(direction_, 1, direction);
-    }
-    if (shadowMap_ != -1 && light->shadowMap()) {
-        glActiveTexture(GL_TEXTURE5);
-        glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
-        glUniform1f(shadowMapSize_, light->shadowMap()->width());
-    }
-    if (light_ != -1) {
-        glUniformMatrix4fv(light_, 1, 0, light->transform());
-    }
+    glUniform3fv(diffuse_, 1, light->diffuseColor());
+    glUniform3fv(specular_, 1, light->specularColor());
+    glUniform1f(atten0_, light->constantAttenuation());
+    glUniform1f(atten1_, light->linearAttenuation());
+    glUniform1f(atten2_, light->quadraticAttenuation());
 
+    float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
+    glUniform1f(spotCutoff_, cosCutoff);
+    glUniform1f(spotPower_, light->spotPower());
 
+    Matrix transform = world_->camera()->viewTransform() * transform_;
+    Vector direction = transform.normal(light->direction()).unit();
+    glUniform3fv(direction_, 1, direction);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
+    glUniform1f(shadowMapSize_, light->shadowMap()->width());
+    glUniformMatrix4fv(light_, 1, 0, light->transform());
 
     // Save the old model matrix
     Matrix previous = transform_;
@@ -208,49 +166,26 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
 }
 
 void LightRenderer::operator()(Ptr<Mesh> mesh) {
-    operator()(mesh->attributeBuffer("position"));
-    operator()(mesh->indexBuffer());
-}
-
-void LightRenderer::operator()(Ptr<AttributeBuffer> buffer) {
-    if (buffer && position_ != -1) {
-        buffer->statusIs(AttributeBuffer::SYNCED);
-        glEnableVertexAttribArray(position_);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
-        GLint size = buffer->elementSize()/sizeof(GLfloat);
-        glVertexAttribPointer(position_, size, GL_FLOAT, 0, 0, 0);
-    } else if (position_ != -1) {
-        glDisableVertexAttribArray(position_);
-    }
-}
-
-void LightRenderer::operator()(Ptr<IndexBuffer> buffer) {
-    if (!world_ || !world_->camera() || !buffer) {
-        return;
-    }
-    Ptr<Camera> camera = world_->camera();
+    mesh->statusIs(Mesh::SYNCED);
 
     // Set up the view, projection, and inverse projection transforms
+    Ptr<Camera> camera = world_->camera();
     Matrix inverseProjection = camera->projectionTransform().inverse();
     glUniformMatrix4fv(model_, 1, 0, transform_);
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
     glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
 
-    // Render the indices of the light's bounding volume
-    Ptr<IndexBuffer> indices = unitSphere_->indexBuffer();
-    indices->statusIs(IndexBuffer::SYNCED);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices->id());
+    // Render the mesh
+    Ptr<IndexBuffer> buffer = mesh->indexBuffer();
+    glBindVertexArray(mesh->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void LightRenderer::operator()(Ptr<Effect> effect) {
     if (effect_ == effect) {
         return;
-    }
-    if (effect_) {
-        glDisableVertexAttribArray(position_);
     }
     effect_ = effect;
     if (!effect_) {
@@ -281,7 +216,6 @@ void LightRenderer::operator()(Ptr<Effect> effect) {
     projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
     unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
     light_ = glGetUniformLocation(effect_->id(), "lightMatrix");
-    position_ = glGetAttribLocation(effect_->id(), "positionIn");
     shadowMapSize_ = glGetUniformLocation(effect_->id(), "shadowMapSize"); 
 
     // Set texture samplers

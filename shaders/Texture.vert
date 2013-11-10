@@ -5,10 +5,13 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-attribute vec3 positionIn;
-attribute vec2 texCoordIn;
+#version 330
 
-varying vec2 texCoord;
+in vec3 positionIn;
+in vec2 texCoordIn;
+
+out vec2 texCoord;
+
 
 /* Simple shader for rendering a full-screen quad */
 void main() {

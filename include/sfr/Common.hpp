@@ -11,8 +11,8 @@
 
 #define GLEW_STATIC
 #ifdef _WIN32
-#define sfr_USE_GLEW
 #define NOMINMAX
+#define sfr_USE_GLEW
 #include <windows.h>
 #include <GL/glew.h>
 #include <GL/GL.h>
@@ -23,7 +23,9 @@
 #include <GL/GL.h>
 #endif
 #ifdef __APPLE__
-#include <OpenGL/GL.h>
+//#define sfr_USE_GLEW
+//#include <GL/glew.h>
+#include <OpenGL/GL3.h>
 #endif
 
 #define _USE_MATH_DEFINES

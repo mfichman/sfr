@@ -8,6 +8,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/Effect.hpp"
 #include "sfr/Shader.hpp"
+#include "sfr/Mesh.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -89,6 +90,11 @@ void Effect::statusIs(Status status) {
         if (vertexShader_) {
             vertexShader_->statusIs(Shader::COMPILED);
         }
+
+        glBindAttribLocation(id_, Mesh::POSITION, "positionIn");
+        glBindAttribLocation(id_, Mesh::NORMAL, "normalIn");
+        glBindAttribLocation(id_, Mesh::TANGENT, "tangentIn");
+        glBindAttribLocation(id_, Mesh::TEXCOORD, "texCoordIn");
 
         glLinkProgram(id_);
         GLint success = 0;

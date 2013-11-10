@@ -20,10 +20,10 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> manager) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    materialPass_ = std::make_shared<MaterialRenderer>(manager);
-    lightPass_ = std::make_shared<LightRenderer>(manager);
-    transparencyPass_ = std::make_shared<TransparencyRenderer>(manager);
-    renderTarget_ = std::make_shared<DeferredRenderTarget>(viewport[2], viewport[3]);
+    materialPass_.reset(new MaterialRenderer(manager));
+    lightPass_.reset(new LightRenderer(manager));
+    transparencyPass_.reset(new TransparencyRenderer(manager));
+    renderTarget_.reset(new DeferredRenderTarget(viewport[2], viewport[3]));
 }
 
 void DeferredRenderer::operator()(Ptr<World> world) {

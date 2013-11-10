@@ -15,7 +15,6 @@
 #include <sfr/TransformUpdater.hpp>
 #include <sfr/FlatRenderer.hpp>
 #include <sfr/World.hpp>
-#include <sfr/TextureRenderer.hpp>
 #include <sfr/Texture.hpp>
 #include <sfr/WavefrontLoader.hpp>
 #include <sfr/TextureLoader.hpp>
@@ -37,7 +36,6 @@ Ptr<sfr::FlatRenderer> flatRenderer;
 Ptr<sfr::NullFunctor> nullRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
-Ptr<sfr::TextureRenderer> textureRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -52,35 +50,43 @@ bool useNullRenderer = false;
 
 void initWindow() {
     // Initialize the window
-    window.reset(new sf::Window(sf::VideoMode(1200, 800, 32), "Window"));
+    sf::ContextSettings settings(32, 0, 0, 3, 2);
+    sf::VideoMode mode(1200, 800, 32);
+    window.reset(new sf::Window(mode, "Window", sf::Style::Default, settings));
     timer.reset(new sf::Clock);
+
+    settings = window->getSettings();
+    if (settings.majorVersion < 3 || (settings.majorVersion == 3 && settings.minorVersion < 2)) {
+        throw std::runtime_error("This program requires OpenGL 3.2");
+    }
 
     // Load OpenGL extensions and check for required features
 #ifdef sfr_USE_GLEW
+    glewExperimental = GL_TRUE;
     GLint error = glewInit();
     if (GLEW_OK != error) {
         throw std::runtime_error((char*)glewGetErrorString(error));
     }
     if (!GLEW_VERSION_3_0) {
-        throw std::runtime_error("This program requires OpenGL 3.0");
+        throw std::runtime_error("This program requires OpenGL 3.2");
     }
+    std::cerr << glGetString(GL_VERSION) << std::endl;
 #endif
     glViewport(0, 0, window->getSize().x, window->getSize().y);
 
     // Set up the renderer, resources, assets, etc.
-    assets = std::make_shared<sfr::AssetTable>();
-	meshLoader = std::make_shared<WavefrontLoader>(assets);
-	effectLoader = std::make_shared<EffectLoader>(assets);
-	textureLoader = std::make_shared<TextureLoader>(assets);
+    assets.reset(new sfr::AssetTable());
+    meshLoader.reset(new WavefrontLoader(assets));
+    effectLoader.reset(new EffectLoader(assets));
+    textureLoader.reset(new TextureLoader(assets));
 
-    deferredRenderer = std::make_shared<sfr::DeferredRenderer>(assets);
-    shadowRenderer = std::make_shared<sfr::ShadowRenderer>(assets);
-    updater = std::make_shared<sfr::TransformUpdater>();
-    nullRenderer = std::make_shared<sfr::NullFunctor>();
-    world = std::make_shared<sfr::World>();
+    deferredRenderer.reset(new sfr::DeferredRenderer(assets));
+    shadowRenderer.reset(new sfr::ShadowRenderer(assets));
+    updater.reset(new sfr::TransformUpdater());
+    nullRenderer.reset(new sfr::NullFunctor());
+    world.reset(new sfr::World());
     root = world->root();
-    flatRenderer = std::make_shared<sfr::FlatRenderer>(assets);
-    textureRenderer = std::make_shared<sfr::TextureRenderer>(assets);
+    flatRenderer.reset(new sfr::FlatRenderer(assets));
 }
 
 
@@ -108,16 +114,16 @@ void initLights() {
             Ptr<sfr::SpotLight> light = node->childIs<sfr::SpotLight>();
             light->spotCutoffIs(20.f);
             light->spotPowerIs(40.f);
-			light->constantAttenuationIs(1.f);
+            light->constantAttenuationIs(1.f);
             light->linearAttenuationIs(0.f);
-			light->quadraticAttenuationIs(0.f);
+            light->quadraticAttenuationIs(0.f);
             light->specularColorIs(sfr::Color(.4f, .4f, 1.f, 1.f));
             light->specularColorIs(sfr::Color(1.f, 1.f, 1.f, 1.f));
-			light->diffuseColorIs(sfr::Color(1.f, 1.f, 1.f, 1.f));
+            light->diffuseColorIs(sfr::Color(1.f, 1.f, 1.f, 1.f));
             light->directionIs(sfr::Vector(0, -1, 0));
             light->shadowMapIs(target);
 
-			lightNode = node;
+            lightNode = node;
         }
     }
 }
@@ -152,22 +158,22 @@ void handleInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         z += 2.f * elapsedTime.asSeconds();
     }
-	sfr::Vector pos = lightNode->position();
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		pos.x += 2.f * elapsedTime.asSeconds();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		pos.x -= 2.f * elapsedTime.asSeconds();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		pos.z += 2.f * elapsedTime.asSeconds();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		pos.z -= 2.f * elapsedTime.asSeconds();
-	}
+    sfr::Vector pos = lightNode->position();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        pos.x += 2.f * elapsedTime.asSeconds();
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        pos.x -= 2.f * elapsedTime.asSeconds();
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        pos.z += 2.f * elapsedTime.asSeconds();
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        pos.z -= 2.f * elapsedTime.asSeconds();
+    }
     lightNode->positionIs(pos);
 
-	float const y = 2.f;
+    float const y = 2.f;
     camera->transformIs(sfr::Matrix::look(
         sfr::Vector(x, y, z),
         sfr::Vector(0.f, 0.3f, 0.f),
@@ -214,10 +220,6 @@ void runRenderLoop() {
             nullRenderer->operator()(world);
             nullRenderer->operator()(world);
         } else {
-            //static Ptr<sfr::Texture> tex(assets->textureIs("textures/MetalDiffuse.png"));
-            //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            //textureRenderer(tex);
-
             updater->operator()(world);
             shadowRenderer->operator()(world);
             deferredRenderer->operator()(world);

@@ -27,14 +27,11 @@ public:
 
 private:
     Matrix transform_;
-    Ptr<Effect> effect_;
     Ptr<Effect> transparencyEffect_;
     Ptr<World> world_;
 
-    GLint attrib_;
     GLint diffuse_;
     GLint opacity_;
-    GLint position_;
 
     GLint model_;
     GLint view_;

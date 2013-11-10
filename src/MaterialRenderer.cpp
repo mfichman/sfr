@@ -23,17 +23,38 @@ using namespace sfr;
 
 MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
     modelEffect_ = manager->assetIs<Effect>("shaders/Model");
+    modelEffect_->statusIs(Effect::LINKED);
+
+    // Activate the shader by querying for uniform variables and attributes 
+    glUseProgram(modelEffect_->id());
+    diffuseMap_ = glGetUniformLocation(modelEffect_->id(), "diffuseMap");
+    specularMap_ = glGetUniformLocation(modelEffect_->id(), "specularMap");
+    normalMap_ = glGetUniformLocation(modelEffect_->id(), "normalMap");   
+    ambient_ = glGetUniformLocation(modelEffect_->id(), "Ka");
+    diffuse_ = glGetUniformLocation(modelEffect_->id(), "Kd");
+    specular_ = glGetUniformLocation(modelEffect_->id(), "Ks");
+    shininess_ = glGetUniformLocation(modelEffect_->id(), "alpha");
+    model_ = glGetUniformLocation(modelEffect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(modelEffect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(modelEffect_->id(), "projectionMatrix");
+    normalMatrix_ = glGetUniformLocation(modelEffect_->id(), "normalMatrix");
+
+    glUseProgram(0);
 }
 
 void MaterialRenderer::operator()(Ptr<World> world) {
+    glUseProgram(modelEffect_->id());
     glEnable(GL_DEPTH_TEST);
-
     world_ = world;
+
+    // Set texture samplers
+    glUniform1i(diffuseMap_, 0);
+    glUniform1i(specularMap_, 1);
+    glUniform1i(normalMap_, 2);
+
     operator()(world_->root());
-   
-    // Clear out the effect
-    operator()(static_cast<Ptr<Effect>>(0));
     glDisable(GL_DEPTH_TEST);
+    glUseProgram(0);
 }
 
 void MaterialRenderer::operator()(Ptr<Transform> transform) {
@@ -54,49 +75,19 @@ void MaterialRenderer::operator()(Ptr<Model> model) {
     }
 
     // Set the material parameters for this mesh
-    operator()(modelEffect_);
     operator()(model->material());
     operator()(model->mesh());
 }
 
 void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer()) {
+    if (!mesh || !mesh->indexBuffer() || !world_ || !world_->camera()) {
         return;
     }
 
-    // Pass the normals, position, tangent, etc. to the vertex shader
-    attrib_ = position_;
-    operator()(mesh->attributeBuffer("position"));
-    attrib_ = normal_;
-    operator()(mesh->attributeBuffer("normal"));
-    attrib_ = tangent_;
-    operator()(mesh->attributeBuffer("tangent"));
-    attrib_ = texCoord_;
-    operator()(mesh->attributeBuffer("texCoord"));
-
-    // Render the mesh
-    operator()(mesh->indexBuffer());
-}
-
-void MaterialRenderer::operator()(Ptr<AttributeBuffer> buffer) {
-    if (buffer && attrib_ != -1) {
-        buffer->statusIs(AttributeBuffer::SYNCED);
-        glEnableVertexAttribArray(attrib_);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
-        GLint size = buffer->elementSize()/sizeof(GLfloat);
-        glVertexAttribPointer(attrib_, size, GL_FLOAT, 0, 0, 0);
-    } else if (attrib_ != -1) {
-        glDisableVertexAttribArray(attrib_);
-    }
-}
-
-void MaterialRenderer::operator()(Ptr<IndexBuffer> buffer) {
-    if (!world_ || !world_->camera()) {
-        return;
-    }
-    Ptr<Camera> camera = world_->camera();
+    mesh->statusIs(Mesh::SYNCED);
 
     // Calculate the normal matrix and pass it to the vertex shader
+    Ptr<Camera> camera = world_->camera();
     Matrix normalMatrix = camera->viewTransform() * transform_;
     normalMatrix = normalMatrix.inverse();
     normalMatrix = normalMatrix.transpose();
@@ -113,11 +104,11 @@ void MaterialRenderer::operator()(Ptr<IndexBuffer> buffer) {
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 
-    // Draw the attribute buffer
-    buffer->statusIs(IndexBuffer::SYNCED);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->id());
+    // Render the mesh
+    Ptr<IndexBuffer> buffer = mesh->indexBuffer();
+    glBindVertexArray(mesh->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void MaterialRenderer::operator()(Ptr<Material> material) {
@@ -138,56 +129,5 @@ void MaterialRenderer::operator()(Ptr<Material> material) {
 void MaterialRenderer::operator()(Ptr<Texture> texture) {
     if (texture) {
         glBindTexture(GL_TEXTURE_2D, texture->id());
-    } else {
-        
     }
 } 
-
-void MaterialRenderer::operator()(Ptr<Effect> effect) {
-    if (effect_ == effect) {
-        return;
-    }
-    if (effect_) {
-        if (normal_ != -1) {
-            glDisableVertexAttribArray(normal_);
-        }
-        if (position_ != -1) {
-            glDisableVertexAttribArray(position_);
-        }
-        if (texCoord_ != -1) {
-            glDisableVertexAttribArray(texCoord_);
-        }
-        if (tangent_ != -1) {
-            glDisableVertexAttribArray(tangent_);
-        }
-    }
-    effect_ = effect;
-    if (!effect_) {
-        glUseProgram(0);
-        return;
-    }
-
-    // Activate the shader by querying for uniform variables and attributes 
-    effect_->statusIs(Effect::LINKED);
-    glUseProgram(effect_->id());
-    diffuseMap_ = glGetUniformLocation(effect_->id(), "diffuseMap");
-    specularMap_ = glGetUniformLocation(effect_->id(), "specularMap");
-    normalMap_ = glGetUniformLocation(effect_->id(), "normalMap");   
-    ambient_ = glGetUniformLocation(effect_->id(), "Ka");
-    diffuse_ = glGetUniformLocation(effect_->id(), "Kd");
-    specular_ = glGetUniformLocation(effect_->id(), "Ks");
-    shininess_ = glGetUniformLocation(effect_->id(), "alpha");
-    normal_ = glGetAttribLocation(effect_->id(), "normalIn");
-    position_ = glGetAttribLocation(effect_->id(), "positionIn");
-    texCoord_ = glGetAttribLocation(effect_->id(), "texCoordIn");
-    tangent_ = glGetAttribLocation(effect_->id(), "tangentIn");
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
-    normalMatrix_ = glGetUniformLocation(effect_->id(), "normalMatrix");
-
-    // Set texture samplers
-    glUniform1i(diffuseMap_, 0);
-    glUniform1i(specularMap_, 1);
-    glUniform1i(normalMap_, 2);
-}

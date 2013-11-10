@@ -39,7 +39,7 @@ LightingInfo lightingInfo() {
 
     // Sample the depth and reconstruct the fragment view coordinates. 
 	// Make sure the depth is unpacked into clip coordinates.
-    info.depth = texture2D(depthBuffer, info.viewport).r;
+    info.depth = texture(depthBuffer, info.viewport).r;
     info.clip = vec3(normalized, 2. * info.depth - 1.);
 
 	// Transform the clip coordinates back into view space for lighting calculations
@@ -48,13 +48,13 @@ LightingInfo lightingInfo() {
     info.view = view.xyz;
 
     // Sample the materials using the viewport position
-	vec4 temp = texture2D(specularBuffer, info.viewport);
-	info.Kd = texture2D(diffuseBuffer, info.viewport).rgb;
+	vec4 temp = texture(specularBuffer, info.viewport);
+	info.Kd = texture(diffuseBuffer, info.viewport).rgb;
 	info.Ks = temp.rgb;
 	info.alpha = temp.a;
 
 	// Sample the normal vector for the pixel
-	info.N = normalize(texture2D(normalBuffer, info.viewport).xyz * 2. - 1.);
+	info.N = normalize(texture(normalBuffer, info.viewport).xyz * 2. - 1.);
 
     return info;
 }

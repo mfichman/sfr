@@ -5,7 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
  
-#version 130
+#version 330
 #pragma include "shaders/Light.frag"
 
 uniform float atten0;

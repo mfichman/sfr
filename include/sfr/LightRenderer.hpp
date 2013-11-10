@@ -23,8 +23,6 @@ public:
     void operator()(Ptr<HemiLight> light);
     void operator()(Ptr<SpotLight> light);
     void operator()(Ptr<Mesh> mesh);
-    void operator()(Ptr<AttributeBuffer> buffer);
-    void operator()(Ptr<IndexBuffer> buffer);
 
 private:
     Ptr<World> world_;
@@ -56,8 +54,6 @@ private:
     GLint direction_;
     GLint spotCutoff_;
     GLint spotPower_;
-
-    GLint position_;
 
     GLint model_;
     GLint view_;

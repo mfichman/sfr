@@ -20,9 +20,20 @@ using namespace sfr;
 
 TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
     transparencyEffect_ = manager->assetIs<Effect>("shaders/Transparency");
+
+    // Activate shader by quering for uniform variables
+    transparencyEffect_->statusIs(Effect::LINKED);
+    glUseProgram(transparencyEffect_->id());
+    diffuse_ = glGetUniformLocation(transparencyEffect_->id(), "Kd");
+    opacity_ = glGetUniformLocation(transparencyEffect_->id(), "alpha");
+    model_ = glGetUniformLocation(transparencyEffect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(transparencyEffect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(transparencyEffect_->id(), "projectionMatrix");
+    glUseProgram(0);
 }
 
 void TransparencyRenderer::operator()(Ptr<World> world) {
+    glUseProgram(transparencyEffect_->id());
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -32,12 +43,11 @@ void TransparencyRenderer::operator()(Ptr<World> world) {
     world_ = world;
     operator()(world_->root());
 
-    // Clear out the effect
-    operator()(Ptr<Effect>());
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
     glFrontFace(GL_CCW);
+    glUseProgram(0);
 }
 
 void TransparencyRenderer::operator()(Ptr<Transform> transform) {
@@ -56,71 +66,15 @@ void TransparencyRenderer::operator()(Ptr<Model> model) {
     }
 
     // Set the material parameters and render mesh
-    operator()(transparencyEffect_);
     operator()(model->material());
     operator()(model->mesh());
 }
 
 void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer()) {
+    if (!mesh || !mesh->indexBuffer() || !world_ || !world_->camera()) {
         return;
     }
 
-    // Pass position to the vertex shader
-    attrib_ = position_;
-    operator()(mesh->attributeBuffer("position"));
-
-    // Render mesh
-    operator()(mesh->indexBuffer());
-}
-
-void TransparencyRenderer::operator()(Ptr<Material> material) {
-    glUniform3fv(diffuse_, 1, material->diffuseColor());
-    glUniform1f(opacity_, material->opacity());
-}
-
-void TransparencyRenderer::operator()(Ptr<Effect> effect) {
-    if (effect_ == effect) {
-        return;
-    }
-    if (effect_) {
-        if (position_ != -1) {
-            glDisableVertexAttribArray(position_);
-        }
-    }
-    effect_ = effect;
-    if (!effect_) {
-        glUseProgram(0);
-        return;
-    }
-
-    // Activate shader by quering for uniform variables
-    effect_->statusIs(Effect::LINKED);
-    glUseProgram(effect_->id());
-    diffuse_ = glGetUniformLocation(effect_->id(), "Kd");
-    opacity_ = glGetUniformLocation(effect_->id(), "alpha");
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
-    position_ = glGetAttribLocation(effect_->id(), "positionIn");
-}
-
-void TransparencyRenderer::operator()(Ptr<AttributeBuffer> buffer) {
-    if (buffer && attrib_ != -1) {
-        buffer->statusIs(AttributeBuffer::SYNCED);
-        glEnableVertexAttribArray(attrib_);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
-        GLint size = buffer->elementSize()/sizeof(GLfloat);
-        glVertexAttribPointer(attrib_, size, GL_FLOAT, 0, 0, 0);
-    } else if (attrib_ != -1) {
-        glDisableVertexAttribArray(attrib_);
-    }
-}
-
-void TransparencyRenderer::operator()(Ptr<IndexBuffer> buffer) {
-    if (!world_ || !world_->camera()) {
-        return;
-    }
     Ptr<Camera> camera = world_->camera();
 
     // Pass the matrices to the vertex shader
@@ -128,9 +82,15 @@ void TransparencyRenderer::operator()(Ptr<IndexBuffer> buffer) {
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 
-    // Draw the attribute buffer
-    buffer->statusIs(IndexBuffer::SYNCED);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->id());
+    // Render the mesh
+    Ptr<IndexBuffer> buffer = mesh->indexBuffer();
+    glBindVertexArray(mesh->id());
     glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
+
+void TransparencyRenderer::operator()(Ptr<Material> material) {
+    glUniform3fv(diffuse_, 1, material->diffuseColor());
+    glUniform1f(opacity_, material->opacity());
+}
+

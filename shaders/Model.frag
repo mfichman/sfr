@@ -5,7 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#version 130
+#version 330
 
 uniform mat3 normalMatrix;
 
@@ -23,16 +23,16 @@ in vec3 normal;
 in vec3 tangent;
 in vec2 texCoord;
 
-out vec3 material;
-out vec4 specular;
-out vec3 normalOut;
-out vec3 worldPosition;
+layout(location=0) out vec3 material;
+layout(location=1) out vec4 specular;
+layout(location=2) out vec3 normalOut;
+layout(location=3) out vec3 worldPosition;
 
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
 
 	// Get the normal from the normal map texture and unpack it
-	vec3 Tn = normalize((texture2D(normalMap, texCoord) * 2. - 1.).xyz);	
+	vec3 Tn = normalize((texture(normalMap, texCoord) * 2. - 1.).xyz);	
 
 	// Create the TBN matrix from the normalized T and N vectors
 	vec3 N = normalize(normal);
@@ -41,8 +41,8 @@ void main() {
 	mat3 TBN = mat3(T, B, N);
 
 	// Sample the diffuse and specular texture
-	vec3 Td = texture2D(diffuseMap, texCoord).rgb;
-	vec3 Ts = texture2D(specularMap, texCoord).rgb;
+	vec3 Td = texture(diffuseMap, texCoord).rgb;
+	vec3 Ts = texture(specularMap, texCoord).rgb;
 
 	// Save diffuse material parameters
 	material = Td * Kd;

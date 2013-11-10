@@ -13,7 +13,7 @@
 using namespace sfr;
 
 World::World() {
-    root_ = std::make_shared<Transform>("root");
+    root_.reset(new Transform("root"));
 }
 
 Ptr<Transform> World::root() const {

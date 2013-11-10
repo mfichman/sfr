@@ -30,7 +30,7 @@ Ptr<Texture> Material::texture(const std::string& name) const {
         ::const_iterator i = texture_.find(name);
 
     if (i == texture_.end()) {
-        return 0;
+        return Ptr<Texture>();
     } else {
         return i->second;
     }

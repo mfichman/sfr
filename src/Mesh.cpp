@@ -21,6 +21,11 @@ using namespace sfr;
 Mesh::Mesh(const std::string& name) {
     name_ = name;
     status_ = DIRTY;
+    glGenVertexArrays(1, &id_);
+}
+
+Mesh::~Mesh() {
+    glDeleteVertexArrays(1, &id_);
 }
 
 const std::string& Mesh::name() const {
@@ -31,7 +36,7 @@ Ptr<AttributeBuffer> Mesh::attributeBuffer(const std::string& name) const {
     std::map<std::string, Ptr<AttributeBuffer> >
         ::const_iterator i = attributeBuffer_.find(name);
     if (i == attributeBuffer_.end()) {
-        return 0;
+        return Ptr<AttributeBuffer>();
     } else {
         return i->second;
     }
@@ -66,20 +71,49 @@ void Mesh::statusIs(Status status) {
     status_ = status;
     if (SYNCED == status) {
         updateTangents();
+        updateVertexArrayObject();
     }
 }
 
+void Mesh::updateVertexBuffer(std::string const& name, Attribute attr) {
+    Ptr<AttributeBuffer> buffer = attributeBuffer(name);
+    if (buffer) {
+        buffer->statusIs(AttributeBuffer::SYNCED);
+        GLint size = buffer->elementSize()/sizeof(GLfloat);
+        glEnableVertexAttribArray(attr);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
+        glVertexAttribPointer(attr, size, GL_FLOAT, 0, 0, 0);
+    } else {
+        glDisableVertexAttribArray(attr);
+    }
+}
+
+void Mesh::updateVertexArrayObject() {
+    glBindVertexArray(id_);
+    updateVertexBuffer("position", Mesh::POSITION);
+    updateVertexBuffer("normal", Mesh::NORMAL);
+    updateVertexBuffer("tangent", Mesh::TANGENT);
+    updateVertexBuffer("texCoord", Mesh::TEXCOORD);
+
+    Ptr<IndexBuffer> buffer = indexBuffer();
+    if (buffer) {
+        buffer->statusIs(IndexBuffer::SYNCED);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->id());
+    }
+    glBindVertexArray(0);
+}
+
 void Mesh::updateTangents() {
-     Ptr<MutableAttributeBuffer<Vector> > tangents(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<Vector>>(
+    Ptr<MutableAttributeBuffer<Vector> > tangents(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<Vector> >(
         attributeBuffer("tangent")));
 
     Ptr<MutableAttributeBuffer<Vector> > positions(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<Vector>>(
+        MutableAttributeBuffer<Vector> >(
         attributeBuffer("position")));
 
     Ptr<MutableAttributeBuffer<TexCoord> > texCoords(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<TexCoord>>(
+        MutableAttributeBuffer<TexCoord> >(
         attributeBuffer("texCoord")));
 
     if (tangents && positions && texCoords) {

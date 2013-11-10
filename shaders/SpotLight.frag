@@ -5,7 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#version 130
+#version 330
 #pragma include "shaders/Light.frag"
 
 uniform sampler2D shadowMap;
@@ -32,7 +32,7 @@ float shadowPoissonPcf(in LightingInfo li) {
     // Get the world position from the position G-buffer.  Note that this 
 	// requires the position G-buffer to have a decent amount of precision
 	// per component (preferrably 16-bit float or higher)
-    vec3 world = texture2D(positionBuffer, li.viewport).xyz;
+    vec3 world = texture(positionBuffer, li.viewport).xyz;
 
 	// Transform the world coordinates to light space and renormalize
     vec4 shadowCoord = lightMatrix * vec4(world, 1.);
@@ -49,7 +49,7 @@ float shadowPoissonPcf(in LightingInfo li) {
 	float shadow = 0.;
 	for(int i = 0; i < 4; i++) {
 	    vec2 sample = shadowCoord.xy + poisson[i]/shadowMapSize;
-		float shadowDepth = texture2D(shadowMap, sample).z;
+		float shadowDepth = texture(shadowMap, sample).z;
 	
 		if(shadowCoord.z > shadowDepth + bias) {
 			shadow += .25;

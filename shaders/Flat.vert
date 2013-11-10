@@ -5,7 +5,7 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
-#version 130 
+#version 330 
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;

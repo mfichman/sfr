@@ -20,18 +20,11 @@ public:
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Model> object);
     void operator()(Ptr<Mesh> mesh);
-    void operator()(Ptr<Effect> effect);
-    void operator()(Ptr<AttributeBuffer> buffer);
-    void operator()(Ptr<IndexBuffer> buffer);
 
 private:
     Matrix transform_;
     Ptr<World> world_;
-    Ptr<Effect> effect_;
     Ptr<Effect> flatShader_;
-
-    GLint attrib_;
-    GLint position_;
 
     GLint model_;
     GLint view_;

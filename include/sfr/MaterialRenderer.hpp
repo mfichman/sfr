@@ -22,12 +22,9 @@ public:
     void operator()(Ptr<Material> material);
     void operator()(Ptr<Texture> texture);
     void operator()(Ptr<Effect> effect);
-    void operator()(Ptr<AttributeBuffer> buffer);
-    void operator()(Ptr<IndexBuffer> buffer);
 
 private:
     Matrix transform_;
-    Ptr<Effect> effect_;
     Ptr<Effect> modelEffect_;
     Ptr<World> world_;
     
@@ -40,11 +37,6 @@ private:
     GLint diffuse_;
     GLint specular_;
     GLint shininess_;
-
-    GLint normal_;
-    GLint position_;
-    GLint texCoord_;
-    GLint tangent_;
 
     GLint model_;
     GLint view_;
