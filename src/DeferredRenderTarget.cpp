@@ -18,7 +18,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
 
 	GLuint formats[] = {
 		GL_RGB, // Material
-		GL_RGBA, // Specular
+		GL_RGBA16F, // Specular
 		GL_RGB16F, // Normal
 		GL_RGB16F, // Position
 	};
