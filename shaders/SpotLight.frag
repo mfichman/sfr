@@ -49,8 +49,7 @@ float shadowPoissonPcf(in LightingInfo li) {
 	float shadow = 0.;
 	for(int i = 0; i < 4; i++) {
 	    vec2 sample = shadowCoord.xy + poisson[i]/shadowMapSize;
-		float shadowDepth = texture(shadowMap, sample).z;
-	
+		float shadowDepth = texture(shadowMap, sample).x;
 		if(shadowCoord.z > shadowDepth + bias) {
 			shadow += .25;
 		}
