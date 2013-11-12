@@ -17,15 +17,15 @@ public:
     enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, NORMAL, TEXCOORD, TANGENT };
 
-    Mesh(const std::string& name);
+    Mesh(std::string const& name);
     ~Mesh();
-    const std::string& name() const;
-    Ptr<AttributeBuffer> attributeBuffer(const std::string& name) const;
+    std::string const& name() const;
+    Ptr<AttributeBuffer> attributeBuffer(std::string const& name) const;
     Ptr<IndexBuffer> indexBuffer() const;
     Status status() const;
     GLuint id() const { return id_; }
 
-    void attributeBufferIs(const std::string& name, Ptr<AttributeBuffer> buffer);
+    void attributeBufferIs(std::string const& name, Ptr<AttributeBuffer> buffer);
     void indexBufferIs(Ptr<IndexBuffer> indices);
     void statusIs(Status status);
 

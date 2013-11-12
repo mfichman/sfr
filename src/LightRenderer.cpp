@@ -137,7 +137,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     Matrix transform = world_->camera()->viewTransform() * transform_;
     Vector direction = transform.normal(light->direction()).unit();
     glUniform3fv(direction_, 1, direction);
-    glActiveTexture(GL_TEXTURE5);
+    glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
     glUniform1f(shadowMapSize_, light->shadowMap()->width());
     glUniformMatrix4fv(light_, 1, 0, light->transform());
@@ -201,6 +201,7 @@ void LightRenderer::operator()(Ptr<Effect> effect) {
     specularBuffer_ = glGetUniformLocation(effect_->id(), "specularBuffer");
     normalBuffer_ = glGetUniformLocation(effect_->id(), "normalBuffer");
     positionBuffer_ = glGetUniformLocation(effect_->id(), "positionBuffer");
+    emissiveBuffer_ = glGetUniformLocation(effect_->id(), "emissiveBuffer");
     depthBuffer_ = glGetUniformLocation(effect_->id(), "depthBuffer");
     diffuse_ = glGetUniformLocation(effect_->id(), "Ld");
     specular_ = glGetUniformLocation(effect_->id(), "Ls");
@@ -223,6 +224,7 @@ void LightRenderer::operator()(Ptr<Effect> effect) {
     glUniform1i(specularBuffer_, 1);
     glUniform1i(normalBuffer_, 2);
     glUniform1i(positionBuffer_, 3);
-    glUniform1i(depthBuffer_, 4);
-    glUniform1i(shadowMap_, 5);
+    glUniform1i(emissiveBuffer_, 4);
+    glUniform1i(depthBuffer_, 5);
+    glUniform1i(shadowMap_, 6);
 }

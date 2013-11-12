@@ -17,10 +17,10 @@ public:
     class Listener;
 
     template <typename T, typename ...Arg>
-    Ptr<T> assetIs(const std::string& name, Arg... args); 
+    Ptr<T> assetIs(std::string const& name, Arg... args); 
 
     template <typename T>
-    Ptr<T> asset(const std::string& name) const;
+    Ptr<T> asset(std::string const& name) const;
 
     void listenerIs(Listener* listener) const;
     void listenerDel(Listener* listener) const;
@@ -55,7 +55,7 @@ protected:
 };
 
 template <typename T, typename ...Arg>
-Ptr<T> AssetTable::assetIs(const std::string& name, Arg... args) {
+Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
     Ptr<T> asset = std::dynamic_pointer_cast<T>(asset_[name]);
     if (!asset) {
         asset.reset(new T(name, args...));
@@ -68,7 +68,7 @@ Ptr<T> AssetTable::assetIs(const std::string& name, Arg... args) {
 }
 
 template <typename T>
-Ptr<T> AssetTable::asset(const std::string& name) const {
+Ptr<T> AssetTable::asset(std::string const& name) const {
     std::map<std::string, Ptr<sfr::Interface> >::const_iterator i = asset_.find(name);
     return (i == asset_.end()) ? Ptr<T>() : std::dynamic_pointer_cast<T>(i->second);
 }

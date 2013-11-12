@@ -16,7 +16,7 @@ Transform::Transform(std::string const& name) {
     name_ = name;
 }
 
-const Matrix& Transform::transform() const {
+Matrix const& Transform::transform() const {
     return transform_;
 }
 
@@ -32,22 +32,22 @@ Iterator<Node> Transform::children() {
     return Iterator<Node>(children_);
 }
 
-const std::string& Transform::name() const {
+std::string const& Transform::name() const {
     return name_;
 }
 
-void Transform::transformIs(const Matrix& transform) {
+void Transform::transformIs(Matrix const& transform) {
     if (transform_ == transform) {
         return;
     }
     transform_ = transform;
 }
 
-void Transform::positionIs(const Vector& position) {
+void Transform::positionIs(Vector const& position) {
     transformIs(Matrix(transform_.rotation(), position));
 }
 
-void Transform::rotationIs(const Quaternion& rotation) {
+void Transform::rotationIs(Quaternion const& rotation) {
     transformIs(Matrix(rotation, transform_.origin()));
 }
 

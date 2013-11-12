@@ -20,11 +20,11 @@ PointLight::PointLight() {
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
 
-const Color& PointLight::diffuseColor() const {
+Color const& PointLight::diffuseColor() const {
     return diffuseColor_;
 }
 
-const Color& PointLight::specularColor() const {
+Color const& PointLight::specularColor() const {
     return specularColor_;
 }
 
@@ -59,14 +59,14 @@ float PointLight::radiusOfEffect() const {
     }
 }
 
-void PointLight::diffuseColorIs(const Color& diffuse) {
+void PointLight::diffuseColorIs(Color const& diffuse) {
     if (diffuseColor_ == diffuse) {
         return;
     }
     diffuseColor_ = diffuse;
 }
 
-void PointLight::specularColorIs(const Color& specular) {
+void PointLight::specularColorIs(Color const& specular) {
     if (specularColor_ == specular) {
         return;
     }

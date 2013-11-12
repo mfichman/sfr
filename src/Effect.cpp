@@ -17,7 +17,7 @@
 using namespace sfr;
 using namespace std;
 
-Effect::Effect(const std::string& name) {
+Effect::Effect(std::string const& name) {
     name_ = name;
     id_ = glCreateProgram();
     status_ = DIRTY;
@@ -27,7 +27,7 @@ Effect::~Effect() {
     glDeleteProgram(id_);
 }
 
-const std::string& Effect::name() const {
+std::string const& Effect::name() const {
     return name_;
 }
 

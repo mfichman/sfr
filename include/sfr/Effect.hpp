@@ -16,10 +16,10 @@ class Effect : public Interface {
 public:
     enum Status { LINKED, DIRTY };
 
-    Effect(const std::string& name);
+    Effect(std::string const& name);
     ~Effect();
 
-    const std::string& name() const;
+    std::string const& name() const;
     Ptr<Shader> fragmentShader() const;
     Ptr<Shader> vertexShader() const;
     GLuint id() const;

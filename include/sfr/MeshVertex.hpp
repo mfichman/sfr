@@ -14,10 +14,10 @@ namespace sfr {
 
 class MeshVertex {
 public:
-    bool operator<(const MeshVertex& other) const;
-    bool operator==(const MeshVertex& other) const;
-    bool operator!=(const MeshVertex& other) const;
-    MeshVertex operator+(const MeshVertex& other) const;
+    bool operator<(MeshVertex const& other) const;
+    bool operator==(MeshVertex const& other) const;
+    bool operator!=(MeshVertex const& other) const;
+    MeshVertex operator+(MeshVertex const& other) const;
     MeshVertex operator*(float scale) const;
 
     Vector position;

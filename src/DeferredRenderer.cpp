@@ -45,6 +45,8 @@ void DeferredRenderer::operator()(Ptr<World> world) {
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(3));
     glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(4));
+    glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
     lightPass_->operator()(world);
 

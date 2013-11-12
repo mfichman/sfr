@@ -15,16 +15,16 @@ class Shader : public Interface {
 public:
     enum Status { COMPILED, DIRTY };
 
-    Shader(const std::string& name, GLenum type);
+    Shader(std::string const& name, GLenum type);
     ~Shader(); 
 
-    const std::string& name() const;
-    const std::string& source() const;
+    std::string const& name() const;
+    std::string const& source() const;
     GLenum type() const;
     Status status() const;
     GLuint id() const;
 
-    void sourceIs(const std::string& name);
+    void sourceIs(std::string const& name);
     void statusIs(Status status);
 
 private:

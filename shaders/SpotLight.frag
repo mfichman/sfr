@@ -82,9 +82,9 @@ void main() {
 
 		// Calculate the shadow coord
 		color = vec4(diffuse + specular, 1.);
-		color.xyz *= shadow * atten * pow(spotEffect, spotPower);
+		color.rgb *= shadow * atten * pow(spotEffect, spotPower);
 	} else {
 		color = vec4(0., 0., 0., 1.);
-	}	
+	}
 	gl_FragDepth = li.depth;
 }

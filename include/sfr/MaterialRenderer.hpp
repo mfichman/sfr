@@ -32,11 +32,13 @@ private:
     GLint diffuseMap_;
     GLint specularMap_;
     GLint normalMap_;
+    GLint emissiveMap_;
 
     GLint ambient_;
     GLint diffuse_;
     GLint specular_;
     GLint shininess_;
+    GLint emissive_;
 
     GLint model_;
     GLint view_;

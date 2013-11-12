@@ -18,9 +18,9 @@ namespace sfr {
 class SpotLight : public Node {
 public:
     SpotLight();
-    const Color& diffuseColor() const;
-    const Color& specularColor() const;
-    const Vector& direction() const;
+    Color const& diffuseColor() const;
+    Color const& specularColor() const;
+    Vector const& direction() const;
     float constantAttenuation() const;
     float linearAttenuation() const;
     float quadraticAttenuation() const;
@@ -28,18 +28,18 @@ public:
     float spotPower() const;
     float radiusOfEffect() const;
     Ptr<DepthRenderTarget> shadowMap() const;
-    const Matrix& transform() const;
+    Matrix const& transform() const;
 
-    void diffuseColorIs(const Color& diffuse);
-    void specularColorIs(const Color& specular);
-    void directionIs(const Vector& direction);
+    void diffuseColorIs(Color const& diffuse);
+    void specularColorIs(Color const& specular);
+    void directionIs(Vector const& direction);
     void constantAttenuationIs(float atten);
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);
     void spotCutoffIs(float cutoff);
     void spotPowerIs(float power);
     void shadowMapIs(Ptr<DepthRenderTarget> target);
-    void transformIs(const Matrix& matrix);
+    void transformIs(Matrix const& matrix);
 
     void operator()(Ptr<Functor> functor);
 

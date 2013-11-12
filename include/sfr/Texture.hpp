@@ -13,9 +13,9 @@ namespace sfr {
 /* Manages texture data */
 class Texture : public Interface {
 public:
-    Texture(const std::string& name);
+    Texture(std::string const& name);
     ~Texture();
-    const std::string& name() const;
+    std::string const& name() const;
     GLuint width() const;
     GLuint height() const;
     GLuint id() const;

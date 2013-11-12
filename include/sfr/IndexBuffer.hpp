@@ -16,10 +16,10 @@ class IndexBuffer : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
 
-    IndexBuffer(const std::string& name);
+    IndexBuffer(std::string const& name);
     ~IndexBuffer();
 
-    const std::string& name() const;
+    std::string const& name() const;
     GLuint id() const;
     GLuint elementCount() const;
     GLuint elementSize() const;

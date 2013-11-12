@@ -30,9 +30,11 @@ MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
     diffuseMap_ = glGetUniformLocation(modelEffect_->id(), "diffuseMap");
     specularMap_ = glGetUniformLocation(modelEffect_->id(), "specularMap");
     normalMap_ = glGetUniformLocation(modelEffect_->id(), "normalMap");   
+    emissiveMap_ = glGetUniformLocation(modelEffect_->id(), "emissiveMap");
     ambient_ = glGetUniformLocation(modelEffect_->id(), "Ka");
     diffuse_ = glGetUniformLocation(modelEffect_->id(), "Kd");
     specular_ = glGetUniformLocation(modelEffect_->id(), "Ks");
+    emissive_ = glGetUniformLocation(modelEffect_->id(), "Ke");
     shininess_ = glGetUniformLocation(modelEffect_->id(), "alpha");
     model_ = glGetUniformLocation(modelEffect_->id(), "modelMatrix");
     view_ = glGetUniformLocation(modelEffect_->id(), "viewMatrix");
@@ -116,6 +118,7 @@ void MaterialRenderer::operator()(Ptr<Material> material) {
     glUniform3fv(ambient_, 1, material->ambientColor());
     glUniform3fv(diffuse_, 1, material->diffuseColor());
     glUniform3fv(specular_, 1, material->specularColor());
+    glUniform3fv(emissive_, 1, material->emissiveColor());
     glUniform1f(shininess_, material->shininess());
 
     glActiveTexture(GL_TEXTURE0);
@@ -124,6 +127,8 @@ void MaterialRenderer::operator()(Ptr<Material> material) {
     operator()(material->texture("specular"));
     glActiveTexture(GL_TEXTURE2);
     operator()(material->texture("normal"));
+    glActiveTexture(GL_TEXTURE3);
+    operator()(material->texture("emissive"));
 }
 
 void MaterialRenderer::operator()(Ptr<Texture> texture) {

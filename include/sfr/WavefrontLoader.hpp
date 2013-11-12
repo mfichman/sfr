@@ -27,8 +27,8 @@ private:
     void newVertex(std::istream& in);
     void newTexCoord(std::istream& in);
     void newNormal(std::istream& in);
-    void newMaterialLibrary(const std::string& name);
-    void newMesh(const std::string& name);
+    void newMaterialLibrary(std::string const& name);
+    void newMesh(std::string const& name);
     void newTriangle(std::istream& in);
     void newTriangle(MeshVertex face[3]);
 

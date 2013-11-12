@@ -34,5 +34,6 @@ void main() {
 	vec3 diffuse = li.Kd * mix(Ld, Ldb, (Rd + 1.)/2.);
 
 	color = vec4(diffuse * atten, 1.);
+    color.rgb += li.Ke; // Emissive
 	gl_FragDepth = li.depth;
 }

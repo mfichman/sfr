@@ -41,6 +41,7 @@ private:
     GLint specularBuffer_;
     GLint normalBuffer_;
     GLint positionBuffer_;
+    GLint emissiveBuffer_;
     GLint depthBuffer_;
 
     GLint diffuse_;

@@ -133,7 +133,7 @@ Matrix Camera::projectionTransform() const {
     }
 }
 
-const Matrix& Camera::viewTransform() const {
+Matrix const& Camera::viewTransform() const {
     return viewTransform_;
 }
 
@@ -186,7 +186,7 @@ void Camera::fieldOfViewIs(float view) {
     fieldOfView_ = view;
 }
 
-void Camera::viewTransformIs(const Matrix& transform) {
+void Camera::viewTransformIs(Matrix const& transform) {
     if (viewTransform_ == transform) {
         return;
     }

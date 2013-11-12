@@ -10,7 +10,7 @@
 
 using namespace sfr;
 
-bool MeshVertex::operator<(const MeshVertex& other) const {
+bool MeshVertex::operator<(MeshVertex const& other) const {
     if (position != other.position) {
         return position < other.position;
     }
@@ -20,16 +20,16 @@ bool MeshVertex::operator<(const MeshVertex& other) const {
     return texCoord < other.texCoord;
 }
 
-bool MeshVertex::operator==(const MeshVertex& other) const {
+bool MeshVertex::operator==(MeshVertex const& other) const {
     return position == other.position && texCoord == other.texCoord
         && normal == other.normal;
 }
 
-bool MeshVertex::operator!=(const MeshVertex& other) const {
+bool MeshVertex::operator!=(MeshVertex const& other) const {
     return !this->operator==(other);
 }
 
-MeshVertex MeshVertex::operator+(const MeshVertex& other) const {
+MeshVertex MeshVertex::operator+(MeshVertex const& other) const {
     MeshVertex out;
     out.position = position + other.position;
     out.normal = normal + other.normal;

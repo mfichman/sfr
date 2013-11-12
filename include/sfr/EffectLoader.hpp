@@ -18,7 +18,7 @@ public:
     void onAsset(Ptr<Effect> effect);
 	void onAsset(Ptr<Shader> shader);
 private:
-    std::string fileContents(const std::string& path);
+    std::string fileContents(std::string const& path);
 };
 
 }

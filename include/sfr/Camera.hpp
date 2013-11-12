@@ -24,7 +24,7 @@ public:
     
     Frustum viewFrustum() const;
     Matrix projectionTransform() const;
-    const Matrix& viewTransform() const;
+    Matrix const& viewTransform() const;
     float far() const;
     float near() const;
     float left() const;
@@ -44,7 +44,7 @@ public:
     void fieldOfViewIs(float view);
     void stateIs(State state);
     void typeIs(Type type);
-    void viewTransformIs(const Matrix& transform);
+    void viewTransformIs(Matrix const& transform);
 
     void operator()(Ptr<Functor> functor);
 

@@ -21,15 +21,15 @@ HemiLight::HemiLight() {
     direction_ = Vector(-1.f, 0.f, 0.f);
 }
 
-const Color& HemiLight::diffuseColor() const {
+Color const& HemiLight::diffuseColor() const {
     return diffuseColor_;
 }
 
-const Color& HemiLight::backDiffuseColor() const {
+Color const& HemiLight::backDiffuseColor() const {
     return backDiffuseColor_;
 }
 
-const Vector& HemiLight::direction() const { 
+Vector const& HemiLight::direction() const { 
     return direction_;
 }
 
@@ -64,21 +64,21 @@ float HemiLight::radiusOfEffect() const {
     }
 }
 
-void HemiLight::diffuseColorIs(const Color& diffuse) {
+void HemiLight::diffuseColorIs(Color const& diffuse) {
     if (diffuseColor_ == diffuse) {
         return;
     }
     diffuseColor_ = diffuse;
 }
 
-void HemiLight::backDiffuseColorIs(const Color& backDiffuse) {
+void HemiLight::backDiffuseColorIs(Color const& backDiffuse) {
     if (backDiffuseColor_ == backDiffuse) {
         return;
     }
     backDiffuseColor_ = backDiffuse;
 }
 
-void HemiLight::directionIs(const Vector& direction) {
+void HemiLight::directionIs(Vector const& direction) {
     if (direction_ == direction) {
         return;
     }

@@ -18,15 +18,15 @@ namespace sfr {
 class PointLight : public Node {
 public:
     PointLight();
-    const Color& diffuseColor() const;
-    const Color& specularColor() const;
+    Color const& diffuseColor() const;
+    Color const& specularColor() const;
     float constantAttenuation() const;
     float linearAttenuation() const;
     float quadraticAttenuation() const;
     float radiusOfEffect() const;
 
-    void diffuseColorIs(const Color& diffuse);
-    void specularColorIs(const Color& specular);
+    void diffuseColorIs(Color const& diffuse);
+    void specularColorIs(Color const& specular);
     void constantAttenuationIs(float atten);
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);

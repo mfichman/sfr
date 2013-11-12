@@ -32,42 +32,42 @@ float Vector::lengthSquared() const {
     return x*x + y*y + z*z;
 }
 
-float Vector::distance(const Vector& other) const {
+float Vector::distance(Vector const& other) const {
     return sqrt(distanceSquared(other));
 }
 
-float Vector::distanceSquared(const Vector& other) const {
+float Vector::distanceSquared(Vector const& other) const {
     return (other - (*this)).lengthSquared();
 }
 
-float Vector::dot(const Vector& other) const {
+float Vector::dot(Vector const& other) const {
     return x*other.x + y*other.y + z*other.z;
 }
 
-Vector Vector::lerp(const Vector& other, float alpha) const {
+Vector Vector::lerp(Vector const& other, float alpha) const {
     return *this * (1-alpha) + other * (alpha);
 }
 
-Vector Vector::cross(const Vector& other) const {
+Vector Vector::cross(Vector const& other) const {
     return Vector(
         y*other.z - z*other.y,
         z*other.x - x*other.z,
         x*other.y - y*other.x);
 }
 
-Vector Vector::operator+(const Vector& other) const {
+Vector Vector::operator+(Vector const& other) const {
     return Vector(x+other.x, y+other.y, z+other.z);
 }
 
-Vector Vector::operator-(const Vector& other) const {
+Vector Vector::operator-(Vector const& other) const {
     return Vector(x-other.x, y-other.y, z-other.z);
 }
 
-Vector Vector::operator*(const Vector& other) const {
+Vector Vector::operator*(Vector const& other) const {
     return Vector(x*other.x, y*other.y, z*other.z);
 }
 
-Vector Vector::operator/(const Vector& other) const {
+Vector Vector::operator/(Vector const& other) const {
     return Vector(x/other.x, y/other.y, z/other.z);
 }
 
@@ -83,14 +83,14 @@ Vector Vector::operator*(float s) const {
     return Vector(s*x, s*y, s*z);
 }
 
-Vector& Vector::operator+=(const Vector& other) {
+Vector& Vector::operator+=(Vector const& other) {
     x += other.x;
     y += other.y;
     z += other.z;
     return *this;
 }
 
-Vector& Vector::operator-=(const Vector& other) {
+Vector& Vector::operator-=(Vector const& other) {
     x += other.x;
     y += other.y;
     z += other.z;
@@ -98,7 +98,7 @@ Vector& Vector::operator-=(const Vector& other) {
 }
 
 
-Vector Vector::project(const Vector& other) const {
+Vector Vector::project(Vector const& other) const {
     Vector u = unit();
     return u * other.dot(u);
 }
@@ -126,7 +126,7 @@ Vector::operator float*() {
     return &x;
 }
 
-bool Vector::operator<(const Vector& other) const {
+bool Vector::operator<(Vector const& other) const {
     static float epsilon = 0.0000001f;
     if (abs(x - other.x) > epsilon) return x < other.x;
     if (abs(y - other.y) > epsilon) return y < other.y;
@@ -134,7 +134,7 @@ bool Vector::operator<(const Vector& other) const {
     return false;
 }
     
-bool Vector::operator==(const Vector& other) const {
+bool Vector::operator==(Vector const& other) const {
     static float epsilon = 0.0000001f;
     if (abs(x - other.x) > epsilon) return false;
     if (abs(y - other.y) > epsilon) return false;
@@ -142,12 +142,12 @@ bool Vector::operator==(const Vector& other) const {
     return true;
 }
     
-bool Vector::operator!=(const Vector& other) const {
+bool Vector::operator!=(Vector const& other) const {
     return !this->operator==(other);
 }
 
 
-std::ostream& operator<<(std::ostream& out, const Vector& vector) {
+std::ostream& operator<<(std::ostream& out, Vector const& vector) {
     return out << vector.x << " " << vector.y << " " << vector.z;
 }
 

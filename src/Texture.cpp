@@ -11,7 +11,7 @@
 
 using namespace sfr;
 
-Texture::Texture(const std::string& name) {
+Texture::Texture(std::string const& name) {
     name_ = name;
     width_ = 0;
     height_ = 0;
@@ -28,7 +28,7 @@ Texture::~Texture() {
     glDeleteTextures(1, &id_);
 }
 
-const std::string& Texture::name() const {
+std::string const& Texture::name() const {
     return name_;
 }
 

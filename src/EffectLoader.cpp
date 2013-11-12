@@ -54,7 +54,7 @@ void EffectLoader::onAsset(Ptr<Shader> shader) {
 	shader->sourceIs(source);
 }
 
-std::string EffectLoader::fileContents(const std::string& path) {
+std::string EffectLoader::fileContents(std::string const& path) {
 
     std::vector<char> source;
 

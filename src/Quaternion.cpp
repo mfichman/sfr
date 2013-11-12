@@ -15,7 +15,7 @@ using namespace sfr;
 
 Quaternion Quaternion::IDENTITY;
 
-Quaternion::Quaternion(float w, const Vector& vector) : 
+Quaternion::Quaternion(float w, Vector const& vector) : 
 	w(w),
 	x(vector.x),
 	y(vector.y),
@@ -30,7 +30,7 @@ Quaternion::Quaternion(float w, float x, float y, float z) :
     z(z) {
 }
 
-Quaternion::Quaternion(const Vector& axis, float angle) {
+Quaternion::Quaternion(Vector const& axis, float angle) {
     float halfAngle = 0.5f*angle;
     float sin = sinf(halfAngle);
     w = cosf(halfAngle);
@@ -39,7 +39,7 @@ Quaternion::Quaternion(const Vector& axis, float angle) {
     z = sin*axis.z;
 }
 
-Quaternion::Quaternion(const Vector& xaxis, const Vector& yaxis, const Vector& zaxis) {
+Quaternion::Quaternion(Vector const& xaxis, Vector const& yaxis, Vector const& zaxis) {
     float kRot[3][3];
     kRot[0][0] = xaxis.x;
     kRot[1][0] = xaxis.y;
@@ -101,15 +101,15 @@ float Quaternion::lengthSquared() const {
     return w*w + x*x + y*y + z*z;
 }
 
-Quaternion Quaternion::operator+(const Quaternion& other) const {
+Quaternion Quaternion::operator+(Quaternion const& other) const {
     return Quaternion(w+other.w, x+other.x, y+other.y, z+other.z);
 }
 
-Quaternion Quaternion::operator-(const Quaternion& other) const {
+Quaternion Quaternion::operator-(Quaternion const& other) const {
     return Quaternion(w-other.w, x-other.x, y-other.y, z-other.z);
 }
 
-Quaternion Quaternion::operator*(const Quaternion& other) const {
+Quaternion Quaternion::operator*(Quaternion const& other) const {
     return Quaternion(
         w*other.w - x*other.x - y*other.y - z*other.z,
         w*other.x + x*other.w + y*other.z - z*other.y,
@@ -126,11 +126,11 @@ Quaternion Quaternion::inverse() const {
     }
 }
 
-float Quaternion::dot(const Quaternion& other) const {
+float Quaternion::dot(Quaternion const& other) const {
     return w*other.w + x*other.x + y*other.y + z*other.z;
 }
 
-Vector Quaternion::operator*(const Vector& v) const {
+Vector Quaternion::operator*(Vector const& v) const {
     // nVidia SDK implementation
     Vector uv, uuv;
     Vector qvec(x, y, z);
@@ -154,7 +154,7 @@ Quaternion Quaternion::unit() const {
     return Quaternion(w/norm, x/norm, y/norm, z/norm);
 }
 
-Quaternion Quaternion::slerp(const Quaternion& other, float alpha) const {
+Quaternion Quaternion::slerp(Quaternion const& other, float alpha) const {
     float cos = this->dot(other);
     Quaternion rkt;
 
@@ -182,11 +182,11 @@ bool Quaternion::operator==(const Quaternion other) const {
     return x == other.x && y == other.y && z == other.z && w == other.w;
 }
 
-bool Quaternion::operator!=(const Quaternion& other) const {
+bool Quaternion::operator!=(Quaternion const& other) const {
     return !operator==(other);
 }  
 
-Quaternion& Quaternion::operator+=(const Quaternion& other) {
+Quaternion& Quaternion::operator+=(Quaternion const& other) {
 	x += other.x;
 	y += other.y;
 	z += other.z;
@@ -194,7 +194,7 @@ Quaternion& Quaternion::operator+=(const Quaternion& other) {
 	return *this;
 }
 
-Quaternion& Quaternion::operator-=(const Quaternion& other) {
+Quaternion& Quaternion::operator-=(Quaternion const& other) {
 	x -= other.x;
 	y -= other.y;
 	z -= other.z;
@@ -202,7 +202,7 @@ Quaternion& Quaternion::operator-=(const Quaternion& other) {
 	return *this;
 }
 
-std::ostream& operator<<(std::ostream& out, const Quaternion& quaternion) {
+std::ostream& operator<<(std::ostream& out, Quaternion const& quaternion) {
     return out << quaternion.w << " " << quaternion.x << " " 
         << quaternion.y << " " << quaternion.z;
 }

@@ -13,14 +13,15 @@
 using namespace sfr;
 
 DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
-    target_.resize(4);
+    target_.resize(5);
     status_ = DISABLED;
 
 	GLuint formats[] = {
-		GL_RGB, // Material
+		GL_RGB, // Diffuse
 		GL_RGBA16F, // Specular
 		GL_RGB16F, // Normal
 		GL_RGB16F, // Position
+        GL_RGB, // Emissive 
 	};
             
     // Initialize the framebuffer, which will hold all of the target textures
@@ -38,10 +39,6 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
         
 		glTexImage2D(GL_TEXTURE_2D, 0, formats[i], w, h, 0, 
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
-/*
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w, h, 0, 
-	        GL_RGBA, GL_UNSIGNED_BYTE, 0);
-*/
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
             GL_TEXTURE_2D, target_[i], 0);
         buffers_.push_back(GL_COLOR_ATTACHMENT0 + i);
@@ -70,7 +67,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
 
 DeferredRenderTarget::~DeferredRenderTarget() {
     glDeleteFramebuffers(1, &id_);
-    glDeleteTextures(1, &target_[0]);
+    glDeleteTextures(target_.size(), &target_[0]);
     glDeleteTextures(1, &depthBuffer_);
 }
 
@@ -103,11 +100,12 @@ void DeferredRenderTarget::statusIs(Status status) {
         glBindFramebuffer(GL_FRAMEBUFFER, id_);
         glDrawBuffers(buffers_.size(), &buffers_[0]);
         glReadBuffer(GL_NONE);
-    }
-    if (DISABLED == status_) {
+    } else if (DISABLED == status_) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDrawBuffer(GL_BACK);
         glReadBuffer(GL_BACK);
+    } else {
+        assert(!"invalid enum");
     }
 }
 

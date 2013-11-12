@@ -8,7 +8,7 @@
 
 #include "sfr/Common.hpp"
 
-std::ostream& operator<<(std::ostream& out, const sfr::Color& color);
+std::ostream& operator<<(std::ostream& out, sfr::Color const& color);
 std::istream& operator>>(std::istream& in, sfr::Color& color);
 
 namespace sfr {
@@ -21,7 +21,7 @@ public:
     operator const float*() const;
     operator float*();
     
-    friend std::ostream& ::operator<<(std::ostream& out, const Color& color);
+    friend std::ostream& ::operator<<(std::ostream& out, Color const& color);
     friend std::istream& ::operator>>(std::istream& in, Color& color);
 
     float red;

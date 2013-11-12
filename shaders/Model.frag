@@ -12,10 +12,12 @@ uniform mat3 normalMatrix;
 uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
 uniform sampler2D normalMap;
+uniform sampler2D emissiveMap;
 
 uniform vec3 Kd;
 uniform vec3 Ks;
 uniform vec3 Ka;
+uniform vec3 Ke;
 uniform float alpha;
 
 in vec3 position;
@@ -27,6 +29,7 @@ layout(location=0) out vec3 material;
 layout(location=1) out vec4 specular;
 layout(location=2) out vec3 normalOut;
 layout(location=3) out vec3 worldPosition;
+layout(location=4) out vec3 emissive;
 
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
@@ -43,6 +46,7 @@ void main() {
 	// Sample the diffuse and specular texture
 	vec3 Td = texture(diffuseMap, texCoord).rgb;
 	vec3 Ts = texture(specularMap, texCoord).rgb;
+    vec3 Te = texture(emissiveMap, texCoord).rgb;
 
 	// Save diffuse material parameters
 	material = Td * Kd;
@@ -58,4 +62,7 @@ void main() {
 	// 16-bit float per component, otherwise the position will be clipped to
 	// the range [0,1)
     worldPosition = position;
+
+    // Emissive color
+    emissive = Te * Ke;
 }

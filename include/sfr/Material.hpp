@@ -15,20 +15,22 @@ namespace sfr {
 /* Mesh color and texture properties */
 class Material : public Interface {
 public:
-    Material(const std::string& name);
+    Material(std::string const& name);
 
-    const std::string& name() const;
-    Ptr<Texture> texture(const std::string& name) const;
-    const Color& ambientColor() const;
-    const Color& diffuseColor() const;
-    const Color& specularColor() const;
+    std::string const& name() const;
+    Ptr<Texture> texture(std::string const& name) const;
+    Color const& ambientColor() const;
+    Color const& diffuseColor() const;
+    Color const& specularColor() const;
+    Color const& emissiveColor() const;
     float shininess() const;
     float opacity() const;
 
-    void textureIs(const std::string& name, Ptr<Texture> texture);
-    void ambientColorIs(const Color& color);
-    void diffuseColorIs(const Color& color);
-    void specularColorIs(const Color& color);
+    void textureIs(std::string const& name, Ptr<Texture> texture);
+    void ambientColorIs(Color const& color);
+    void diffuseColorIs(Color const& color);
+    void specularColorIs(Color const& color);
+    void emissiveColorIs(Color const& color);
     void shininessIs(float shininess);
     void opacityIs(float opacity);
 
@@ -38,6 +40,7 @@ private:
     Color ambientColor_;
     Color diffuseColor_;
     Color specularColor_;
+    Color emissiveColor_;
     float shininess_;
     float opacity_;
 };

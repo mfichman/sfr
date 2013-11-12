@@ -11,7 +11,7 @@
 
 using namespace sfr;
 
-IndexBuffer::IndexBuffer(const std::string& name) {
+IndexBuffer::IndexBuffer(std::string const& name) {
     name_ = name;
     id_ = 0;
     status_ = DIRTY;
@@ -27,7 +27,7 @@ GLuint IndexBuffer::id() const {
     return id_;
 }
 
-const std::string& IndexBuffer::name() const {
+std::string const& IndexBuffer::name() const {
     return name_;
 }
 

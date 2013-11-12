@@ -10,7 +10,7 @@
 
 using namespace sfr;
 
-Shader::Shader(const std::string& name, GLenum type) {
+Shader::Shader(std::string const& name, GLenum type) {
     name_ = name;
     id_ = 0;
     status_ = DIRTY;
@@ -23,7 +23,7 @@ Shader::~Shader() {
     glDeleteShader(id_);
 }
 
-const std::string& Shader::name() const {
+std::string const& Shader::name() const {
     return name_;
 }
 
@@ -31,7 +31,7 @@ GLenum Shader::type() const {
     return type_;
 }
 
-const std::string& Shader::source() const {
+std::string const& Shader::source() const {
     return source_;
 }
 
@@ -43,7 +43,7 @@ GLuint Shader::id() const {
     return id_;
 }
 
-void Shader::sourceIs(const std::string& source) {
+void Shader::sourceIs(std::string const& source) {
     if (source == source_) {
         return;
     }

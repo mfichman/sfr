@@ -12,7 +12,7 @@
 
 using namespace sfr;
 
-Material::Material(const std::string& name) {
+Material::Material(std::string const& name) {
     name_ = name;
     shininess_ = 40.f;
     opacity_ = 1.f;
@@ -21,11 +21,11 @@ Material::Material(const std::string& name) {
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
 
-const std::string& Material::name() const {
+std::string const& Material::name() const {
     return name_;
 }
 
-Ptr<Texture> Material::texture(const std::string& name) const {
+Ptr<Texture> Material::texture(std::string const& name) const {
     std::map<std::string, Ptr<Texture> >
         ::const_iterator i = texture_.find(name);
 
@@ -36,16 +36,20 @@ Ptr<Texture> Material::texture(const std::string& name) const {
     }
 }
 
-const Color& Material::ambientColor() const {
+Color const& Material::ambientColor() const {
     return ambientColor_;
 }
 
-const Color& Material::diffuseColor() const {
+Color const& Material::diffuseColor() const {
     return diffuseColor_;
 }
 
-const Color& Material::specularColor() const {
+Color const& Material::specularColor() const {
     return specularColor_;
+}
+
+Color const& Material::emissiveColor() const {
+    return emissiveColor_;
 }
 
 float Material::shininess() const {
@@ -56,45 +60,31 @@ float Material::opacity() const {
     return opacity_;
 }
 
-void Material::textureIs(const std::string& name, Ptr<Texture> texture) {
-    if (texture_[name] == texture) {
-        return;
-    }
+void Material::textureIs(std::string const& name, Ptr<Texture> texture) {
     texture_[name] = texture;
 }
 
-void Material::ambientColorIs(const Color& color) {
-    if (ambientColor_ == color) {
-        return;
-    }
+void Material::ambientColorIs(Color const& color) {
     ambientColor_ = color;
 }
 
-void Material::diffuseColorIs(const Color& color) {
-    if (diffuseColor_ == color) {
-        return;
-    }
+void Material::diffuseColorIs(Color const& color) {
     diffuseColor_ = color;
 }
 
-void Material::specularColorIs(const Color& color) {
-    if (specularColor_ == color) {
-        return;
-    }
+void Material::specularColorIs(Color const& color) {
     specularColor_ = color;
 }
 
+void Material::emissiveColorIs(Color const& color) {
+    emissiveColor_ = color;
+}
+
 void Material::shininessIs(float shininess) {
-    if (shininess_ == shininess) {
-        return;
-    }
     shininess_ = shininess;
 }
 
 void Material::opacityIs(float opacity) {
-    if (opacity_ == opacity) {
-        return;
-    }
     opacity_ = opacity;
 }
 

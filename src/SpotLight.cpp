@@ -24,15 +24,15 @@ SpotLight::SpotLight() {
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
 
-const Color& SpotLight::diffuseColor() const {
+Color const& SpotLight::diffuseColor() const {
     return diffuseColor_;
 }
 
-const Color& SpotLight::specularColor() const {
+Color const& SpotLight::specularColor() const {
     return specularColor_;
 }
 
-const Vector& SpotLight::direction() const {
+Vector const& SpotLight::direction() const {
     return direction_;
 }
 
@@ -82,25 +82,25 @@ Ptr<DepthRenderTarget> SpotLight::shadowMap() const {
     return shadowMap_;
 }
 
-const Matrix& SpotLight::transform() const {
+Matrix const& SpotLight::transform() const {
     return transform_;
 }
 
-void SpotLight::diffuseColorIs(const Color& diffuse) {
+void SpotLight::diffuseColorIs(Color const& diffuse) {
     if (diffuseColor_ == diffuse) {
         return;
     }
     diffuseColor_ = diffuse;
 }
 
-void SpotLight::specularColorIs(const Color& specular) {
+void SpotLight::specularColorIs(Color const& specular) {
     if (specularColor_ == specular) {
         return;
     }
     specularColor_ = specular;
 }
 
-void SpotLight::directionIs(const Vector& direction) {
+void SpotLight::directionIs(Vector const& direction) {
     if (direction_ == direction) {
         return;
     }
@@ -149,7 +149,7 @@ void SpotLight::shadowMapIs(Ptr<DepthRenderTarget> target) {
     shadowMap_ = target;
 }
 
-void SpotLight::transformIs(const Matrix& transform) {
+void SpotLight::transformIs(Matrix const& transform) {
     transform_ = transform;
 }
 

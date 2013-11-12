@@ -34,7 +34,7 @@ Color::operator float*() {
 }
 
 
-std::ostream& operator<<(std::ostream& out, const Color& color) {
+std::ostream& operator<<(std::ostream& out, Color const& color) {
     return out << color.red << " " << color.blue << " " 
         << color.green << " " << color.alpha;
 }

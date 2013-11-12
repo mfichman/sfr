@@ -9,6 +9,7 @@ uniform sampler2D diffuseBuffer;
 uniform sampler2D specularBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D positionBuffer;
+uniform sampler2D emissiveBuffer;
 uniform sampler2D depthBuffer;
 
 uniform mat4 unprojectMatrix; // Back to view coordinates from clip coordinates
@@ -23,6 +24,7 @@ struct LightingInfo {
 	float depth; // Coord in range [0, 1]
 	vec3 Kd; // Diffuse color sampled from G-buffers
 	vec3 Ks; // Specular color sampled from G-buffers
+    vec3 Ke; // Emissive color sampled from G-buffers
 	float alpha; // Specular lighting exponent sampled from G-buffers
 	//vec3 world; // World position sampled from G-buffers
 	vec3 N; // Normal vector
@@ -50,6 +52,7 @@ LightingInfo lightingInfo() {
     // Sample the materials using the viewport position
 	vec4 temp = texture(specularBuffer, info.viewport);
 	info.Kd = texture(diffuseBuffer, info.viewport).rgb;
+    info.Ke = texture(emissiveBuffer, info.viewport).rgb;
 	info.Ks = temp.rgb;
 	info.alpha = temp.a;
 

@@ -20,15 +20,15 @@ class Transform : public Node {
 public:
     Transform(std::string const& name);
 
-    const Matrix& transform() const;
+    Matrix const& transform() const;
     Vector position() const;
     Quaternion rotation() const;
     Iterator<Node> children();
-    const std::string& name() const;
+    std::string const& name() const;
 
-    void transformIs(const Matrix& transform);
-    void positionIs(const Vector& position);
-    void rotationIs(const Quaternion& rotation);
+    void transformIs(Matrix const& transform);
+    void positionIs(Vector const& position);
+    void rotationIs(Quaternion const& rotation);
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {

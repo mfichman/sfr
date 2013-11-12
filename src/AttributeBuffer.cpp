@@ -11,7 +11,7 @@
 
 using namespace sfr;
 
-AttributeBuffer::AttributeBuffer(const std::string& name) {
+AttributeBuffer::AttributeBuffer(std::string const& name) {
     name_ = name;
     id_ = 0;
     status_ = DIRTY;
@@ -27,7 +27,7 @@ GLuint AttributeBuffer::id() const {
     return id_;
 }
 
-const std::string& AttributeBuffer::name() const {
+std::string const& AttributeBuffer::name() const {
     return name_;
 }
 

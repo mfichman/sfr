@@ -17,17 +17,17 @@ namespace sfr {
 class HemiLight : public Node {
 public:
     HemiLight();
-    const Color& diffuseColor() const;
-    const Color& backDiffuseColor() const;
-    const Vector& direction() const;
+    Color const& diffuseColor() const;
+    Color const& backDiffuseColor() const;
+    Vector const& direction() const;
     float constantAttenuation() const;
     float linearAttenuation() const;
     float quadraticAttenuation() const;
     float radiusOfEffect() const;
 
-    void diffuseColorIs(const Color& diffuse);
-    void backDiffuseColorIs(const Color& color);
-    void directionIs(const Vector& direction);
+    void diffuseColorIs(Color const& diffuse);
+    void backDiffuseColorIs(Color const& color);
+    void directionIs(Vector const& direction);
     void constantAttenuationIs(float atten);
     void linearAttenuationIs(float atten);
     void quadraticAttenuationIs(float atten);

@@ -133,13 +133,14 @@ void WavefrontLoader::newMesh() {
             material_->textureIs("diffuse", white);
             material_->textureIs("specular", white);
             material_->textureIs("normal", blue);
+            material_->textureIs("emissive", white);
         }
         model->materialIs(material_);
     }
     mesh_.reset();
 }
 
-void WavefrontLoader::newMesh(const std::string& name) {
+void WavefrontLoader::newMesh(std::string const& name) {
     newMesh();
 
     // Each OBJ file may have multiple meshes inside of it, specified
@@ -228,7 +229,7 @@ void WavefrontLoader::newTriangle(MeshVertex face[3]) {
     }
 }
 
-void WavefrontLoader::newMaterialLibrary(const std::string& name) {
+void WavefrontLoader::newMaterialLibrary(std::string const& name) {
     // Get the folder the mesh file was found in, and look in that folder for
     // the material library file
     std::string meshFile = transform_->name();
@@ -265,6 +266,7 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             material_->textureIs("diffuse", white);
             material_->textureIs("specular", white);
             material_->textureIs("normal", blue);
+            material_->textureIs("emissive", blue);
         } else if (!material_) {
             std::string line;
             std::getline(in, line);
@@ -281,6 +283,10 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             Color diffuse;
             in >> diffuse;
             material_->diffuseColorIs(diffuse);
+        } else if (command == "Ke") {
+            Color emissive;
+            in >> emissive;
+            material_->emissiveColorIs(emissive);
         } else if (command == "Ks") {
             Color specular;
             in >> specular;
@@ -299,6 +305,11 @@ void WavefrontLoader::newMaterialLibrary(const std::string& name) {
             in >> name;
             Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
             material_->textureIs("specular", texture);
+        } else if (command == "map_Ke") {
+            std::string name;
+            in >> name;
+            Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
+            material_->textureIs("emissive", texture);
         } else if (command == "d") {
             float opacity;
             in >> opacity;

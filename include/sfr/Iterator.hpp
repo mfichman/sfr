@@ -38,15 +38,15 @@ public:
         return current_;
     }
 
-    bool operator==(const Ptr<T>& other) {
+    bool operator==(Ptr<T> const& other) {
         return current_ == other;
     }
 
-    bool operator!=(const Ptr<T>& other) {
+    bool operator!=(Ptr<T> const& other) {
         return current_ != other;
     }
 
-    const Iterator<T>& operator++(int) {
+    Iterator<T> const& operator++(int) {
         current_ = current_->next();
         return *this;
     }
@@ -78,15 +78,15 @@ private:
         return begin_->get();
     }
 
-    bool operator==(const Ptr<T>& other) {
+    bool operator==(Ptr<T> const& other) {
         return begin_ == other.begin_ && end_ == other.end_;
     }
 
-    bool operator!=(const Ptr<T>& other) {
+    bool operator!=(Ptr<T> const& other) {
         return !operator==(other);
     }
 
-    const Iterator<T>& operator++(int) {
+    Iterator<T> const& operator++(int) {
         begin_++;
         return *this;
     }

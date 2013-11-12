@@ -39,7 +39,7 @@ Matrix Matrix::perspective(float fov, float aspect, float n, float f) {
 	return Matrix::frustum(left, right, bottom, top, n, f);
 }
 
-Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& sky) {
+Matrix Matrix::look(Vector const& pos, Vector const& at, Vector const& sky) {
     Vector forward = (pos - at).unit();
     Vector right = sky.unit().cross(forward);
     Vector up = forward.cross(right);
@@ -71,7 +71,7 @@ Matrix Matrix::look(const Vector& pos, const Vector& at, const Vector& sky) {
 
 }
 
-Matrix Matrix::look(const Vector& direction) {
+Matrix Matrix::look(Vector const& direction) {
     Vector forward = direction.unit();
     Vector up = forward.orthogonal();
     Vector right = up.cross(forward);
@@ -79,7 +79,7 @@ Matrix Matrix::look(const Vector& direction) {
     return Matrix::rotate(right, up, forward);
 }
 
-Matrix Matrix::rotate(const Vector& x, const Vector& y, const Vector& z) {
+Matrix Matrix::rotate(Vector const& x, Vector const& y, Vector const& z) {
     Matrix data;
     // Right
     data[0] = x.x;
@@ -107,7 +107,7 @@ Matrix Matrix::rotate(const Vector& x, const Vector& y, const Vector& z) {
     return data;
 }
 
-Matrix Matrix::rotate(const Quaternion& rotation) {
+Matrix Matrix::rotate(Quaternion const& rotation) {
     Matrix data;
 
     // This routine is borrowed from Ogre 3D
@@ -150,7 +150,7 @@ Matrix Matrix::scale(float sx, float sy, float sz) {
         0,      0,      0,      1);
 }
 
-Matrix Matrix::translate(const Vector& trans) {
+Matrix Matrix::translate(Vector const& trans) {
     Matrix data;
     data[12] = trans.x;
     data[13] = trans.y;
@@ -174,7 +174,7 @@ Matrix::Matrix(float m00, float m01, float m02, float m03,
     data[3] = m30; data[7] = m31; data[11] = m32; data[15] = m33;
 }
 
-Matrix::Matrix(const Quaternion& rotation, const Vector& trans) {
+Matrix::Matrix(Quaternion const& rotation, Vector const& trans) {
     // This routine is borrowed from Ogre 3D
     float fTx  = 2.0f*rotation.x;
     float fTy  = 2.0f*rotation.y;
@@ -219,7 +219,7 @@ Matrix::Matrix() {
     data[15] = 1.0f;
 }
 
-Matrix Matrix::operator*(const Matrix& other) const {
+Matrix Matrix::operator*(Matrix const& other) const {
     Matrix out;
     
     /*
@@ -259,7 +259,7 @@ Matrix Matrix::operator*(const Matrix& other) const {
     return out;
 }
 
-Vector Matrix::normal(const Vector& v) const {
+Vector Matrix::normal(Vector const& v) const {
     Vector out;
     
     out.x = data[0]*v.x + data[4]*v.y + data[8]*v.z;
@@ -269,7 +269,7 @@ Vector Matrix::normal(const Vector& v) const {
     return out;
 }
 
-Vector Matrix::operator*(const Vector& v) const {
+Vector Matrix::operator*(Vector const& v) const {
     Vector out;
     
     float invw = 1.0f / (data[3]*v.x + data[7]*v.y + data[11]*v.z + data[15]);
@@ -281,7 +281,7 @@ Vector Matrix::operator*(const Vector& v) const {
     return out;
 }
 
-Vector Matrix::rotate(const Vector& v) const {
+Vector Matrix::rotate(Vector const& v) const {
     Vector out;
     
     //float invw = 1.0f / (data[3]*v.x + data[7]*v.y + data[11]*v.z + data[15]);
@@ -293,7 +293,7 @@ Vector Matrix::rotate(const Vector& v) const {
     return out;
 }
 
-Frustum Matrix::operator*(const Frustum& f) const {
+Frustum Matrix::operator*(Frustum const& f) const {
     Frustum out;
     
     out.nearTopLeft = (*this) * f.nearTopLeft;

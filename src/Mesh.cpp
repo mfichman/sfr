@@ -18,7 +18,7 @@
 
 using namespace sfr;
 
-Mesh::Mesh(const std::string& name) {
+Mesh::Mesh(std::string const& name) {
     name_ = name;
     status_ = DIRTY;
     glGenVertexArrays(1, &id_);
@@ -28,11 +28,11 @@ Mesh::~Mesh() {
     glDeleteVertexArrays(1, &id_);
 }
 
-const std::string& Mesh::name() const {
+std::string const& Mesh::name() const {
     return name_;
 }
 
-Ptr<AttributeBuffer> Mesh::attributeBuffer(const std::string& name) const {
+Ptr<AttributeBuffer> Mesh::attributeBuffer(std::string const& name) const {
     std::map<std::string, Ptr<AttributeBuffer> >
         ::const_iterator i = attributeBuffer_.find(name);
     if (i == attributeBuffer_.end()) {
@@ -50,7 +50,7 @@ Mesh::Status Mesh::status() const {
     return status_;
 }
 
-void Mesh::attributeBufferIs(const std::string& name, Ptr<AttributeBuffer> buf) {
+void Mesh::attributeBufferIs(std::string const& name, Ptr<AttributeBuffer> buf) {
     attributeBuffer_[name] = buf;
     statusIs(DIRTY);
 }
@@ -130,15 +130,15 @@ void Mesh::updateTangents() {
             GLuint i1 = indexBuffer()->element(i-1);
             GLuint i2 = indexBuffer()->element(i-0);
 
-            const Vector& p0 = positions->element(i0);
-            const Vector& p1 = positions->element(i1);
-            const Vector& p2 = positions->element(i2);
+            Vector const& p0 = positions->element(i0);
+            Vector const& p1 = positions->element(i1);
+            Vector const& p2 = positions->element(i2);
 
             Vector d1 = p1 - p0;
             Vector d2 = p2 - p1;
-            const TexCoord& tex0 = texCoords->element(i0);
-            const TexCoord& tex1 = texCoords->element(i1);
-            const TexCoord& tex2 = texCoords->element(i2);
+            TexCoord const& tex0 = texCoords->element(i0);
+            TexCoord const& tex1 = texCoords->element(i1);
+            TexCoord const& tex2 = texCoords->element(i2);
             float s1 = tex1.u - tex0.u;
             float t1 = tex1.v - tex0.v;
             float s2 = tex2.u - tex0.u;

@@ -8,7 +8,7 @@
 
 #include "sfr/Common.hpp"
 
-std::ostream& operator<<(std::ostream& out, const sfr::Quaternion& quaternion);
+std::ostream& operator<<(std::ostream& out, sfr::Quaternion const& quaternion);
 std::istream& operator>>(std::istream& in, sfr::Quaternion& quaternion);
 
 namespace sfr {
@@ -16,31 +16,31 @@ namespace sfr {
 class Quaternion {
 public:
     Quaternion(float w, float x, float y, float z);
-    Quaternion(const Vector& axis, float angle);
-    Quaternion(const Vector& x, const Vector& y, const Vector& z);
-    Quaternion(const Matrix& matrix);
-	Quaternion(float w, const Vector& vector);
+    Quaternion(Vector const& axis, float angle);
+    Quaternion(Vector const& x, Vector const& y, Vector const& z);
+    Quaternion(Matrix const& matrix);
+	Quaternion(float w, Vector const& vector);
     Quaternion();
     
-    friend std::ostream& ::operator<<(std::ostream& out, const Quaternion& quaternion);
+    friend std::ostream& ::operator<<(std::ostream& out, Quaternion const& quaternion);
     friend std::istream& ::operator>>(std::istream& in, Quaternion& quaternion);
 
     float length() const;
     float lengthSquared() const;
-    float dot(const Quaternion& other) const;
-    Vector operator*(const Vector& other) const;
+    float dot(Quaternion const& other) const;
+    Vector operator*(Vector const& other) const;
     Quaternion operator*(float s) const;
-    Quaternion operator+(const Quaternion& other) const;
-    Quaternion operator-(const Quaternion& other) const;
-    Quaternion operator*(const Quaternion& other) const;
+    Quaternion operator+(Quaternion const& other) const;
+    Quaternion operator-(Quaternion const& other) const;
+    Quaternion operator*(Quaternion const& other) const;
     Quaternion operator-() const;
-    Quaternion slerp(const Quaternion& other, float alpha) const;
+    Quaternion slerp(Quaternion const& other, float alpha) const;
     Quaternion inverse() const;
     Quaternion unit() const;
     bool operator==(const Quaternion other) const;
-    bool operator!=(const Quaternion& other) const;
-	Quaternion& operator+=(const Quaternion& other);
-	Quaternion& operator-=(const Quaternion& other);
+    bool operator!=(Quaternion const& other) const;
+	Quaternion& operator+=(Quaternion const& other);
+	Quaternion& operator-=(Quaternion const& other);
 
     static Quaternion IDENTITY;
 

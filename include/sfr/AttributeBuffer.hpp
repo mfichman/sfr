@@ -15,10 +15,10 @@ class AttributeBuffer : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
 
-    AttributeBuffer(const std::string& name);
+    AttributeBuffer(std::string const& name);
     ~AttributeBuffer();
 
-    const std::string& name() const;
+    std::string const& name() const;
     GLuint id() const;
     virtual GLuint elementCount() const=0;
     virtual GLuint elementSize() const=0;
@@ -39,7 +39,7 @@ private:
 template <typename T>
 class MutableAttributeBuffer : public AttributeBuffer {
 public:
-    MutableAttributeBuffer(const std::string& name) :
+    MutableAttributeBuffer(std::string const& name) :
         AttributeBuffer(name) {
     }
 
@@ -51,7 +51,7 @@ public:
         return sizeof(T);
     }
 
-    const T& element(GLuint index) {
+    T const& element(GLuint index) {
         return element_[index];
     }
 
