@@ -26,7 +26,7 @@ public:
     void listenerDel(Listener* listener) const;
 
 private:
-	std::map<std::string, Ptr<sfr::Interface> > asset_;
+	std::map<std::string, Ptr<sfr::Interface>> asset_;
     mutable std::vector<Listener*> listener_;
 
     Ptr<WavefrontLoader> meshLoader_;
@@ -69,7 +69,7 @@ Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
 
 template <typename T>
 Ptr<T> AssetTable::asset(std::string const& name) const {
-    std::map<std::string, Ptr<sfr::Interface> >::const_iterator i = asset_.find(name);
+    std::map<std::string, Ptr<sfr::Interface>>::const_iterator i = asset_.find(name);
     return (i == asset_.end()) ? Ptr<T>() : std::dynamic_pointer_cast<T>(i->second);
 }
 

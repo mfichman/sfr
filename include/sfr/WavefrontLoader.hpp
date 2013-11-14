@@ -36,10 +36,10 @@ private:
     Ptr<Transform> transform_;
     Ptr<Mesh> mesh_;
     Ptr<Material> material_;
-    Ptr<MutableAttributeBuffer<Vector> > vertexBuffer_;
-    Ptr<MutableAttributeBuffer<Vector> > normalBuffer_;
-    Ptr<MutableAttributeBuffer<Vector> > tangentBuffer_;
-    Ptr<MutableAttributeBuffer<TexCoord> > texCoordBuffer_;
+    Ptr<MutableAttributeBuffer<Vector>> vertexBuffer_;
+    Ptr<MutableAttributeBuffer<Vector>> normalBuffer_;
+    Ptr<MutableAttributeBuffer<Vector>> tangentBuffer_;
+    Ptr<MutableAttributeBuffer<TexCoord>> texCoordBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
     std::map<MeshVertex, GLuint> cache_;
     std::vector<TexCoord> texCoord_;

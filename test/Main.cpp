@@ -100,7 +100,7 @@ void handleInput();
 void initLights() {
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
     light1->linearAttenuationIs(0.1f);
-    light1->diffuseColorIs(sfr::Color(1.f, 1.f, 1.f, 1.f));
+    light1->diffuseColorIs(sfr::Color(.8f, .8f, .8f, 1.f));
     light1->backDiffuseColorIs(sfr::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(sfr::Vector(1.f, 0.f, 0.f));
 

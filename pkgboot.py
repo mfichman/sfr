@@ -84,33 +84,34 @@ class Package:
             pch = pchenv.StaticObject('build/src/Common', 'build/src/Common.cpp')
         else:
             self.env['CXX'] = 'clang++'
-            self.env.Append(CXXFLAGS='-std=c++11 -stdlib=libc++ -g -Wall -Werror -ansi')
-            self.env.Append(CXXFLAGS='-Wno-c++11-extensions')
+            self.env.Append(CXXFLAGS='-std=c++11 -stdlib=libc++ -g -Wall -Werror -fPIC')
             for framework in self.frameworks:
                 self.env.Append(LINKFLAGS='-framework %s' % framework)
             self.env.Append(LINKFLAGS='-stdlib=libc++')
 
             pchenv = self.env.Clone()
             pchenv.Append(CXXFLAGS='-x c++-header -o Common.h.gch')
-            pch = pchenv.StaticObject('build/src/Common', 'build/src/Common.cpp')
+            pch = pchenv.SharedObject('build/src/Common', 'build/src/Common.cpp')
 
         src = self.env.Glob('build/src/**.cpp')+self.env.Glob('build/src/**.c')+self.env.Glob('build/src/**.asm')
         src = filter(lambda x: 'Common.cpp' not in x.name, src)
         self.env.Depends(src, pch) # Wait for pch to build
 
-        self.lib = self.env.StaticLibrary('lib/%s' % self.name, (src))
+        self.lib = self.env.SharedLibrary('lib/%s' % self.name, src)
         if self.kind == 'bin':
             main = self.env.Glob('Main.cpp')
             self.program = self.env.Program('bin/%s' % self.name, (self.lib, main))
 
         self.env.Append(BUILDERS={'Test': Builder(action=run_test)})
         self.tests = []
+        testenv = self.env.Clone()
+        testenv.Append(LIBS=self.lib)
         for test in self.env.Glob('build/test/**.cpp'):
             self.env.Depends(test, pch)
             name = test.name.replace('.cpp', '')
-            prog = self.env.Program('bin/test/%s' % name, (test, self.lib))
+            prog = testenv.Program('bin/test/%s' % name, test)
             if 'check' in COMMAND_LINE_TARGETS:
-                self.tests.append(self.env.Test(name, prog))
+                self.tests.append(testenv.Test(name, prog))
         if 'check' in COMMAND_LINE_TARGETS:
             self.env.Alias('check', self.tests)
         

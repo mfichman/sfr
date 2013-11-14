@@ -33,7 +33,7 @@ std::string const& Mesh::name() const {
 }
 
 Ptr<AttributeBuffer> Mesh::attributeBuffer(std::string const& name) const {
-    std::map<std::string, Ptr<AttributeBuffer> >
+    std::map<std::string, Ptr<AttributeBuffer>>
         ::const_iterator i = attributeBuffer_.find(name);
     if (i == attributeBuffer_.end()) {
         return Ptr<AttributeBuffer>();
@@ -104,16 +104,16 @@ void Mesh::updateVertexArrayObject() {
 }
 
 void Mesh::updateTangents() {
-    Ptr<MutableAttributeBuffer<Vector> > tangents(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<Vector> >(
+    Ptr<MutableAttributeBuffer<Vector>> tangents(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<Vector>>(
         attributeBuffer("tangent")));
 
-    Ptr<MutableAttributeBuffer<Vector> > positions(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<Vector> >(
+    Ptr<MutableAttributeBuffer<Vector>> positions(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<Vector>>(
         attributeBuffer("position")));
 
-    Ptr<MutableAttributeBuffer<TexCoord> > texCoords(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<TexCoord> >(
+    Ptr<MutableAttributeBuffer<TexCoord>> texCoords(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<TexCoord>>(
         attributeBuffer("texCoord")));
 
     if (tangents && positions && texCoords) {

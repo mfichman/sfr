@@ -43,7 +43,7 @@ public:
     void operator()(Ptr<Functor> functor);
 
 private:
-    std::vector<Ptr<Node> > children_;
+    std::vector<Ptr<Node>> children_;
     Matrix transform_;
     std::string name_;
 };

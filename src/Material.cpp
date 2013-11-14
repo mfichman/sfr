@@ -26,7 +26,7 @@ std::string const& Material::name() const {
 }
 
 Ptr<Texture> Material::texture(std::string const& name) const {
-    std::map<std::string, Ptr<Texture> >
+    std::map<std::string, Ptr<Texture>>
         ::const_iterator i = texture_.find(name);
 
     if (i == texture_.end()) {

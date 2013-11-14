@@ -13,6 +13,7 @@
 using namespace sfr;
 
 DepthRenderTarget::DepthRenderTarget(GLuint width, GLuint height) {
+    status_ = DepthRenderTarget::DISABLED;
     width_ = width;
     height_ = height;
 

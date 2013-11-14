@@ -60,7 +60,7 @@ public:
 private:
     Ptr<T> current_;
 */
-    Iterator(std::vector<Ptr<T> >& list) : 
+    Iterator(std::vector<Ptr<T>>& list) : 
         begin_(list.begin()),
         end_(list.end()) {
     }
@@ -92,8 +92,8 @@ private:
     }
 
 private:
-    typename std::vector<Ptr<T> >::iterator begin_;
-    typename std::vector<Ptr<T> >::iterator end_;
+    typename std::vector<Ptr<T>>::iterator begin_;
+    typename std::vector<Ptr<T>>::iterator end_;
 
 };
 

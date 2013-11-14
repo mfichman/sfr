@@ -86,5 +86,9 @@ void main() {
 	} else {
 		color = vec4(0., 0., 0., 1.);
 	}
+    float lum = 0.2216*color.r + 0.7152*color.g + 0.0722*color.b;
+    float lumd = lum / (1+lum); 
+    
+    color.rgb *= lumd;
 	gl_FragDepth = li.depth;
 }

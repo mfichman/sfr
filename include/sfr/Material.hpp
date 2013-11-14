@@ -36,7 +36,7 @@ public:
 
 private:
     std::string name_;
-    std::map<std::string, Ptr<Texture> > texture_;
+    std::map<std::string, Ptr<Texture>> texture_;
     Color ambientColor_;
     Color diffuseColor_;
     Color specularColor_;

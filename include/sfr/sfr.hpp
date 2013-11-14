@@ -56,7 +56,6 @@
 #include "TexCoord.hpp"
 #include "Texture.hpp"
 #include "TextureLoader.hpp"
-#include "TextureRenderer.hpp"
 #include "Transform.hpp"
 #include "TransformUpdater.hpp"
 #include "TransparencyRenderer.hpp"

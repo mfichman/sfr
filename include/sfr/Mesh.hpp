@@ -35,7 +35,7 @@ private:
     void updateVertexBuffer(std::string const& name, Attribute attr);
 
     std::string name_;
-    std::map<std::string, Ptr<AttributeBuffer> > attributeBuffer_;
+    std::map<std::string, Ptr<AttributeBuffer>> attributeBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
     Status status_;
     GLuint id_;  
