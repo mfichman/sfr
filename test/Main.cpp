@@ -61,7 +61,7 @@ void initWindow() {
     }
 
     // Load OpenGL extensions and check for required features
-#ifdef sfr_USE_GLEW
+#ifdef SFR_USE_GLEW
     glewExperimental = GL_TRUE;
     GLint error = glewInit();
     if (GLEW_OK != error) {

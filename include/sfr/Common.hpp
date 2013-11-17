@@ -4,26 +4,27 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-#pragma once
 
-#ifndef sfr_DEPS_INCLUDED
-#define sfr_DEPS_INLUCDED
+#ifndef SFR_COMMON_HPP
+#define SFR_COMMON_HPP
 
 #define GLEW_STATIC
 #ifdef _WIN32
 #define NOMINMAX
-#define sfr_USE_GLEW
+#define SFR_USE_GLEW
 #include <windows.h>
 #include <GL/glew.h>
 #include <GL/GL.h>
+#undef far
+#undef near
 #endif
 #ifdef __linux__
-#define sfr_USE_GLEW
+#define SFR_USE_GLEW
 #include <GL/glew.h>
 #include <GL/GL.h>
 #endif
 #ifdef __APPLE__
-//#define sfr_USE_GLEW
+//#define SFR_USE_GLEW
 //#include <GL/glew.h>
 #include <OpenGL/GL3.h>
 #endif
@@ -41,8 +42,6 @@
 #include <memory>
 
 #include "sfr/Ptr.hpp"
-
-#endif
 
 namespace sfr {
 
@@ -84,5 +83,4 @@ class World;
 
 }
 
-#undef far
-#undef near
+#endif

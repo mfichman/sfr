@@ -18,6 +18,22 @@ def run_test(target, source, env):
     except subprocess.CalledProcessError, e:
         return 1
 
+def build_pch(target, source, env):
+    try:
+        args = (
+            str(env['CXX']),
+            str(env['CXXFLAGS']),
+            '-x'
+            'c++-header',
+            str(source[0]),
+            '-o',
+            str(target[0]),
+        )
+        print(' '.join(args))
+        subprocess.check_call(shlex.split(' '.join(args)))
+    except subprocess.CalledProcessError, e:
+        return 1
+
 class Package:
     """
     Defines a workspace for a package.  Automatically sets up all the usual SCons 
@@ -88,12 +104,16 @@ class Package:
             for framework in self.frameworks:
                 self.env.Append(LINKFLAGS='-framework %s' % framework)
             self.env.Append(LINKFLAGS='-stdlib=libc++')
+            self.env.Append(BUILDERS={'Pch': Builder(action=build_pch)})
 
             pchenv = self.env.Clone()
-            pchenv.Append(CXXFLAGS='-x c++-header -o Common.h.gch')
-            pch = pchenv.SharedObject('build/src/Common', 'build/src/Common.cpp')
+            pch = pchenv.Pch('include/jet2/Common.hpp.pch', 'include/%s' % self.pch)
+            self.env.Append(CXXFLAGS='-include include/jet2/Common.hpp')
 
-        src = self.env.Glob('build/src/**.cpp')+self.env.Glob('build/src/**.c')+self.env.Glob('build/src/**.asm')
+        src = []
+        src += self.env.Glob('build/src/**.cpp')
+        src += self.env.Glob('build/src/**.c')
+        src += self.env.Glob('build/src/**.asm')
         src = filter(lambda x: 'Common.cpp' not in x.name, src)
         self.env.Depends(src, pch) # Wait for pch to build
 
