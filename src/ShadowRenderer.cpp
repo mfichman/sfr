@@ -23,16 +23,7 @@ ShadowRenderer::ShadowRenderer(Ptr<AssetTable> manager) {
 
 void ShadowRenderer::operator()(Ptr<World> world) {
     world_ = world;
-    operator()(world->root());
-}
-
-void ShadowRenderer::operator()(Ptr<Transform> transform) {
-    Matrix previous = transform_;
-    transform_ = transform_ * transform->transform();
-    for (Iterator<Node> node = transform->children(); node; node++) {
-        node(std::static_pointer_cast<ShadowRenderer>(shared_from_this()));
-    }
-    transform_ = previous;
+    Renderer::operator()(world->root());
 }
 
 void ShadowRenderer::operator()(Ptr<PointLight> light) {
@@ -97,7 +88,7 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
 	// Transform to the center of the light, then point in the reverse of the light 
 	// direction.  Then, invert the matrix so that it is a view matrix.  
     // FIXME: This doesn't seem quite right.
-	Matrix view = (transform_ * Matrix::look(-light->direction())).inverse();
+	Matrix view = (worldTransform() * Matrix::look(-light->direction())).inverse();
 
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);

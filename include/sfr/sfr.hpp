@@ -29,6 +29,7 @@
 #include "Common.hpp"
 #include "DeferredRenderTarget.hpp"
 #include "DeferredRenderer.hpp"
+#include "BoundsRenderer.hpp"
 #include "DepthRenderTarget.hpp"
 #include "Effect.hpp"
 #include "EffectLoader.hpp"

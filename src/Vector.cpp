@@ -127,18 +127,16 @@ Vector::operator float*() {
 }
 
 bool Vector::operator<(Vector const& other) const {
-    static float epsilon = 0.0000001f;
-    if (abs(x - other.x) > epsilon) return x < other.x;
-    if (abs(y - other.y) > epsilon) return y < other.y;
-    if (abs(z - other.z) > epsilon) return z < other.z;
+    if (x != other.x) return x < other.x;
+    if (y != other.y) return y < other.y;
+    if (z != other.z) return z < other.z;
     return false;
 }
     
 bool Vector::operator==(Vector const& other) const {
-    static float epsilon = 0.0000001f;
-    if (abs(x - other.x) > epsilon) return false;
-    if (abs(y - other.y) > epsilon) return false;
-    if (abs(z - other.z) > epsilon) return false;
+    if (x != other.x) return false;
+    if (y != other.y) return false;
+    if (z != other.z) return false;
     return true;
 }
     

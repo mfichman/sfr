@@ -54,7 +54,7 @@ void LightRenderer::operator()(Ptr<World> world) {
 
 void LightRenderer::operator()(Ptr<Transform> transform) {
     Matrix previous = transform_;
-    transform_ = transform_ * transform->transform();
+    transform_ = transform->worldTransform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<LightRenderer>(shared_from_this()));
     }

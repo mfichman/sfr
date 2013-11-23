@@ -76,6 +76,7 @@ void Mesh::statusIs(Status status) {
 }
 
 void Mesh::updateVertexBuffer(std::string const& name, Attribute attr) {
+    // Update the VAO used to render the mesh
     Ptr<AttributeBuffer> buffer = attributeBuffer(name);
     if (buffer) {
         buffer->statusIs(AttributeBuffer::SYNCED);

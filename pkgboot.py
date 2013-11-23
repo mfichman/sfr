@@ -20,9 +20,11 @@ def run_test(target, source, env):
 
 def build_pch(target, source, env):
     try:
+        includes = ' '.join(['-I%s' % inc for inc in env['CPPPATH']])
         args = (
             str(env['CXX']),
             str(env['CXXFLAGS']),
+            includes,
             '-x'
             'c++-header',
             str(source[0]),
@@ -107,8 +109,8 @@ class Package:
             self.env.Append(BUILDERS={'Pch': Builder(action=build_pch)})
 
             pchenv = self.env.Clone()
-            pch = pchenv.Pch('include/jet2/Common.hpp.pch', 'include/%s' % self.pch)
-            self.env.Append(CXXFLAGS='-include include/jet2/Common.hpp')
+            pch = pchenv.Pch('include/%s/Common.hpp.pch' % self.name, 'include/%s' % self.pch)
+            self.env.Append(CXXFLAGS='-include include/%s/Common.hpp' % self.name)
 
         src = []
         src += self.env.Glob('build/src/**.cpp')

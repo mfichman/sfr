@@ -7,16 +7,15 @@
 #pragma once
 
 #include "sfr/Node.hpp"
-#include "sfr/Matrix.hpp"
+#include "sfr/Renderer.hpp"
 
 namespace sfr {
 
 /* Simple renderer.  Passes vertex, texture, and material info to a shader. */
-class MaterialRenderer : public Node::Functor {
+class MaterialRenderer : public Renderer {
 public:
     MaterialRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
-    void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Model> object);
     void operator()(Ptr<Mesh> mesh);
     void operator()(Ptr<Material> material);
@@ -24,7 +23,7 @@ public:
     void operator()(Ptr<Effect> effect);
 
 private:
-    Matrix transform_;
+    Ptr<Transform> transform_;
     Ptr<Effect> modelEffect_;
     Ptr<World> world_;
     

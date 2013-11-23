@@ -54,20 +54,9 @@ void MaterialRenderer::operator()(Ptr<World> world) {
     glUniform1i(specularMap_, 1);
     glUniform1i(normalMap_, 2);
 
-    operator()(world_->root());
+    Renderer::operator()(world_->root());
     glDisable(GL_DEPTH_TEST);
     glUseProgram(0);
-}
-
-void MaterialRenderer::operator()(Ptr<Transform> transform) {
-    Matrix previous = transform_;
-    transform_ = transform_ * transform->transform();
-
-    for (Iterator<Node> node = transform->children(); node; node++) {
-        node(std::static_pointer_cast<MaterialRenderer>(shared_from_this()));
-    }
-
-    transform_ = previous;
 }
 
 void MaterialRenderer::operator()(Ptr<Model> model) {
@@ -90,7 +79,7 @@ void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Calculate the normal matrix and pass it to the vertex shader
     Ptr<Camera> camera = world_->camera();
-    Matrix normalMatrix = camera->viewTransform() * transform_;
+    Matrix normalMatrix = camera->viewTransform() * worldTransform();
     normalMatrix = normalMatrix.inverse();
     normalMatrix = normalMatrix.transpose();
 
@@ -102,7 +91,7 @@ void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
     
     // Pass the model matrix to the vertex shader
     glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
-    glUniformMatrix4fv(model_, 1, 0, transform_);
+    glUniformMatrix4fv(model_, 1, 0, worldTransform());
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 

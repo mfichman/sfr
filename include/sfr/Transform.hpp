@@ -21,6 +21,7 @@ public:
     Transform(std::string const& name);
 
     Matrix const& transform() const;
+    Matrix const& worldTransform() const;
     Vector position() const;
     Quaternion rotation() const;
     Iterator<Node> children();
@@ -29,6 +30,7 @@ public:
     void transformIs(Matrix const& transform);
     void positionIs(Vector const& position);
     void rotationIs(Quaternion const& rotation);
+    void worldTransformIs(Matrix const& worldTransform);
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {
@@ -45,6 +47,7 @@ public:
 private:
     std::vector<Ptr<Node>> children_;
     Matrix transform_;
+    Matrix worldTransform_;
     std::string name_;
 };
 

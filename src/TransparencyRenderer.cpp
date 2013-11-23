@@ -41,22 +41,13 @@ void TransparencyRenderer::operator()(Ptr<World> world) {
     glFrontFace(GL_CW);
 
     world_ = world;
-    operator()(world_->root());
+    Renderer::operator()(world_->root());
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
     glFrontFace(GL_CCW);
     glUseProgram(0);
-}
-
-void TransparencyRenderer::operator()(Ptr<Transform> transform) {
-    Matrix previous = transform_;
-    transform_ = transform_ * transform->transform();
-    for (Iterator<Node> node = transform->children(); node; node++) {
-        node(std::static_pointer_cast<TransparencyRenderer>(shared_from_this()));
-    }
-    transform_ = previous;
 }
 
 void TransparencyRenderer::operator()(Ptr<Model> model) {
@@ -78,7 +69,7 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
     Ptr<Camera> camera = world_->camera();
 
     // Pass the matrices to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, transform_);
+    glUniformMatrix4fv(model_, 1, 0, worldTransform());
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 

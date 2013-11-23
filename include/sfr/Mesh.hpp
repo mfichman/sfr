@@ -8,6 +8,7 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Interface.hpp"
+#include "sfr/Box.hpp"
 
 namespace sfr {
 
@@ -24,10 +25,12 @@ public:
     Ptr<IndexBuffer> indexBuffer() const;
     Status status() const;
     GLuint id() const { return id_; }
+    Box const& bounds() { return bounds_; }
 
     void attributeBufferIs(std::string const& name, Ptr<AttributeBuffer> buffer);
     void indexBufferIs(Ptr<IndexBuffer> indices);
     void statusIs(Status status);
+    void boundsIs(Box const& bounds) { bounds_ = bounds; }
 
 private:
     void updateTangents();
@@ -39,6 +42,7 @@ private:
     Ptr<IndexBuffer> indexBuffer_;
     Status status_;
     GLuint id_;  
+    Box bounds_;
 };
 
 }

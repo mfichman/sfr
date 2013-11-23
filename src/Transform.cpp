@@ -16,6 +16,10 @@ Transform::Transform(std::string const& name) {
     name_ = name;
 }
 
+Matrix const& Transform::worldTransform() const {
+    return worldTransform_;
+}
+
 Matrix const& Transform::transform() const {
     return transform_;
 }
@@ -37,10 +41,11 @@ std::string const& Transform::name() const {
 }
 
 void Transform::transformIs(Matrix const& transform) {
-    if (transform_ == transform) {
-        return;
-    }
     transform_ = transform;
+}
+
+void Transform::worldTransformIs(Matrix const& transform) {
+    worldTransform_ = transform;
 }
 
 void Transform::positionIs(Vector const& position) {

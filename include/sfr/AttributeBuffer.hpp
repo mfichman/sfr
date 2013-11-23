@@ -71,6 +71,10 @@ public:
         statusIs(DIRTY);
     }
 
+    void elementEnq(T element) {
+        element_.push_back(element);
+    }
+
 private:
     const void* data() const {
         return element_.empty() ? 0 : &element_[0];

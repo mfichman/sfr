@@ -21,6 +21,7 @@ public:
 /* Implement this interface to perform processing on the scene. */
 class Node::Functor : public Interface {
 public:
+    virtual ~Functor() {};
     virtual void operator()(Ptr<Camera> camera) {}
     virtual void operator()(Ptr<Transform> transform) {}
     virtual void operator()(Ptr<Instance> instance) {}

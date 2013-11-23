@@ -34,20 +34,9 @@ void FlatRenderer::operator()(Ptr<World> world) {
     glUseProgram(flatShader_->id());
     glEnable(GL_DEPTH_TEST);
     world_ = world;
-    operator()(world_->root());
+    Renderer::operator()(world_->root());
     glDisable(GL_DEPTH_TEST);
     glUseProgram(0);
-}
-
-void FlatRenderer::operator()(Ptr<Transform> transform) {
-    Matrix previous = transform_;
-    transform_ = transform_ * transform->transform();
-
-    for (Iterator<Node> node = transform->children(); node; node++) {
-        node->operator()(std::static_pointer_cast<FlatRenderer>(shared_from_this()));
-    }
-
-    transform_ = previous;
 }
 
 void FlatRenderer::operator()(Ptr<Model> model) {
@@ -62,7 +51,7 @@ void FlatRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, transform_);
+    glUniformMatrix4fv(model_, 1, 0, worldTransform());
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
 

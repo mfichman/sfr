@@ -94,6 +94,21 @@ void WavefrontLoader::newVertex(std::istream& in) {
 	Vector position;
 	in >> position;
 	position_.push_back(position);
+    if (position.x > bounds_.max.x) {
+        bounds_.max.x = position.x;
+    } else if (position.x < bounds_.min.x) {
+        bounds_.min.x = position.x;
+    }
+    if (position.y > bounds_.max.y) {
+        bounds_.max.y = position.y;
+    } else if (position.y < bounds_.min.y) {
+        bounds_.min.y = position.y;
+    }
+    if (position.z > bounds_.max.z) {
+        bounds_.max.z = position.z;
+    } else if (position.z < bounds_.min.z) {
+        bounds_.min.z = position.z;
+    }
 }
 
 void WavefrontLoader::newTexCoord(std::istream& in) {
@@ -126,6 +141,7 @@ void WavefrontLoader::newMesh() {
     if (transform_) {
         Ptr<Model> model = transform_->childIs<Model>();
         model->meshIs(mesh_);
+        mesh_->boundsIs(bounds_);
         if (!material_) {
             Ptr<Texture> white = notifier_->assetIs<Texture>("textures/White.png");
             Ptr<Texture> blue = notifier_->assetIs<Texture>("textures/Blue.png");
@@ -138,6 +154,7 @@ void WavefrontLoader::newMesh() {
         model->materialIs(material_);
     }
     mesh_.reset();
+    bounds_ = Box();
 }
 
 void WavefrontLoader::newMesh(std::string const& name) {
@@ -208,22 +225,21 @@ void WavefrontLoader::newTriangle(MeshVertex face[3]) {
     // attribute buffers.
 
     for (int i = 0; i < 3; i++) {
-        //std::map<MeshVertex, GLuint>::iterator j = cache_.find(face[i]);
+        std::map<MeshVertex, GLuint>::iterator j = cache_.find(face[i]);
         GLuint index = 0;
-        //if (j == cache_.end()) {
+        if (j == cache_.end()) {
             // Vertex was not found, so push a new index and vertex into the
             // list.  Add the vertex to the cache.
             index = vertexBuffer_->elementCount();
-            //cache_.insert(std::make_pair(face[i], index));
+            cache_.insert(std::make_pair(face[i], index));
             vertexBuffer_->elementIs(index, face[i].position);
             normalBuffer_->elementIs(index, face[i].normal);
             texCoordBuffer_->elementIs(index, face[i].texCoord);
             tangentBuffer_->elementIs(index, face[i].tangent);
-        //} else {
-            // Vertex was found, so use the existing index
-        //    index = j->second;
-        //    std::cout << "FOUND" << index << std::endl;
-        //}
+        } else {
+            //Vertex was found, so use the existing index
+            index = j->second;
+        }
 
         indexBuffer_->elementIs(indexBuffer_->elementCount(), index);
     }

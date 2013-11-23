@@ -14,6 +14,7 @@
 #include <sfr/Model.hpp>
 #include <sfr/TransformUpdater.hpp>
 #include <sfr/FlatRenderer.hpp>
+#include <sfr/BoundsRenderer.hpp>
 #include <sfr/World.hpp>
 #include <sfr/Texture.hpp>
 #include <sfr/WavefrontLoader.hpp>
@@ -36,6 +37,7 @@ Ptr<sfr::FlatRenderer> flatRenderer;
 Ptr<sfr::NullFunctor> nullRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
+Ptr<sfr::BoundsRenderer> boundsRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -82,8 +84,9 @@ void initWindow() {
 
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));
     shadowRenderer.reset(new sfr::ShadowRenderer(assets));
-    updater.reset(new sfr::TransformUpdater());
-    nullRenderer.reset(new sfr::NullFunctor());
+    updater.reset(new sfr::TransformUpdater);
+    nullRenderer.reset(new sfr::NullFunctor);
+    boundsRenderer.reset(new sfr::BoundsRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));
@@ -188,6 +191,7 @@ void initModels() {
     //Ptr<sfr::Transform> sphere = assets->nodeIs("meshes/SmoothSphere.obj");
     //sphere->positionIs(sfr::Vector(0.f, 0.f, 5.f));
     Ptr<sfr::Transform> car(assets->assetIs<sfr::Transform>("meshes/Lexus.obj"));
+    //Ptr<sfr::Transform> car(assets->assetIs<sfr::Transform>("meshes/Insurrector.obj"));
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
             Ptr<sfr::Transform> node = root->childIs<sfr::Transform>("car");
@@ -215,6 +219,7 @@ void runRenderLoop() {
         // include time processing input or running the Display() function,
         // because that causes the CPU to wait for the GPU to finish rendering.
         perfClock.restart();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         if (useNullRenderer) {
             // Traverse scene twice, just like the other renderer...
             nullRenderer->operator()(world);
@@ -223,6 +228,7 @@ void runRenderLoop() {
             updater->operator()(world);
             shadowRenderer->operator()(world);
             deferredRenderer->operator()(world);
+            //boundsRenderer->operator()(world);
         }
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;

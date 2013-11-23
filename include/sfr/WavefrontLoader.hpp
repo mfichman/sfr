@@ -12,6 +12,7 @@
 #include "sfr/TexCoord.hpp"
 #include "sfr/MeshVertex.hpp"
 #include "sfr/AttributeBuffer.hpp"
+#include "sfr/Box.hpp"
 
 namespace sfr {
 
@@ -45,6 +46,7 @@ private:
     std::vector<TexCoord> texCoord_;
     std::vector<Vector> position_;
     std::vector<Vector> normal_;
+    Box bounds_;
 };
 
 }
