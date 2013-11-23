@@ -6,12 +6,9 @@
  *****************************************************************************/
 
 #version 330
-
-in vec3 positionIn;
-in vec2 texCoordIn;
+#pragma include "shaders/Mesh.vert"
 
 out vec2 texCoord;
-
 
 /* Simple shader for rendering a full-screen quad */
 void main() {

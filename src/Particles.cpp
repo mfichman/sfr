@@ -11,6 +11,8 @@
 
 using namespace sfr;
 
+#define OFFSET(field) ((void*)&(((Particle*)0)->field))
+
 Particles::Particles() {
     status_ = DIRTY;
     buffer_.reset(new MutableAttributeBuffer<Particle>(""));
@@ -49,14 +51,27 @@ void Particles::statusIs(Status status) {
     }
 }
 
+void Particles::defAttribute(Attribute id, void* offset) {
+    GLuint size = buffer_->elementSize()/sizeof(GLfloat);
+    GLuint stride = sizeof(Particle);
+    glEnableVertexAttribArray(id);
+    glVertexAttribPointer(id, size, GL_FLOAT, 0, stride, offset);
+
+}
+
 void Particles::syncHardwareBuffer() {
     // Update the VAO/VBO containing the particle data
     buffer_->statusIs(AttributeBuffer::SYNCED);
-    GLuint size = buffer_->elementSize()/sizeof(GLfloat);
+
     glBindVertexArray(id_);
-    glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
-    glVertexAttribPointer(0, size, GL_FLOAT, 0, 0, 0);
+    defAttribute(POSITION, OFFSET(position));
+    defAttribute(VELOCITY, OFFSET(velocity));
+    defAttribute(TIME, OFFSET(time));
+    defAttribute(SIZE, OFFSET(size));
+    defAttribute(GROWTH, OFFSET(growth));
+    defAttribute(ROTATION, OFFSET(rotation));
+    defAttribute(ALPHA, OFFSET(alpha));
     glBindVertexArray(0);
 }
 

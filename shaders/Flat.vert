@@ -6,13 +6,12 @@
  *****************************************************************************/
 
 #version 330 
+#pragma include "shaders/Mesh.vert"
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-in vec3 positionIn;
- 
 /* Very fast simple solid-color shader for rendering to depth */
 void main() {
 	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;

@@ -19,21 +19,21 @@
 using namespace sfr;
 
 TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
-    transparencyEffect_ = manager->assetIs<Effect>("shaders/Transparency");
+    effect_ = manager->assetIs<Effect>("shaders/Transparency");
 
     // Activate shader by quering for uniform variables
-    transparencyEffect_->statusIs(Effect::LINKED);
-    glUseProgram(transparencyEffect_->id());
-    diffuse_ = glGetUniformLocation(transparencyEffect_->id(), "Kd");
-    opacity_ = glGetUniformLocation(transparencyEffect_->id(), "alpha");
-    model_ = glGetUniformLocation(transparencyEffect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(transparencyEffect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(transparencyEffect_->id(), "projectionMatrix");
+    effect_->statusIs(Effect::LINKED);
+    glUseProgram(effect_->id());
+    diffuse_ = glGetUniformLocation(effect_->id(), "Kd");
+    opacity_ = glGetUniformLocation(effect_->id(), "alpha");
+    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
     glUseProgram(0);
 }
 
 void TransparencyRenderer::operator()(Ptr<World> world) {
-    glUseProgram(transparencyEffect_->id());
+    glUseProgram(effect_->id());
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

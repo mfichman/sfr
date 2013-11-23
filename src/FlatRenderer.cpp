@@ -20,18 +20,18 @@
 using namespace sfr;
 
 FlatRenderer::FlatRenderer(Ptr<AssetTable> manager) {
-    flatShader_ = manager->assetIs<sfr::Effect>("shaders/Flat");
-    flatShader_->statusIs(Effect::LINKED); 
+    effect_ = manager->assetIs<sfr::Effect>("shaders/Flat");
+    effect_->statusIs(Effect::LINKED); 
 
-    glUseProgram(flatShader_->id());
-    model_ = glGetUniformLocation(flatShader_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(flatShader_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(flatShader_->id(), "projectionMatrix");
+    glUseProgram(effect_->id());
+    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
+    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
+    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
     glUseProgram(0);
 }
 
 void FlatRenderer::operator()(Ptr<World> world) {
-    glUseProgram(flatShader_->id());
+    glUseProgram(effect_->id());
     glEnable(GL_DEPTH_TEST);
     world_ = world;
     Renderer::operator()(world_->root());

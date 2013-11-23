@@ -102,6 +102,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform1f(atten2_, light->quadraticAttenuation());
     Matrix transform = transform_ * world_->camera()->viewTransform();
     Vector direction = transform.normal(light->direction()).unit();
+    // Transform the light direction from world space into view space
     glUniform3fv(direction_, 1, direction);
 
     // Calculate the model transform, and scale the model to cover the light's 
@@ -136,6 +137,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
 
     Matrix transform = world_->camera()->viewTransform() * transform_;
     Vector direction = transform.normal(light->direction()).unit();
+    // Transform the light direction from into view space
     glUniform3fv(direction_, 1, direction);
     glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());

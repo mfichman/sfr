@@ -6,16 +6,12 @@
  *****************************************************************************/
  
 #version 330
+#pragma include "shaders/Mesh.vert"
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
-
-in vec3 positionIn;
-in vec3 normalIn;
-in vec3 tangentIn;
-in vec2 texCoordIn;
 
 out vec3 position;
 out vec3 normal;

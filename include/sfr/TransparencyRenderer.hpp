@@ -20,12 +20,11 @@ public:
     void operator()(Ptr<Model> model);
     void operator()(Ptr<Mesh> mesh);
     void operator()(Ptr<Material> material);
-    void operator()(Ptr<Effect> effect);
     void operator()(Ptr<AttributeBuffer> buffer);
     void operator()(Ptr<IndexBuffer> buffer);
 
 private:
-    Ptr<Effect> transparencyEffect_;
+    Ptr<Effect> effect_;
     Ptr<World> world_;
 
     GLint diffuse_;

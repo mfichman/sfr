@@ -22,7 +22,7 @@ public:
 
 private:
     Ptr<World> world_;
-    Ptr<Effect> flatShader_;
+    Ptr<Effect> effect_;
 
     GLint model_;
     GLint view_;

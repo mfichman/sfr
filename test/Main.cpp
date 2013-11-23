@@ -8,6 +8,7 @@
 #include <sfr/DeferredRenderer.hpp>
 #include <sfr/DepthRenderTarget.hpp>
 #include <sfr/ShadowRenderer.hpp>
+#include <sfr/ParticleRenderer.hpp>
 #include <sfr/NullFunctor.hpp>
 #include <sfr/Material.hpp>
 #include <sfr/Transform.hpp>
@@ -38,6 +39,7 @@ Ptr<sfr::NullFunctor> nullRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
+Ptr<sfr::ParticleRenderer> particleRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -87,6 +89,7 @@ void initWindow() {
     updater.reset(new sfr::TransformUpdater);
     nullRenderer.reset(new sfr::NullFunctor);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
+    particleRenderer.reset(new sfr::ParticleRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));

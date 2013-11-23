@@ -41,6 +41,11 @@ MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
     projection_ = glGetUniformLocation(modelEffect_->id(), "projectionMatrix");
     normalMatrix_ = glGetUniformLocation(modelEffect_->id(), "normalMatrix");
 
+    // Set texture samplers
+    glUniform1i(diffuseMap_, 0);
+    glUniform1i(specularMap_, 1);
+    glUniform1i(normalMap_, 2);
+
     glUseProgram(0);
 }
 
@@ -48,11 +53,6 @@ void MaterialRenderer::operator()(Ptr<World> world) {
     glUseProgram(modelEffect_->id());
     glEnable(GL_DEPTH_TEST);
     world_ = world;
-
-    // Set texture samplers
-    glUniform1i(diffuseMap_, 0);
-    glUniform1i(specularMap_, 1);
-    glUniform1i(normalMap_, 2);
 
     Renderer::operator()(world_->root());
     glDisable(GL_DEPTH_TEST);

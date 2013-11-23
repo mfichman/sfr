@@ -80,6 +80,8 @@ class DepthRenderTarget;
 class DeferredRenderTarget;
 class Model;
 class World;
+class Particles;
+class Particle;
 
 }
 

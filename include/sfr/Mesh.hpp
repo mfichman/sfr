@@ -16,7 +16,7 @@ namespace sfr {
 class Mesh : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
-    enum Attribute { POSITION, NORMAL, TEXCOORD, TANGENT };
+    enum Attribute { POSITION, NORMAL, TANGENT, TEXCOORD };
 
     Mesh(std::string const& name);
     ~Mesh();

@@ -5,13 +5,11 @@
  * February, 2011                                                            *
  *****************************************************************************/
   
-#version 330
-
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-in vec3 positionIn;
+layout(location=0) in vec3 positionIn;
 
 out vec4 position;
 out vec3 lightPosition;

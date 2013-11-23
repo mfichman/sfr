@@ -9,6 +9,7 @@
 #include "sfr/Effect.hpp"
 #include "sfr/Shader.hpp"
 #include "sfr/Mesh.hpp"
+#include "sfr/Particles.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -84,54 +85,53 @@ void Effect::statusIs(Status status) {
         return;
     }
     if (LINKED == status) {
-        if (fragmentShader_) {
-            fragmentShader_->statusIs(Shader::COMPILED);
-        }
-        if (vertexShader_) {
-            vertexShader_->statusIs(Shader::COMPILED);
-        }
-
-        glBindAttribLocation(id_, Mesh::POSITION, "positionIn");
-        glBindAttribLocation(id_, Mesh::NORMAL, "normalIn");
-        glBindAttribLocation(id_, Mesh::TANGENT, "tangentIn");
-        glBindAttribLocation(id_, Mesh::TEXCOORD, "texCoordIn");
-
-        glLinkProgram(id_);
-        GLint success = 0;
-        glGetProgramiv(id_, GL_LINK_STATUS, &success);
-        if (!success) {
-            // The program didn't compile successfully, so log the error 
-            // and throw an exception.
-            GLint length = 0;
-            std::vector<char> log;
-
-            glGetShaderiv(vertexShader_->id(), GL_INFO_LOG_LENGTH, &length);
-            log.resize(length + 1);
-            if (length) {
-                std::cerr << "Vertex shader error: " << name_ << std::endl;
-                glGetShaderInfoLog(vertexShader_->id(), length, &length, &log[0]);
-                std::cerr << &log[0] << std::endl;
-            }
-
-            glGetShaderiv(fragmentShader_->id(), GL_INFO_LOG_LENGTH, &length);
-            log.resize(length + 1);
-            if (length) {
-                std::cerr << "Fragment shader error: " << name_ << std::endl;
-                glGetShaderInfoLog(fragmentShader_->id(), length, &length, &log[0]);
-                std::cerr << &log[0] << std::endl;
-            }
-
-            glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &length);
-            log.resize(length + 1);
-            if (length) {
-                std::cerr << "Shader link error: " << name_ << std::endl;
-                glGetProgramInfoLog(id_, length, &length, &log[0]);
-                std::cerr << &log[0] << std::endl;
-            }
-
-            throw std::runtime_error("Shader linker error: " + name_);
-        }
+        linkShaders();
     }
 
     status_ = status;
+}
+
+void Effect::linkShaders() {
+    if (fragmentShader_) {
+        fragmentShader_->statusIs(Shader::COMPILED);
+    }
+    if (vertexShader_) {
+        vertexShader_->statusIs(Shader::COMPILED);
+    }
+
+    glLinkProgram(id_);
+    GLint success = 0;
+    glGetProgramiv(id_, GL_LINK_STATUS, &success);
+    if (!success) {
+        // The program didn't compile successfully, so log the error 
+        // and throw an exception.
+        GLint length = 0;
+        std::vector<char> log;
+
+        glGetShaderiv(vertexShader_->id(), GL_INFO_LOG_LENGTH, &length);
+        log.resize(length + 1);
+        if (length) {
+            std::cerr << "Vertex shader error: " << name_ << std::endl;
+            glGetShaderInfoLog(vertexShader_->id(), length, &length, &log[0]);
+            std::cerr << &log[0] << std::endl;
+        }
+
+        glGetShaderiv(fragmentShader_->id(), GL_INFO_LOG_LENGTH, &length);
+        log.resize(length + 1);
+        if (length) {
+            std::cerr << "Fragment shader error: " << name_ << std::endl;
+            glGetShaderInfoLog(fragmentShader_->id(), length, &length, &log[0]);
+            std::cerr << &log[0] << std::endl;
+        }
+
+        glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &length);
+        log.resize(length + 1);
+        if (length) {
+            std::cerr << "Shader link error: " << name_ << std::endl;
+            glGetProgramInfoLog(id_, length, &length, &log[0]);
+            std::cerr << &log[0] << std::endl;
+        }
+
+        throw std::runtime_error("Shader linker error: " + name_);
+    }
 }

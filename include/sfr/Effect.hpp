@@ -30,6 +30,8 @@ public:
     void statusIs(Status status);
 
 private:
+    void linkShaders();
+
     std::string name_;
     Ptr<Shader> fragmentShader_;
     Ptr<Shader> vertexShader_;

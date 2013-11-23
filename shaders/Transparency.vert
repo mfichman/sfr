@@ -6,12 +6,11 @@
  *****************************************************************************/
   
 #version 330
+#pragma include "shaders/Mesh.vert"
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-
-in vec3 positionIn;
 
 /* Deferred render point light shader */
 void main() {

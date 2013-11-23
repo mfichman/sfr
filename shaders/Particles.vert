@@ -10,20 +10,15 @@
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float time;
 
-float time;
-
-struct Particle {
-    vec3 position;
-    vec3 velocity;
-    float time;
-    float size;
-    float growth;
-    float rotation;
-    float alpha;
-};
-
-in Particle particleIn;
+layout(location=0) in vec3 positionIn;
+layout(location=1) in vec3 velocityIn;
+layout(location=2) in float timeIn;
+layout(location=3) in float sizeIn;
+layout(location=4) in float growthIn;
+layout(location=5) in float rotationIn;
+layout(location=6) in float alphaIn;
 
 out float alpha;
 out float rotation;
@@ -32,7 +27,7 @@ out float rotation;
 void main() {
     mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 
-    gl_Position = transform * vec4(particleIn.position, 1);
+    gl_Position = transform * vec4(positionIn, 1);
     gl_PointSize =  1.0;
     
     alpha = 1.0;

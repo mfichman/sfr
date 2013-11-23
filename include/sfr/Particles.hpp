@@ -16,6 +16,7 @@ namespace sfr {
 class Particles : public Node {
 public:
     enum Status { SYNCED, DIRTY };
+    enum Attribute { POSITION, VELOCITY, TIME, SIZE, GROWTH, ROTATION, ALPHA };
 
     Particles();
     ~Particles();
@@ -32,6 +33,7 @@ public:
     void statusIs(Status status);
 
 private:
+    void defAttribute(Attribute id, void* offset);
     void syncHardwareBuffer();
 
     Ptr<Texture> texture_;
