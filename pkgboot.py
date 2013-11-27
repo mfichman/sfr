@@ -140,6 +140,8 @@ class Package:
         pchenv.Append(CXXFLAGS='/Yc%s' % self.pch)
         self.pch = pchenv.StaticObject('build/src/Common', 'build/src/Common.cpp')
 
+        self._finish_build()
+
     def _setup_unix(self):
         # Set up OS X/Linux-specific options
         self.env['CXX'] = 'clang++'
@@ -157,6 +159,8 @@ class Package:
         self.pch = pchenv.Pch('include/%s/Common.hpp.pch' % self.name, 'include/%s' % self.pch)
         self.env.Append(CXXFLAGS='-include include/%s/Common.hpp' % self.name)
 
+        self._finish_build()
+
     def _setup_build(self):
         # Set up the basic build options
         self.libs = filter(self._lib_is_valid_for_platform, self.libs)
@@ -172,8 +176,9 @@ class Package:
         self.src = filter(lambda x: 'Common.cpp' not in x.name, self.src)
         self.env.Depends(self.src, self.pch) # Wait for pch to build
 
+    def _finish_build(self):
         if self.env['PLATFORM'] == 'win32':
-            self.lib = self.env.StaticLibrary('lib/%s' % self.name, self.src)
+            self.lib = self.env.StaticLibrary('lib/%s' % self.name, (self.src, self.pch))
         else:
             self.lib = self.env.SharedLibrary('lib/%s' % self.name, self.src)
         if self.kind == 'bin':
@@ -189,10 +194,7 @@ class Package:
         for test in self.env.Glob('build/test/**.cpp'):
             self.env.Depends(test, self.pch)
             name = test.name.replace('.cpp', '')
-            if self.env['PLATFORM'] == 'win32':
-                prog = testenv.Program('bin/test/%s' % name, (test, self.pch))
-            else:
-                prog = testenv.Program('bin/test/%s' % name, test)
+            prog = testenv.Program('bin/test/%s' % name, (test, self.pch))
             if 'check' in COMMAND_LINE_TARGETS:
                 self.tests.append(testenv.Test(name, prog))
         if 'check' in COMMAND_LINE_TARGETS:

@@ -155,6 +155,11 @@ void WavefrontLoader::newMesh() {
     }
     mesh_.reset();
     bounds_ = Box();
+
+    auto max = std::numeric_limits<float>::infinity();
+    auto min = -std::numeric_limits<float>::infinity();
+    bounds_.max = Vector(min, min, min);
+    bounds_.min = Vector(max, max, max);
 }
 
 void WavefrontLoader::newMesh(std::string const& name) {
