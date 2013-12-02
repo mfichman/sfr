@@ -38,6 +38,7 @@ ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
 void ParticleRenderer::operator()(Ptr<World> world) {
     glUseProgram(effect_->id());
     glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_POINT_SPRITE); // This is apparently required on Windows
     glEnable(GL_BLEND);
     glDepthMask(GL_FALSE);
 
@@ -45,6 +46,7 @@ void ParticleRenderer::operator()(Ptr<World> world) {
     Renderer::operator()(world_->root());
 
     glDisable(GL_PROGRAM_POINT_SIZE);
+    glDisable(GL_POINT_SPRITE);
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
     glUseProgram(0);

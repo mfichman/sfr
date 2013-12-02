@@ -10,13 +10,22 @@
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Vector.hpp"
+#include "sfr/TexCoord.hpp"
 
 namespace sfr {
+
+class RibbonVertex {
+public:
+    Vector position;
+    TexCoord texCoord;
+    GLfloat alpha;
+};
 
 /* Ribbon trail system */
 class Ribbon : public Node {
 public:
     enum Status { SYNCED, DIRTY };
+    enum Attribute { POSITION, TEXCOORD, ALPHA };
 
     Ribbon();
     ~Ribbon();
@@ -26,26 +35,29 @@ public:
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
     Ptr<Texture> texture() const { return texture_; }
     Status status() const { return status_; }
-    float width() const { return width_; }
+    GLfloat width() const { return width_; }
 
     void pointDeq();
     void pointEnq(Vector const& point);
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
-    void widthIs(float width);
+    void widthIs(GLfloat width);
+    void cameraPositionIs(Vector const& pos);
 
     virtual void operator()(Ptr<Functor> functor);
 
 private:
+    void defAttribute(Attribute id, GLuint size, void* offset);
     void rebuildBuffer();
     void syncHardwareBuffer();
 
     Ptr<Texture> texture_;
-    Ptr<MutableAttributeBuffer<Vector>> buffer_; 
+    Ptr<MutableAttributeBuffer<RibbonVertex>> buffer_; 
     std::list<Vector> point_;
     Status status_;
     GLuint id_;
-    float width_;
+    GLfloat width_;
+    Vector cameraPosition_;
 };
 
 }

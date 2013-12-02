@@ -48,6 +48,7 @@ Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
 Ptr<sfr::Particles> particles;
+Ptr<sfr::Ribbon> ribbon;
 Ptr<sfr::Transform> root;
 Ptr<WavefrontLoader> meshLoader;
 Ptr<EffectLoader> effectLoader;
@@ -189,7 +190,6 @@ void handleInput() {
 
 void initModels() {
     // Initialize the models that are part of the scene
-/*
     Ptr<sfr::Transform> plane(assets->assetIs<sfr::Transform>("meshes/Plane.obj"));
     root->childIs(plane);
 
@@ -204,7 +204,6 @@ void initModels() {
             node->childIs(car);
         }
     }
-*/
 }
 
 void initParticles() {
@@ -219,20 +218,15 @@ void initParticles() {
 }
 
 void initRibbon() {
-    Ptr<sfr::Transform> rnode = root->childIs<sfr::Transform>("particles");
-    Ptr<sfr::Ribbon> ribbon = rnode->childIs<sfr::Ribbon>();
+    Ptr<sfr::Transform> rnode = root->childIs<sfr::Transform>("ribbon");
+    ribbon = rnode->childIs<sfr::Ribbon>();
 
-    ribbon->textureIs(assets->assetIs<Texture>("textures/BurstGold.png"));
+    ribbon->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
     ribbon->widthIs(.1);
-    ribbon->pointEnq(Vector(0, 0, 0));
-    ribbon->pointEnq(Vector(.2, 0, 0));
-    ribbon->pointEnq(Vector(.4, 0, 0));
-    ribbon->pointEnq(Vector(.6, 0, 0));
-    ribbon->pointEnq(Vector(.8, 0, 0));
-    ribbon->pointEnq(Vector(1.0, 0, 0));
-    ribbon->pointEnq(Vector(1.2, 0, 0));
-    ribbon->pointEnq(Vector(1.4, 0, 0));
 
+    for (float i = 0; i < M_PI; i += 0.01) {
+        ribbon->pointEnq(Vector(sin(i), cos(i), 0));
+    }
 }
 
 void runRenderLoop() {
@@ -257,10 +251,12 @@ void runRenderLoop() {
         perfClock.restart();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        ribbon->cameraPositionIs(camera->position());
+
         updater->operator()(world);
-        //shadowRenderer->operator()(world);
-        //deferredRenderer->operator()(world);
-        //particleRenderer->operator()(world);
+        shadowRenderer->operator()(world);
+        deferredRenderer->operator()(world);
+        particleRenderer->operator()(world);
         ribbonRenderer->operator()(world);
         //boundsRenderer->operator()(world);
 
@@ -286,7 +282,9 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
+/*
         initModels();
+*/
         initParticles();
         initRibbon();
         initLights();

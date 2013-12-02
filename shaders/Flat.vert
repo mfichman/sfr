@@ -14,8 +14,8 @@ uniform mat4 projectionMatrix;
 
 /* Very fast simple solid-color shader for rendering to depth */
 void main() {
-	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
+    mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 
-	// Transform the vertex to get the clip-space position of the vertex
-	gl_Position = transform * vec4(positionIn, 1);
+    // Transform the vertex to get the clip-space position of the vertex
+    gl_Position = transform * vec4(positionIn, 1);
 }

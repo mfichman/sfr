@@ -9,7 +9,7 @@
 
 out vec4 color;
 
- /* Very fast simple solid-color shader for rendering to depth */
- void main() {
-	color = vec4(1., 1., 1., 1.);
- }
+/* Very fast simple solid-color shader for rendering to depth */
+void main() {
+    color = vec4(1., 1., 1., 1.);
+}

@@ -34,6 +34,7 @@ RibbonRenderer::RibbonRenderer(Ptr<AssetTable> assets) {
 void RibbonRenderer::operator()(Ptr<World> world) {
     glUseProgram(effect_->id());
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDepthMask(GL_FALSE);
 	glDisable(GL_CULL_FACE);
 
@@ -42,6 +43,7 @@ void RibbonRenderer::operator()(Ptr<World> world) {
 
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
+	glEnable(GL_CULL_FACE);
     glUseProgram(0);
 }
 
@@ -64,6 +66,8 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     Ptr<AttributeBuffer> buffer = ribbon->buffer();
     glBindVertexArray(ribbon->id());
     glDrawArrays(GL_TRIANGLE_STRIP, 0, buffer->elementCount());
+    //glDrawArrays(GL_TRIANGLE_STRIP, 0, buffer->elementCount()/2);
+    //glDrawArrays(GL_TRIANGLE_STRIP, buffer->elementCount()/2, buffer->elementCount()/2);
     glBindVertexArray(0);
 
 }

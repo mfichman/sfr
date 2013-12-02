@@ -7,9 +7,13 @@
 
 #version 330
 
-in vec4 color;
-out vec4 colorOut;
+uniform sampler2D tex;
+
+in vec2 texCoord;
+in float alpha;
+out vec4 color;
 
 void main() {
-    colorOut = color; 
+    color = texture(tex, texCoord);
+    color.a *= alpha;
 }
