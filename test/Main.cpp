@@ -9,6 +9,8 @@
 #include <sfr/DepthRenderTarget.hpp>
 #include <sfr/ShadowRenderer.hpp>
 #include <sfr/ParticleRenderer.hpp>
+#include <sfr/Particles.hpp>
+#include <sfr/Particle.hpp>
 #include <sfr/NullFunctor.hpp>
 #include <sfr/Material.hpp>
 #include <sfr/Transform.hpp>
@@ -16,11 +18,13 @@
 #include <sfr/TransformUpdater.hpp>
 #include <sfr/FlatRenderer.hpp>
 #include <sfr/BoundsRenderer.hpp>
+#include <sfr/RibbonRenderer.hpp>
 #include <sfr/World.hpp>
 #include <sfr/Texture.hpp>
 #include <sfr/WavefrontLoader.hpp>
 #include <sfr/TextureLoader.hpp>
 #include <sfr/EffectLoader.hpp>
+#include <sfr/Ribbon.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -35,14 +39,15 @@ std::auto_ptr<sf::Clock> timer;
 Ptr<sfr::AssetTable> assets;
 Ptr<sfr::DeferredRenderer> deferredRenderer;
 Ptr<sfr::FlatRenderer> flatRenderer;
-Ptr<sfr::NullFunctor> nullRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
 Ptr<sfr::ParticleRenderer> particleRenderer;
+Ptr<sfr::RibbonRenderer> ribbonRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
+Ptr<sfr::Particles> particles;
 Ptr<sfr::Transform> root;
 Ptr<WavefrontLoader> meshLoader;
 Ptr<EffectLoader> effectLoader;
@@ -50,7 +55,6 @@ Ptr<TextureLoader> textureLoader;
 sf::Time elapsedTime = sf::seconds(0.f);
 float z = 3.1f;
 float x = -1.8f;
-bool useNullRenderer = false;
 
 void initWindow() {
     // Initialize the window
@@ -87,9 +91,9 @@ void initWindow() {
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));
     shadowRenderer.reset(new sfr::ShadowRenderer(assets));
     updater.reset(new sfr::TransformUpdater);
-    nullRenderer.reset(new sfr::NullFunctor);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
     particleRenderer.reset(new sfr::ParticleRenderer(assets));
+    ribbonRenderer.reset(new sfr::RibbonRenderer(assets)); 
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));
@@ -143,9 +147,6 @@ void handleInput() {
             std::cout << "Exiting" << std::endl;
             exit(0);
         case sf::Event::KeyPressed:
-            if (evt.key.code == sf::Keyboard::N) {
-                useNullRenderer = !useNullRenderer;
-            }
             break;
         default:
             break;
@@ -188,6 +189,7 @@ void handleInput() {
 
 void initModels() {
     // Initialize the models that are part of the scene
+/*
     Ptr<sfr::Transform> plane(assets->assetIs<sfr::Transform>("meshes/Plane.obj"));
     root->childIs(plane);
 
@@ -202,6 +204,35 @@ void initModels() {
             node->childIs(car);
         }
     }
+*/
+}
+
+void initParticles() {
+    Ptr<sfr::Transform> pnode = root->childIs<sfr::Transform>("particles");
+    particles = pnode->childIs<sfr::Particles>();
+
+    Particle p1 = { Vector(0, 0, 0), Vector(0, 0, 0), 0, 100, 0, 0, 1, 2, 2 };
+    Particle p2 = { Vector(2, 0, 0), Vector(0, 0, 0), 0, 100, 0, 5, 1, 2, -1 };
+    particles->particleEnq(p1);
+    particles->particleEnq(p2);
+    particles->textureIs(assets->assetIs<Texture>("textures/BurstGold.png"));
+}
+
+void initRibbon() {
+    Ptr<sfr::Transform> rnode = root->childIs<sfr::Transform>("particles");
+    Ptr<sfr::Ribbon> ribbon = rnode->childIs<sfr::Ribbon>();
+
+    ribbon->textureIs(assets->assetIs<Texture>("textures/BurstGold.png"));
+    ribbon->widthIs(.1);
+    ribbon->pointEnq(Vector(0, 0, 0));
+    ribbon->pointEnq(Vector(.2, 0, 0));
+    ribbon->pointEnq(Vector(.4, 0, 0));
+    ribbon->pointEnq(Vector(.6, 0, 0));
+    ribbon->pointEnq(Vector(.8, 0, 0));
+    ribbon->pointEnq(Vector(1.0, 0, 0));
+    ribbon->pointEnq(Vector(1.2, 0, 0));
+    ribbon->pointEnq(Vector(1.4, 0, 0));
+
 }
 
 void runRenderLoop() {
@@ -217,22 +248,22 @@ void runRenderLoop() {
         timer->restart();
 
         handleInput();
+
+        particles->timeInc(elapsedTime.asSeconds());
         
         // Record the CPU time used while traversing the scene graph.  Don't
         // include time processing input or running the Display() function,
         // because that causes the CPU to wait for the GPU to finish rendering.
         perfClock.restart();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        if (useNullRenderer) {
-            // Traverse scene twice, just like the other renderer...
-            nullRenderer->operator()(world);
-            nullRenderer->operator()(world);
-        } else {
-            updater->operator()(world);
-            shadowRenderer->operator()(world);
-            deferredRenderer->operator()(world);
-            //boundsRenderer->operator()(world);
-        }
+
+        updater->operator()(world);
+        //shadowRenderer->operator()(world);
+        //deferredRenderer->operator()(world);
+        //particleRenderer->operator()(world);
+        ribbonRenderer->operator()(world);
+        //boundsRenderer->operator()(world);
+
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;
 
@@ -256,6 +287,8 @@ int main(int argc, char** argv) {
         initWindow();
         initCamera();
         initModels();
+        initParticles();
+        initRibbon();
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {

@@ -12,9 +12,11 @@
 using namespace sfr;
 
 #define OFFSET(field) ((void*)&(((Particle*)0)->field))
+#define SIZE(field) (sizeof((((Particle*)0)->field)))
 
 Particles::Particles() {
     status_ = DIRTY;
+    time_ = 0;
     buffer_.reset(new MutableAttributeBuffer<Particle>(""));
     glGenVertexArrays(1, &id_);
 }
@@ -51,12 +53,19 @@ void Particles::statusIs(Status status) {
     }
 }
 
-void Particles::defAttribute(Attribute id, void* offset) {
-    GLuint size = buffer_->elementSize()/sizeof(GLfloat);
+void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
     GLuint stride = sizeof(Particle);
     glEnableVertexAttribArray(id);
-    glVertexAttribPointer(id, size, GL_FLOAT, 0, stride, offset);
+    glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
 
+}
+
+void Particles::timeIs(float time) {
+    time_ = time;
+}
+
+void Particles::timeInc(float time) {
+    timeIs(time+time_);
 }
 
 void Particles::syncHardwareBuffer() {
@@ -65,13 +74,19 @@ void Particles::syncHardwareBuffer() {
 
     glBindVertexArray(id_);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
-    defAttribute(POSITION, OFFSET(position));
-    defAttribute(VELOCITY, OFFSET(velocity));
-    defAttribute(TIME, OFFSET(time));
-    defAttribute(SIZE, OFFSET(size));
-    defAttribute(GROWTH, OFFSET(growth));
-    defAttribute(ROTATION, OFFSET(rotation));
-    defAttribute(ALPHA, OFFSET(alpha));
+    defAttribute(POSITION, SIZE(position), OFFSET(position));
+    defAttribute(VELOCITY, SIZE(velocity), OFFSET(velocity));
+    defAttribute(TIME, SIZE(time), OFFSET(time));
+    defAttribute(SIZE, SIZE(size), OFFSET(size));
+    defAttribute(GROWTH, SIZE(growth), OFFSET(growth));
+    defAttribute(ROTATION, SIZE(rotation), OFFSET(rotation));
+    defAttribute(ALPHA, SIZE(alpha), OFFSET(alpha));
+    defAttribute(LIFE, SIZE(life), OFFSET(life));
+    defAttribute(SPIN, SIZE(spin), OFFSET(spin));
     glBindVertexArray(0);
+}
+
+void Particles::operator()(Ptr<Node::Functor> functor) {
+    functor->operator()(std::static_pointer_cast<Particles>(shared_from_this()));
 }
 

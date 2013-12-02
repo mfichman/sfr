@@ -1,4 +1,3 @@
-
 /*****************************************************************************
  * Simple, Fast Renderer (SFR)                                               *
  * CS249b                                                                    *
@@ -38,10 +37,16 @@ ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
 
 void ParticleRenderer::operator()(Ptr<World> world) {
     glUseProgram(effect_->id());
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_BLEND);
+    glDepthMask(GL_FALSE);
 
     world_ = world;
     Renderer::operator()(world_->root());
 
+    glDisable(GL_PROGRAM_POINT_SIZE);
+    glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
     glUseProgram(0);
 }
 
@@ -50,10 +55,13 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
     Ptr<Texture> texture = particles->texture();
     if (!texture) { return; }
 
+    particles->statusIs(Particles::SYNCED);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
     // Pass the matrices to the vertex shader
+    glUniform1f(time_, particles->time());
     glUniformMatrix4fv(model_, 1, 0, worldTransform());
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
     glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());

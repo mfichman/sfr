@@ -15,8 +15,8 @@ namespace sfr {
 void Renderer::operator()(Ptr<Transform> transform) {
     // Cache a pointer to the transform node that is lowest on the tree, so
     // that we can retrieve the world transform easily.
-    Ptr<Transform> previous = transform_;
-    transform_ = transform;
+    Matrix previous = transform_;
+    transform_ = transform_ * transform->transform();
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<Renderer>(shared_from_this()));
     }
@@ -24,7 +24,7 @@ void Renderer::operator()(Ptr<Transform> transform) {
 }
 
 Matrix const& Renderer::worldTransform() const { 
-    return transform_->worldTransform();
+    return transform_;
 
 }
 

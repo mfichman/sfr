@@ -29,6 +29,8 @@ public:
     virtual void operator()(Ptr<Model> object) {}
     virtual void operator()(Ptr<HemiLight> light) {}
     virtual void operator()(Ptr<SpotLight> light) {}
+    virtual void operator()(Ptr<Particles> particles) {}
+    virtual void operator()(Ptr<Ribbon> ribbon) {}
 };
 
 }

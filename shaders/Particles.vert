@@ -19,6 +19,8 @@ layout(location=3) in float sizeIn;
 layout(location=4) in float growthIn;
 layout(location=5) in float rotationIn;
 layout(location=6) in float alphaIn;
+layout(location=7) in float lifeIn;
+layout(location=8) in float spinIn;
 
 out float alpha;
 out float rotation;
@@ -27,10 +29,13 @@ out float rotation;
 void main() {
     mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 
+    float elapsed = time - timeIn;
+    float f = 1.0-(elapsed/lifeIn);
+
     gl_Position = transform * vec4(positionIn, 1);
-    gl_PointSize =  1.0;
+    gl_PointSize = sizeIn + growthIn * elapsed;
     
-    alpha = 1.0;
-    rotation = 1.0;
+    alpha = f * alphaIn; //, 0.0, 1.0);
+    rotation = rotationIn + spinIn * elapsed;//1.0;
     // FIXME
 }

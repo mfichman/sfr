@@ -12,7 +12,7 @@
 
 namespace sfr {
 
-/* Renders transparent meshes with a flat shading technique. */
+/* Renders transparent particles with an alpha-blend technique. */
 class ParticleRenderer : public Renderer {
 public:
     ParticleRenderer(Ptr<AssetTable> manager);

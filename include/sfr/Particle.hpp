@@ -21,6 +21,8 @@ public:
     float growth; // Change in size per sec
     float rotation; // Rotation about view z-axis
     float alpha; // Starting alpha
+    float life; // Lifetime
+    float spin; // Rotation rate
 };
 
 

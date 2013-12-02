@@ -35,6 +35,8 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <queue>
+#include <list>
 #include <iostream>
 #include <map>
 #include <stdexcept>
@@ -82,6 +84,7 @@ class Model;
 class World;
 class Particles;
 class Particle;
+class Ribbon;
 
 }
 
