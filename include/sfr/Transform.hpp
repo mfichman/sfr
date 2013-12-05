@@ -18,6 +18,8 @@ namespace sfr {
 /* Rotation, translation, scaling node with children. */
 class Transform : public Node {
 public:
+    enum ShadowMode { SHADOWED, UNSHADOWED };
+
     Transform(std::string const& name);
 
     Matrix const& transform() const;
@@ -26,11 +28,13 @@ public:
     Quaternion rotation() const;
     Iterator<Node> children();
     std::string const& name() const;
+    ShadowMode shadowMode() const;
 
     void transformIs(Matrix const& transform);
     void positionIs(Vector const& position);
     void rotationIs(Quaternion const& rotation);
     void worldTransformIs(Matrix const& worldTransform);
+    void shadowModeIs(ShadowMode mode);
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {
@@ -49,6 +53,7 @@ private:
     Matrix transform_;
     Matrix worldTransform_;
     std::string name_;
+    ShadowMode shadowMode_;
 };
 
 

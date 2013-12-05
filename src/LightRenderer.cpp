@@ -35,9 +35,17 @@ void LightRenderer::operator()(Ptr<World> world) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_FRONT);
+	glCullFace(GL_FRONT); 
+    // Render the face of the light volume that's furthest from the camera.
     glDepthFunc(GL_ALWAYS);
+    // Always render light volume fragments, regardless of depth fail/pass.
     glBlendFunc(GL_ONE, GL_ONE);
+    // Enable blending, to combine the blend the output of all the lights.
+    glEnable(GL_DEPTH_CLAMP); // 3.2 only
+    // Ensures that if the light volume fragment would be normally clipped by
+    // the positive Z, the fragment is still rendered anyway.  Otherwise, you
+    // can get "holes" where the light volume intersects the far clipping
+    // plane.
 
     world_ = world;
     operator()(world_->root());
@@ -50,6 +58,7 @@ void LightRenderer::operator()(Ptr<World> world) {
     glDisable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 	glCullFace(GL_BACK);
+    glDisable(GL_DEPTH_CLAMP);
 }
 
 void LightRenderer::operator()(Ptr<Transform> transform) {
@@ -140,8 +149,12 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light direction from into view space
     glUniform3fv(direction_, 1, direction);
     glActiveTexture(GL_TEXTURE6);
-    glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
-    glUniform1f(shadowMapSize_, light->shadowMap()->width());
+    if (light->shadowMap()) {
+        glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
+        glUniform1f(shadowMapSize_, light->shadowMap()->width());
+    } else {
+        glUniform1f(shadowMapSize_, 0);
+    }
     glUniformMatrix4fv(light_, 1, 0, light->transform());
 
     // Save the old model matrix

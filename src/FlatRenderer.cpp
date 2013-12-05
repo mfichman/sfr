@@ -19,9 +19,10 @@
 
 using namespace sfr;
 
-FlatRenderer::FlatRenderer(Ptr<AssetTable> manager) {
+FlatRenderer::FlatRenderer(Ptr<AssetTable> manager, bool shadowPass) {
     effect_ = manager->assetIs<sfr::Effect>("shaders/Flat");
     effect_->statusIs(Effect::LINKED); 
+    shadowPass_ = shadowPass;
 
     glUseProgram(effect_->id());
     model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
@@ -37,6 +38,14 @@ void FlatRenderer::operator()(Ptr<World> world) {
     Renderer::operator()(world_->root());
     glDisable(GL_DEPTH_TEST);
     glUseProgram(0);
+}
+
+void FlatRenderer::operator()(Ptr<Transform> transform) {
+    if (shadowPass_ && transform->shadowMode() != Transform::SHADOWED) {
+        // Doesn't cast or receive shadows
+    } else {
+        Renderer::operator()(transform);
+    } 
 }
 
 void FlatRenderer::operator()(Ptr<Model> model) {

@@ -71,21 +71,27 @@ void Ribbon::rebuildBuffer() {
     // Rebuild the ribbon strip from the points given in the point array 
     GLfloat sign = 1;
     int index = 0;
+
+
+    float prev = 0;
     for (std::list<Vector>::iterator i = point_.begin(); i != point_.end(); ++i) {
         // Iterate over each point, and find a vector to the next point.  Then,
         // draw a new triagle orthogonal to that direction.
         std::list<Vector>::iterator next = i;
         ++next;
         Vector forward;
+        Vector center;
         if (next == point_.end()) {
             std::list<Vector>::iterator prev = i;
             --prev;
             forward = (*i - *prev).unit();
+            center = (*i + *prev)/2;
         } else {
             forward = (*next - *i).unit();
+            center = (*i + *next)/2;
         } 
-        Vector const look = (cameraPosition_ - *i).unit();
-        Vector const right = forward.cross(look).unit();
+        Vector const look = (cameraPosition_ - center).unit();
+        Vector const right = look.cross(forward);
 
         RibbonVertex rv;
         if (i == point_.begin() || next == point_.end()) {

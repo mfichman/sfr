@@ -35,8 +35,9 @@ void RibbonRenderer::operator()(Ptr<World> world) {
     glUseProgram(effect_->id());
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glDepthMask(GL_FALSE);
-	glDisable(GL_CULL_FACE);
+    glDepthMask(GL_FALSE);//TRUE);//FALSE);
+	glEnable(GL_CULL_FACE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     world_ = world;
     Renderer::operator()(world_->root());

@@ -224,8 +224,11 @@ void initRibbon() {
     ribbon->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
     ribbon->widthIs(.1);
 
-    for (float i = 0; i < M_PI; i += 0.01) {
-        ribbon->pointEnq(Vector(sin(i), cos(i), 0));
+    for (float i = 0; i < 1; i += 0.1) {
+        ribbon->pointEnq(Vector(i/4, i, 0));
+    }
+    for (float i = 0; i < 1; i += 0.1) {
+        ribbon->pointEnq(Vector(.25-i/4, 1+i, 0));
     }
 }
 

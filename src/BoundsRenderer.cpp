@@ -22,8 +22,7 @@ using namespace sfr;
 BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     shader_ = manager->assetIs<sfr::Effect>("shaders/Flat");
     shader_->statusIs(Effect::LINKED); 
-    Ptr<Mesh> cube = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cube");
-
+    unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
     unitCube_ = manager->assetIs<Mesh>("meshes/UnitCube");
 
     Ptr<MutableAttributeBuffer<Vector>> vbuf(new MutableAttributeBuffer<Vector>("position"));
@@ -104,3 +103,39 @@ void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
     glBindVertexArray(0);
 }
 
+void BoundsRenderer::operator()(Ptr<SpotLight> light) {
+    if (!world_ || !world_->camera()) {
+        return;
+    }
+
+    glPolygonMode(GL_LINES, GL_FRONT_AND_BACK);
+
+    float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
+
+    // Scale model to cover the light's area of effect.
+    static const float margin = 2.f;
+	static const float maxRadius = 500.f;
+	float radius = std::min(maxRadius, light->radiusOfEffect());
+    float cutoff = light->spotCutoff() + margin;
+    float width = std::tan((float)M_PI * cutoff / 180.f);
+    float sx = width * radius;
+    float sy = width * radius;
+    float sz = radius;
+    
+    // Transform the light to point in the correct direction
+    Matrix rotate = Matrix::look(light->direction());
+    Matrix scale = Matrix::scale(sx, sy, sz);
+    Matrix transform = transform_ * rotate * scale;
+
+    Ptr<Camera> camera = world_->camera();
+    glUniformMatrix4fv(model_, 1, 0, transform);
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+
+    Ptr<IndexBuffer> buffer = unitCone_->indexBuffer();
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBindVertexArray(unitCone_->id());
+    glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}

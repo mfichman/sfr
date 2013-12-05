@@ -18,7 +18,7 @@
 using namespace sfr;
 
 ShadowRenderer::ShadowRenderer(Ptr<AssetTable> manager) {
-    flatRenderer_.reset(new FlatRenderer(manager));
+    flatRenderer_.reset(new FlatRenderer(manager, true));
 }
 
 void ShadowRenderer::operator()(Ptr<World> world) {

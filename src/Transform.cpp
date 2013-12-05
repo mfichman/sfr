@@ -14,6 +14,7 @@ using namespace sfr;
 
 Transform::Transform(std::string const& name) {
     name_ = name;
+    shadowMode_ = SHADOWED;
 }
 
 Matrix const& Transform::worldTransform() const {
@@ -40,6 +41,10 @@ std::string const& Transform::name() const {
     return name_;
 }
 
+Transform::ShadowMode Transform::shadowMode() const {
+    return shadowMode_;
+}
+
 void Transform::transformIs(Matrix const& transform) {
     transform_ = transform;
 }
@@ -62,6 +67,10 @@ void Transform::childIs(Ptr<Node> child) {
 
 void Transform::childDel(Ptr<Node> child) {
     std::remove(children_.begin(), children_.end(), child);
+}
+
+void Transform::shadowModeIs(ShadowMode mode) {
+    shadowMode_ = mode;
 }
 
 void Transform::operator()(Ptr<Functor> functor) {

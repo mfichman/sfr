@@ -32,6 +32,10 @@ float shadowPoissonPcf(in LightingInfo li) {
     // Get the world position from the position G-buffer.  Note that this 
 	// requires the position G-buffer to have a decent amount of precision
 	// per component (preferrably 16-bit float or higher)
+    if (shadowMapSize == 0) {
+        return 1.;
+    }
+
     vec3 world = texture(positionBuffer, li.viewport).xyz;
 
 	// Transform the world coordinates to light space and renormalize

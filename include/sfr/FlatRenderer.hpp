@@ -15,15 +15,17 @@ namespace sfr {
 /* Shadow map renderer. */
 class FlatRenderer : public Renderer {
 public:
-    FlatRenderer(Ptr<AssetTable> manager);
+    FlatRenderer(Ptr<AssetTable> manager, bool shadowPass=false);
     void operator()(Ptr<World> world);
     void operator()(Ptr<Model> object);
     void operator()(Ptr<Mesh> mesh);
+    void operator()(Ptr<Transform> transform);
 
 private:
     Ptr<World> world_;
     Ptr<Effect> effect_;
 
+    bool shadowPass_;
     GLint model_;
     GLint view_;
     GLint projection_;
