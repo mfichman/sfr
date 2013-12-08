@@ -85,6 +85,7 @@ class World;
 class Particles;
 class Particle;
 class Ribbon;
+class Cubemap;
 
 }
 

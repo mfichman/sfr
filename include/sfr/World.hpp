@@ -17,12 +17,15 @@ public:
     World();
     Ptr<Transform> root() const;
     Ptr<Camera> camera() const;
+    Ptr<Cubemap> skybox() const;
 
     void cameraIs(Ptr<Camera> camera);
+    void skyboxIs(Ptr<Cubemap> cubemap);
 
 private:
     Ptr<Transform> root_;
     Ptr<Camera> camera_;
+    Ptr<Cubemap> skybox_;
 };
 
 }

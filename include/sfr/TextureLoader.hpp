@@ -16,6 +16,7 @@ class TextureLoader : public AssetTable::Listener {
 public:
 	TextureLoader(Ptr<AssetTable> notifier) : AssetTable::Listener(notifier) {}
     void onAsset(Ptr<Texture> texture);
+    void onAsset(Ptr<Cubemap> cubemap);
 };
 
 }

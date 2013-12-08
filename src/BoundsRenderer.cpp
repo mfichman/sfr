@@ -110,7 +110,7 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
 
     glPolygonMode(GL_LINES, GL_FRONT_AND_BACK);
 
-    float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
+    //float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
 
     // Scale model to cover the light's area of effect.
     static const float margin = 2.f;

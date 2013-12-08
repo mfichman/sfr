@@ -49,6 +49,7 @@ public:
     virtual void onAsset(Ptr<Transform> transform) {}
     virtual void onAsset(Ptr<Effect> effect) {}
 	virtual void onAsset(Ptr<Shader> shader) {}
+    virtual void onAsset(Ptr<Cubemap> cubemap) {}
 
 protected:
  	Ptr<AssetTable> const notifier_;

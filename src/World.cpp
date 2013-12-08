@@ -24,10 +24,15 @@ Ptr<Camera> World::camera() const {
     return camera_;
 }
 
+Ptr<Cubemap> World::skybox() const {
+    return skybox_;
+}
+
 void World::cameraIs(Ptr<Camera> camera) {
-    if (camera_ == camera) {
-        return;
-    }
     camera_ = camera;
+}
+
+void World::skyboxIs(Ptr<Cubemap> skybox) {
+    skybox_ = skybox;
 }
 

@@ -1,30 +1,4 @@
-#include <sfr/Common.hpp>
-#include <sfr/AssetTable.hpp>
-#include <sfr/Mesh.hpp>
-#include <sfr/Camera.hpp>
-#include <sfr/PointLight.hpp>
-#include <sfr/HemiLight.hpp>
-#include <sfr/SpotLight.hpp>
-#include <sfr/DeferredRenderer.hpp>
-#include <sfr/DepthRenderTarget.hpp>
-#include <sfr/ShadowRenderer.hpp>
-#include <sfr/ParticleRenderer.hpp>
-#include <sfr/Particles.hpp>
-#include <sfr/Particle.hpp>
-#include <sfr/NullFunctor.hpp>
-#include <sfr/Material.hpp>
-#include <sfr/Transform.hpp>
-#include <sfr/Model.hpp>
-#include <sfr/TransformUpdater.hpp>
-#include <sfr/FlatRenderer.hpp>
-#include <sfr/BoundsRenderer.hpp>
-#include <sfr/RibbonRenderer.hpp>
-#include <sfr/World.hpp>
-#include <sfr/Texture.hpp>
-#include <sfr/WavefrontLoader.hpp>
-#include <sfr/TextureLoader.hpp>
-#include <sfr/EffectLoader.hpp>
-#include <sfr/Ribbon.hpp>
+#include <sfr/sfr.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
 #include <iostream>
@@ -41,6 +15,7 @@ Ptr<sfr::DeferredRenderer> deferredRenderer;
 Ptr<sfr::FlatRenderer> flatRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
+Ptr<sfr::SkyboxRenderer> skyboxRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
 Ptr<sfr::ParticleRenderer> particleRenderer;
 Ptr<sfr::RibbonRenderer> ribbonRenderer;
@@ -91,6 +66,7 @@ void initWindow() {
 
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));
     shadowRenderer.reset(new sfr::ShadowRenderer(assets));
+    skyboxRenderer.reset(new sfr::SkyboxRenderer(assets));
     updater.reset(new sfr::TransformUpdater);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
     particleRenderer.reset(new sfr::ParticleRenderer(assets));
@@ -104,9 +80,9 @@ void initWindow() {
 void initCamera() {
     camera = root->childIs<sfr::Transform>("camera");
     world->cameraIs(camera->childIs<sfr::Camera>());
-}
 
-void handleInput();
+    world->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
+}
 
 void initLights() {
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
@@ -246,7 +222,7 @@ void runRenderLoop() {
 
         handleInput();
 
-        particles->timeInc(elapsedTime.asSeconds());
+        //particles->timeInc(elapsedTime.asSeconds());
         
         // Record the CPU time used while traversing the scene graph.  Don't
         // include time processing input or running the Display() function,
@@ -254,13 +230,14 @@ void runRenderLoop() {
         perfClock.restart();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ribbon->cameraPositionIs(camera->position());
+        //ribbon->cameraPositionIs(camera->position());
 
         updater->operator()(world);
         shadowRenderer->operator()(world);
         deferredRenderer->operator()(world);
-        particleRenderer->operator()(world);
-        ribbonRenderer->operator()(world);
+        skyboxRenderer->operator()(world);
+        //particleRenderer->operator()(world);
+        //ribbonRenderer->operator()(world);
         //boundsRenderer->operator()(world);
 
         perfTime += perfClock.getElapsedTime().asSeconds();
@@ -285,11 +262,9 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-/*
         initModels();
-*/
-        initParticles();
-        initRibbon();
+        //initParticles();
+        //initRibbon();
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {

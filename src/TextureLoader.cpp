@@ -8,6 +8,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/TextureLoader.hpp"
 #include "sfr/Texture.hpp"
+#include "sfr/Cubemap.hpp"
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 
@@ -23,4 +24,16 @@ void TextureLoader::onAsset(Ptr<Texture> texture) {
     texture->widthIs(image.getSize().x);
     texture->heightIs(image.getSize().y);
     texture->dataIs(image.getPixelsPtr());
+}
+
+void TextureLoader::onAsset(Ptr<Cubemap> cubemap) {
+
+    sf::Image image;
+    if (!image.loadFromFile(cubemap->name())) {
+        throw std::runtime_error("Couldn't load image: " + cubemap->name());
+    }
+
+    cubemap->widthIs(image.getSize().x);
+    cubemap->heightIs(image.getSize().y);
+    cubemap->dataIs(image.getPixelsPtr());
 }

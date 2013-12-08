@@ -35,7 +35,6 @@ void DeferredRenderer::operator()(Ptr<World> world) {
     renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
     
     // Pass 2: Render lighting using light bounding boxes
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(0));
     glActiveTexture(GL_TEXTURE1);

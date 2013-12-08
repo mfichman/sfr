@@ -71,9 +71,6 @@ void Ribbon::rebuildBuffer() {
     // Rebuild the ribbon strip from the points given in the point array 
     GLfloat sign = 1;
     int index = 0;
-
-
-    float prev = 0;
     for (std::list<Vector>::iterator i = point_.begin(); i != point_.end(); ++i) {
         // Iterate over each point, and find a vector to the next point.  Then,
         // draw a new triagle orthogonal to that direction.
