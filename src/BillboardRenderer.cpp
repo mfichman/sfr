@@ -44,12 +44,14 @@ void BillboardRenderer::operator()(Ptr<World> world) {
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
 
     world_ = world;
     Renderer::operator()(world_->root());
 
     glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     glUseProgram(0);
 }
@@ -61,15 +63,22 @@ void BillboardRenderer::operator()(Ptr<Billboard> billboard) {
 
     Ptr<Mesh> mesh = quad_;
 
-    Vector const origin = worldTransform().origin(); 
-    Vector up = camera->worldTransform().up().unit();
-    Vector const look = (camera->worldTransform().origin() - origin).unit();
-    Vector const right = up.cross(look).unit();
-    up = look.cross(right).unit();
-
-    Quaternion rotation(right, up, look);
     Matrix scale = Matrix::scale(billboard->width(), billboard->height(), 1.);
-    Matrix transform = Matrix::Matrix(rotation, origin) * scale;
+    Matrix transform;
+    if (billboard->mode()==Billboard::PARTICLE) {
+        // Rotate the billboard to always face the camera, like a particle.
+        Vector const origin = worldTransform().origin(); 
+        Vector up = camera->worldTransform().up().unit();
+        Vector const look = (camera->worldTransform().origin() - origin).unit();
+        Vector const right = up.cross(look).unit();
+        up = look.cross(right).unit();
+
+        Quaternion rotation(right, up, look);
+        transform = Matrix::Matrix(rotation, origin) * scale;
+    } else {
+        // Render the billboard using the world transform rotation.
+        transform = worldTransform() * scale;
+    }
        
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());

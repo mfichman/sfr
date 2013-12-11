@@ -16,7 +16,7 @@ namespace sfr {
 class Quaternion {
 public:
     Quaternion(float w, float x, float y, float z);
-    Quaternion(Vector const& axis, float angle);
+    Quaternion(Vector const& axis, float angle); // Radians!
     Quaternion(Vector const& x, Vector const& y, Vector const& z);
     Quaternion(Matrix const& matrix);
 	Quaternion(float w, Vector const& vector);

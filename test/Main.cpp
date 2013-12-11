@@ -1,3 +1,4 @@
+#include <sfr/Common.hpp>
 #include <sfr/sfr.hpp>
 #include <SFML/Window.hpp>
 #include <stdexcept>
