@@ -137,73 +137,51 @@ Matrix const& Camera::viewTransform() const {
     return viewTransform_;
 }
 
+Matrix const& Camera::worldTransform() const {
+    return worldTransform_;
+}
+
 void Camera::farIs(float distance) {
-    if (distance == far_) {
-        return;
-    }
     far_ = distance;
 }
 
 void Camera::nearIs(float distance) {
-    if (distance == near_) {
-        return;
-    }
     near_ = distance;
 }
 
 void Camera::leftIs(float distance) {
-    if (distance == left_) {
-        return;
-    }
     left_ = distance;
 }
 
 void Camera::rightIs(float distance) {
-    if (distance == right_) {
-        return;
-    }
     right_ = distance;
 }
 
 void Camera::topIs(float distance) {
-    if (distance == top_) {
-        return;
-    }
     top_ = distance;
 }
 
 void Camera::bottomIs(float distance) {
-    if (distance == bottom_) {
-        return;
-    }
     bottom_ = distance;
 }
 
 void Camera::fieldOfViewIs(float view) {
-    if (fieldOfView_ == view) {
-        return;
-    }
     fieldOfView_ = view;
 }
 
 void Camera::viewTransformIs(Matrix const& transform) {
-    if (viewTransform_ == transform) {
-        return;
-    }
     viewTransform_ = transform;
 }
 
+void Camera::worldTransformIs(Matrix const& transform) {
+    worldTransform_ = transform;
+}
+
 void Camera::stateIs(State state) {
-    if (state_ == state) {
-        return;
-    }
     state_ = state;
 }
 
 void Camera::typeIs(Type type) {
-    if (type_ == type) {
-        return;
-    }
     type_ = type;
 }
 

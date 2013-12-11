@@ -56,6 +56,10 @@ void Ribbon::widthIs(GLfloat width) {
     width_ = width;
 }
 
+void Ribbon::minWidthIs(GLfloat width) {
+    minWidth_ = width;
+}
+
 void Ribbon::cameraPositionIs(Vector const& pos) {
     status_ = DIRTY;
     cameraPosition_ = pos;
@@ -69,41 +73,41 @@ void Ribbon::defAttribute(Attribute id, GLuint size, void* offset) {
 
 void Ribbon::rebuildBuffer() {
     // Rebuild the ribbon strip from the points given in the point array 
-    GLfloat sign = 1;
-    int index = 0;
+    auto sign = 1.f;
+    auto index = 0;
     for (std::list<Vector>::iterator i = point_.begin(); i != point_.end(); ++i) {
         // Iterate over each point, and find a vector to the next point.  Then,
-        // draw a new triagle orthogonal to that direction.
+        // draw a new triangle orthogonal to that direction.
         std::list<Vector>::iterator next = i;
         ++next;
         Vector forward;
-        Vector center;
+        auto center = *i;
         if (next == point_.end()) {
             std::list<Vector>::iterator prev = i;
             --prev;
             forward = (*i - *prev).unit();
-            center = (*i + *prev)/2;
         } else {
             forward = (*next - *i).unit();
-            center = (*i + *next)/2;
         } 
-        Vector const look = (cameraPosition_ - center).unit();
-        Vector const right = look.cross(forward);
+        auto width = minWidth_ + (width_-minWidth_) * index / point_.size();
+        auto look = (cameraPosition_ - center).unit();
+        auto right = look.cross(forward).unit();
 
-        RibbonVertex rv;
         if (i == point_.begin() || next == point_.end()) {
             // Start off with one point that is placed slightly differently, to
             // keep the end of the ribbon flat at a 90-degree angle to the
             // movement direction.
-            rv.position = (*i + (right*sign*width_));
+            auto rv = RibbonVertex();
+            rv.position = (*i + (right*sign*width));
             rv.texCoord = TexCoord(.5, (sign+1.)/2.);
-            rv.alpha = 1. - (GLfloat)index/(GLfloat)point_.size();
+            rv.alpha = (GLfloat)index/(GLfloat)point_.size();
             buffer_->elementEnq(rv);
             sign *= -1;
         }
-        rv.position = (*i + (right*sign*width_));
+        auto rv = RibbonVertex();
+        rv.position = (*i + (right*sign*width));
         rv.texCoord = TexCoord(.5, (sign+1.)/2.);
-        rv.alpha = 1. - (GLfloat)index/(GLfloat)point_.size();
+        rv.alpha = (GLfloat)index/(GLfloat)point_.size();
         buffer_->elementEnq(rv);
         sign *= -1;
 

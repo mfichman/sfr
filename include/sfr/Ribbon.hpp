@@ -36,12 +36,14 @@ public:
     Ptr<Texture> texture() const { return texture_; }
     Status status() const { return status_; }
     GLfloat width() const { return width_; }
+    GLfloat minWidth() const { return minWidth_; }
 
     void pointDeq();
     void pointEnq(Vector const& point);
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
     void widthIs(GLfloat width);
+    void minWidthIs(GLfloat width);
     void cameraPositionIs(Vector const& pos);
 
     virtual void operator()(Ptr<Functor> functor);
@@ -57,6 +59,7 @@ private:
     Status status_;
     GLuint id_;
     GLfloat width_;
+    GLfloat minWidth_;
     Vector cameraPosition_;
 };
 

@@ -36,7 +36,8 @@ void RibbonRenderer::operator()(Ptr<World> world) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDepthMask(GL_FALSE);//TRUE);//FALSE);
-	glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     world_ = world;
@@ -45,6 +46,7 @@ void RibbonRenderer::operator()(Ptr<World> world) {
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
     glUseProgram(0);
 }
 
@@ -53,6 +55,7 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     Ptr<Texture> texture = ribbon->texture();
     if (!texture) { return; }
 
+    ribbon->cameraPositionIs(camera->worldTransform().origin());
     ribbon->statusIs(Ribbon::SYNCED);
     
     glActiveTexture(GL_TEXTURE0);

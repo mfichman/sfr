@@ -19,6 +19,7 @@ Ptr<sfr::SkyboxRenderer> skyboxRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
 Ptr<sfr::ParticleRenderer> particleRenderer;
 Ptr<sfr::RibbonRenderer> ribbonRenderer;
+Ptr<sfr::BillboardRenderer> billboardRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -71,6 +72,7 @@ void initWindow() {
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
     particleRenderer.reset(new sfr::ParticleRenderer(assets));
     ribbonRenderer.reset(new sfr::RibbonRenderer(assets)); 
+    billboardRenderer.reset(new sfr::BillboardRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));
@@ -208,6 +210,12 @@ void initRibbon() {
     }
 }
 
+void initQuad() {
+    Ptr<sfr::Billboard> billboard = root->childIs<sfr::Billboard>();
+    billboard->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
+    billboard->widthIs(2.);
+}
+
 void runRenderLoop() {
     sf::Clock perfClock;
     float realTime = 0.f;
@@ -230,13 +238,12 @@ void runRenderLoop() {
         perfClock.restart();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //ribbon->cameraPositionIs(camera->position());
-
         updater->operator()(world);
         shadowRenderer->operator()(world);
         deferredRenderer->operator()(world);
-        skyboxRenderer->operator()(world);
+        //skyboxRenderer->operator()(world);
         //particleRenderer->operator()(world);
+        //billboardRenderer->operator()(world);
         //ribbonRenderer->operator()(world);
         //boundsRenderer->operator()(world);
 
@@ -265,6 +272,7 @@ int main(int argc, char** argv) {
         initModels();
         //initParticles();
         //initRibbon();
+        //initQuad();
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {

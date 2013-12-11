@@ -11,17 +11,19 @@
 #include "sfr/AssetTable.hpp"
 #include "sfr/Effect.hpp"
 #include "sfr/World.hpp"
+#include "sfr/Billboard.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Camera.hpp"
 #include "sfr/Texture.hpp"
+#include "sfr/Mesh.hpp"
 
 using namespace sfr;
 
 ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
     effect_ = assets->assetIs<Effect>("shaders/Particles");
-
     effect_->statusIs(Effect::LINKED);
+
     glUseProgram(effect_->id());
 
     time_ = glGetUniformLocation(effect_->id(), "time");
@@ -31,7 +33,6 @@ ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
     projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
        
     glUniform1i(texture_, 0);
-
     glUseProgram(0);
 }
 
