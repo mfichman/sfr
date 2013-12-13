@@ -21,8 +21,16 @@ void TransformUpdater::operator()(Ptr<World> world) {
 }
 
 void TransformUpdater::operator()(Ptr<Transform> transform) {
+    if (transform->renderMode() == Transform::INVISIBLE) { return; }
     Matrix previous = transform_;
-    transform_ = transform_ * transform->transform();
+    switch (transform->transformMode()) {
+    case Transform::WORLD: 
+        transform_ = transform->transform();
+        break;
+    case Transform::INHERIT:
+        transform_ = transform_ * transform->transform();
+        break;
+    }
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<TransformUpdater>(shared_from_this()));
     }

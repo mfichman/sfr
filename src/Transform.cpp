@@ -15,6 +15,8 @@ using namespace sfr;
 Transform::Transform(std::string const& name) {
     name_ = name;
     shadowMode_ = SHADOWED;
+    transformMode_ = INHERIT;
+    renderMode_ = VISIBLE;
 }
 
 Matrix const& Transform::worldTransform() const {
@@ -45,6 +47,14 @@ Transform::ShadowMode Transform::shadowMode() const {
     return shadowMode_;
 }
 
+Transform::TransformMode Transform::transformMode() const {
+    return transformMode_;
+}
+
+Transform::RenderMode Transform::renderMode() const {
+    return renderMode_;
+}
+
 void Transform::transformIs(Matrix const& transform) {
     transform_ = transform;
 }
@@ -71,6 +81,14 @@ void Transform::childDel(Ptr<Node> child) {
 
 void Transform::shadowModeIs(ShadowMode mode) {
     shadowMode_ = mode;
+}
+
+void Transform::transformModeIs(TransformMode mode) {
+    transformMode_ = mode;
+}
+
+void Transform::renderModeIs(RenderMode mode) {
+    renderMode_ = mode;
 }
 
 void Transform::operator()(Ptr<Functor> functor) {

@@ -98,14 +98,14 @@ void Ribbon::rebuildBuffer() {
             // keep the end of the ribbon flat at a 90-degree angle to the
             // movement direction.
             auto rv = RibbonVertex();
-            rv.position = (*i + (right*sign*width));
+            rv.position = (*i + (right*sign*width/2.));
             rv.texCoord = TexCoord(.5, (sign+1.)/2.);
             rv.alpha = (GLfloat)index/(GLfloat)point_.size();
             buffer_->elementEnq(rv);
             sign *= -1;
         }
         auto rv = RibbonVertex();
-        rv.position = (*i + (right*sign*width));
+        rv.position = (*i + (right*sign*width/2.));
         rv.texCoord = TexCoord(.5, (sign+1.)/2.);
         rv.alpha = (GLfloat)index/(GLfloat)point_.size();
         buffer_->elementEnq(rv);

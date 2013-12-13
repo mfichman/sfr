@@ -89,10 +89,13 @@ void initCamera() {
 
 void initLights() {
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
-    light1->linearAttenuationIs(0.1f);
+    //light1->linearAttenuationIs(100);//0.1f);
     light1->diffuseColorIs(sfr::Color(.8f, .8f, .8f, 1.f));
     light1->backDiffuseColorIs(sfr::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(sfr::Vector(1.f, 0.f, 0.f));
+    light1->constantAttenuationIs(1);
+    light1->linearAttenuationIs(0);
+    light1->quadraticAttenuationIs(0);
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
@@ -145,20 +148,22 @@ void handleInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
         z += 2.f * elapsedTime.asSeconds();
     }
-    sfr::Vector pos = lightNode->position();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        pos.x += 2.f * elapsedTime.asSeconds();
+    if (lightNode) {
+        sfr::Vector pos = lightNode->position();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            pos.x += 2.f * elapsedTime.asSeconds();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            pos.x -= 2.f * elapsedTime.asSeconds();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            pos.z += 2.f * elapsedTime.asSeconds();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            pos.z -= 2.f * elapsedTime.asSeconds();
+        }
+        lightNode->positionIs(pos);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        pos.x -= 2.f * elapsedTime.asSeconds();
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        pos.z += 2.f * elapsedTime.asSeconds();
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        pos.z -= 2.f * elapsedTime.asSeconds();
-    }
-    lightNode->positionIs(pos);
 
     float const y = 2.f;
     camera->transformIs(sfr::Matrix::look(

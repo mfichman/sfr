@@ -19,6 +19,8 @@ namespace sfr {
 class Transform : public Node {
 public:
     enum ShadowMode { SHADOWED, UNSHADOWED };
+    enum TransformMode { INHERIT, WORLD };
+    enum RenderMode { VISIBLE, INVISIBLE };
 
     Transform(std::string const& name);
 
@@ -28,13 +30,17 @@ public:
     Quaternion rotation() const;
     Iterator<Node> children();
     std::string const& name() const;
-    ShadowMode shadowMode() const;
+    ShadowMode shadowMode() const; // Render shadows, or not?
+    TransformMode transformMode() const; // Inherit transform from parent?
+    RenderMode renderMode() const; // Render this node & children, or not?
 
     void transformIs(Matrix const& transform);
     void positionIs(Vector const& position);
     void rotationIs(Quaternion const& rotation);
     void worldTransformIs(Matrix const& worldTransform);
     void shadowModeIs(ShadowMode mode);
+    void transformModeIs(TransformMode mode);
+    void renderModeIs(RenderMode mode);
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {
@@ -54,6 +60,8 @@ private:
     Matrix worldTransform_;
     std::string name_;
     ShadowMode shadowMode_;
+    TransformMode transformMode_;
+    RenderMode renderMode_;
 };
 
 

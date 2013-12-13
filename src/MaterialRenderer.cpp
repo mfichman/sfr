@@ -51,11 +51,15 @@ MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
 
 void MaterialRenderer::operator()(Ptr<World> world) {
     glUseProgram(modelEffect_->id());
+    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+    glCullFace(GL_BACK);
     world_ = world;
 
     Renderer::operator()(world_->root());
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glUseProgram(0);
 }
 

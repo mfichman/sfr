@@ -26,6 +26,7 @@ LightRenderer::LightRenderer(Ptr<AssetTable> manager) {
     manager->assetIs<Transform>("meshes/LightShapes.obj");
     unitSphere_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Sphere");
     unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
+    unitQuad_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Quad");
     pointLight_ = manager->assetIs<Effect>("shaders/PointLight");
     hemiLight_ = manager->assetIs<Effect>("shaders/HemiLight");
     spotLight_ = manager->assetIs<Effect>("shaders/SpotLight");
@@ -48,7 +49,7 @@ void LightRenderer::operator()(Ptr<World> world) {
     // plane.
 
     world_ = world;
-    operator()(world_->root());
+    Renderer::operator()(world_->root());
 
     // Clear out the current effect
     operator()(Ptr<Effect>());
@@ -59,15 +60,6 @@ void LightRenderer::operator()(Ptr<World> world) {
     glDepthFunc(GL_LESS);
 	glCullFace(GL_BACK);
     glDisable(GL_DEPTH_CLAMP);
-}
-
-void LightRenderer::operator()(Ptr<Transform> transform) {
-    Matrix previous = transform_;
-    transform_ = transform->worldTransform();
-    for (Iterator<Node> node = transform->children(); node; node++) {
-        node(std::static_pointer_cast<LightRenderer>(shared_from_this()));
-    }
-    transform_ = previous;
 }
 
 void LightRenderer::operator()(Ptr<PointLight> light) {
@@ -97,6 +89,9 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
 }
 
 void LightRenderer::operator()(Ptr<HemiLight> light) {
+    // Render a hemi light, that is, a light that has a color for faces facing
+    // the light direction, and another color for faces that face away from the
+    // light direction, with attenuation.
     if (!world_ || !world_->camera()) {
         return;
     }
@@ -116,14 +111,37 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
-    Matrix previous = transform_;
-    float radius = light->radiusOfEffect();
-    transform_ = transform_ * Matrix::scale(radius, radius, radius);
-    
-    // This renders the light's bounding volume (usually a sphere)
-	// FIXME: If attenuation is 0, then render a fullscreen quad instead
-    operator()(unitSphere_);
-    transform_ = previous;
+    if (light->linearAttenuation() == 0 && light->quadraticAttenuation() == 0) {
+        // If attenuation is 0, then render a fullscreen quad instead of a
+        // bounding sphere.  This renders a degenerate hemi-light, which is a
+        // simple full-scene directional light.
+        Ptr<Mesh> mesh = unitQuad_;
+        mesh->statusIs(Mesh::SYNCED);
+
+        // Set up the view, projection, and inverse projection transforms
+        Ptr<Camera> camera = world_->camera();
+        Matrix inverseProjection = camera->projectionTransform().inverse();
+        glUniformMatrix4fv(model_, 1, 0, Matrix()); // Identity
+        glUniformMatrix4fv(projection_, 1, 0, Matrix()); // Identity
+        glUniformMatrix4fv(view_, 1, 0, Matrix()); // Identity
+        // Use the identity transform, so that the specially-shaped unit quad
+        // maps to the whole screen as a fullscreen quad in clip-space, that
+        // is, x=[-1,1] y=[-1,1]
+        glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
+
+        // Render the mesh
+        Ptr<IndexBuffer> buffer = mesh->indexBuffer();
+        glBindVertexArray(mesh->id());
+        glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    } else {
+        // This renders the light's bounding volume (usually a sphere)
+        Matrix previous = transform_;
+        float radius = light->radiusOfEffect();
+        transform_ = transform_ * Matrix::scale(radius, radius, radius);
+        operator()(unitSphere_);
+        transform_ = previous;
+    }
 }
 
 void LightRenderer::operator()(Ptr<SpotLight> light) {

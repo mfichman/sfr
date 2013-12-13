@@ -9,15 +9,15 @@
 #include "sfr/Common.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Matrix.hpp"
+#include "sfr/Renderer.hpp"
 
 namespace sfr {
 
 /* Deferred shading renderer (2nd pass). */
-class LightRenderer : public Node::Functor {
+class LightRenderer : public Renderer {
 public:
     LightRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
-    void operator()(Ptr<Transform> transform);
     void operator()(Ptr<PointLight> light);
     void operator()(Ptr<Effect> effect);
     void operator()(Ptr<HemiLight> light);
@@ -28,13 +28,12 @@ private:
     Ptr<World> world_;
     Ptr<Mesh> unitSphere_;
     Ptr<Mesh> unitCone_;
+    Ptr<Mesh> unitQuad_;
     Ptr<Effect> effect_;
     Ptr<Effect> directionalLight_;
     Ptr<Effect> pointLight_;
     Ptr<Effect> hemiLight_;
     Ptr<Effect> spotLight_;
-
-    Matrix transform_;
 
     GLint shadowMap_;
     GLint diffuseBuffer_;
