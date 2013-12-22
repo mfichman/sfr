@@ -11,16 +11,17 @@ uniform sampler2D tex;
 
 in float alpha;
 in float rotation;
+in vec2 texCoord;
+in vec4 color;
 
-out vec4 color;
+out vec4 colorOut;
 
 void main() {
-    float x = gl_PointCoord.s - 0.5;
-    float y = gl_PointCoord.t - 0.5;
+    float x = texCoord.s - 0.5;
+    float y = texCoord.t - 0.5;
     float s = x * cos(rotation) - y * sin(rotation) + 0.5;
     float t = x * sin(rotation) + y * cos(rotation) + 0.5;
     
-	color = texture(tex, vec2(s, t));
-	color.a *= alpha;
+	colorOut = color * texture(tex, vec2(s, t));
 }
 

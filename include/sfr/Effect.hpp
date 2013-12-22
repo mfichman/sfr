@@ -22,11 +22,13 @@ public:
     std::string const& name() const;
     Ptr<Shader> fragmentShader() const;
     Ptr<Shader> vertexShader() const;
+    Ptr<Shader> geometryShader() const;
     GLuint id() const;
     Status status() const;
 
     void fragmentShaderIs(Ptr<Shader> shader);
     void vertexShaderIs(Ptr<Shader> shader);
+    void geometryShaderIs(Ptr<Shader> shader);
     void statusIs(Status status);
 
 private:
@@ -35,6 +37,7 @@ private:
     std::string name_;
     Ptr<Shader> fragmentShader_;
     Ptr<Shader> vertexShader_;
+    Ptr<Shader> geometryShader_;
     GLuint id_;
     Status status_;
 };

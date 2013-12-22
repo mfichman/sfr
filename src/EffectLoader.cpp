@@ -18,8 +18,15 @@ void EffectLoader::onAsset(Ptr<Effect> effect) {
 	Ptr<Shader> fragShader(notifier_->assetIs<Shader>(effect->name() + ".frag", GL_FRAGMENT_SHADER));
 	Ptr<Shader> vertShader(notifier_->assetIs<Shader>(effect->name() + ".vert", GL_VERTEX_SHADER));
 
+    std::fstream in((effect->name() + ".geom").c_str());
+	Ptr<Shader> geomShader;
+    if (in) {
+        geomShader = notifier_->assetIs<Shader>(effect->name() + ".geom", GL_GEOMETRY_SHADER);
+    }
+
     effect->fragmentShaderIs(fragShader);
     effect->vertexShaderIs(vertShader);
+    effect->geometryShaderIs(geomShader);
 
     effect->statusIs(Effect::LINKED);
 }

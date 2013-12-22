@@ -8,21 +8,17 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Vector.hpp"
+#include "sfr/Color.hpp"
 #include "sfr/Node.hpp"
 
 namespace sfr {
 
 class Particle {
 public:
-    Vector position;
-    Vector velocity; 
-    float time; // Creation time
-    float size; // Size 
-    float growth; // Change in size per sec
-    float rotation; // Rotation about view z-axis
-    float alpha; // Starting alpha
-    float life; // Lifetime
-    float spin; // Rotation rate
+    Vector position; // Position of the particle
+    Color color; // Color blend of the particle
+    float size; // Size of the particle in world coordinates
+    float rotation; // Texture rotation about view z-axis
 };
 
 

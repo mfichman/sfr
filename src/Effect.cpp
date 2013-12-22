@@ -40,6 +40,10 @@ Ptr<Shader> Effect::vertexShader() const {
     return vertexShader_;
 }
 
+Ptr<Shader> Effect::geometryShader() const {
+    return geometryShader_;
+}
+
 GLuint Effect::id() const {
     return id_;
 }
@@ -80,6 +84,24 @@ void Effect::vertexShaderIs(Ptr<Shader> shader) {
     statusIs(DIRTY);
 }
 
+void Effect::geometryShaderIs(Ptr<Shader> shader) {
+    if (geometryShader_ == Ptr<Shader>(shader)) {
+        return;
+    }
+    if (GL_GEOMETRY_SHADER != shader->type()) {
+        throw std::runtime_error(shader->name() + " isn't a geometry shader");
+    }
+
+    if (geometryShader_) {
+        glDetachShader(id_, geometryShader_->id());
+    }
+    geometryShader_ = shader;
+    if (geometryShader_) {
+        glAttachShader(id_, geometryShader_->id());
+    }
+    statusIs(DIRTY);
+}
+
 void Effect::statusIs(Status status) {
     if (status_ == status) {
         return;
@@ -97,6 +119,9 @@ void Effect::linkShaders() {
     }
     if (vertexShader_) {
         vertexShader_->statusIs(Shader::COMPILED);
+    }
+    if (geometryShader_) {
+        geometryShader_->statusIs(Shader::COMPILED);
     }
 
     glLinkProgram(id_);
@@ -121,6 +146,14 @@ void Effect::linkShaders() {
         if (length) {
             std::cerr << "Fragment shader error: " << name_ << std::endl;
             glGetShaderInfoLog(fragmentShader_->id(), length, &length, &log[0]);
+            std::cerr << &log[0] << std::endl;
+        }
+
+        glGetShaderiv(geometryShader_->id(), GL_INFO_LOG_LENGTH, &length);
+        log.resize(length + 1);
+        if (length) {
+            std::cerr << "Geometry shader error: " << name_ << std::endl;
+            glGetShaderInfoLog(geometryShader_->id(), length, &length, &log[0]);
             std::cerr << &log[0] << std::endl;
         }
 

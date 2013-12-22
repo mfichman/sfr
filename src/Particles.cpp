@@ -16,7 +16,6 @@ using namespace sfr;
 
 Particles::Particles() {
     status_ = DIRTY;
-    time_ = 0;
     buffer_.reset(new MutableAttributeBuffer<Particle>(""));
     glGenVertexArrays(1, &id_);
 }
@@ -60,15 +59,6 @@ void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
 
 }
 
-void Particles::timeIs(GLfloat time) {
-    time_ = time;
-}
-
-GLfloat Particles::timeInc(GLfloat time) {
-    timeIs(time+time_);
-    return time_;
-}
-
 void Particles::syncHardwareBuffer() {
     // Update the VAO/VBO containing the particle data
     buffer_->statusIs(AttributeBuffer::SYNCED);
@@ -76,14 +66,9 @@ void Particles::syncHardwareBuffer() {
     glBindVertexArray(id_);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
     defAttribute(POSITION, SIZE(position), OFFSET(position));
-    defAttribute(VELOCITY, SIZE(velocity), OFFSET(velocity));
-    defAttribute(TIME, SIZE(time), OFFSET(time));
+    defAttribute(COLOR, SIZE(color), OFFSET(color));
     defAttribute(SIZE, SIZE(size), OFFSET(size));
-    defAttribute(GROWTH, SIZE(growth), OFFSET(growth));
     defAttribute(ROTATION, SIZE(rotation), OFFSET(rotation));
-    defAttribute(ALPHA, SIZE(alpha), OFFSET(alpha));
-    defAttribute(LIFE, SIZE(life), OFFSET(life));
-    defAttribute(SPIN, SIZE(spin), OFFSET(spin));
     glBindVertexArray(0);
 }
 

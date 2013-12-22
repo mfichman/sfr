@@ -194,8 +194,8 @@ void initParticles() {
     Ptr<sfr::Transform> pnode = root->childIs<sfr::Transform>("particles");
     particles = pnode->childIs<sfr::Particles>();
 
-    Particle p1 = { Vector(0, 0, 0), Vector(0, 0, 0), 0, 100, 0, 0, 1, 2, 2 };
-    Particle p2 = { Vector(2, 0, 0), Vector(0, 0, 0), 0, 100, 0, 5, 1, 2, -1 };
+    Particle p1 = { Vector(0, 0, 0), Color(), 100, 0 };
+    Particle p2 = { Vector(2, 0, 0), Color(), 100, 0 };
     particles->particleEnq(p1);
     particles->particleEnq(p2);
     particles->textureIs(assets->assetIs<Texture>("textures/BurstGold.png"));

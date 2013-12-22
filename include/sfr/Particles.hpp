@@ -16,7 +16,7 @@ namespace sfr {
 class Particles : public Node {
 public:
     enum Status { SYNCED, DIRTY };
-    enum Attribute { POSITION, VELOCITY, TIME, SIZE, GROWTH, ROTATION, ALPHA, LIFE, SPIN };
+    enum Attribute { POSITION, COLOR, SIZE, ROTATION };
 
     Particles();
     ~Particles();
@@ -26,14 +26,11 @@ public:
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
     Ptr<Texture> texture() const { return texture_; }
     Status status() const { return status_; }
-    GLfloat time() const { return time_; }
 
     void particleEnq(Particle const& particle);
     void particleIs(GLuint index, Particle const& particle);
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
-    void timeIs(GLfloat time);
-    GLfloat timeInc(GLfloat time);
 
     virtual void operator()(Ptr<Functor> functor);
 
@@ -45,7 +42,6 @@ private:
     Ptr<MutableAttributeBuffer<Particle>> buffer_; 
     Status status_;
     GLuint id_;
-    GLfloat time_;
 };
 
 
