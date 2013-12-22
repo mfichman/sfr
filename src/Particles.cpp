@@ -60,12 +60,13 @@ void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
 
 }
 
-void Particles::timeIs(float time) {
+void Particles::timeIs(GLfloat time) {
     time_ = time;
 }
 
-void Particles::timeInc(float time) {
+GLfloat Particles::timeInc(GLfloat time) {
     timeIs(time+time_);
+    return time_;
 }
 
 void Particles::syncHardwareBuffer() {
