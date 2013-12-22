@@ -16,6 +16,7 @@ namespace sfr {
 class Particle {
 public:
     Vector position; // Position of the particle
+    Vector velocity; // Velocity of the particle
     Color color; // Color blend of the particle
     float size; // Size of the particle in world coordinates
     float rotation; // Texture rotation about view z-axis

@@ -23,7 +23,6 @@ private:
     Ptr<Effect> effect_;
     Ptr<World> world_;
 
-    GLint time_;
     GLint texture_;
     GLint model_;
     GLint view_;
