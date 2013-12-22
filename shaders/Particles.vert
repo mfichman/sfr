@@ -27,15 +27,20 @@ out float rotation;
 
 /* Particle shader */
 void main() {
-    mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
-
     float elapsed = time - timeIn;
     float f = 1.0-(elapsed/lifeIn);
 
-    gl_Position = transform * vec4(positionIn, 1);
-    gl_PointSize = sizeIn + growthIn * elapsed;
+    vec3 position = positionIn + elapsed * velocityIn;
+    mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
+
+    vec4 viewPosition = viewMatrix * modelMatrix * vec4(position, 1);
+    float dist = length(viewPosition.xyz);
+
+    gl_Position = projectionMatrix * viewPosition;
+    gl_PointSize = (sizeIn + growthIn * elapsed) / (1.0 + dist);
     
     alpha = f * alphaIn; //, 0.0, 1.0);
     rotation = rotationIn + spinIn * elapsed;//1.0;
     // FIXME
 }
+

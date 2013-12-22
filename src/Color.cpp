@@ -34,6 +34,14 @@ Color::operator float*() {
 }
 
 
+Color Color::operator*(float scale) const {
+    return Color(red*scale, green*scale, blue*scale, alpha*scale);
+}
+
+Color Color::operator+(Color const& other) const {
+    return Color(red+other.red, blue+other.blue, green+other.green, alpha+other.alpha);
+}
+
 std::ostream& operator<<(std::ostream& out, Color const& color) {
     return out << color.red << " " << color.blue << " " 
         << color.green << " " << color.alpha;

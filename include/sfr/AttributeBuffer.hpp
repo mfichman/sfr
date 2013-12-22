@@ -73,6 +73,7 @@ public:
 
     void elementEnq(T element) {
         element_.push_back(element);
+        statusIs(DIRTY);
     }
 
 private:

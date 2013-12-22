@@ -14,6 +14,7 @@ Billboard::Billboard() {
     mode_ = NORMAL;
     width_ = 1.f;
     height_ = 1.f;
+    tint_ = sfr::Color(1.f, 1.f, 1.f, 1.f);
 }
 
 void Billboard::textureIs(Ptr<Texture> texture) {
@@ -30,6 +31,10 @@ void Billboard::heightIs(GLfloat height) {
 
 void Billboard::modeIs(Mode mode) {
     mode_ = mode;
+}
+
+void Billboard::tintIs(sfr::Color tint) {
+    tint_ = tint;
 }
 
 void Billboard::operator()(Ptr<Functor> functor) {

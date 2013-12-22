@@ -28,6 +28,7 @@ private:
     GLint model_;
     GLint view_;
     GLint projection_;
+    GLint tint_;
 };
 
 }

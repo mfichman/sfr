@@ -20,6 +20,9 @@ public:
 
     operator const float*() const;
     operator float*();
+
+    Color operator*(float scale) const;
+    Color operator+(Color const& other) const;
     
     friend std::ostream& ::operator<<(std::ostream& out, Color const& color);
     friend std::istream& ::operator>>(std::istream& in, Color& color);

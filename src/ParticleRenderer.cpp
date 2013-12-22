@@ -43,6 +43,7 @@ void ParticleRenderer::operator()(Ptr<World> world) {
     glEnable(GL_POINT_SPRITE); // This is apparently required on Windows
 #endif
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDepthMask(GL_FALSE);
 
     world_ = world;
