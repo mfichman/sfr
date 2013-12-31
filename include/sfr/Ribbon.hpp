@@ -40,6 +40,7 @@ public:
 
     void pointDeq();
     void pointEnq(Vector const& point);
+    void pointDelAll() { point_.clear(); }
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
     void widthIs(GLfloat width);
