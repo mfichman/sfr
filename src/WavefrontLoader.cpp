@@ -169,10 +169,10 @@ void WavefrontLoader::newMesh(std::string const& name) {
     // by the "o" command.  Read in each mesh separately and then add it to 
     // the scene graph.
     mesh_ = notifier_->assetIs<Mesh>(transform_->name() + "/" + name);
-    vertexBuffer_.reset(new MutableAttributeBuffer<Vector> ("position"));
-    normalBuffer_.reset(new MutableAttributeBuffer<Vector> ("normal"));
-    texCoordBuffer_.reset(new MutableAttributeBuffer<TexCoord> ("texCoord"));
-    tangentBuffer_.reset(new MutableAttributeBuffer<Vector> ("tangent"));
+    vertexBuffer_.reset(new MutableAttributeBuffer<Vector> ("position", GL_STATIC_DRAW));
+    normalBuffer_.reset(new MutableAttributeBuffer<Vector> ("normal", GL_STATIC_DRAW));
+    texCoordBuffer_.reset(new MutableAttributeBuffer<TexCoord> ("texCoord", GL_STATIC_DRAW));
+    tangentBuffer_.reset(new MutableAttributeBuffer<Vector> ("tangent", GL_STATIC_DRAW));
     indexBuffer_.reset(new IndexBuffer(mesh_->name()));
 
     mesh_->attributeBufferIs("position", vertexBuffer_);

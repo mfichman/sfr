@@ -25,7 +25,7 @@ BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
     unitCube_ = manager->assetIs<Mesh>("meshes/UnitCube");
 
-    Ptr<MutableAttributeBuffer<Vector>> vbuf(new MutableAttributeBuffer<Vector>("position"));
+    Ptr<MutableAttributeBuffer<Vector>> vbuf(new MutableAttributeBuffer<Vector>("position", GL_STATIC_DRAW));
     vbuf->elementEnq(Vector(1.000000, 1.000000, -1.000000)); // 0
     vbuf->elementEnq(Vector(1.000000, -1.000000, -1.000000)); // 1
     vbuf->elementEnq(Vector(-1.000000, -1.000000, -1.000000)); // 2

@@ -16,7 +16,7 @@ using namespace sfr;
 
 Particles::Particles() {
     status_ = DIRTY;
-    buffer_.reset(new MutableAttributeBuffer<Particle>(""));
+    buffer_.reset(new MutableAttributeBuffer<Particle>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
 }
 

@@ -15,7 +15,7 @@ class AttributeBuffer : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
 
-    AttributeBuffer(std::string const& name);
+    AttributeBuffer(std::string const& name, GLenum usage);
     ~AttributeBuffer();
 
     std::string const& name() const;
@@ -32,6 +32,7 @@ private:
 
     std::string name_; 
     GLuint id_;
+    GLenum usage_;
     Status status_;
 
 };
@@ -39,8 +40,8 @@ private:
 template <typename T>
 class MutableAttributeBuffer : public AttributeBuffer {
 public:
-    MutableAttributeBuffer(std::string const& name) :
-        AttributeBuffer(name) {
+    MutableAttributeBuffer(std::string const& name, GLenum usage) :
+        AttributeBuffer(name, usage) {
     }
 
     GLuint elementCount() const {

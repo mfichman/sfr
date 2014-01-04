@@ -30,6 +30,7 @@ public:
     Ribbon();
     ~Ribbon();
 
+    Vector const& pointHead() const { return point_.front(); }
     GLuint pointCount() const { return point_.size(); }
     GLuint id() const { return id_; }
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
@@ -39,6 +40,7 @@ public:
     GLfloat minWidth() const { return minWidth_; }
 
     void pointDeq();
+    void pointHeadIs(Vector const& point);
     void pointEnq(Vector const& point);
     void pointDelAll() { point_.clear(); }
     void textureIs(Ptr<Texture> texture);

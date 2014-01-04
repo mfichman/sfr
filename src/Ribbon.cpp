@@ -16,7 +16,7 @@ using namespace sfr;
 Ribbon::Ribbon() {
     status_ = DIRTY;
     width_ = 0;
-    buffer_.reset(new MutableAttributeBuffer<RibbonVertex>(""));
+    buffer_.reset(new MutableAttributeBuffer<RibbonVertex>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
 }
 
@@ -27,6 +27,15 @@ Ribbon::~Ribbon() {
 void Ribbon::pointDeq() {
     status_ = DIRTY;
     point_.pop_front(); 
+}
+
+void Ribbon::pointHeadIs(Vector const& point) {
+    status_ = DIRTY;
+    if (point_.empty()) {
+        point_.push_back(point);
+    } else {
+        point_.back() = point;
+    }
 }
 
 void Ribbon::pointEnq(Vector const& point) {

@@ -11,10 +11,11 @@
 
 using namespace sfr;
 
-AttributeBuffer::AttributeBuffer(std::string const& name) {
+AttributeBuffer::AttributeBuffer(std::string const& name, GLenum usage) {
     name_ = name;
     id_ = 0;
     status_ = DIRTY;
+    usage_ = usage;
     
     glGenBuffers(1, &id_);
 }
@@ -45,6 +46,6 @@ void AttributeBuffer::statusIs(Status status) {
 void AttributeBuffer::syncHardwareBuffers() {
     GLuint size = elementCount()*elementSize();
     glBindBuffer(GL_ARRAY_BUFFER, id_);
-    glBufferData(GL_ARRAY_BUFFER, size, data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, size, data(), usage_);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
