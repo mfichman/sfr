@@ -34,7 +34,6 @@ void TransformUpdater::operator()(Ptr<Transform> transform) {
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<TransformUpdater>(shared_from_this()));
     }
-    transform->worldTransformIs(transform_);
     transform_ = previous;
 }
 

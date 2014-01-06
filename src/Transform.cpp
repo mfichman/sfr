@@ -19,10 +19,6 @@ Transform::Transform(std::string const& name) {
     renderMode_ = VISIBLE;
 }
 
-Matrix const& Transform::worldTransform() const {
-    return worldTransform_;
-}
-
 Matrix const& Transform::transform() const {
     return transform_;
 }
@@ -57,10 +53,6 @@ Transform::RenderMode Transform::renderMode() const {
 
 void Transform::transformIs(Matrix const& transform) {
     transform_ = transform;
-}
-
-void Transform::worldTransformIs(Matrix const& transform) {
-    worldTransform_ = transform;
 }
 
 void Transform::positionIs(Vector const& position) {

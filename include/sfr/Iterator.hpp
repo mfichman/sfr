@@ -91,6 +91,11 @@ private:
         return *this;
     }
 
+    
+    T* get() const { 
+        return begin_->get(); 
+    }
+
 private:
     typename std::vector<Ptr<T>>::iterator begin_;
     typename std::vector<Ptr<T>>::iterator end_;

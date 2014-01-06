@@ -109,14 +109,14 @@ void Ribbon::rebuildBuffer() {
             auto rv = RibbonVertex();
             rv.position = (*i + (right*sign*width/2.));
             rv.texCoord = TexCoord(.5, (sign+1.)/2.);
-            rv.alpha = (GLfloat)index/(GLfloat)point_.size();
+            rv.alpha = 4*(GLfloat)index/(GLfloat)point_.size();
             buffer_->elementEnq(rv);
             sign *= -1;
         }
         auto rv = RibbonVertex();
         rv.position = (*i + (right*sign*width/2.));
         rv.texCoord = TexCoord(.5, (sign+1.)/2.);
-        rv.alpha = (GLfloat)index/(GLfloat)point_.size();
+        rv.alpha = 4*(GLfloat)index/(GLfloat)point_.size();
         buffer_->elementEnq(rv);
         sign *= -1;
 

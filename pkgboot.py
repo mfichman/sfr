@@ -157,7 +157,7 @@ class Package:
 
         pchenv = self.env.Clone()
         self.pch = pchenv.Pch('include/%s/Common.hpp.pch' % self.name, 'include/%s' % self.pch)
-        self.env.Append(CXXFLAGS='-include include/%s/Common.hpp' % self.name)
+        self.env.Append(CPPFLAGS='-include include/%s/Common.hpp' % self.name)
 
         self._finish_build()
 
