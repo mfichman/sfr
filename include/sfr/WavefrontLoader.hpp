@@ -9,7 +9,6 @@
 #include "sfr/Common.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/TexCoord.hpp"
 #include "sfr/MeshVertex.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Box.hpp"
@@ -37,15 +36,15 @@ private:
     Ptr<Transform> transform_;
     Ptr<Mesh> mesh_;
     Ptr<Material> material_;
-    Ptr<MutableAttributeBuffer<Vector>> vertexBuffer_;
-    Ptr<MutableAttributeBuffer<Vector>> normalBuffer_;
-    Ptr<MutableAttributeBuffer<Vector>> tangentBuffer_;
-    Ptr<MutableAttributeBuffer<TexCoord>> texCoordBuffer_;
+    Ptr<MutableAttributeBuffer<GLvec3>> vertexBuffer_;
+    Ptr<MutableAttributeBuffer<GLvec3>> normalBuffer_;
+    Ptr<MutableAttributeBuffer<GLvec3>> tangentBuffer_;
+    Ptr<MutableAttributeBuffer<GLvec2>> texCoordBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
     std::map<MeshVertex, GLuint> cache_;
-    std::vector<TexCoord> texCoord_;
-    std::vector<Vector> position_;
-    std::vector<Vector> normal_;
+    std::vector<GLvec2> texCoord_;
+    std::vector<GLvec3> position_;
+    std::vector<GLvec3> normal_;
     Box bounds_;
 };
 

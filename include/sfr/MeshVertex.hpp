@@ -8,7 +8,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/TexCoord.hpp"
 
 namespace sfr {
 
@@ -18,12 +17,12 @@ public:
     bool operator==(MeshVertex const& other) const;
     bool operator!=(MeshVertex const& other) const;
     MeshVertex operator+(MeshVertex const& other) const;
-    MeshVertex operator*(float scale) const;
+    MeshVertex operator*(Scalar scale) const;
 
-    Vector position;
-    Vector normal;
-    Vector tangent;
-    TexCoord texCoord;
+    GLvec3 position;
+    GLvec3 normal;
+    GLvec3 tangent;
+    GLvec2 texCoord;
 };
 
 }

@@ -63,7 +63,6 @@
 #include "ShadowRenderer.hpp"
 #include "SkyboxRenderer.hpp"
 #include "SpotLight.hpp"
-#include "TexCoord.hpp"
 #include "Texture.hpp"
 #include "TextureLoader.hpp"
 #include "Transform.hpp"

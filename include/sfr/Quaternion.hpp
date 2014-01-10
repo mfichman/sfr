@@ -15,26 +15,26 @@ namespace sfr {
 
 class Quaternion {
 public:
-    Quaternion(float w, float x, float y, float z);
-    Quaternion(Vector const& axis, float angle); // Radians!
+    Quaternion(Scalar w, Scalar x, Scalar y, Scalar z);
+    Quaternion(Vector const& axis, Scalar angle); // Radians!
     Quaternion(Vector const& x, Vector const& y, Vector const& z);
     Quaternion(Matrix const& matrix);
-	Quaternion(float w, Vector const& vector);
+	Quaternion(Scalar w, Vector const& vector);
     Quaternion();
     
     friend std::ostream& ::operator<<(std::ostream& out, Quaternion const& quaternion);
     friend std::istream& ::operator>>(std::istream& in, Quaternion& quaternion);
 
-    float length() const;
-    float lengthSquared() const;
-    float dot(Quaternion const& other) const;
+    Scalar length() const;
+    Scalar lengthSquared() const;
+    Scalar dot(Quaternion const& other) const;
     Vector operator*(Vector const& other) const;
-    Quaternion operator*(float s) const;
+    Quaternion operator*(Scalar s) const;
     Quaternion operator+(Quaternion const& other) const;
     Quaternion operator-(Quaternion const& other) const;
     Quaternion operator*(Quaternion const& other) const;
     Quaternion operator-() const;
-    Quaternion slerp(Quaternion const& other, float alpha) const;
+    Quaternion slerp(Quaternion const& other, Scalar alpha) const;
     Quaternion inverse() const;
     Quaternion unit() const;
     bool operator==(const Quaternion other) const;
@@ -44,10 +44,10 @@ public:
 
     static Quaternion IDENTITY;
 
-    float w;
-    float x;
-    float y;
-    float z;
+    Scalar w;
+    Scalar x;
+    Scalar y;
+    Scalar z;
 };
 
 }

@@ -17,24 +17,19 @@ Color::Color() :
     alpha(1.0f) {
 }
 
-Color::Color(float red, float blue, float green, float alpha) :
+Color::Color(Scalar red, Scalar blue, Scalar green, Scalar alpha) :
     red(red),
     blue(blue),
     green(green),
     alpha(alpha) {
 }
 
-Color::operator const float*() const {
-    return &red;
+GLvec4
+Color::vec4f() const {
+    return GLvec4(red, blue, green, alpha);
 }
     
-//! Returns a pointer to the internal float data of this color
-Color::operator float*() {
-    return &red;
-}
-
-
-Color Color::operator*(float scale) const {
+Color Color::operator*(Scalar scale) const {
     return Color(red*scale, green*scale, blue*scale, alpha*scale);
 }
 

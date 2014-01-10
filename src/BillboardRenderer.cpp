@@ -83,11 +83,11 @@ void BillboardRenderer::operator()(Ptr<Billboard> billboard) {
        
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
-    glUniform4fv(tint_, 1, (GLfloat*)&billboard->tint());
+    glUniform4fv(tint_, 1, billboard->tint().vec4f());
 
-    glUniformMatrix4fv(model_, 1, 0, transform);
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

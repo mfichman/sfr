@@ -91,8 +91,10 @@ void WavefrontLoader::newModel(std::istream& in) {
 }
 
 void WavefrontLoader::newVertex(std::istream& in) {
-	Vector position;
-	in >> position;
+	GLvec3 position;
+	in >> position.x;
+	in >> position.y;
+	in >> position.z;
 	position_.push_back(position);
     if (position.x > bounds_.max.x) {
         bounds_.max.x = position.x;
@@ -112,16 +114,19 @@ void WavefrontLoader::newVertex(std::istream& in) {
 }
 
 void WavefrontLoader::newTexCoord(std::istream& in) {
-	TexCoord texCoord;
-	in >> texCoord;
+	GLvec2 texCoord;
+	in >> texCoord.u;
+	in >> texCoord.v;
 	texCoord.v = 1 - texCoord.v;
 	//texCoord.u = 1 - texoord.u;
 	texCoord_.push_back(texCoord);
 }
 
 void WavefrontLoader::newNormal(std::istream& in) {
-    Vector normal;
-	in >> normal;
+    GLvec3 normal;
+	in >> normal.x;
+	in >> normal.y;
+	in >> normal.z;
 	normal_.push_back(normal);
 }
 
@@ -156,8 +161,8 @@ void WavefrontLoader::newMesh() {
     mesh_.reset();
     bounds_ = Box();
 
-    auto max = std::numeric_limits<float>::infinity();
-    auto min = -std::numeric_limits<float>::infinity();
+    auto max = std::numeric_limits<Scalar>::infinity();
+    auto min = -std::numeric_limits<Scalar>::infinity();
     bounds_.max = Vector(min, min, min);
     bounds_.min = Vector(max, max, max);
 }
@@ -169,10 +174,10 @@ void WavefrontLoader::newMesh(std::string const& name) {
     // by the "o" command.  Read in each mesh separately and then add it to 
     // the scene graph.
     mesh_ = notifier_->assetIs<Mesh>(transform_->name() + "/" + name);
-    vertexBuffer_.reset(new MutableAttributeBuffer<Vector> ("position", GL_STATIC_DRAW));
-    normalBuffer_.reset(new MutableAttributeBuffer<Vector> ("normal", GL_STATIC_DRAW));
-    texCoordBuffer_.reset(new MutableAttributeBuffer<TexCoord> ("texCoord", GL_STATIC_DRAW));
-    tangentBuffer_.reset(new MutableAttributeBuffer<Vector> ("tangent", GL_STATIC_DRAW));
+    vertexBuffer_.reset(new MutableAttributeBuffer<GLvec3>("position", GL_STATIC_DRAW));
+    normalBuffer_.reset(new MutableAttributeBuffer<GLvec3>("normal", GL_STATIC_DRAW));
+    texCoordBuffer_.reset(new MutableAttributeBuffer<GLvec2>("texCoord", GL_STATIC_DRAW));
+    tangentBuffer_.reset(new MutableAttributeBuffer<GLvec3>("tangent", GL_STATIC_DRAW));
     indexBuffer_.reset(new IndexBuffer(mesh_->name()));
 
     mesh_->attributeBufferIs("position", vertexBuffer_);
@@ -313,7 +318,7 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
             in >> specular;
             material_->specularColorIs(specular);
         } else if (command == "Ns") {
-            GLfloat shininess;
+            Scalar shininess;
             in >> shininess;
             material_->shininessIs(shininess);
         } else if (command == "map_Kd") {
@@ -332,7 +337,7 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
             Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
             material_->textureIs("emissive", texture);
         } else if (command == "d") {
-            float opacity;
+            Scalar opacity;
             in >> opacity;
             material_->opacityIs(opacity);
         } else {

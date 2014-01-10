@@ -28,29 +28,29 @@ Color const& PointLight::specularColor() const {
     return specularColor_;
 }
 
-float PointLight::constantAttenuation() const {
+Scalar PointLight::constantAttenuation() const {
     return constantAttenuation_;
 }
 
-float PointLight::linearAttenuation() const {
+Scalar PointLight::linearAttenuation() const {
     return linearAttenuation_;
 }
 
-float PointLight::quadraticAttenuation() const {
+Scalar PointLight::quadraticAttenuation() const {
     return quadraticAttenuation_;
 }
 
-float PointLight::radiusOfEffect() const {
-    float a = quadraticAttenuation();
-    float b = linearAttenuation();
-    float c = constantAttenuation(); 
-    float minIntensity = 0.02f;
+Scalar PointLight::radiusOfEffect() const {
+    Scalar a = quadraticAttenuation();
+    Scalar b = linearAttenuation();
+    Scalar c = constantAttenuation(); 
+    Scalar minIntensity = 0.02f;
 
     if (a != 0) {
         // Quadratic equation to find distance at which intensity
         // is below the threshold
-        float d1 = -b + sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
-        float d2 = -b - sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        Scalar d1 = -b + sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        Scalar d2 = -b - sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
 
         return std::max(d1, d2);
     } else {
@@ -60,37 +60,22 @@ float PointLight::radiusOfEffect() const {
 }
 
 void PointLight::diffuseColorIs(Color const& diffuse) {
-    if (diffuseColor_ == diffuse) {
-        return;
-    }
     diffuseColor_ = diffuse;
 }
 
 void PointLight::specularColorIs(Color const& specular) {
-    if (specularColor_ == specular) {
-        return;
-    }
     specularColor_ = specular;
 }
 
-void PointLight::constantAttenuationIs(float atten) {
-    if (constantAttenuation_ == atten) {
-        return;
-    }
+void PointLight::constantAttenuationIs(Scalar atten) {
     constantAttenuation_ = atten;
 }
 
-void PointLight::linearAttenuationIs(float atten) {
-    if (linearAttenuation_ == atten) {
-        return;
-    }
+void PointLight::linearAttenuationIs(Scalar atten) {
     linearAttenuation_ = atten;
 }
 
-void PointLight::quadraticAttenuationIs(float atten) {
-    if (quadraticAttenuation_ == atten) {
-        return;
-    }
+void PointLight::quadraticAttenuationIs(Scalar atten) {
     quadraticAttenuation_ = atten;
 }
 

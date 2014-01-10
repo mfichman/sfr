@@ -8,7 +8,6 @@
 #include "sfr/Common.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/TexCoord.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Node.hpp"
@@ -105,23 +104,23 @@ void Mesh::updateVertexArrayObject() {
 }
 
 void Mesh::updateTangents() {
-    Ptr<MutableAttributeBuffer<Vector>> tangents(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<Vector>>(
+    Ptr<MutableAttributeBuffer<GLvec3>> tangents(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<GLvec3>>(
         attributeBuffer("tangent")));
 
-    Ptr<MutableAttributeBuffer<Vector>> positions(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<Vector>>(
+    Ptr<MutableAttributeBuffer<GLvec3>> positions(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<GLvec3>>(
         attributeBuffer("position")));
 
-    Ptr<MutableAttributeBuffer<TexCoord>> texCoords(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<TexCoord>>(
+    Ptr<MutableAttributeBuffer<GLvec2>> texCoords(std::dynamic_pointer_cast<
+        MutableAttributeBuffer<GLvec2>>(
         attributeBuffer("texCoord")));
 
     if (tangents && positions && texCoords) {
         // Initialize all tangents to zero for the whole mesh to set up 
         // weighted average
         for (GLuint i = 0; i < tangents->elementCount(); i++) {
-            tangents->elementIs(i, Vector());
+            tangents->elementIs(i, GLvec3(0, 0, 0));
         }
 
         // Iterate through all faces and add each face's contribution to the
@@ -131,28 +130,40 @@ void Mesh::updateTangents() {
             GLuint i1 = indexBuffer()->element(i-1);
             GLuint i2 = indexBuffer()->element(i-0);
 
-            Vector const& p0 = positions->element(i0);
-            Vector const& p1 = positions->element(i1);
-            Vector const& p2 = positions->element(i2);
+            GLvec3 const& p0 = positions->element(i0);
+            GLvec3 const& p1 = positions->element(i1);
+            GLvec3 const& p2 = positions->element(i2);
 
-            Vector d1 = p1 - p0;
-            Vector d2 = p2 - p1;
-            TexCoord const& tex0 = texCoords->element(i0);
-            TexCoord const& tex1 = texCoords->element(i1);
-            TexCoord const& tex2 = texCoords->element(i2);
-            float s1 = tex1.u - tex0.u;
-            float t1 = tex1.v - tex0.v;
-            float s2 = tex2.u - tex0.u;
-            float t2 = tex2.v - tex0.v;
-            float a = 1/(s1*t2 - s2*t1);
+            Vector const d1(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z);
+            Vector const d2(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+            GLvec2 const& tex0 = texCoords->element(i0);
+            GLvec2 const& tex1 = texCoords->element(i1);
+            GLvec2 const& tex2 = texCoords->element(i2);
+            Scalar const s1 = tex1.u - tex0.u;
+            Scalar const t1 = tex1.v - tex0.v;
+            Scalar const s2 = tex2.u - tex0.u;
+            Scalar const t2 = tex2.v - tex0.v;
+            Scalar const a = 1/(s1*t2 - s2*t1);
 
-            Vector tangent0 = tangents->element(i0);
-            Vector tangent1 = tangents->element(i1);
-            Vector tangent2 = tangents->element(i2);
+            GLvec3 tangent0 = tangents->element(i0);
+            GLvec3 tangent1 = tangents->element(i1);
+            GLvec3 tangent2 = tangents->element(i2);
 
-            tangent0 += ((d1*t2 - d2*t1)*a).unit();
-            tangent1 += ((d1*t2 - d2*t1)*a).unit();
-            tangent2 += ((d1*t2 - d2*t1)*a).unit();
+            Vector const tan0 = ((d1*t2 - d2*t1)*a).unit();
+            Vector const tan1 = ((d1*t2 - d2*t1)*a).unit();
+            Vector const tan2 = ((d1*t2 - d2*t1)*a).unit();
+
+            tangent0.x += tan0.x;
+            tangent0.y += tan0.y;
+            tangent0.z += tan0.z;
+
+            tangent1.x += tan1.x;
+            tangent1.y += tan1.y;
+            tangent1.z += tan1.z;
+
+            tangent2.x += tan2.x;
+            tangent2.y += tan2.y;
+            tangent2.z += tan2.z;
 
             tangents->elementIs(i0, tangent0);
             tangents->elementIs(i1, tangent1);
@@ -161,7 +172,9 @@ void Mesh::updateTangents() {
 
         // Normalize all tangents in the mesh to take the average
         for (GLuint i = 0; i < tangents->elementCount(); i++) {
-            tangents->elementIs(i, tangents->element(i).unit());
+            GLvec3 const vec = tangents->element(i);
+            Vector const tan(vec.x, vec.y, vec.z); 
+            tangents->elementIs(i, tan.unit().vec3f());
         }
     }
 }

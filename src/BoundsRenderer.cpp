@@ -25,15 +25,15 @@ BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
     unitCube_ = manager->assetIs<Mesh>("meshes/UnitCube");
 
-    Ptr<MutableAttributeBuffer<Vector>> vbuf(new MutableAttributeBuffer<Vector>("position", GL_STATIC_DRAW));
-    vbuf->elementEnq(Vector(1.000000, 1.000000, -1.000000)); // 0
-    vbuf->elementEnq(Vector(1.000000, -1.000000, -1.000000)); // 1
-    vbuf->elementEnq(Vector(-1.000000, -1.000000, -1.000000)); // 2
-    vbuf->elementEnq(Vector(-1.000000, 1.000000, -1.000000)); // 3
-    vbuf->elementEnq(Vector(1.000000, 1.000000, 1.000000)); // 4
-    vbuf->elementEnq(Vector(1.000000, -1.000001, 1.000000)); // 5
-    vbuf->elementEnq(Vector(-1.000000, -1.000000, 1.000000)); // 6
-    vbuf->elementEnq(Vector(-1.000000, 1.000000, 1.000000)); // 7
+    Ptr<MutableAttributeBuffer<GLvec3>> vbuf(new MutableAttributeBuffer<GLvec3>("position", GL_STATIC_DRAW));
+    vbuf->elementEnq(GLvec3(1.000000, 1.000000, -1.000000)); // 0
+    vbuf->elementEnq(GLvec3(1.000000, -1.000000, -1.000000)); // 1
+    vbuf->elementEnq(GLvec3(-1.000000, -1.000000, -1.000000)); // 2
+    vbuf->elementEnq(GLvec3(-1.000000, 1.000000, -1.000000)); // 3
+    vbuf->elementEnq(GLvec3(1.000000, 1.000000, 1.000000)); // 4
+    vbuf->elementEnq(GLvec3(1.000000, -1.000001, 1.000000)); // 5
+    vbuf->elementEnq(GLvec3(-1.000000, -1.000000, 1.000000)); // 6
+    vbuf->elementEnq(GLvec3(-1.000000, 1.000000, 1.000000)); // 7
 
     Ptr<IndexBuffer> ibuf(new IndexBuffer("buf"));
     ibuf->elementEnq(0); ibuf->elementEnq(1);
@@ -92,9 +92,9 @@ void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, transform);
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = unitCube_->indexBuffer();
@@ -110,17 +110,17 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
 
     glPolygonMode(GL_LINES, GL_FRONT_AND_BACK);
 
-    //float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
+    //Scalar cosCutoff = std::cos((Scalar)M_PI * light->spotCutoff() / 180.f);
 
     // Scale model to cover the light's area of effect.
-    static const float margin = 2.f;
-	static const float maxRadius = 500.f;
-	float radius = std::min(maxRadius, light->radiusOfEffect());
-    float cutoff = light->spotCutoff() + margin;
-    float width = std::tan((float)M_PI * cutoff / 180.f);
-    float sx = width * radius;
-    float sy = width * radius;
-    float sz = radius;
+    Scalar const margin = 2.f;
+	Scalar const maxRadius = 500.f;
+	Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
+    Scalar const cutoff = light->spotCutoff() + margin;
+    Scalar const width = std::tan(M_PI * cutoff / 180.f);
+    Scalar const sx = width * radius;
+    Scalar const sy = width * radius;
+    Scalar const sz = radius;
     
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
@@ -128,9 +128,9 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
     Matrix transform = transform_ * rotate * scale;
 
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, transform);
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     Ptr<IndexBuffer> buffer = unitCone_->indexBuffer();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

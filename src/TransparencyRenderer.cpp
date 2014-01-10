@@ -69,9 +69,9 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
     Ptr<Camera> camera = world_->camera();
 
     // Pass the matrices to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, worldTransform());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -81,7 +81,7 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
 }
 
 void TransparencyRenderer::operator()(Ptr<Material> material) {
-    glUniform3fv(diffuse_, 1, material->diffuseColor());
+    glUniform3fv(diffuse_, 1, material->diffuseColor().vec4f());
     glUniform1f(opacity_, material->opacity());
 }
 

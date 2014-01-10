@@ -66,8 +66,8 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     operator()(pointLight_);
 
     // Set the light color, attenuation, and position properties.
-    glUniform3fv(diffuse_, 1, light->diffuseColor());
-    glUniform3fv(specular_, 1, light->specularColor());
+    glUniform3fv(diffuse_, 1, light->diffuseColor().vec4f());
+    glUniform3fv(specular_, 1, light->specularColor().vec4f());
     glUniform1f(atten0_, light->constantAttenuation());
     glUniform1f(atten1_, light->linearAttenuation());
     glUniform1f(atten2_, light->quadraticAttenuation());
@@ -76,7 +76,7 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     Matrix previous = transform_;
 
     // Scale model to cover the light's area of effect
-    float radius = light->radiusOfEffect();
+    Scalar radius = light->radiusOfEffect();
     
     // Scale the light geometry to the correct size
     Matrix scale = Matrix::scale(radius, radius, radius);
@@ -99,15 +99,15 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     operator()(hemiLight_);
 
     // Set the light color, attenuation, and direction properties
-    glUniform3fv(diffuse_, 1, light->diffuseColor());
-    glUniform3fv(backDiffuse_, 1, light->backDiffuseColor());
+    glUniform3fv(diffuse_, 1, light->diffuseColor().vec4f());
+    glUniform3fv(backDiffuse_, 1, light->backDiffuseColor().vec4f());
     glUniform1f(atten0_, light->constantAttenuation());
     glUniform1f(atten1_, light->linearAttenuation());
     glUniform1f(atten2_, light->quadraticAttenuation());
     Matrix transform = transform_ * world_->camera()->viewTransform();
     Vector direction = transform.normal(light->direction()).unit();
     // Transform the light direction from world space into view space
-    glUniform3fv(direction_, 1, direction);
+    glUniform3fv(direction_, 1, direction.vec3f());
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
@@ -121,13 +121,13 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         // Set up the view, projection, and inverse projection transforms
         Ptr<Camera> camera = world_->camera();
         Matrix inverseProjection = camera->projectionTransform().inverse();
-        glUniformMatrix4fv(model_, 1, 0, Matrix()); // Identity
-        glUniformMatrix4fv(projection_, 1, 0, Matrix()); // Identity
-        glUniformMatrix4fv(view_, 1, 0, Matrix()); // Identity
+        glUniformMatrix4fv(model_, 1, 0, Matrix().mat4f()); // Identity
+        glUniformMatrix4fv(projection_, 1, 0, Matrix().mat4f()); // Identity
+        glUniformMatrix4fv(view_, 1, 0, Matrix().mat4f()); // Identity
         // Use the identity transform, so that the specially-shaped unit quad
         // maps to the whole screen as a fullscreen quad in clip-space, that
         // is, x=[-1,1] y=[-1,1]
-        glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
+        glUniformMatrix4fv(unproject_, 1, 0, inverseProjection.mat4f());
 
         // Render the mesh
         Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -137,7 +137,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     } else {
         // This renders the light's bounding volume (usually a sphere)
         Matrix previous = transform_;
-        float radius = light->radiusOfEffect();
+        Scalar radius = light->radiusOfEffect();
         transform_ = transform_ * Matrix::scale(radius, radius, radius);
         operator()(unitSphere_);
         transform_ = previous;
@@ -152,20 +152,20 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     operator()(spotLight_);
 
     // Set the light color, attenuation, and direction properties
-    glUniform3fv(diffuse_, 1, light->diffuseColor());
-    glUniform3fv(specular_, 1, light->specularColor());
+    glUniform3fv(diffuse_, 1, light->diffuseColor().vec4f());
+    glUniform3fv(specular_, 1, light->specularColor().vec4f());
     glUniform1f(atten0_, light->constantAttenuation());
     glUniform1f(atten1_, light->linearAttenuation());
     glUniform1f(atten2_, light->quadraticAttenuation());
 
-    float cosCutoff = std::cos((float)M_PI * light->spotCutoff() / 180.f);
+    Scalar cosCutoff = std::cos(M_PI * light->spotCutoff() / 180.f);
     glUniform1f(spotCutoff_, cosCutoff);
     glUniform1f(spotPower_, light->spotPower());
 
     Matrix transform = world_->camera()->viewTransform() * transform_;
     Vector direction = transform.normal(light->direction()).unit();
     // Transform the light direction from into view space
-    glUniform3fv(direction_, 1, direction);
+    glUniform3fv(direction_, 1, direction.vec3f());
     glActiveTexture(GL_TEXTURE6);
     if (light->shadowMap()) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
@@ -173,20 +173,20 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     } else {
         glUniform1f(shadowMapSize_, 0);
     }
-    glUniformMatrix4fv(light_, 1, 0, light->transform());
+    glUniformMatrix4fv(light_, 1, 0, light->transform().mat4f());
 
     // Save the old model matrix
     Matrix previous = transform_;
 
     // Scale model to cover the light's area of effect.
-    static const float margin = 2.f;
-	static const float maxRadius = 500.f;
-	float radius = std::min(maxRadius, light->radiusOfEffect());
-    float cutoff = light->spotCutoff() + margin;
-    float width = std::tan((float)M_PI * cutoff / 180.f);
-    float sx = width * radius;
-    float sy = width * radius;
-    float sz = radius;
+    Scalar const margin = 2.f;
+	Scalar const maxRadius = 500.f;
+	Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
+    Scalar const cutoff = light->spotCutoff() + margin;
+    Scalar const width = std::tan(M_PI * cutoff / 180.f);
+    Scalar const sx = width * radius;
+    Scalar const sy = width * radius;
+    Scalar const sz = radius;
     
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
@@ -204,10 +204,10 @@ void LightRenderer::operator()(Ptr<Mesh> mesh) {
     // Set up the view, projection, and inverse projection transforms
     Ptr<Camera> camera = world_->camera();
     Matrix inverseProjection = camera->projectionTransform().inverse();
-    glUniformMatrix4fv(model_, 1, 0, transform_);
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
-    glUniformMatrix4fv(unproject_, 1, 0, inverseProjection);
+    glUniformMatrix4fv(model_, 1, 0, transform_.mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    glUniformMatrix4fv(unproject_, 1, 0, inverseProjection.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

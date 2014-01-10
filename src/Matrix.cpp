@@ -15,7 +15,7 @@
 using namespace sfr;
 
 
-Matrix Matrix::frustum(float l, float r, float b, float t, float n, float f) {
+Matrix Matrix::frustum(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f) {
 	return Matrix(
 		2*n/(r-l),	0,			(r+l)/(r-l),	0,
 		0,			2*n/(t-b),	(t+b)/(t-b),	0,
@@ -23,7 +23,7 @@ Matrix Matrix::frustum(float l, float r, float b, float t, float n, float f) {
 		0,			0,			-1,				0);
 }
 
-Matrix Matrix::ortho(float l, float r, float b, float t, float n, float f) {
+Matrix Matrix::ortho(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f) {
 	return Matrix(
 		2/(r-l),	0,			0,				-(r+l)/(r-l),
 		0,			2/(t-b),	0,				-(t+b)/(t-b),
@@ -31,11 +31,11 @@ Matrix Matrix::ortho(float l, float r, float b, float t, float n, float f) {
 		0,			0,			0,				1);
 }
 
-Matrix Matrix::perspective(float fov, float aspect, float n, float f) {
-	float top = tan(fov*3.14159f/360.0f) * n;
-	float bottom = -top;
-	float right = aspect * top;
-	float left = aspect * bottom;
+Matrix Matrix::perspective(Scalar fov, Scalar aspect, Scalar n, Scalar f) {
+	Scalar top = tan(fov*M_PI/360.0f) * n;
+	Scalar bottom = -top;
+	Scalar right = aspect * top;
+	Scalar left = aspect * bottom;
 	return Matrix::frustum(left, right, bottom, top, n, f);
 }
 
@@ -111,18 +111,18 @@ Matrix Matrix::rotate(Quaternion const& rotation) {
     Matrix data;
 
     // This routine is borrowed from Ogre 3D
-    float fTx  = 2.0f*rotation.x;
-    float fTy  = 2.0f*rotation.y;
-    float fTz  = 2.0f*rotation.z;
-    float fTwx = fTx*rotation.w;
-    float fTwy = fTy*rotation.w;
-    float fTwz = fTz*rotation.w;
-    float fTxx = fTx*rotation.x;
-    float fTxy = fTy*rotation.x;
-    float fTxz = fTz*rotation.x;
-    float fTyy = fTy*rotation.y;
-    float fTyz = fTz*rotation.y;
-    float fTzz = fTz*rotation.z;
+    Scalar fTx  = 2.0f*rotation.x;
+    Scalar fTy  = 2.0f*rotation.y;
+    Scalar fTz  = 2.0f*rotation.z;
+    Scalar fTwx = fTx*rotation.w;
+    Scalar fTwy = fTy*rotation.w;
+    Scalar fTwz = fTz*rotation.w;
+    Scalar fTxx = fTx*rotation.x;
+    Scalar fTxy = fTy*rotation.x;
+    Scalar fTxz = fTz*rotation.x;
+    Scalar fTyy = fTy*rotation.y;
+    Scalar fTyz = fTz*rotation.y;
+    Scalar fTzz = fTz*rotation.z;
 
     data[0] = 1.0f-(fTyy+fTzz);
     data[4] = fTxy-fTwz;
@@ -142,7 +142,7 @@ Matrix Matrix::rotate(Quaternion const& rotation) {
     return data;
 }
 
-Matrix Matrix::scale(float sx, float sy, float sz) {
+Matrix Matrix::scale(Scalar sx, Scalar sy, Scalar sz) {
     return Matrix(
         sx,     0,      0,      0, 
         0,      sy,     0,      0,
@@ -159,14 +159,14 @@ Matrix Matrix::translate(Vector const& trans) {
     return data;
 }
 
-Matrix::Matrix(const float data[16]) {
+Matrix::Matrix(const Scalar data[16]) {
     std::copy(data, data+16, this->data);
 }
 
-Matrix::Matrix(float m00, float m01, float m02, float m03,
-    float m10, float m11, float m12, float m13,
-    float m20, float m21, float m22, float m23,
-    float m30, float m31, float m32, float m33) {
+Matrix::Matrix(Scalar m00, Scalar m01, Scalar m02, Scalar m03,
+    Scalar m10, Scalar m11, Scalar m12, Scalar m13,
+    Scalar m20, Scalar m21, Scalar m22, Scalar m23,
+    Scalar m30, Scalar m31, Scalar m32, Scalar m33) {
     
     data[0] = m00; data[4] = m01; data[8] = m02; data[12] = m03;
     data[1] = m10; data[5] = m11; data[9] = m12; data[13] = m13;
@@ -176,18 +176,18 @@ Matrix::Matrix(float m00, float m01, float m02, float m03,
 
 Matrix::Matrix(Quaternion const& rotation, Vector const& trans) {
     // This routine is borrowed from Ogre 3D
-    float fTx  = 2.0f*rotation.x;
-    float fTy  = 2.0f*rotation.y;
-    float fTz  = 2.0f*rotation.z;
-    float fTwx = fTx*rotation.w;
-    float fTwy = fTy*rotation.w;
-    float fTwz = fTz*rotation.w;
-    float fTxx = fTx*rotation.x;
-    float fTxy = fTy*rotation.x;
-    float fTxz = fTz*rotation.x;
-    float fTyy = fTy*rotation.y;
-    float fTyz = fTz*rotation.y;
-    float fTzz = fTz*rotation.z;
+    Scalar fTx  = 2.0f*rotation.x;
+    Scalar fTy  = 2.0f*rotation.y;
+    Scalar fTz  = 2.0f*rotation.z;
+    Scalar fTwx = fTx*rotation.w;
+    Scalar fTwy = fTy*rotation.w;
+    Scalar fTwz = fTz*rotation.w;
+    Scalar fTxx = fTx*rotation.x;
+    Scalar fTxy = fTy*rotation.x;
+    Scalar fTxz = fTz*rotation.x;
+    Scalar fTyy = fTy*rotation.y;
+    Scalar fTyz = fTz*rotation.y;
+    Scalar fTzz = fTz*rotation.z;
 
     data[0] = 1.0f-(fTyy+fTzz);
     data[4] = fTxy-fTwz;
@@ -272,7 +272,7 @@ Vector Matrix::normal(Vector const& v) const {
 Vector Matrix::operator*(Vector const& v) const {
     Vector out;
     
-    float invw = 1.0f / (data[3]*v.x + data[7]*v.y + data[11]*v.z + data[15]);
+    Scalar invw = 1.0f / (data[3]*v.x + data[7]*v.y + data[11]*v.z + data[15]);
     
     out.x = (data[0]*v.x + data[4]*v.y + data[8]*v.z + data[12])*invw;
     out.y = (data[1]*v.x + data[5]*v.y + data[9]*v.z + data[13])*invw;
@@ -284,7 +284,7 @@ Vector Matrix::operator*(Vector const& v) const {
 Vector Matrix::rotate(Vector const& v) const {
     Vector out;
     
-    //float invw = 1.0f / (data[3]*v.x + data[7]*v.y + data[11]*v.z + data[15]);
+    //Scalar invw = 1.0f / (data[3]*v.x + data[7]*v.y + data[11]*v.z + data[15]);
     
     out.x = (data[0]*v.x + data[4]*v.y + data[8]*v.z);// + data[12])*invw;
     out.y = (data[1]*v.x + data[5]*v.y + data[9]*v.z);// + data[13])*invw;
@@ -313,24 +313,24 @@ Matrix Matrix::inverse() const {
     // This inversion routine is taken from Ogre3D, version 1.7.
     Matrix out;
     
-    float m00 = data[0], m01 = data[4], m02 = data[8], m03 = data[12];
-    float m10 = data[1], m11 = data[5], m12 = data[9], m13 = data[13];
-    float m20 = data[2], m21 = data[6], m22 = data[10], m23 = data[14];
-    float m30 = data[3], m31 = data[7], m32 = data[11], m33 = data[15];
+    Scalar m00 = data[0], m01 = data[4], m02 = data[8], m03 = data[12];
+    Scalar m10 = data[1], m11 = data[5], m12 = data[9], m13 = data[13];
+    Scalar m20 = data[2], m21 = data[6], m22 = data[10], m23 = data[14];
+    Scalar m30 = data[3], m31 = data[7], m32 = data[11], m33 = data[15];
 
-    float v0 = m20 * m31 - m21 * m30;
-    float v1 = m20 * m32 - m22 * m30;
-    float v2 = m20 * m33 - m23 * m30;
-    float v3 = m21 * m32 - m22 * m31;
-    float v4 = m21 * m33 - m23 * m31;
-    float v5 = m22 * m33 - m23 * m32;
+    Scalar v0 = m20 * m31 - m21 * m30;
+    Scalar v1 = m20 * m32 - m22 * m30;
+    Scalar v2 = m20 * m33 - m23 * m30;
+    Scalar v3 = m21 * m32 - m22 * m31;
+    Scalar v4 = m21 * m33 - m23 * m31;
+    Scalar v5 = m22 * m33 - m23 * m32;
 
-    float t00 = + (v5 * m11 - v4 * m12 + v3 * m13);
-    float t10 = - (v5 * m10 - v2 * m12 + v1 * m13);
-    float t20 = + (v4 * m10 - v2 * m11 + v0 * m13);
-    float t30 = - (v3 * m10 - v1 * m11 + v0 * m12);
+    Scalar t00 = + (v5 * m11 - v4 * m12 + v3 * m13);
+    Scalar t10 = - (v5 * m10 - v2 * m12 + v1 * m13);
+    Scalar t20 = + (v4 * m10 - v2 * m11 + v0 * m13);
+    Scalar t30 = - (v3 * m10 - v1 * m11 + v0 * m12);
 
-    float invDet = 1 / (t00 * m00 + t10 * m01 + t20 * m02 + t30 * m03);
+    Scalar invDet = 1 / (t00 * m00 + t10 * m01 + t20 * m02 + t30 * m03);
 
     out[0] = t00 * invDet;
     out[1] = t10 * invDet;
@@ -369,12 +369,29 @@ Matrix Matrix::inverse() const {
     return out;
 }
 
-Matrix::operator const float*() const {
-    return data;
-}
-    
-Matrix::operator float*() {
-    return data;
+GLmat4 Matrix::mat4f() const { 
+    GLmat4 out;
+    out.data[0] = data[0];
+    out.data[1] = data[1];
+    out.data[2] = data[2];
+    out.data[3] = data[3];
+
+    out.data[4] = data[4];
+    out.data[5] = data[5];
+    out.data[6] = data[6];
+    out.data[7] = data[7];
+
+    out.data[8] = data[8];
+    out.data[9] = data[9];
+    out.data[10] = data[10];
+    out.data[11] = data[11];
+
+    out.data[12] = data[12];
+    out.data[13] = data[13];
+    out.data[14] = data[14];
+    out.data[15] = data[15];
+
+    return out;
 }
     
 Vector Matrix::forward() const {

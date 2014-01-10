@@ -36,37 +36,37 @@ Vector const& SpotLight::direction() const {
     return direction_;
 }
 
-float SpotLight::constantAttenuation() const {
+Scalar SpotLight::constantAttenuation() const {
     return constantAttenuation_;
 }
 
-float SpotLight::linearAttenuation() const {
+Scalar SpotLight::linearAttenuation() const {
     return linearAttenuation_;
 }
 
-float SpotLight::quadraticAttenuation() const {
+Scalar SpotLight::quadraticAttenuation() const {
     return quadraticAttenuation_;
 }
 
-float SpotLight::spotCutoff() const {
+Scalar SpotLight::spotCutoff() const {
     return spotCutoff_;
 }
 
-float SpotLight::spotPower() const {
+Scalar SpotLight::spotPower() const {
     return spotPower_;
 }
 
-float SpotLight::radiusOfEffect() const {
-    float a = quadraticAttenuation();
-    float b = linearAttenuation();
-    float c = constantAttenuation(); 
-    float minIntensity = 0.02f;
+Scalar SpotLight::radiusOfEffect() const {
+    Scalar a = quadraticAttenuation();
+    Scalar b = linearAttenuation();
+    Scalar c = constantAttenuation(); 
+    Scalar minIntensity = 0.02f;
 
     if (a != 0) {
         // Quadratic equation to find distance at which intensity
         // is below the threshold
-        float d1 = -b + std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
-        float d2 = -b - std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        Scalar d1 = -b + std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
+        Scalar d2 = -b - std::sqrt(b*b - 4*a*(c - 1/minIntensity))/2/a;
 
         return std::max(d1, d2);
     } else if (b != 0) {
@@ -87,65 +87,38 @@ Matrix const& SpotLight::transform() const {
 }
 
 void SpotLight::diffuseColorIs(Color const& diffuse) {
-    if (diffuseColor_ == diffuse) {
-        return;
-    }
     diffuseColor_ = diffuse;
 }
 
 void SpotLight::specularColorIs(Color const& specular) {
-    if (specularColor_ == specular) {
-        return;
-    }
     specularColor_ = specular;
 }
 
 void SpotLight::directionIs(Vector const& direction) {
-    if (direction_ == direction) {
-        return;
-    }
     direction_ = direction;
 }
 
-void SpotLight::constantAttenuationIs(float atten) {
-    if (constantAttenuation_ == atten) {
-        return;
-    }
+void SpotLight::constantAttenuationIs(Scalar atten) {
     constantAttenuation_ = atten;
 }
 
-void SpotLight::linearAttenuationIs(float atten) {
-    if (linearAttenuation_ == atten) {
-        return;
-    }
+void SpotLight::linearAttenuationIs(Scalar atten) {
     linearAttenuation_ = atten;
 }
 
-void SpotLight::quadraticAttenuationIs(float atten) {
-    if (quadraticAttenuation_ == atten) {
-        return;
-    }
+void SpotLight::quadraticAttenuationIs(Scalar atten) {
     quadraticAttenuation_ = atten;
 }
 
-void SpotLight::spotCutoffIs(float cutoff) {
-    if (spotCutoff_ == cutoff) {
-        return;
-    }
+void SpotLight::spotCutoffIs(Scalar cutoff) {
     spotCutoff_ = cutoff;
 }
 
-void SpotLight::spotPowerIs(float power) {
-    if (spotPower_ == power) {
-        return;
-    }
+void SpotLight::spotPowerIs(Scalar power) {
     spotPower_ = power;
 }
 
 void SpotLight::shadowMapIs(Ptr<DepthRenderTarget> target) {
-    if (shadowMap_ == target) {
-        return;
-    }
     shadowMap_ = target;
 }
 

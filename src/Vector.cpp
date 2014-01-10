@@ -12,7 +12,7 @@
 using namespace sfr;
 
 
-Vector::Vector(float x, float y, float z) : 
+Vector::Vector(Scalar x, Scalar y, Scalar z) : 
     x(x),
     y(y),
     z(z) {
@@ -24,27 +24,27 @@ Vector::Vector() :
     z(0) {
 }
 
-float Vector::length() const {
+Scalar Vector::length() const {
     return sqrt(lengthSquared());
 }
 
-float Vector::lengthSquared() const {
+Scalar Vector::lengthSquared() const {
     return x*x + y*y + z*z;
 }
 
-float Vector::distance(Vector const& other) const {
+Scalar Vector::distance(Vector const& other) const {
     return sqrt(distanceSquared(other));
 }
 
-float Vector::distanceSquared(Vector const& other) const {
+Scalar Vector::distanceSquared(Vector const& other) const {
     return (other - (*this)).lengthSquared();
 }
 
-float Vector::dot(Vector const& other) const {
+Scalar Vector::dot(Vector const& other) const {
     return x*other.x + y*other.y + z*other.z;
 }
 
-Vector Vector::lerp(Vector const& other, float alpha) const {
+Vector Vector::lerp(Vector const& other, Scalar alpha) const {
     return *this * (1-alpha) + other * (alpha);
 }
 
@@ -75,11 +75,11 @@ Vector Vector::operator-() const {
     return Vector(-x, -y, -z);
 }
 
-Vector Vector::operator/(float s) const {
+Vector Vector::operator/(Scalar s) const {
 	return Vector(x/s, y/s, z/s);
 }
 
-Vector Vector::operator*(float s) const {
+Vector Vector::operator*(Scalar s) const {
     return Vector(s*x, s*y, s*z);
 }
 
@@ -104,7 +104,7 @@ Vector Vector::project(Vector const& other) const {
 }
 
 Vector Vector::unit() const {
-    float norm = length();
+    Scalar norm = length();
     return Vector(x/norm, y/norm, z/norm);
 }
 
@@ -118,14 +118,11 @@ Vector Vector::orthogonal() const {
     return ortho.unit();    
 }
 
-Vector::operator const float*() const {
-    return &x;
+GLvec3
+Vector::vec3f() const {
+    return GLvec3(x, y, z);
 }
     
-Vector::operator float*() {
-    return &x;
-}
-
 bool Vector::operator<(Vector const& other) const {
     if (x != other.x) return x < other.x;
     if (y != other.y) return y < other.y;
@@ -143,7 +140,6 @@ bool Vector::operator==(Vector const& other) const {
 bool Vector::operator!=(Vector const& other) const {
     return !this->operator==(other);
 }
-
 
 std::ostream& operator<<(std::ostream& out, Vector const& vector) {
     return out << vector.x << " " << vector.y << " " << vector.z;

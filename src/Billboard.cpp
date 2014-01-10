@@ -21,11 +21,11 @@ void Billboard::textureIs(Ptr<Texture> texture) {
     texture_ = texture;
 }
 
-void Billboard::widthIs(GLfloat width) {
+void Billboard::widthIs(Scalar width) {
     width_ = width;
 }
 
-void Billboard::heightIs(GLfloat height) {
+void Billboard::heightIs(Scalar height) {
     height_ = height;
 }
 

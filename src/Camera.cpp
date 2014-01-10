@@ -30,31 +30,31 @@ Camera::Type Camera::type() const {
     return type_;
 }
 
-float Camera::far() const {
+Scalar Camera::far() const {
     return far_;
 }
 
-float Camera::near() const {
+Scalar Camera::near() const {
     return near_;
 }
 
-float Camera::left() const {
+Scalar Camera::left() const {
     return left_;
 }
 
-float Camera::right() const {
+Scalar Camera::right() const {
     return right_;
 }
 
-float Camera::top() const {
+Scalar Camera::top() const {
     return top_;
 }
 
-float Camera::bottom() const {
+Scalar Camera::bottom() const {
     return bottom_;
 }
 
-float Camera::fieldOfView() const {
+Scalar Camera::fieldOfView() const {
     return fieldOfView_;
 }
 
@@ -84,12 +84,12 @@ Frustum Camera::viewFrustum() const {
         glGetFloatv(GL_VIEWPORT, viewport);
 
         // Find the width and height of the near and far planes
-        float ratio = viewport[2]/viewport[3];
-        float tang = tan(RADIANS(fieldOfView()) * 0.5f);
-        float nh = near_ * tang; // Height of the near plane
-        float nw = nh * ratio; // Width of the near plane
-        float fh = far_ * tang; // Height of the far plane
-        float fw = fh * ratio; // Width of the near plane
+        Scalar ratio = viewport[2]/viewport[3];
+        Scalar tang = tan(RADIANS(fieldOfView()) * 0.5f);
+        Scalar nh = near_ * tang; // Height of the near plane
+        Scalar nw = nh * ratio; // Width of the near plane
+        Scalar fh = far_ * tang; // Height of the far plane
+        Scalar fw = fh * ratio; // Width of the near plane
 
         // Get "look at" vectors.  The AT vector is simply a vector somewhere
         // along the local +z axis for the camera.
@@ -128,7 +128,7 @@ Matrix Camera::projectionTransform() const {
     } else {
         GLfloat viewport[4];
         glGetFloatv(GL_VIEWPORT, viewport);
-        float aspectRatio = viewport[2]/viewport[3];
+        Scalar aspectRatio = viewport[2]/viewport[3];
         return Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
     }
 }
@@ -141,31 +141,31 @@ Matrix const& Camera::worldTransform() const {
     return worldTransform_;
 }
 
-void Camera::farIs(float distance) {
+void Camera::farIs(Scalar distance) {
     far_ = distance;
 }
 
-void Camera::nearIs(float distance) {
+void Camera::nearIs(Scalar distance) {
     near_ = distance;
 }
 
-void Camera::leftIs(float distance) {
+void Camera::leftIs(Scalar distance) {
     left_ = distance;
 }
 
-void Camera::rightIs(float distance) {
+void Camera::rightIs(Scalar distance) {
     right_ = distance;
 }
 
-void Camera::topIs(float distance) {
+void Camera::topIs(Scalar distance) {
     top_ = distance;
 }
 
-void Camera::bottomIs(float distance) {
+void Camera::bottomIs(Scalar distance) {
     bottom_ = distance;
 }
 
-void Camera::fieldOfViewIs(float view) {
+void Camera::fieldOfViewIs(Scalar view) {
     fieldOfView_ = view;
 }
 

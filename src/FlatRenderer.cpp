@@ -60,9 +60,9 @@ void FlatRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, worldTransform());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

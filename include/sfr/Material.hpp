@@ -23,16 +23,16 @@ public:
     Color const& diffuseColor() const;
     Color const& specularColor() const;
     Color const& emissiveColor() const;
-    float shininess() const;
-    float opacity() const;
+    Scalar shininess() const;
+    Scalar opacity() const;
 
     void textureIs(std::string const& name, Ptr<Texture> texture);
     void ambientColorIs(Color const& color);
     void diffuseColorIs(Color const& color);
     void specularColorIs(Color const& color);
     void emissiveColorIs(Color const& color);
-    void shininessIs(float shininess);
-    void opacityIs(float opacity);
+    void shininessIs(Scalar shininess);
+    void opacityIs(Scalar opacity);
 
 private:
     std::string name_;
@@ -41,8 +41,8 @@ private:
     Color diffuseColor_;
     Color specularColor_;
     Color emissiveColor_;
-    float shininess_;
-    float opacity_;
+    Scalar shininess_;
+    Scalar opacity_;
 };
 
 }

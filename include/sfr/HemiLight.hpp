@@ -20,17 +20,17 @@ public:
     Color const& diffuseColor() const;
     Color const& backDiffuseColor() const;
     Vector const& direction() const;
-    float constantAttenuation() const;
-    float linearAttenuation() const;
-    float quadraticAttenuation() const;
-    float radiusOfEffect() const;
+    Scalar constantAttenuation() const;
+    Scalar linearAttenuation() const;
+    Scalar quadraticAttenuation() const;
+    Scalar radiusOfEffect() const;
 
     void diffuseColorIs(Color const& diffuse);
     void backDiffuseColorIs(Color const& color);
     void directionIs(Vector const& direction);
-    void constantAttenuationIs(float atten);
-    void linearAttenuationIs(float atten);
-    void quadraticAttenuationIs(float atten);
+    void constantAttenuationIs(Scalar atten);
+    void linearAttenuationIs(Scalar atten);
+    void quadraticAttenuationIs(Scalar atten);
 
     void operator()(Ptr<Functor> functor);
 
@@ -38,9 +38,9 @@ private:
     Color diffuseColor_;
     Color backDiffuseColor_;
     Vector direction_;
-    float constantAttenuation_;
-    float linearAttenuation_;
-    float quadraticAttenuation_;
+    Scalar constantAttenuation_;
+    Scalar linearAttenuation_;
+    Scalar quadraticAttenuation_;
 };
 
 }

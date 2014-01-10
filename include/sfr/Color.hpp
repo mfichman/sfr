@@ -15,22 +15,20 @@ namespace sfr {
 
 class Color {
 public:
-    Color(float red, float blue, float green, float alpha);
+    Color(Scalar red, Scalar blue, Scalar green, Scalar alpha);
     Color();
-
-    operator const float*() const;
-    operator float*();
-
-    Color operator*(float scale) const;
+    
+    GLvec4 vec4f() const;
+    Color operator*(Scalar scale) const;
     Color operator+(Color const& other) const;
     
     friend std::ostream& ::operator<<(std::ostream& out, Color const& color);
     friend std::istream& ::operator>>(std::istream& in, Color& color);
 
-    float red;
-    float blue;
-    float green;
-    float alpha;
+    Scalar red;
+    Scalar blue;
+    Scalar green;
+    Scalar alpha;
 };
 
 }

@@ -11,38 +11,43 @@
 using namespace sfr;
 
 bool MeshVertex::operator<(MeshVertex const& other) const {
-    if (position != other.position) {
-        return position < other.position;
+    if (position.x != other.position.x) {
+        return position.x < other.position.x;
     }
-    if (normal != other.normal) {
-        return normal < other.normal;
+    if (position.y != other.position.y) {
+        return position.y < other.position.y;
     }
-    return texCoord < other.texCoord;
+    if (position.z != other.position.z) {
+        return position.z < other.position.z;
+    }
+
+    if (normal.x != other.normal.x) {
+        return normal.x < other.normal.x;
+    }
+    if (normal.y != other.normal.y) {
+        return normal.y < other.normal.y;
+    }
+    if (normal.z != other.normal.z) {
+        return normal.z < other.normal.z;
+    }
+
+    if (texCoord.u != other.texCoord.u) {
+        return texCoord.u < other.texCoord.u;
+    }
+    return texCoord.v < other.texCoord.v;
 }
 
 bool MeshVertex::operator==(MeshVertex const& other) const {
-    return position == other.position && texCoord == other.texCoord
-        && normal == other.normal;
+    return position.x == other.position.x 
+        && position.y == other.position.y 
+        && position.z == other.position.z 
+        && texCoord.u == other.texCoord.u
+        && texCoord.v == other.texCoord.v
+        && normal.x == other.normal.x
+        && normal.y == other.normal.y
+        && normal.z == other.normal.z;
 }
 
 bool MeshVertex::operator!=(MeshVertex const& other) const {
     return !this->operator==(other);
-}
-
-MeshVertex MeshVertex::operator+(MeshVertex const& other) const {
-    MeshVertex out;
-    out.position = position + other.position;
-    out.normal = normal + other.normal;
-    out.tangent = tangent + other.tangent;
-    out.texCoord = texCoord + other.texCoord;
-    return out;
-}
-
-MeshVertex MeshVertex::operator*(float scale) const {
-    MeshVertex out;
-    out.position = position * scale;
-    out.normal = normal * scale;
-    out.tangent = tangent * scale;
-    out.texCoord = texCoord * scale;
-    return out;
 }

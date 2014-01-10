@@ -61,11 +61,11 @@ void Ribbon::statusIs(Status status) {
     }
 }
 
-void Ribbon::widthIs(GLfloat width) {
+void Ribbon::widthIs(Scalar width) {
     width_ = width;
 }
 
-void Ribbon::minWidthIs(GLfloat width) {
+void Ribbon::minWidthIs(Scalar width) {
     minWidth_ = width;
 }
 
@@ -107,15 +107,15 @@ void Ribbon::rebuildBuffer() {
             // keep the end of the ribbon flat at a 90-degree angle to the
             // movement direction.
             auto rv = RibbonVertex();
-            rv.position = (*i + (right*sign*width/2.));
-            rv.texCoord = TexCoord(.5, (sign+1.)/2.);
+            rv.position = (*i + (right*sign*width/2.)).vec3f();
+            rv.texCoord = GLvec2(.5, (sign+1.)/2.);
             rv.alpha = 4*(GLfloat)index/(GLfloat)point_.size();
             buffer_->elementEnq(rv);
             sign *= -1;
         }
         auto rv = RibbonVertex();
-        rv.position = (*i + (right*sign*width/2.));
-        rv.texCoord = TexCoord(.5, (sign+1.)/2.);
+        rv.position = (*i + (right*sign*width/2.)).vec3f();
+        rv.texCoord = GLvec2(.5, (sign+1.)/2.);
         rv.alpha = 4*(GLfloat)index/(GLfloat)point_.size();
         buffer_->elementEnq(rv);
         sign *= -1;

@@ -14,24 +14,25 @@ namespace sfr {
 class Matrix {
 public:
 	
-	static Matrix frustum(float l, float r, float b, float t, float n, float f);
-	static Matrix ortho(float l, float r, float b, float t, float n, float f);
-	static Matrix perspective(float fovy, float aspect, float near, float far);
-    static Matrix scale(float sx, float sy, float sz);
+	static Matrix frustum(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f);
+	static Matrix ortho(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f);
+	static Matrix perspective(Scalar fovy, Scalar aspect, Scalar near, Scalar far);
+    static Matrix scale(Scalar sx, Scalar sy, Scalar sz);
     static Matrix rotate(Quaternion const& rotation);
     static Matrix rotate(Vector const& x, Vector const& y, Vector const& z);
     static Matrix look(Vector const& pos, Vector const& at, Vector const& up);
     static Matrix look(Vector const& direction);
     static Matrix translate(Vector const& trans);
 
-    Matrix(const float data[16]);
-    Matrix(float m00, float m01, float m02, float m03,
-           float m10, float m11, float m12, float m13,
-           float m20, float m21, float m22, float m23,
-           float m30, float m31, float m32, float m33);
+    Matrix(const Scalar data[16]);
+    Matrix(Scalar m00, Scalar m01, Scalar m02, Scalar m03,
+           Scalar m10, Scalar m11, Scalar m12, Scalar m13,
+           Scalar m20, Scalar m21, Scalar m22, Scalar m23,
+           Scalar m30, Scalar m31, Scalar m32, Scalar m33);
     Matrix(Quaternion const& rotation, Vector const& trans);
     Matrix();
 
+    GLmat4 mat4f() const;
     Matrix inverse() const;
     Matrix transpose() const;
     Matrix operator*(Matrix const& other) const;
@@ -40,8 +41,6 @@ public:
     Vector rotate(Vector const& other) const;
     Vector normal(Vector const& other) const;
 
-    operator const float*() const;
-    operator float*();
     Vector forward() const;
     Vector right() const;
     Vector up() const;
@@ -54,6 +53,9 @@ public:
      * 2  6  10 14
      * 3  7  11 15
     */
-    float data[16];
+    Scalar operator[](size_t index) const { return data[index]; }
+    Scalar& operator[](size_t index) { return data[index]; }
+private:
+    Scalar data[16];
 };
 }

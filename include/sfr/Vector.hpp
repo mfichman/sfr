@@ -17,30 +17,29 @@ namespace sfr {
 class Vector {
 public:
 
-    Vector(float x, float y, float z);
+    Vector(Scalar x, Scalar y, Scalar z);
     Vector();
 
-    float length() const;
-    float lengthSquared() const;
-    float distance(Vector const& other) const;
-    float distanceSquared(Vector const& other) const;
-    float dot(Vector const& other) const;
+    Scalar length() const;
+    Scalar lengthSquared() const;
+    Scalar distance(Vector const& other) const;
+    Scalar distanceSquared(Vector const& other) const;
+    Scalar dot(Vector const& other) const;
     Vector cross(Vector const& other) const;
     Vector operator+(Vector const& other) const;
     Vector operator-(Vector const& other) const;
     Vector operator*(Vector const& other) const;
     Vector operator/(Vector const& other) const;
-	Vector operator/(float s) const;
+	Vector operator/(Scalar s) const;
     Vector operator-() const;
-    Vector operator*(float s) const;
+    Vector operator*(Scalar s) const;
     Vector& operator+=(Vector const& other);
     Vector& operator-=(Vector const& other);
     Vector project(Vector const& other) const;
     Vector unit() const;
     Vector orthogonal() const;
-    Vector lerp(Vector const& other, float alpha) const;
-    operator const float*() const;
-    operator float*();
+    Vector lerp(Vector const& other, Scalar alpha) const;
+    GLvec3 vec3f() const;
 
     friend std::ostream& ::operator<<(std::ostream& out, Vector const& vector);
     friend std::istream& ::operator>>(std::istream& in, Vector& vector);
@@ -54,9 +53,9 @@ public:
     static Vector UNIT_Y;
     static Vector UNIT_Z;
 
-    float x;
-    float y;
-    float z;
+    Scalar x;
+    Scalar y;
+    Scalar z;
 };
 
 }

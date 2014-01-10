@@ -10,14 +10,13 @@
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/TexCoord.hpp"
 
 namespace sfr {
 
 class RibbonVertex {
 public:
-    Vector position;
-    TexCoord texCoord;
+    GLvec3 position;
+    GLvec2 texCoord;
     GLfloat alpha;
 };
 
@@ -36,8 +35,8 @@ public:
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
     Ptr<Texture> texture() const { return texture_; }
     Status status() const { return status_; }
-    GLfloat width() const { return width_; }
-    GLfloat minWidth() const { return minWidth_; }
+    Scalar width() const { return width_; }
+    Scalar minWidth() const { return minWidth_; }
 
     void pointDeq();
     void pointHeadIs(Vector const& point);
@@ -45,8 +44,8 @@ public:
     void pointDelAll() { point_.clear(); }
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
-    void widthIs(GLfloat width);
-    void minWidthIs(GLfloat width);
+    void widthIs(Scalar width);
+    void minWidthIs(Scalar width);
     void cameraPositionIs(Vector const& pos);
 
     virtual void operator()(Ptr<Functor> functor);
@@ -61,8 +60,8 @@ private:
     std::list<Vector> point_;
     Status status_;
     GLuint id_;
-    GLfloat width_;
-    GLfloat minWidth_;
+    Scalar width_;
+    Scalar minWidth_;
     Vector cameraPosition_;
 };
 

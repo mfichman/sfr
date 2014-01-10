@@ -43,9 +43,9 @@ void SkyboxRenderer::operator()(Ptr<World> world) {
     world_ = world;
 
     Matrix const view = Matrix::rotate(camera->viewTransform().rotation());
-    glUniformMatrix4fv(model_, 1, 0, Matrix()); // Identity
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, view);
+    glUniformMatrix4fv(model_, 1, 0, Matrix().mat4f()); // Identity
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, view.mat4f());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->id());

@@ -52,11 +52,11 @@ Color const& Material::emissiveColor() const {
     return emissiveColor_;
 }
 
-float Material::shininess() const {
+Scalar Material::shininess() const {
     return shininess_;
 }
 
-float Material::opacity() const {
+Scalar Material::opacity() const {
     return opacity_;
 }
 
@@ -80,11 +80,11 @@ void Material::emissiveColorIs(Color const& color) {
     emissiveColor_ = color;
 }
 
-void Material::shininessIs(float shininess) {
+void Material::shininessIs(Scalar shininess) {
     shininess_ = shininess;
 }
 
-void Material::opacityIs(float opacity) {
+void Material::opacityIs(Scalar opacity) {
     opacity_ = opacity;
 }
 

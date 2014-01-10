@@ -62,9 +62,9 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
     // Pass the matrices to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, worldTransform());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the particles
     Ptr<AttributeBuffer> buffer = particles->buffer();

@@ -20,25 +20,25 @@ public:
     PointLight();
     Color const& diffuseColor() const;
     Color const& specularColor() const;
-    float constantAttenuation() const;
-    float linearAttenuation() const;
-    float quadraticAttenuation() const;
-    float radiusOfEffect() const;
+    Scalar constantAttenuation() const;
+    Scalar linearAttenuation() const;
+    Scalar quadraticAttenuation() const;
+    Scalar radiusOfEffect() const;
 
     void diffuseColorIs(Color const& diffuse);
     void specularColorIs(Color const& specular);
-    void constantAttenuationIs(float atten);
-    void linearAttenuationIs(float atten);
-    void quadraticAttenuationIs(float atten);
+    void constantAttenuationIs(Scalar atten);
+    void linearAttenuationIs(Scalar atten);
+    void quadraticAttenuationIs(Scalar atten);
 
     void operator()(Ptr<Functor> functor);
 
 private:
     Color diffuseColor_;
     Color specularColor_;
-    float constantAttenuation_;
-    float linearAttenuation_;
-    float quadraticAttenuation_;
+    Scalar constantAttenuation_;
+    Scalar linearAttenuation_;
+    Scalar quadraticAttenuation_;
 };
 
 }

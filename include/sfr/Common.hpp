@@ -47,6 +47,12 @@
 
 namespace sfr {
 
+#ifdef SFR_SINGLE_PRECISION
+typedef float Scalar;
+#else
+typedef double Scalar;
+#endif
+
 class ShadowRenderer;
 class FlatRenderer;
 class DeferredRenderer;
@@ -87,6 +93,44 @@ class Particle;
 class Ribbon;
 class Cubemap;
 class Billboard;
+
+
+class GLmat4 {
+public:
+    GLfloat data[16];
+    operator GLfloat const*() const { return data; }
+};
+
+class GLvec4 {
+public:
+    GLvec4(GLfloat x, GLfloat y, GLfloat z, GLfloat w) : x(x), y(y), z(z), w(w) {}
+    GLvec4() : x(0), y(0), z(0), w(0) {}
+    GLfloat x;
+    GLfloat y;
+    GLfloat z;
+    GLfloat w;
+    operator GLfloat const*() const { return &x; }
+};
+
+class GLvec3 {
+public:
+    GLvec3(GLfloat x, GLfloat y, GLfloat z) : x(x), y(y), z(z) {}
+    GLvec3() : x(0), y(0), z(0) {}
+    GLfloat x;
+    GLfloat y;
+    GLfloat z;
+    operator GLfloat const*() const { return &x; }
+};
+
+class GLvec2 {
+public:
+    GLvec2(GLfloat u, GLfloat v) : u(u), v(v) {}
+    GLvec2() : u(0), v(0) {}
+    GLfloat u;
+    GLfloat v;
+    operator GLfloat const*() const { return &u; }
+};
+
 
 }
 

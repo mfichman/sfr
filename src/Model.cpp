@@ -8,7 +8,6 @@
 #include "sfr/Common.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/TexCoord.hpp"
 #include "sfr/Effect.hpp"
 #include "sfr/Material.hpp"
 #include <algorithm>

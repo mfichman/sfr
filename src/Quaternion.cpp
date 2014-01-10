@@ -15,7 +15,7 @@ using namespace sfr;
 
 Quaternion Quaternion::IDENTITY;
 
-Quaternion::Quaternion(float w, Vector const& vector) : 
+Quaternion::Quaternion(Scalar w, Vector const& vector) : 
 	w(w),
 	x(vector.x),
 	y(vector.y),
@@ -23,16 +23,16 @@ Quaternion::Quaternion(float w, Vector const& vector) :
 
 }
 
-Quaternion::Quaternion(float w, float x, float y, float z) : 
+Quaternion::Quaternion(Scalar w, Scalar x, Scalar y, Scalar z) : 
     w(w),
     x(x),
     y(y),
     z(z) {
 }
 
-Quaternion::Quaternion(Vector const& axis, float angle) {
-    float halfAngle = 0.5f*angle;
-    float sin = sinf(halfAngle);
+Quaternion::Quaternion(Vector const& axis, Scalar angle) {
+    Scalar halfAngle = 0.5f*angle;
+    Scalar sin = sinf(halfAngle);
     w = cosf(halfAngle);
     x = sin*axis.x;
     y = sin*axis.y;
@@ -40,7 +40,7 @@ Quaternion::Quaternion(Vector const& axis, float angle) {
 }
 
 Quaternion::Quaternion(Vector const& xaxis, Vector const& yaxis, Vector const& zaxis) {
-    float kRot[3][3];
+    Scalar kRot[3][3];
     kRot[0][0] = xaxis.x;
     kRot[1][0] = xaxis.y;
     kRot[2][0] = xaxis.z;
@@ -53,8 +53,8 @@ Quaternion::Quaternion(Vector const& xaxis, Vector const& yaxis, Vector const& z
     kRot[1][2] = zaxis.y;
     kRot[2][2] = zaxis.z;
 
-    float fTrace = kRot[0][0]+kRot[1][1]+kRot[2][2];
-    float fRoot;
+    Scalar fTrace = kRot[0][0]+kRot[1][1]+kRot[2][2];
+    Scalar fRoot;
 
     if (fTrace > 0.0) {
         // |w| > 1/2, may as well choose w > 1/2
@@ -76,7 +76,7 @@ Quaternion::Quaternion(Vector const& xaxis, Vector const& yaxis, Vector const& z
         size_t k = s_iNext[j];
 
         fRoot = sqrtf(kRot[i][i]-kRot[j][j]-kRot[k][k] + 1.0f);
-        float* apkQuat[3] = { &x, &y, &z };
+        Scalar* apkQuat[3] = { &x, &y, &z };
         *apkQuat[i] = 0.5f*fRoot;
         fRoot = 0.5f/fRoot;
         w = (kRot[k][j]-kRot[j][k])*fRoot;
@@ -93,11 +93,11 @@ Quaternion::Quaternion() :
 }
 
   
-float Quaternion::length() const {
+Scalar Quaternion::length() const {
     return sqrtf(lengthSquared());
 }
 
-float Quaternion::lengthSquared() const {
+Scalar Quaternion::lengthSquared() const {
     return w*w + x*x + y*y + z*z;
 }
 
@@ -118,7 +118,7 @@ Quaternion Quaternion::operator*(Quaternion const& other) const {
 }
 
 Quaternion Quaternion::inverse() const {
-    float norm = lengthSquared();
+    Scalar norm = lengthSquared();
     if (norm > 0) {
         return Quaternion(w/norm, -x/norm, -y/norm, -z/norm);
     } else {
@@ -126,7 +126,7 @@ Quaternion Quaternion::inverse() const {
     }
 }
 
-float Quaternion::dot(Quaternion const& other) const {
+Scalar Quaternion::dot(Quaternion const& other) const {
     return w*other.w + x*other.x + y*other.y + z*other.z;
 }
 
@@ -141,7 +141,7 @@ Vector Quaternion::operator*(Vector const& v) const {
     return v + uv + uuv;
 }
 
-Quaternion Quaternion::operator*(float s) const {
+Quaternion Quaternion::operator*(Scalar s) const {
     return Quaternion(w*s, x*s, y*s, z*s);
 }
 
@@ -150,12 +150,12 @@ Quaternion Quaternion::operator-() const {
 }
 
 Quaternion Quaternion::unit() const {
-    float norm = length();
+    Scalar norm = length();
     return Quaternion(w/norm, x/norm, y/norm, z/norm);
 }
 
-Quaternion Quaternion::slerp(Quaternion const& other, float alpha) const {
-    float cos = this->dot(other);
+Quaternion Quaternion::slerp(Quaternion const& other, Scalar alpha) const {
+    Scalar cos = this->dot(other);
     Quaternion rkt;
 
     if (cos < 0) {
@@ -166,11 +166,11 @@ Quaternion Quaternion::slerp(Quaternion const& other, float alpha) const {
     }
 
     if (abs(cos) < 1 - 1e-03) {
-        float sin = std::sqrt(1 - cos*cos);
-        float angle = std::atan2(sin, cos);
-        float inv_sin = 1/sin;
-        float coeff0 = std::sin((1-alpha) * angle) * inv_sin;
-        float coeff1 = std::sin(alpha * angle) * inv_sin;
+        Scalar sin = std::sqrt(1 - cos*cos);
+        Scalar angle = std::atan2(sin, cos);
+        Scalar inv_sin = 1/sin;
+        Scalar coeff0 = std::sin((1-alpha) * angle) * inv_sin;
+        Scalar coeff1 = std::sin(alpha * angle) * inv_sin;
         return (*this)*coeff0 + rkt*coeff1;
     } else {
         rkt = (*this)*(1-alpha) + rkt*alpha;

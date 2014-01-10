@@ -95,9 +95,9 @@ void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
     
     // Pass the model matrix to the vertex shader
     glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
-    glUniformMatrix4fv(model_, 1, 0, worldTransform());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform());
+    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
+    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -108,10 +108,10 @@ void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
 
 void MaterialRenderer::operator()(Ptr<Material> material) {
 
-    glUniform3fv(ambient_, 1, material->ambientColor());
-    glUniform3fv(diffuse_, 1, material->diffuseColor());
-    glUniform3fv(specular_, 1, material->specularColor());
-    glUniform3fv(emissive_, 1, material->emissiveColor());
+    glUniform3fv(ambient_, 1, material->ambientColor().vec4f());
+    glUniform3fv(diffuse_, 1, material->diffuseColor().vec4f());
+    glUniform3fv(specular_, 1, material->specularColor().vec4f());
+    glUniform3fv(emissive_, 1, material->emissiveColor().vec4f());
     glUniform1f(shininess_, material->shininess());
 
     glActiveTexture(GL_TEXTURE0);
