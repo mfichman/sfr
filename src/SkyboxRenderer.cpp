@@ -24,9 +24,7 @@ SkyboxRenderer::SkyboxRenderer(Ptr<AssetTable> manager) {
     unitSphere_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Sphere");
 
     glUseProgram(effect_->id());
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    transform_ = glGetUniformLocation(effect_->id(), "transform");
     glUseProgram(0);
 }
 
@@ -43,9 +41,8 @@ void SkyboxRenderer::operator()(Ptr<World> world) {
     world_ = world;
 
     Matrix const view = Matrix::rotate(camera->viewTransform().rotation());
-    glUniformMatrix4fv(model_, 1, 0, Matrix().mat4f()); // Identity
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, view.mat4f());
+    Matrix const transform = camera->projectionTransform() * view;
+    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->id());

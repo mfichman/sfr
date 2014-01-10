@@ -23,6 +23,7 @@ public:
     Camera();
     
     Frustum viewFrustum() const;
+    Matrix transform() const;
     Matrix projectionTransform() const;
     Matrix const& viewTransform() const;
     Matrix const& worldTransform() const;

@@ -55,9 +55,8 @@ private:
     GLint spotCutoff_;
     GLint spotPower_;
 
-    GLint model_;
-    GLint view_;
-    GLint projection_;
+    GLint transform_;
+    GLint modelView_;
     GLint unproject_;
     GLint light_;
     

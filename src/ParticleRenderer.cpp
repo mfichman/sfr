@@ -27,8 +27,7 @@ ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
     glUseProgram(effect_->id());
 
     texture_ = glGetUniformLocation(effect_->id(), "tex");
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
+    modelView_ = glGetUniformLocation(effect_->id(), "modelViewMatrix");
     projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
        
     glUniform1i(texture_, 0);
@@ -62,9 +61,9 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
     // Pass the matrices to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
+    Matrix const modelView = camera->viewTransform() * worldTransform();
+    glUniformMatrix4fv(modelView_, 1, 0, modelView.mat4f());
     glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the particles
     Ptr<AttributeBuffer> buffer = particles->buffer();

@@ -37,8 +37,7 @@ MaterialRenderer::MaterialRenderer(Ptr<AssetTable> manager) {
     emissive_ = glGetUniformLocation(modelEffect_->id(), "Ke");
     shininess_ = glGetUniformLocation(modelEffect_->id(), "alpha");
     model_ = glGetUniformLocation(modelEffect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(modelEffect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(modelEffect_->id(), "projectionMatrix");
+    transform_ = glGetUniformLocation(modelEffect_->id(), "transform");
     normalMatrix_ = glGetUniformLocation(modelEffect_->id(), "normalMatrix");
 
     // Set texture samplers
@@ -92,12 +91,13 @@ void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
         normalMatrix[4], normalMatrix[5], normalMatrix[6],
         normalMatrix[8], normalMatrix[9], normalMatrix[10]
     };
+
+    Matrix const transform = camera->transform() * worldTransform();
     
     // Pass the model matrix to the vertex shader
     glUniformMatrix3fv(normalMatrix_, 1, 0, temp);    
+    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
     glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

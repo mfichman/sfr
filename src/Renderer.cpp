@@ -16,23 +16,23 @@ void Renderer::operator()(Ptr<Transform> transform) {
     // Cache a pointer to the transform node that is lowest on the tree, so
     // that we can retrieve the world transform easily.
     if (transform->renderMode() == Transform::INVISIBLE) { return; }
-    Matrix previous = transform_;
+    Matrix previous = worldTransform_;
     switch (transform->transformMode()) {
     case Transform::WORLD: 
-        transform_ = transform->transform();
+        worldTransform_ = transform->transform();
         break;
     case Transform::INHERIT:
-        transform_ = transform_ * transform->transform();
+        worldTransform_ = worldTransform_ * transform->transform();
         break;
     }
     for (Iterator<Node> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<Renderer>(shared_from_this()));
     }
-    transform_ = previous;
+    worldTransform_ = previous;
 }
 
 Matrix const& Renderer::worldTransform() const { 
-    return transform_;
+    return worldTransform_;
 }
 
 }

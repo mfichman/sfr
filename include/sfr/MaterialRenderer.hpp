@@ -23,7 +23,6 @@ public:
     void operator()(Ptr<Effect> effect);
 
 private:
-    Ptr<Transform> transform_;
     Ptr<Effect> modelEffect_;
     Ptr<World> world_;
     
@@ -40,8 +39,7 @@ private:
     GLint emissive_;
 
     GLint model_;
-    GLint view_;
-    GLint projection_;
+    GLint transform_;
     GLint normalMatrix_;
 };
 

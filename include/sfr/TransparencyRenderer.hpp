@@ -30,9 +30,7 @@ private:
     GLint diffuse_;
     GLint opacity_;
 
-    GLint model_;
-    GLint view_;
-    GLint projection_;
+    GLint transform_;
 };
 
 }

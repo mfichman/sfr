@@ -26,9 +26,7 @@ private:
     Ptr<Effect> effect_;
 
     bool shadowPass_;
-    GLint model_;
-    GLint view_;
-    GLint projection_;
+    GLint transform_;
 };
 
 }

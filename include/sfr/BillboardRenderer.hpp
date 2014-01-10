@@ -25,9 +25,7 @@ private:
     Ptr<Mesh> quad_;
 
     GLint texture_;
-    GLint model_;
-    GLint view_;
-    GLint projection_;
+    GLint transform_;
     GLint tint_;
 };
 

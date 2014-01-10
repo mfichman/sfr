@@ -25,9 +25,7 @@ FlatRenderer::FlatRenderer(Ptr<AssetTable> manager, bool shadowPass) {
     shadowPass_ = shadowPass;
 
     glUseProgram(effect_->id());
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    transform_ = glGetUniformLocation(effect_->id(), "transform");
     glUseProgram(0);
 }
 
@@ -60,9 +58,8 @@ void FlatRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    Matrix const transform = camera->transform() * worldTransform();
+    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

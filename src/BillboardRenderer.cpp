@@ -31,9 +31,7 @@ BillboardRenderer::BillboardRenderer(Ptr<AssetTable> assets) {
     glUseProgram(effect_->id());
 
     texture_ = glGetUniformLocation(effect_->id(), "tex");
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    transform_ = glGetUniformLocation(effect_->id(), "transform");
     tint_ = glGetUniformLocation(effect_->id(), "tint");
        
     glUniform1i(texture_, 0);
@@ -85,9 +83,8 @@ void BillboardRenderer::operator()(Ptr<Billboard> billboard) {
     glBindTexture(GL_TEXTURE_2D, texture->id());
     glUniform4fv(tint_, 1, billboard->tint().vec4f());
 
-    glUniformMatrix4fv(model_, 1, 0, transform.mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    transform = camera->transform() * transform;
+    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

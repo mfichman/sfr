@@ -20,7 +20,7 @@ public:
     Matrix const& worldTransform() const; // Current world transform
 
 protected:
-    Matrix transform_;
+    Matrix worldTransform_;
 };
 
 }

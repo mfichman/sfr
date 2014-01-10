@@ -23,9 +23,7 @@ RibbonRenderer::RibbonRenderer(Ptr<AssetTable> assets) {
     glUseProgram(effect_->id());
 
     texture_ = glGetUniformLocation(effect_->id(), "tex");
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    transform_ = glGetUniformLocation(effect_->id(), "transform");
        
     glUniform1i(texture_, 0);
     glUseProgram(0);
@@ -62,9 +60,8 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
     // Pass the matrices to the vertex shader
-    glUniformMatrix4fv(model_, 1, 0, worldTransform().mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    Matrix const transform = camera->transform() * worldTransform();
+    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
 
     // Render the particles
     Ptr<AttributeBuffer> buffer = ribbon->buffer();

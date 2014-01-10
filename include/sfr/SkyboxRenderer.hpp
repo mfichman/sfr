@@ -23,9 +23,7 @@ private:
     Ptr<Effect> effect_;
     Ptr<Mesh> unitSphere_;
 
-    GLint model_;
-    GLint view_;
-    GLint projection_;
+    GLint transform_;
 };
 
 }

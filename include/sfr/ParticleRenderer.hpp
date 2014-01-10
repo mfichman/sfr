@@ -24,9 +24,8 @@ private:
     Ptr<World> world_;
 
     GLint texture_;
-    GLint model_;
-    GLint view_;
     GLint projection_;
+    GLint modelView_;
 };
 
 }

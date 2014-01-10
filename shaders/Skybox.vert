@@ -8,15 +8,11 @@
 #version 330
 #pragma include "shaders/Mesh.vert"
 
-uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 transform;
 
 out vec3 texCoord;
 
 void main() {
-    mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
-    
     gl_Position = transform * vec4(positionIn, 1);
     // Set z=w so that the skydome is always on the far z plane
     // (Note: OpenGL needs a little bias so that z is almost to the far z

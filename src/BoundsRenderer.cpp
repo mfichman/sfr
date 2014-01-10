@@ -125,7 +125,7 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    Matrix transform = transform_ * rotate * scale;
+    Matrix transform = worldTransform() * rotate * scale;
 
     Ptr<Camera> camera = world_->camera();
     glUniformMatrix4fv(model_, 1, 0, transform.mat4f());

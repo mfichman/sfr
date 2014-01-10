@@ -121,6 +121,10 @@ Frustum Camera::viewFrustum() const {
     }
 }
 
+Matrix Camera::transform() const {
+    return projectionTransform() * viewTransform();
+}
+
 Matrix Camera::projectionTransform() const {
 
     if (ORTHOGRAPHIC == type_) {

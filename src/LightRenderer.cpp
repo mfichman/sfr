@@ -73,19 +73,19 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     glUniform1f(atten2_, light->quadraticAttenuation());
 
     // Save old model matrix
-    Matrix previous = transform_;
+    Matrix previous = worldTransform_;
 
     // Scale model to cover the light's area of effect
     Scalar radius = light->radiusOfEffect();
     
     // Scale the light geometry to the correct size
     Matrix scale = Matrix::scale(radius, radius, radius);
-    transform_ = transform_ * scale;
+    worldTransform_ = worldTransform_ * scale;
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_);
 
-    transform_ = previous;
+    worldTransform_ = previous;
 }
 
 void LightRenderer::operator()(Ptr<HemiLight> light) {
@@ -104,7 +104,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform1f(atten0_, light->constantAttenuation());
     glUniform1f(atten1_, light->linearAttenuation());
     glUniform1f(atten2_, light->quadraticAttenuation());
-    Matrix transform = transform_ * world_->camera()->viewTransform();
+    Matrix transform = worldTransform_ * world_->camera()->viewTransform();
     Vector direction = transform.normal(light->direction()).unit();
     // Transform the light direction from world space into view space
     glUniform3fv(direction_, 1, direction.vec3f());
@@ -121,9 +121,8 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         // Set up the view, projection, and inverse projection transforms
         Ptr<Camera> camera = world_->camera();
         Matrix inverseProjection = camera->projectionTransform().inverse();
-        glUniformMatrix4fv(model_, 1, 0, Matrix().mat4f()); // Identity
-        glUniformMatrix4fv(projection_, 1, 0, Matrix().mat4f()); // Identity
-        glUniformMatrix4fv(view_, 1, 0, Matrix().mat4f()); // Identity
+        glUniformMatrix4fv(transform_, 1, 0, Matrix().mat4f()); // Identity
+        glUniformMatrix4fv(modelView_, 1, 0, Matrix().mat4f()); // Identity
         // Use the identity transform, so that the specially-shaped unit quad
         // maps to the whole screen as a fullscreen quad in clip-space, that
         // is, x=[-1,1] y=[-1,1]
@@ -136,11 +135,11 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         glBindVertexArray(0);
     } else {
         // This renders the light's bounding volume (usually a sphere)
-        Matrix previous = transform_;
+        Matrix previous = worldTransform_;
         Scalar radius = light->radiusOfEffect();
-        transform_ = transform_ * Matrix::scale(radius, radius, radius);
+        worldTransform_ = worldTransform_ * Matrix::scale(radius, radius, radius);
         operator()(unitSphere_);
-        transform_ = previous;
+        worldTransform_ = previous;
     }
 }
 
@@ -162,7 +161,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform1f(spotCutoff_, cosCutoff);
     glUniform1f(spotPower_, light->spotPower());
 
-    Matrix transform = world_->camera()->viewTransform() * transform_;
+    Matrix transform = world_->camera()->viewTransform() * worldTransform_;
     Vector direction = transform.normal(light->direction()).unit();
     // Transform the light direction from into view space
     glUniform3fv(direction_, 1, direction.vec3f());
@@ -176,7 +175,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniformMatrix4fv(light_, 1, 0, light->transform().mat4f());
 
     // Save the old model matrix
-    Matrix previous = transform_;
+    Matrix previous = worldTransform_;
 
     // Scale model to cover the light's area of effect.
     Scalar const margin = 2.f;
@@ -191,11 +190,11 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    transform_ = transform_ * rotate * scale;
+    worldTransform_ = worldTransform_ * rotate * scale;
 
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitCone_);
-    transform_ = previous;
+    worldTransform_ = previous;
 }
 
 void LightRenderer::operator()(Ptr<Mesh> mesh) {
@@ -203,10 +202,11 @@ void LightRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Set up the view, projection, and inverse projection transforms
     Ptr<Camera> camera = world_->camera();
-    Matrix inverseProjection = camera->projectionTransform().inverse();
-    glUniformMatrix4fv(model_, 1, 0, transform_.mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    Matrix const inverseProjection = camera->projectionTransform().inverse();
+    Matrix const transform = camera->transform() * worldTransform();
+    Matrix const modelView = camera->viewTransform() * worldTransform();
+    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(modelView_, 1, 0, modelView.mat4f());
     glUniformMatrix4fv(unproject_, 1, 0, inverseProjection.mat4f());
 
     // Render the mesh
@@ -245,9 +245,8 @@ void LightRenderer::operator()(Ptr<Effect> effect) {
     spotCutoff_ = glGetUniformLocation(effect_->id(), "spotCutoff");
     spotPower_ = glGetUniformLocation(effect_->id(), "spotPower");
     direction_ = glGetUniformLocation(effect_->id(), "direction");
-    model_ = glGetUniformLocation(effect_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(effect_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
+    transform_ = glGetUniformLocation(effect_->id(), "transform");
+    modelView_ = glGetUniformLocation(effect_->id(), "modelViewMatrix");
     unproject_ = glGetUniformLocation(effect_->id(), "unprojectMatrix");
     light_ = glGetUniformLocation(effect_->id(), "lightMatrix");
     shadowMapSize_ = glGetUniformLocation(effect_->id(), "shadowMapSize"); 
