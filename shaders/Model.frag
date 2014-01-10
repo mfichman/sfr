@@ -7,8 +7,6 @@
 
 #version 330
 
-uniform mat3 normalMatrix;
-
 uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
 uniform sampler2D normalMap;

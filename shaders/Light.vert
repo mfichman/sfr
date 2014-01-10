@@ -5,9 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
   
-uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat4 transform;
 
 layout(location=0) in vec3 positionIn;
 
@@ -16,9 +15,7 @@ out vec3 lightPosition;
 
 /* Deferred render point light shader */
 void main() {
-	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
-
 	// Transform the vertex to get the clip-space position of the vertex
 	gl_Position = position = transform * vec4(positionIn, 1);
-	lightPosition = (viewMatrix * modelMatrix * vec4(0, 0, 0, 1)).xyz;
+	lightPosition = (modelViewMatrix * vec4(0, 0, 0, 1)).xyz;
 }

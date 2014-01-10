@@ -9,8 +9,7 @@
 #pragma include "shaders/Mesh.vert"
 
 uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
+uniform mat4 transform;
 uniform mat3 normalMatrix;
 
 out vec3 position;
@@ -20,8 +19,6 @@ out vec2 texCoord;
  
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
-	mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
-
     // World position
 	position = (modelMatrix * vec4(positionIn, 1)).xyz;
 
