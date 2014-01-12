@@ -87,9 +87,9 @@ void MaterialRenderer::operator()(Ptr<Mesh> mesh) {
     normalMatrix = normalMatrix.transpose();
 
     GLfloat temp[9] = {
-        normalMatrix[0], normalMatrix[1], normalMatrix[2],
-        normalMatrix[4], normalMatrix[5], normalMatrix[6],
-        normalMatrix[8], normalMatrix[9], normalMatrix[10]
+        (GLfloat)normalMatrix[0], (GLfloat)normalMatrix[1], (GLfloat)normalMatrix[2],
+        (GLfloat)normalMatrix[4], (GLfloat)normalMatrix[5], (GLfloat)normalMatrix[6],
+        (GLfloat)normalMatrix[8], (GLfloat)normalMatrix[9], (GLfloat)normalMatrix[10]
     };
 
     Matrix const transform = camera->transform() * worldTransform();
