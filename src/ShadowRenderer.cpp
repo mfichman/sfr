@@ -49,6 +49,8 @@ void ShadowRenderer::operator()(Ptr<PointLight> light) {
     lightCamera->nearIs(0.1f);
     lightCamera->farIs(light->radiusOfEffect());
     lightCamera->typeIs(Camera::PERSPECTIVE);
+    //lightCamera->viewportWidthIs();
+    //lightCamera->viewportHeightIs();
 
     // Save current camera
     Ptr<Camera> sceneCamera = world_->camera();
@@ -97,6 +99,8 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     lightCamera->nearIs(1.f);
     lightCamera->farIs(light->radiusOfEffect());//something's up w/ projection
     lightCamera->typeIs(Camera::PERSPECTIVE);
+    lightCamera->viewportWidthIs(light->shadowMap()->width());
+    lightCamera->viewportHeightIs(light->shadowMap()->height());
 
     Matrix projection = lightCamera->projectionTransform();
     Matrix bias = Matrix(

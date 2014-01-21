@@ -137,11 +137,6 @@ void WavefrontLoader::newMesh() {
 
     // Force immediate loading of the vertex data to the graphics card
     mesh_->statusIs(Mesh::SYNCED);
-    vertexBuffer_->statusIs(AttributeBuffer::SYNCED);
-    tangentBuffer_->statusIs(AttributeBuffer::SYNCED);
-    normalBuffer_->statusIs(AttributeBuffer::SYNCED);
-    texCoordBuffer_->statusIs(AttributeBuffer::SYNCED);
-    indexBuffer_->statusIs(IndexBuffer::SYNCED);
 
     if (transform_) {
         Ptr<Model> model = transform_->childIs<Model>();

@@ -61,9 +61,8 @@ void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
 
 void Particles::syncHardwareBuffer() {
     // Update the VAO/VBO containing the particle data
-    buffer_->statusIs(AttributeBuffer::SYNCED);
-
     glBindVertexArray(id_);
+    buffer_->statusIs(AttributeBuffer::SYNCED);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
     defAttribute(POSITION, SIZE(position), OFFSET(position));
     defAttribute(COLOR, SIZE(color), OFFSET(color));

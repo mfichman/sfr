@@ -47,5 +47,4 @@ void AttributeBuffer::syncHardwareBuffers() {
     GLuint size = elementCount()*elementSize();
     glBindBuffer(GL_ARRAY_BUFFER, id_);
     glBufferData(GL_ARRAY_BUFFER, size, data(), usage_);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

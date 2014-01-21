@@ -82,8 +82,11 @@ void initWindow() {
 
 void initCamera() {
     camera = root->childIs<sfr::Transform>("camera");
-    world->cameraIs(camera->childIs<sfr::Camera>());
-
+    Ptr<sfr::Camera> cam = camera->childIs<sfr::Camera>();
+    cam->viewportWidthIs(window->getSize().x);
+    cam->viewportHeightIs(window->getSize().y);
+    std::cout << cam->viewportWidth() << std::endl;
+    world->cameraIs(cam);
     world->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
 }
 

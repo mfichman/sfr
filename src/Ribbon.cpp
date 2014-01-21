@@ -56,7 +56,6 @@ void Ribbon::statusIs(Status status) {
         buffer_->elementCountIs(0);
         rebuildBuffer();
         //rebuildBuffer(false);
-        buffer_->statusIs(AttributeBuffer::SYNCED);
         syncHardwareBuffer();
     }
 }
@@ -131,6 +130,7 @@ void Ribbon::syncHardwareBuffer() {
     // fashion, keeping the ribbon flat along the axis orthogonal to the
     // direction of movement.
     glBindVertexArray(id_);
+    buffer_->statusIs(AttributeBuffer::SYNCED);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
     defAttribute(POSITION, SIZE(position), OFFSET(position));
     defAttribute(TEXCOORD, SIZE(texCoord), OFFSET(texCoord)); 

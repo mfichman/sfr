@@ -24,6 +24,8 @@ Camera::Camera() {
     right_ = 0;
     top_ = 0;
     bottom_ = 0;
+    viewportWidth_ = 0;
+    viewportHeight_ = 0;
 }
 
 Camera::Type Camera::type() const {
@@ -58,6 +60,14 @@ Scalar Camera::fieldOfView() const {
     return fieldOfView_;
 }
 
+Scalar Camera::viewportWidth() const {
+    return viewportWidth_;
+}
+
+Scalar Camera::viewportHeight() const {
+    return viewportHeight_;
+}
+
 Camera::State Camera::state() const {
     return state_;
 }
@@ -78,13 +88,8 @@ Frustum Camera::viewFrustum() const {
 
         return frustum;
     } else {
-
-        // Ge the height, width, and shadow distance of the frustum
-        GLfloat viewport[4];
-        glGetFloatv(GL_VIEWPORT, viewport);
-
         // Find the width and height of the near and far planes
-        Scalar ratio = viewport[2]/viewport[3];
+        Scalar ratio = viewportWidth_/viewportHeight_;
         Scalar tang = tan(RADIANS(fieldOfView()) * 0.5f);
         Scalar nh = near_ * tang; // Height of the near plane
         Scalar nw = nh * ratio; // Width of the near plane
@@ -130,9 +135,7 @@ Matrix Camera::projectionTransform() const {
     if (ORTHOGRAPHIC == type_) {
         return Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
     } else {
-        GLfloat viewport[4];
-        glGetFloatv(GL_VIEWPORT, viewport);
-        Scalar aspectRatio = viewport[2]/viewport[3];
+        Scalar aspectRatio = viewportWidth_/viewportHeight_;
         return Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
     }
 }
@@ -143,6 +146,14 @@ Matrix const& Camera::viewTransform() const {
 
 Matrix const& Camera::worldTransform() const {
     return worldTransform_;
+}
+
+void Camera::viewportWidthIs(Scalar width) {
+    viewportWidth_ = width;
+}
+
+void Camera::viewportHeightIs(Scalar height) {
+    viewportHeight_ = height;
 }
 
 void Camera::farIs(Scalar distance) {

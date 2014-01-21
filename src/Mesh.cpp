@@ -80,8 +80,8 @@ void Mesh::updateVertexBuffer(std::string const& name, Attribute attr) {
     if (buffer) {
         buffer->statusIs(AttributeBuffer::SYNCED);
         GLint size = buffer->elementSize()/sizeof(GLfloat);
-        glEnableVertexAttribArray(attr);
         glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
+        glEnableVertexAttribArray(attr);
         glVertexAttribPointer(attr, size, GL_FLOAT, 0, 0, 0);
     } else {
         glDisableVertexAttribArray(attr);

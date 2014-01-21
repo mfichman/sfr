@@ -43,7 +43,6 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
             GL_TEXTURE_2D, target_[i], 0);
         buffers_.push_back(GL_COLOR_ATTACHMENT0 + i);
     }
-    glBindTexture(GL_TEXTURE_2D, 0);
 
     // Create a depth buffer texture using 32 bit depth
     glGenTextures(1, &depthBuffer_);

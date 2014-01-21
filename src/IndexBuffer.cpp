@@ -74,7 +74,6 @@ void IndexBuffer::syncHardwareBuffers() {
     GLuint size = elementCount()*elementSize();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 const void* IndexBuffer::data() const {
