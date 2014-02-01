@@ -42,57 +42,62 @@
 #include <stdexcept>
 #include <fstream>
 #include <memory>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
 
 #include "sfr/Ptr.hpp"
 
 namespace sfr {
 
-#ifdef SFR_SINGLE_PRECISION
-typedef float Scalar;
-#else
+#ifdef SFR_DOUBLE_PRECISION
 typedef double Scalar;
+#else
+typedef float Scalar;
 #endif
 
-class ShadowRenderer;
-class FlatRenderer;
-class DeferredRenderer;
-class MaterialRenderer;
-class LightRenderer;
-class TransparencyRenderer;
-class Node;
-class Transform;
-class Instance;
-class Mesh;
-class Material;
-class Texture;
-class PointLight;
-class HemiLight;
-class SpotLight;
-class AttributeBuffer;
-class IndexBuffer;
-class Effect;
-class Shader;
-class Matrix;
-class Quaternion;
-class Vector;
-class Frustum;
-class TexCoord;
-class Color;
-class WavefrontLoader;
-class MaterialLoader;
-class EffectLoader;
-class TextureLoader;
-class Camera;
 class AssetTable;
-class DepthRenderTarget;
-class DeferredRenderTarget;
-class Model;
-class World;
-class Particles;
-class Particle;
-class Ribbon;
-class Cubemap;
+class AttributeBuffer;
 class Billboard;
+class Camera;
+class Color;
+class Cubemap;
+class DeferredRenderer;
+class DeferredRenderTarget;
+class DepthRenderTarget;
+class Effect;
+class EffectLoader;
+class FlatRenderer;
+class Font;
+class FontLoader;
+class Frustum;
+class HemiLight;
+class IndexBuffer;
+class Instance;
+class LightRenderer;
+class Material;
+class MaterialLoader;
+class MaterialRenderer;
+class Matrix;
+class Mesh;
+class Model;
+class Node;
+class Particle;
+class Particles;
+class PointLight;
+class Quaternion;
+class Ribbon;
+class Shader;
+class ShadowRenderer;
+class SpotLight;
+class TexCoord;
+class Texture;
+class TextureLoader;
+class Transform;
+class TransparencyRenderer;
+class Vector;
+class WavefrontLoader;
+class World;
 
 
 class GLmat4 {

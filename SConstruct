@@ -11,6 +11,7 @@ class Sfr(pkgboot.Package):
         'sfml-window',
         'sfml-graphics',
         'sfml-system',
+        'freetype',
     ]
 
     frameworks = [

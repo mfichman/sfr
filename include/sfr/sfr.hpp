@@ -37,6 +37,8 @@
 #include "Effect.hpp"
 #include "EffectLoader.hpp"
 #include "FlatRenderer.hpp"
+#include "Font.hpp"
+#include "FontLoader.hpp"
 #include "Frustum.hpp"
 #include "HemiLight.hpp"
 #include "IndexBuffer.hpp"

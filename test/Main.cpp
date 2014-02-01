@@ -27,6 +27,7 @@ Ptr<sfr::Transform> lightNode;
 Ptr<sfr::Particles> particles;
 Ptr<sfr::Ribbon> ribbon;
 Ptr<sfr::Transform> root;
+Ptr<FontLoader> fontLoader;
 Ptr<WavefrontLoader> meshLoader;
 Ptr<EffectLoader> effectLoader;
 Ptr<TextureLoader> textureLoader;
@@ -62,6 +63,7 @@ void initWindow() {
 
     // Set up the renderer, resources, assets, etc.
     assets.reset(new sfr::AssetTable());
+    fontLoader.reset(new FontLoader(assets));
     meshLoader.reset(new WavefrontLoader(assets));
     effectLoader.reset(new EffectLoader(assets));
     textureLoader.reset(new TextureLoader(assets));
@@ -193,6 +195,10 @@ void initModels() {
     }
 }
 
+void initFonts() {
+    assets->assetIs<sfr::Font>("fonts/Neuropol.ttf");
+}
+
 void initParticles() {
     Ptr<sfr::Transform> pnode = root->childIs<sfr::Transform>("particles");
     particles = pnode->childIs<sfr::Particles>();
@@ -279,6 +285,7 @@ int main(int argc, char** argv) {
         initWindow();
         initCamera();
         initModels();
+        initFonts();
         //initParticles();
         //initRibbon();
         //initQuad();

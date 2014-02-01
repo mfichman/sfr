@@ -73,18 +73,11 @@ void DepthRenderTarget::statusIs(Status status) {
     }
     status_ = status;
     if (ENABLED == status_) {
-        GLint viewport[4];
-        glGetIntegerv(GL_VIEWPORT, viewport);
-        saveWidth_ = viewport[2];
-        saveHeight_ = viewport[3];
-
-        glViewport(0, 0, width_, height_);
         glBindFramebuffer(GL_FRAMEBUFFER, id_);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
     }
     if (DISABLED == status_) {
-        glViewport(0, 0, saveWidth_, saveHeight_);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDrawBuffer(GL_BACK);
         glReadBuffer(GL_BACK);

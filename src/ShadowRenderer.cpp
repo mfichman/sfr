@@ -84,6 +84,7 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
 	// Camera projectionTransform uses glViewport to calculate itself...hence, the 
 	// viewport must be set before calling it by enabling the shadow render target 
 	// here.
+    glViewport(0, 0, light->shadowMap()->width(), light->shadowMap()->height());
 	light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
     // Set up the view matrix for the virtual light camera
 
@@ -123,4 +124,6 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     world_->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
 	glCullFace(GL_BACK);
+
+    glViewport(0, 0, sceneCamera->viewportWidth(), sceneCamera->viewportHeight());
 }

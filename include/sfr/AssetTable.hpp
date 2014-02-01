@@ -28,11 +28,6 @@ public:
 private:
 	std::map<std::string, Ptr<sfr::Interface>> asset_;
     mutable std::vector<Listener*> listener_;
-
-    Ptr<WavefrontLoader> meshLoader_;
-    Ptr<MaterialLoader> materialLoader_;
-    Ptr<EffectLoader> effectLoader_;
-    Ptr<TextureLoader> textureLoader_;
 };
 
 class AssetTable::Listener : public Interface {
@@ -50,6 +45,7 @@ public:
     virtual void onAsset(Ptr<Effect> effect) {}
 	virtual void onAsset(Ptr<Shader> shader) {}
     virtual void onAsset(Ptr<Cubemap> cubemap) {}
+    virtual void onAsset(Ptr<Font> font) {}
 
 protected:
  	Ptr<AssetTable> const notifier_;

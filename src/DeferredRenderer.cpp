@@ -20,10 +20,13 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> manager) {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
+    GLint width = viewport[2];
+    GLint height = viewport[3];
+
     materialPass_.reset(new MaterialRenderer(manager));
     lightPass_.reset(new LightRenderer(manager));
     transparencyPass_.reset(new TransparencyRenderer(manager));
-    renderTarget_.reset(new DeferredRenderTarget(viewport[2], viewport[3]));
+    renderTarget_.reset(new DeferredRenderTarget(width, height));
 }
 
 void DeferredRenderer::operator()(Ptr<World> world) {

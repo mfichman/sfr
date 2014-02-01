@@ -19,8 +19,6 @@ in Vertex {
     float size;
 } vertex[];
 
-//in Vertex vertex[];
-
 out vec4 color;
 out vec2 texCoord;
 out float alpha;
