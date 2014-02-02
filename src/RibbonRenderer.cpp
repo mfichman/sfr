@@ -8,7 +8,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/RibbonRenderer.hpp"
 #include "sfr/Ribbon.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/World.hpp"
 #include "sfr/Texture.hpp"
@@ -17,26 +17,17 @@
 using namespace sfr;
 
 RibbonRenderer::RibbonRenderer(Ptr<AssetTable> assets) {
-    effect_ = assets->assetIs<Effect>("shaders/Ribbon");
-
-    effect_->statusIs(Effect::LINKED);
-    glUseProgram(effect_->id());
-
-    texture_ = glGetUniformLocation(effect_->id(), "tex");
-    transform_ = glGetUniformLocation(effect_->id(), "transform");
-       
-    glUniform1i(texture_, 0);
-    glUseProgram(0);
+    program_ = assets->assetIs<RibbonProgram>("shaders/Ribbon");
+    program_->statusIs(Program::LINKED);
 }
 
 void RibbonRenderer::operator()(Ptr<World> world) {
-    glUseProgram(effect_->id());
+    glUseProgram(program_->id());
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glDepthMask(GL_FALSE);//TRUE);//FALSE);
+    glDepthMask(GL_FALSE);
     glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     world_ = world;
     Renderer::operator()(world_->root());
@@ -61,7 +52,7 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
 
     // Pass the matrices to the vertex shader
     Matrix const transform = camera->transform() * worldTransform();
-    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the particles
     Ptr<AttributeBuffer> buffer = ribbon->buffer();

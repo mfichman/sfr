@@ -20,7 +20,7 @@ void NullFunctor::operator()(Ptr<Camera> camera) {
 }
 
 void NullFunctor::operator()(Ptr<Transform> transform) {
-    for (Iterator<Node> node = transform->children(); node; node++) {
+    for (Iterator<std::vector<Ptr<Node>>> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<NullFunctor>(shared_from_this()));
     }
 }

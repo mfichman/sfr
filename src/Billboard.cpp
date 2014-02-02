@@ -40,3 +40,12 @@ void Billboard::tintIs(sfr::Color tint) {
 void Billboard::operator()(Ptr<Functor> functor) {
     functor->operator()(std::static_pointer_cast<Billboard>(shared_from_this()));
 }
+
+void BillboardProgram::onLink() {
+    texture_ = glGetUniformLocation(id(), "tex");
+    transform_ = glGetUniformLocation(id(), "transform");
+    tint_ = glGetUniformLocation(id(), "tint");
+
+    // Set texture samplers
+    glUniform1i(texture_, 0);
+}

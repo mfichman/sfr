@@ -45,7 +45,7 @@ DepthRenderTarget::DepthRenderTarget(GLuint width, GLuint height) {
     statusIs(ENABLED);
     GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (GL_FRAMEBUFFER_COMPLETE != status) {
-        throw std::runtime_error("Couldn't create depth render target");
+        throw ResourceException("couldn't create depth render target");
     }
     statusIs(DISABLED);
 }

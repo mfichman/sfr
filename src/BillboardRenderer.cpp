@@ -7,13 +7,10 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/BillboardRenderer.hpp"
-#include "sfr/Particles.hpp"
-#include "sfr/AssetTable.hpp"
-#include "sfr/Effect.hpp"
-#include "sfr/World.hpp"
 #include "sfr/Billboard.hpp"
-#include "sfr/AttributeBuffer.hpp"
+#include "sfr/AssetTable.hpp"
 #include "sfr/IndexBuffer.hpp"
+#include "sfr/World.hpp"
 #include "sfr/Camera.hpp"
 #include "sfr/Texture.hpp"
 #include "sfr/Mesh.hpp"
@@ -21,25 +18,16 @@
 using namespace sfr;
 
 BillboardRenderer::BillboardRenderer(Ptr<AssetTable> assets) {
-    effect_ = assets->assetIs<Effect>("shaders/Billboard");
-    effect_->statusIs(Effect::LINKED);
+    program_ = assets->assetIs<BillboardProgram>("shaders/Billboard");
+    program_->statusIs(Program::LINKED);
 
     assets->assetIs<Transform>("meshes/Quad.obj"); 
     quad_ = assets->asset<Mesh>("meshes/Quad.obj/Quad"); 
     assert(quad_);
-
-    glUseProgram(effect_->id());
-
-    texture_ = glGetUniformLocation(effect_->id(), "tex");
-    transform_ = glGetUniformLocation(effect_->id(), "transform");
-    tint_ = glGetUniformLocation(effect_->id(), "tint");
-       
-    glUniform1i(texture_, 0);
-    glUseProgram(0);
 }
 
 void BillboardRenderer::operator()(Ptr<World> world) {
-    glUseProgram(effect_->id());
+    glUseProgram(program_->id());
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -56,6 +44,7 @@ void BillboardRenderer::operator()(Ptr<World> world) {
 }
 
 void BillboardRenderer::operator()(Ptr<Billboard> billboard) {
+    // Render a single billboard 
     Ptr<Camera> camera = world_->camera();
     Ptr<Texture> texture = billboard->texture();
     if (!texture) { return; }
@@ -81,10 +70,10 @@ void BillboardRenderer::operator()(Ptr<Billboard> billboard) {
        
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
-    glUniform4fv(tint_, 1, billboard->tint().vec4f());
+    glUniform4fv(program_->tint(), 1, billboard->tint().vec4f());
 
     transform = camera->transform() * transform;
-    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

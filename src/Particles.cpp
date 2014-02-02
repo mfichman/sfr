@@ -75,3 +75,10 @@ void Particles::operator()(Ptr<Node::Functor> functor) {
     functor->operator()(std::static_pointer_cast<Particles>(shared_from_this()));
 }
 
+void ParticleProgram::onLink() {
+    texture_ = glGetUniformLocation(id(), "tex");
+    modelViewMatrix_ = glGetUniformLocation(id(), "modelViewMatrix");
+    projectionMatrix_ = glGetUniformLocation(id(), "projectionMatrix");
+       
+    glUniform1i(texture_, 0);
+}

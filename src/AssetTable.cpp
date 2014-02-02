@@ -13,8 +13,8 @@
 #include "sfr/Material.hpp"
 #include "sfr/Texture.hpp"
 #include "sfr/Transform.hpp"
-#include "sfr/EffectLoader.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/ProgramLoader.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/Shader.hpp"
 #include <algorithm>
 

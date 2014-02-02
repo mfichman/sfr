@@ -9,7 +9,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/World.hpp"
 #include "sfr/Cubemap.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/SkyboxRenderer.hpp"
 #include "sfr/AssetTable.hpp"
@@ -19,12 +19,12 @@
 using namespace sfr;
 
 SkyboxRenderer::SkyboxRenderer(Ptr<AssetTable> manager) {
-    effect_ = manager->assetIs<sfr::Effect>("shaders/Skybox");
-    effect_->statusIs(Effect::LINKED); 
+    program_ = manager->assetIs<sfr::Program>("shaders/Skybox");
+    program_->statusIs(Program::LINKED); 
     unitSphere_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Sphere");
 
-    glUseProgram(effect_->id());
-    transform_ = glGetUniformLocation(effect_->id(), "transform");
+    glUseProgram(program_->id());
+    transform_ = glGetUniformLocation(program_->id(), "transform");
     glUseProgram(0);
 }
 
@@ -35,7 +35,7 @@ void SkyboxRenderer::operator()(Ptr<World> world) {
     if (!camera) { return; }
     if (!cubemap) { return; }
 
-    glUseProgram(effect_->id());
+    glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     world_ = world;

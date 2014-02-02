@@ -25,7 +25,7 @@ void Renderer::operator()(Ptr<Transform> transform) {
         worldTransform_ = worldTransform_ * transform->transform();
         break;
     }
-    for (Iterator<Node> node = transform->children(); node; node++) {
+    for (Iterator<std::vector<Ptr<Node>>> node = transform->children(); node; node++) {
         node(std::static_pointer_cast<Renderer>(shared_from_this()));
     }
     worldTransform_ = previous;

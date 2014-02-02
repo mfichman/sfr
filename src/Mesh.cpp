@@ -11,7 +11,7 @@
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Node.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/Material.hpp"
 #include <algorithm>
 

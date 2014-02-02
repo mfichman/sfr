@@ -10,6 +10,7 @@
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Vector.hpp"
+#include "sfr/Program.hpp"
 
 namespace sfr {
 
@@ -63,6 +64,20 @@ private:
     Scalar width_;
     Scalar minWidth_;
     Vector cameraPosition_;
+};
+
+class RibbonProgram : public Program {
+public:
+    RibbonProgram(std::string const& name) : Program(name) {}
+
+    GLint texture() { return texture_; }
+    GLint transform() { return transform_; }
+
+private:
+    void onLink();
+
+    GLint texture_ = -1;
+    GLint transform_ = -1;
 };
 
 }

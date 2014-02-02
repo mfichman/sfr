@@ -29,7 +29,7 @@ Ptr<sfr::Ribbon> ribbon;
 Ptr<sfr::Transform> root;
 Ptr<FontLoader> fontLoader;
 Ptr<WavefrontLoader> meshLoader;
-Ptr<EffectLoader> effectLoader;
+Ptr<ProgramLoader> programLoader;
 Ptr<TextureLoader> textureLoader;
 sf::Time elapsedTime = sf::seconds(0.f);
 float z = 3.1f;
@@ -65,7 +65,7 @@ void initWindow() {
     assets.reset(new sfr::AssetTable());
     fontLoader.reset(new FontLoader(assets));
     meshLoader.reset(new WavefrontLoader(assets));
-    effectLoader.reset(new EffectLoader(assets));
+    programLoader.reset(new ProgramLoader(assets));
     textureLoader.reset(new TextureLoader(assets));
 
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));

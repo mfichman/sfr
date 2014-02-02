@@ -24,7 +24,7 @@ public:
     void operator()(Ptr<IndexBuffer> buffer);
 
 private:
-    Ptr<Effect> effect_;
+    Ptr<Program> program_;
     Ptr<World> world_;
 
     GLint diffuse_;

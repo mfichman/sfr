@@ -7,7 +7,7 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/DeferredRenderer.hpp"
-#include "sfr/MaterialRenderer.hpp"
+#include "sfr/ModelRenderer.hpp"
 #include "sfr/LightRenderer.hpp"
 #include "sfr/DeferredRenderTarget.hpp"
 #include "sfr/TransparencyRenderer.hpp"
@@ -23,7 +23,7 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> manager) {
     GLint width = viewport[2];
     GLint height = viewport[3];
 
-    materialPass_.reset(new MaterialRenderer(manager));
+    materialPass_.reset(new ModelRenderer(manager));
     lightPass_.reset(new LightRenderer(manager));
     transparencyPass_.reset(new TransparencyRenderer(manager));
     renderTarget_.reset(new DeferredRenderTarget(width, height));

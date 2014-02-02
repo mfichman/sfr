@@ -18,7 +18,7 @@ void TextureLoader::onAsset(Ptr<Texture> texture) {
 
     sf::Image image;
     if (!image.loadFromFile(texture->name())) {
-        throw std::runtime_error("Couldn't load image: " + texture->name());
+        throw ResourceException("couldn't load image: "+texture->name());
     }
 
     texture->widthIs(image.getSize().x);
@@ -30,7 +30,7 @@ void TextureLoader::onAsset(Ptr<Cubemap> cubemap) {
 
     sf::Image image;
     if (!image.loadFromFile(cubemap->name())) {
-        throw std::runtime_error("Couldn't load image: " + cubemap->name());
+        throw ResourceException("couldn't load image: "+cubemap->name());
     }
 
     cubemap->widthIs(image.getSize().x);

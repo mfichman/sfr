@@ -31,8 +31,8 @@ Quaternion Transform::rotation() const {
     return transform_.rotation();
 }
 
-Iterator<Node> Transform::children() {
-    return Iterator<Node>(children_);
+Iterator<std::vector<Ptr<Node>>> Transform::children() {
+    return Iterator<std::vector<Ptr<Node>>>(children_);
 }
 
 std::string const& Transform::name() const {

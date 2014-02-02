@@ -8,7 +8,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/Material.hpp"
 #include <algorithm>
 
@@ -38,4 +38,24 @@ void Model::meshIs(Ptr<Mesh> mesh) {
 
 void Model::operator()(Ptr<Functor> functor) {
     functor->operator()(std::static_pointer_cast<Model>(shared_from_this()));
+}
+
+void ModelProgram::onLink() {
+    diffuseMap_ = glGetUniformLocation(id(), "diffuseMap");
+    specularMap_ = glGetUniformLocation(id(), "specularMap");
+    normalMap_ = glGetUniformLocation(id(), "normalMap");   
+    emissiveMap_ = glGetUniformLocation(id(), "emissiveMap");
+    ambient_ = glGetUniformLocation(id(), "Ka");
+    diffuse_ = glGetUniformLocation(id(), "Kd");
+    specular_ = glGetUniformLocation(id(), "Ks");
+    emissive_ = glGetUniformLocation(id(), "Ke");
+    shininess_ = glGetUniformLocation(id(), "alpha");
+    transform_ = glGetUniformLocation(id(), "transform");
+    modelMatrix_ = glGetUniformLocation(id(), "modelMatrix");
+    normalMatrix_ = glGetUniformLocation(id(), "normalMatrix");
+
+    // Set texture samplers
+    glUniform1i(diffuseMap_, 0);
+    glUniform1i(specularMap_, 1);
+    glUniform1i(normalMap_, 2);
 }

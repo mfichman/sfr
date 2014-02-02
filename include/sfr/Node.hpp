@@ -24,9 +24,8 @@ public:
     virtual ~Functor() {};
     virtual void operator()(Ptr<Camera> camera) {}
     virtual void operator()(Ptr<Transform> transform) {}
-    virtual void operator()(Ptr<Instance> instance) {}
+    virtual void operator()(Ptr<Model> model) {}
     virtual void operator()(Ptr<PointLight> light) {}
-    virtual void operator()(Ptr<Model> object) {}
     virtual void operator()(Ptr<HemiLight> light) {}
     virtual void operator()(Ptr<SpotLight> light) {}
     virtual void operator()(Ptr<Particles> particles) {}

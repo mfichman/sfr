@@ -20,7 +20,7 @@ public:
     void operator()(Ptr<Particles> particles);
 
 private:
-    Ptr<Effect> effect_;
+    Ptr<ParticleProgram> program_;
     Ptr<World> world_;
 
     GLint texture_;

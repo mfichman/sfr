@@ -20,13 +20,9 @@ public:
     void operator()(Ptr<Billboard> billboard);
 
 private:
-    Ptr<Effect> effect_;
+    Ptr<BillboardProgram> program_;
     Ptr<World> world_;
     Ptr<Mesh> quad_;
-
-    GLint texture_;
-    GLint transform_;
-    GLint tint_;
 };
 
 }

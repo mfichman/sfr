@@ -9,6 +9,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Particle.hpp"
+#include "sfr/Program.hpp"
 
 namespace sfr {
 
@@ -44,5 +45,20 @@ private:
     GLuint id_;
 };
 
+class ParticleProgram : public Program {
+public:
+    ParticleProgram(std::string const& name) : Program(name) {}
+
+    GLint texture() { return texture_; }
+    GLint modelViewMatrix() { return modelViewMatrix_; }
+    GLint projectionMatrix() { return projectionMatrix_; }
+
+private:
+    void onLink();
+
+    GLint texture_ = -1;
+    GLint modelViewMatrix_ = -1;
+    GLint projectionMatrix_ = -1;
+};
 
 }

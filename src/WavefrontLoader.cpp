@@ -33,7 +33,7 @@ void WavefrontLoader::onAsset(Ptr<Transform> transform) {
     // Open the file for the current transform object
     std::ifstream in(transform->name().c_str());
     if (!in.good()) {
-        throw std::runtime_error("File not found: " + transform->name());
+        throw ResourceException("file not found: "+transform->name());
     }
     
     texCoord_.clear();
@@ -197,7 +197,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
         // Process the position of the vertex
         in >> index;
         if (in.fail() || (index-1) >= position_.size()) {
-            throw std::runtime_error("Invalid mesh: " + mesh_->name());
+            throw ResourceException("invalid mesh (missing vertex position): " + mesh_->name());
         } else {
             face[i].position = position_[index-1];
         }
@@ -206,7 +206,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
         // Process the texCoord of the vertex
         in >> index;
         if (in.fail() || (index-1) >= texCoord_.size()) {
-            throw std::runtime_error("Invalid mesh: " + mesh_->name());
+            throw ResourceException("invalid mesh (missing texcoord):" + mesh_->name());
         } else {
             face[i].texCoord = texCoord_[index-1];
         }
@@ -215,7 +215,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
         // Process the normal of the vertex
         in >> index;
         if (in.fail() || (index-1) >= normal_.size()) {
-	            throw std::runtime_error("Invalid mesh: " + mesh_->name());
+	            throw ResourceException("invalid mesh (missing normal): " + mesh_->name());
         } else {
             face[i].normal = normal_[index-1];
         }

@@ -20,7 +20,7 @@ public:
 
 private:
     Ptr<World> world_;
-    Ptr<Effect> effect_;
+    Ptr<Program> program_;
     Ptr<Mesh> unitSphere_;
 
     GLint transform_;

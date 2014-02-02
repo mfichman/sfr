@@ -36,6 +36,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <set>
 #include <list>
 #include <iostream>
 #include <map>
@@ -47,6 +48,7 @@
 #include FT_GLYPH_H
 
 #include "sfr/Ptr.hpp"
+#include "sfr/ResourceException.hpp"
 
 namespace sfr {
 
@@ -59,34 +61,41 @@ typedef float Scalar;
 class AssetTable;
 class AttributeBuffer;
 class Billboard;
+class BillboardProgram;
+class BillboardRenderer;
 class Camera;
 class Color;
 class Cubemap;
 class DeferredRenderer;
 class DeferredRenderTarget;
 class DepthRenderTarget;
-class Effect;
-class EffectLoader;
+class Program;
+class ProgramLoader;
 class FlatRenderer;
 class Font;
 class FontLoader;
 class Frustum;
 class HemiLight;
 class IndexBuffer;
-class Instance;
+class LightProgram;
 class LightRenderer;
 class Material;
 class MaterialLoader;
-class MaterialRenderer;
+class ModelRenderer;
 class Matrix;
 class Mesh;
 class Model;
+class ModelProgram;
 class Node;
 class Particle;
+class ParticleProgram;
 class Particles;
 class PointLight;
+class Program;
 class Quaternion;
 class Ribbon;
+class RibbonProgram;
+class RibbonRenderer;
 class Shader;
 class ShadowRenderer;
 class SpotLight;

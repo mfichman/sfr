@@ -18,7 +18,7 @@ public:
     void operator()(Ptr<World> world);
 
 private:
-    Ptr<MaterialRenderer> materialPass_;
+    Ptr<ModelRenderer> materialPass_;
     Ptr<LightRenderer> lightPass_;
     Ptr<TransparencyRenderer> transparencyPass_;
     Ptr<DeferredRenderTarget> renderTarget_;

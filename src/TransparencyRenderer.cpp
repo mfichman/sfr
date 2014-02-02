@@ -8,7 +8,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/TransparencyRenderer.hpp"
 #include "sfr/AssetTable.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/World.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Material.hpp"
@@ -19,19 +19,19 @@
 using namespace sfr;
 
 TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
-    effect_ = manager->assetIs<Effect>("shaders/Transparency");
+    program_ = manager->assetIs<Program>("shaders/Transparency");
 
     // Activate shader by quering for uniform variables
-    effect_->statusIs(Effect::LINKED);
-    glUseProgram(effect_->id());
-    diffuse_ = glGetUniformLocation(effect_->id(), "Kd");
-    opacity_ = glGetUniformLocation(effect_->id(), "alpha");
-    transform_ = glGetUniformLocation(effect_->id(), "transform");
+    program_->statusIs(Program::LINKED);
+    glUseProgram(program_->id());
+    diffuse_ = glGetUniformLocation(program_->id(), "Kd");
+    opacity_ = glGetUniformLocation(program_->id(), "alpha");
+    transform_ = glGetUniformLocation(program_->id(), "transform");
     glUseProgram(0);
 }
 
 void TransparencyRenderer::operator()(Ptr<World> world) {
-    glUseProgram(effect_->id());
+    glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

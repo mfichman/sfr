@@ -14,23 +14,19 @@
 #include "sfr/AssetTable.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/World.hpp"
 
 using namespace sfr;
 
 FlatRenderer::FlatRenderer(Ptr<AssetTable> manager, bool shadowPass) {
-    effect_ = manager->assetIs<sfr::Effect>("shaders/Flat");
-    effect_->statusIs(Effect::LINKED); 
+    program_ = manager->assetIs<ModelProgram>("shaders/Flat");
+    program_->statusIs(Program::LINKED); 
     shadowPass_ = shadowPass;
-
-    glUseProgram(effect_->id());
-    transform_ = glGetUniformLocation(effect_->id(), "transform");
-    glUseProgram(0);
 }
 
 void FlatRenderer::operator()(Ptr<World> world) {
-    glUseProgram(effect_->id());
+    glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
     world_ = world;
     Renderer::operator()(world_->root());
@@ -59,7 +55,7 @@ void FlatRenderer::operator()(Ptr<Mesh> mesh) {
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = world_->camera();
     Matrix const transform = camera->transform() * worldTransform();
-    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

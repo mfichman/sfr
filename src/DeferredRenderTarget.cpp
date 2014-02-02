@@ -59,7 +59,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
     // Test the framebuffer configuration
     statusIs(ENABLED);
     if (GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
-        throw std::runtime_error("Couldn't create deferred render target");
+        throw ResourceException("couldn't create deferred render target");
     }
     statusIs(DISABLED);
 }

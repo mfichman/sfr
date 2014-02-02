@@ -14,14 +14,14 @@
 #include "sfr/AssetTable.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/World.hpp"
 
 using namespace sfr;
 
 BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
-    shader_ = manager->assetIs<sfr::Effect>("shaders/Flat");
-    shader_->statusIs(Effect::LINKED); 
+    program_ = manager->assetIs<ModelProgram>("shaders/Flat");
+    program_->statusIs(Program::LINKED); 
     unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
     unitCube_ = manager->assetIs<Mesh>("meshes/UnitCube");
 
@@ -52,17 +52,10 @@ BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     unitCube_->attributeBufferIs("position", vbuf);
     unitCube_->indexBufferIs(ibuf);
     unitCube_->statusIs(Mesh::SYNCED);
-
-
-    glUseProgram(shader_->id());
-    model_ = glGetUniformLocation(shader_->id(), "modelMatrix");
-    view_ = glGetUniformLocation(shader_->id(), "viewMatrix");
-    projection_ = glGetUniformLocation(shader_->id(), "projectionMatrix");
-    glUseProgram(0);
 }
 
 void BoundsRenderer::operator()(Ptr<World> world) {
-    glUseProgram(shader_->id());
+    glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
     world_ = world;
     Renderer::operator()(world_->root());
@@ -85,16 +78,14 @@ void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
 
     Matrix translate = Matrix::translate(pos);
     Matrix scale = Matrix::scale(d.x, d.y, d.z);  
-
-    Matrix transform = worldTransform() * translate * scale;
+    Matrix world = worldTransform() * translate * scale;
 
     unitCube_->statusIs(Mesh::SYNCED);
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, transform.mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    Matrix const transform = camera->transform() * world;
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = unitCube_->indexBuffer();
@@ -125,12 +116,11 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    Matrix transform = worldTransform() * rotate * scale;
+    Matrix world = worldTransform() * rotate * scale;
 
     Ptr<Camera> camera = world_->camera();
-    glUniformMatrix4fv(model_, 1, 0, transform.mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
-    glUniformMatrix4fv(view_, 1, 0, camera->viewTransform().mat4f());
+    Matrix const transform = camera->transform() * world;
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     Ptr<IndexBuffer> buffer = unitCone_->indexBuffer();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

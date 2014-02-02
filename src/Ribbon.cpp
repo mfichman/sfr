@@ -141,3 +141,10 @@ void Ribbon::syncHardwareBuffer() {
 void Ribbon::operator()(Ptr<Node::Functor> functor) {
     functor->operator()(std::static_pointer_cast<Ribbon>(shared_from_this()));
 }
+
+void RibbonProgram::onLink() {
+    texture_ = glGetUniformLocation(id(), "tex");
+    transform_ = glGetUniformLocation(id(), "transform");
+       
+    glUniform1i(texture_, 0);
+}

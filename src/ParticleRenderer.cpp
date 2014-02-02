@@ -9,7 +9,7 @@
 #include "sfr/ParticleRenderer.hpp"
 #include "sfr/Particles.hpp"
 #include "sfr/AssetTable.hpp"
-#include "sfr/Effect.hpp"
+#include "sfr/Program.hpp"
 #include "sfr/World.hpp"
 #include "sfr/Billboard.hpp"
 #include "sfr/AttributeBuffer.hpp"
@@ -21,21 +21,12 @@
 using namespace sfr;
 
 ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
-    effect_ = assets->assetIs<Effect>("shaders/Particles");
-    effect_->statusIs(Effect::LINKED);
-
-    glUseProgram(effect_->id());
-
-    texture_ = glGetUniformLocation(effect_->id(), "tex");
-    modelView_ = glGetUniformLocation(effect_->id(), "modelViewMatrix");
-    projection_ = glGetUniformLocation(effect_->id(), "projectionMatrix");
-       
-    glUniform1i(texture_, 0);
-    glUseProgram(0);
+    program_ = assets->assetIs<ParticleProgram>("shaders/Particles");
+    program_->statusIs(Program::LINKED);
 }
 
 void ParticleRenderer::operator()(Ptr<World> world) {
-    glUseProgram(effect_->id());
+    glUseProgram(program_->id());
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -62,8 +53,8 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
 
     // Pass the matrices to the vertex shader
     Matrix const modelView = camera->viewTransform() * worldTransform();
-    glUniformMatrix4fv(modelView_, 1, 0, modelView.mat4f());
-    glUniformMatrix4fv(projection_, 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(program_->modelViewMatrix(), 1, 0, modelView.mat4f());
+    glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionTransform().mat4f());
 
     // Render the particles
     Ptr<AttributeBuffer> buffer = particles->buffer();

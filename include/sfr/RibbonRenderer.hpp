@@ -20,11 +20,8 @@ public:
     void operator()(Ptr<Ribbon> ribbon);
 
 private:
-    Ptr<Effect> effect_;
+    Ptr<RibbonProgram> program_;
     Ptr<World> world_;
-
-    GLint texture_;
-    GLint transform_;
 };
 
 }

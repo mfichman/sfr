@@ -42,7 +42,7 @@ public:
     virtual void onAsset(Ptr<Material> material) {}
     virtual void onAsset(Ptr<Texture> texture) {}
     virtual void onAsset(Ptr<Transform> transform) {}
-    virtual void onAsset(Ptr<Effect> effect) {}
+    virtual void onAsset(Ptr<Program> program) {}
 	virtual void onAsset(Ptr<Shader> shader) {}
     virtual void onAsset(Ptr<Cubemap> cubemap) {}
     virtual void onAsset(Ptr<Font> font) {}
@@ -53,15 +53,19 @@ protected:
 
 template <typename T, typename ...Arg>
 Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
-    Ptr<T> asset = std::dynamic_pointer_cast<T>(asset_[name]);
+    Ptr<Interface> asset = asset_[name];
     if (!asset) {
-        asset.reset(new T(name, args...));
+        Ptr<T> asset = std::make_shared<T>(name, args...);
         asset_[name] = asset;
         for (size_t i = 0; i < listener_.size(); i++) {
             listener_[i]->onAsset(asset);
         }
+        return asset;
+    } else if (typeid(T) != typeid(*asset)) {
+        throw ResourceException("asset already exists: "+name);
+    } else {
+        return std::dynamic_pointer_cast<T>(asset);
     }
-    return asset;
 }
 
 template <typename T>

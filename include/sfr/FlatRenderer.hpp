@@ -23,10 +23,9 @@ public:
 
 private:
     Ptr<World> world_;
-    Ptr<Effect> effect_;
+    Ptr<ModelProgram> program_;
 
     bool shadowPass_;
-    GLint transform_;
 };
 
 }

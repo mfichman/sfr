@@ -27,7 +27,7 @@ public:
     Matrix const& transform() const;
     Vector position() const;
     Quaternion rotation() const;
-    Iterator<Node> children();
+    Iterator<std::vector<Ptr<Node>>> children();
     std::string const& name() const;
     ShadowMode shadowMode() const; // Render shadows, or not?
     TransformMode transformMode() const; // Inherit transform from parent?

@@ -60,7 +60,7 @@ void Texture::heightIs(GLuint height) {
 void Texture::dataIs(const GLubyte* pixels) {
     glBindTexture(GL_TEXTURE_2D, id_);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width_, height_, 0, GL_RGBA, 
-        GL_UNSIGNED_BYTE, pixels);
+                 GL_UNSIGNED_BYTE, pixels);
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 

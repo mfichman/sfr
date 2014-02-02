@@ -25,13 +25,9 @@ public:
 
 private:
     Ptr<World> world_;
-    Ptr<Effect> shader_;
+    Ptr<ModelProgram> program_;
     Ptr<Mesh> unitCube_;
     Ptr<Mesh> unitCone_;
-
-    GLint model_;
-    GLint view_;
-    GLint projection_;
 };
 
 }

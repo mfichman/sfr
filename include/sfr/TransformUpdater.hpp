@@ -18,8 +18,16 @@ public:
     void operator()(Ptr<World> world);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Camera> camera);
+    void operator()(Ptr<Model> model);
+    void operator()(Ptr<PointLight> light);
+    void operator()(Ptr<HemiLight> light);
+    void operator()(Ptr<SpotLight> light);
+    void operator()(Ptr<Particles> particles);
+    void operator()(Ptr<Ribbon> ribbon);
+    void operator()(Ptr<Billboard> billboard);
 
 private:
+    Ptr<World> world_;
     Matrix transform_;
 };
 

@@ -11,7 +11,7 @@
 namespace sfr {
 
 /* Iterator support for intrusive singly-linked lists. */
-template <typename T>
+template <typename C>
 class Iterator {
 public:
 /*
@@ -60,7 +60,7 @@ public:
 private:
     Ptr<T> current_;
 */
-    Iterator(std::vector<Ptr<T>>& list) : 
+    Iterator(C const& list) : 
         begin_(list.begin()),
         end_(list.end()) {
     }
@@ -74,31 +74,31 @@ private:
         return begin_ != end_;
     }
 
-    T* operator->() const {
+    typename C::value_type* operator->() const {
         return begin_->get();
     }
 
-    bool operator==(Ptr<T> const& other) {
+    bool operator==(typename C::value_type const& other) {
         return begin_ == other.begin_ && end_ == other.end_;
     }
 
-    bool operator!=(Ptr<T> const& other) {
+    bool operator!=(typename C::value_type const& other) {
         return !operator==(other);
     }
 
-    Iterator<T> const& operator++(int) {
+    Iterator<C> const& operator++(int) {
         begin_++;
         return *this;
     }
 
     
-    T* get() const { 
+    typename C::value_type* get() const { 
         return begin_->get(); 
     }
 
 private:
-    typename std::vector<Ptr<T>>::iterator begin_;
-    typename std::vector<Ptr<T>>::iterator end_;
+    typename C::const_iterator begin_;
+    typename C::const_iterator end_;
 
 };
 

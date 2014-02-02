@@ -19,7 +19,7 @@ public:
     LightRenderer(Ptr<AssetTable> manager);
     void operator()(Ptr<World> world);
     void operator()(Ptr<PointLight> light);
-    void operator()(Ptr<Effect> effect);
+    void operator()(Ptr<Program> effect);
     void operator()(Ptr<HemiLight> light);
     void operator()(Ptr<SpotLight> light);
     void operator()(Ptr<Mesh> mesh);
@@ -29,38 +29,11 @@ private:
     Ptr<Mesh> unitSphere_;
     Ptr<Mesh> unitCone_;
     Ptr<Mesh> unitQuad_;
-    Ptr<Effect> effect_;
-    Ptr<Effect> directionalLight_;
-    Ptr<Effect> pointLight_;
-    Ptr<Effect> hemiLight_;
-    Ptr<Effect> spotLight_;
-
-    GLint shadowMap_;
-    GLint diffuseBuffer_;
-    GLint specularBuffer_;
-    GLint normalBuffer_;
-    GLint positionBuffer_;
-    GLint emissiveBuffer_;
-    GLint depthBuffer_;
-
-    GLint diffuse_;
-    GLint backDiffuse_;
-    GLint specular_;
-
-    GLint atten0_;
-    GLint atten1_;
-    GLint atten2_;
-
-    GLint direction_;
-    GLint spotCutoff_;
-    GLint spotPower_;
-
-    GLint transform_;
-    GLint modelView_;
-    GLint unproject_;
-    GLint light_;
-    
-    GLint shadowMapSize_;
+    Ptr<LightProgram> program_;
+    Ptr<LightProgram> directionalLight_;
+    Ptr<LightProgram> pointLight_;
+    Ptr<LightProgram> hemiLight_;
+    Ptr<LightProgram> spotLight_;
 };
 
 }
