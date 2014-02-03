@@ -33,34 +33,34 @@ LightRenderer::LightRenderer(Ptr<AssetTable> manager) {
     spotLight_ = manager->assetIs<LightProgram>("shaders/SpotLight");
 }
 
-void LightRenderer::operator()(Ptr<World> world) {
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_FRONT); 
-    // Render the face of the light volume that's furthest from the camera.
-    glDepthFunc(GL_ALWAYS);
-    // Always render light volume fragments, regardless of depth fail/pass.
-    glBlendFunc(GL_ONE, GL_ONE);
-    // Enable blending, to combine the blend the output of all the lights.
-    glEnable(GL_DEPTH_CLAMP); // 3.2 only
-    // Ensures that if the light volume fragment would be normally clipped by
-    // the positive Z, the fragment is still rendered anyway.  Otherwise, you
-    // can get "holes" where the light volume intersects the far clipping
-    // plane.
-
-    world_ = world;
-    Renderer::operator()(world_->root());
-
-    // Clear out the current effect
-    operator()(Ptr<Program>());
-    
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-	glCullFace(GL_BACK);
-    glDisable(GL_DEPTH_CLAMP);
+void LightRenderer::onState() {
+    if (state() == Renderer::ACTIVE) {
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND); // Blend lights together
+        glEnable(GL_DEPTH_CLAMP); // 3.2 only
+        // Ensures that if the light volume fragment would be normally clipped by
+        // the positive Z, the fragment is still rendered anyway.  Otherwise, you
+        // can get "holes" where the light volume intersects the far clipping
+        // plane.
+    	glCullFace(GL_FRONT); 
+        // Render the face of the light volume that's furthest from the camera.
+        glDepthFunc(GL_ALWAYS);
+        // Always render light volume fragments, regardless of depth fail/pass.
+        glBlendFunc(GL_ONE, GL_ONE);
+        // Enable blending, to combine the blend the output of all the lights.
+    } else if (state() == Renderer::INACTIVE) {
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_CLAMP);
+    	glCullFace(GL_BACK);
+        glDepthFunc(GL_LESS);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        operator()(Ptr<Program>());
+    } else {
+        assert(!"Invalid state");
+    }
 }
 
 void LightRenderer::operator()(Ptr<PointLight> light) {
@@ -74,26 +74,26 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
 
     // Save old model matrix
-    Matrix previous = worldTransform_;
+    Matrix previous = worldTransform();
 
     // Scale model to cover the light's area of effect
     Scalar radius = light->radiusOfEffect();
     
     // Scale the light geometry to the correct size
     Matrix scale = Matrix::scale(radius, radius, radius);
-    worldTransform_ = worldTransform_ * scale;
+    worldTransformIs(worldTransform() * scale);
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_);
 
-    worldTransform_ = previous;
+    worldTransformIs(previous);
 }
 
 void LightRenderer::operator()(Ptr<HemiLight> light) {
     // Render a hemi light, that is, a light that has a color for faces facing
     // the light direction, and another color for faces that face away from the
     // light direction, with attenuation.
-    if (!world_ || !world_->camera()) {
+    if (!world() || !world()->camera()) {
         return;
     }
 
@@ -105,7 +105,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform1f(program_->atten0(), light->constantAttenuation());
     glUniform1f(program_->atten1(), light->linearAttenuation());
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
-    Matrix transform = worldTransform_ * world_->camera()->viewTransform();
+    Matrix transform = worldTransform() * world()->camera()->viewTransform();
     Vector direction = transform.normal(light->direction()).unit();
     // Transform the light direction from world space into view space
     glUniform3fv(program_->direction(), 1, direction.vec3f());
@@ -120,7 +120,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         mesh->statusIs(Mesh::SYNCED);
 
         // Set up the view, projection, and inverse projection transforms
-        Ptr<Camera> camera = world_->camera();
+        Ptr<Camera> camera = world()->camera();
         Matrix inverseProjection = camera->projectionTransform().inverse();
         glUniformMatrix4fv(program_->transform(), 1, 0, Matrix().mat4f()); // Identity
         glUniformMatrix4fv(program_->modelView(), 1, 0, Matrix().mat4f()); // Identity
@@ -136,16 +136,16 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         glBindVertexArray(0);
     } else {
         // This renders the light's bounding volume (usually a sphere)
-        Matrix previous = worldTransform_;
+        Matrix previous = worldTransform();
         Scalar radius = light->radiusOfEffect();
-        worldTransform_ = worldTransform_ * Matrix::scale(radius, radius, radius);
+        worldTransformIs(worldTransform() * Matrix::scale(radius, radius, radius));
         operator()(unitSphere_);
-        worldTransform_ = previous;
+        worldTransformIs(previous);
     }
 }
 
 void LightRenderer::operator()(Ptr<SpotLight> light) {
-    if (!world_ || !world_->camera()) {
+    if (!world() || !world()->camera()) {
         return;
     }
 
@@ -162,7 +162,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform1f(program_->spotCutoff(), cosCutoff);
     glUniform1f(program_->spotPower(), light->spotPower());
 
-    Matrix transform = world_->camera()->viewTransform() * worldTransform_;
+    Matrix transform = world()->camera()->viewTransform() * worldTransform();
     Vector direction = transform.normal(light->direction()).unit();
     // Transform the light direction from into view space
     glUniform3fv(program_->direction(), 1, direction.vec3f());
@@ -176,7 +176,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniformMatrix4fv(program_->light(), 1, 0, light->transform().mat4f());
 
     // Save the old model matrix
-    Matrix previous = worldTransform_;
+    Matrix previous = worldTransform();
 
     // Scale model to cover the light's area of effect.
     Scalar const margin = 2.f;
@@ -191,18 +191,18 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    worldTransform_ = worldTransform_ * rotate * scale;
+    worldTransformIs(worldTransform() * rotate * scale);
 
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitCone_);
-    worldTransform_ = previous;
+    worldTransformIs(previous);
 }
 
 void LightRenderer::operator()(Ptr<Mesh> mesh) {
     mesh->statusIs(Mesh::SYNCED);
 
     // Set up the view, projection, and inverse projection transforms
-    Ptr<Camera> camera = world_->camera();
+    Ptr<Camera> camera = world()->camera();
     Matrix const inverseProjection = camera->projectionTransform().inverse();
     Matrix const transform = camera->transform() * worldTransform();
     Matrix const modelView = camera->viewTransform() * worldTransform();

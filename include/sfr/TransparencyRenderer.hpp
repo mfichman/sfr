@@ -16,21 +16,17 @@ namespace sfr {
 class TransparencyRenderer : public Renderer {
 public:
     TransparencyRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<Model> model);
     void operator()(Ptr<Mesh> mesh);
     void operator()(Ptr<Material> material);
     void operator()(Ptr<AttributeBuffer> buffer);
     void operator()(Ptr<IndexBuffer> buffer);
 
+    using Renderer::operator();
+
 private:
-    Ptr<Program> program_;
-    Ptr<World> world_;
-
-    GLint diffuse_;
-    GLint opacity_;
-
-    GLint transform_;
+    virtual void onState();
+    Ptr<ModelProgram> program_;
 };
 
 }

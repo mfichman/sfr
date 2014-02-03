@@ -58,6 +58,7 @@ typedef double Scalar;
 typedef float Scalar;
 #endif
 
+class AlphaRenderer;
 class AssetTable;
 class AttributeBuffer;
 class Billboard;
@@ -89,16 +90,19 @@ class ModelProgram;
 class Node;
 class Particle;
 class ParticleProgram;
+class ParticleRenderer;
 class Particles;
 class PointLight;
 class Program;
 class Quaternion;
+class Renderer;
 class Ribbon;
 class RibbonProgram;
 class RibbonRenderer;
 class Shader;
 class ShadowRenderer;
 class SpotLight;
+class SkyboxRenderer;
 class TexCoord;
 class Texture;
 class TextureLoader;

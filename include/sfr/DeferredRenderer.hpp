@@ -20,7 +20,8 @@ public:
 private:
     Ptr<ModelRenderer> materialPass_;
     Ptr<LightRenderer> lightPass_;
-    Ptr<TransparencyRenderer> transparencyPass_;
+    Ptr<AlphaRenderer> alphaPass_;
+    Ptr<SkyboxRenderer> skyboxPass_;
     Ptr<DeferredRenderTarget> renderTarget_;
 };
 

@@ -16,12 +16,13 @@ namespace sfr {
 class BillboardRenderer : public Renderer {
 public:
     BillboardRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<Billboard> billboard);
+    
+    using Renderer::operator();
 
 private:
+    void onState(); 
     Ptr<BillboardProgram> program_;
-    Ptr<World> world_;
     Ptr<Mesh> quad_;
 };
 

@@ -15,7 +15,7 @@ class RenderDesc {
 public:
     RenderDesc(Ptr<Node> node, Ptr<Program> program, Matrix const& worldTransform);
 
-    Ptr<Node> node() const { node_; }
+    Ptr<Node> node() const { return node_; }
     Ptr<Program> program() const { return program_; }
     Matrix const& worldTransform() const { return worldTransform_; }
     bool operator<(RenderDesc const& other) const;

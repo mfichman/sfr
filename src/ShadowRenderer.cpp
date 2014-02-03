@@ -21,11 +21,6 @@ ShadowRenderer::ShadowRenderer(Ptr<AssetTable> manager) {
     flatRenderer_.reset(new FlatRenderer(manager, true));
 }
 
-void ShadowRenderer::operator()(Ptr<World> world) {
-    world_ = world;
-    Renderer::operator()(world->root());
-}
-
 void ShadowRenderer::operator()(Ptr<PointLight> light) {
     // if (!light->shadowMap()) {
     //      return;
@@ -53,8 +48,8 @@ void ShadowRenderer::operator()(Ptr<PointLight> light) {
     //lightCamera->viewportHeightIs();
 
     // Save current camera
-    Ptr<Camera> sceneCamera = world_->camera();
-    world_->cameraIs(lightCamera);
+    Ptr<Camera> sceneCamera = world()->camera();
+    world()->cameraIs(lightCamera);
 
     for (int i = 0; i < 6; i++) {
 /*
@@ -68,12 +63,12 @@ void ShadowRenderer::operator()(Ptr<PointLight> light) {
 
         // Render the scene into the cube map face
         light->shadowMap()->statusIs(axis[i]);
-        flatRenderer_(world_);
+        flatRenderer_(world());
 */
     }
 
     //light->shadowMap()->statusIs(CubeDepthRenderTarget::DISABLED);
-    world_->cameraIs(sceneCamera);
+    world()->cameraIs(sceneCamera);
 }
 
 void ShadowRenderer::operator()(Ptr<SpotLight> light) {
@@ -113,15 +108,15 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     light->transformIs(lightMatrix);
     
     // Save the current view camera
-    Ptr<Camera> sceneCamera = world_->camera();
+    Ptr<Camera> sceneCamera = world()->camera();
 
     // Render the scene into the shadow map from light perspective
     glClear(GL_DEPTH_BUFFER_BIT); 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-    world_->cameraIs(lightCamera);
-    flatRenderer_->operator()(world_);
-    world_->cameraIs(sceneCamera);
+    world()->cameraIs(lightCamera);
+    flatRenderer_->operator()(world());
+    world()->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
 	glCullFace(GL_BACK);
 

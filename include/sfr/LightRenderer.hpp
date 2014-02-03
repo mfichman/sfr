@@ -17,15 +17,16 @@ namespace sfr {
 class LightRenderer : public Renderer {
 public:
     LightRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<PointLight> light);
     void operator()(Ptr<Program> effect);
     void operator()(Ptr<HemiLight> light);
     void operator()(Ptr<SpotLight> light);
     void operator()(Ptr<Mesh> mesh);
 
+    using Renderer::operator();
+
 private:
-    Ptr<World> world_;
+    void onState();
     Ptr<Mesh> unitSphere_;
     Ptr<Mesh> unitCone_;
     Ptr<Mesh> unitQuad_;

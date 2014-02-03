@@ -50,9 +50,10 @@ void ModelProgram::onLink() {
     specular_ = glGetUniformLocation(id(), "Ks");
     emissive_ = glGetUniformLocation(id(), "Ke");
     shininess_ = glGetUniformLocation(id(), "alpha");
-    transform_ = glGetUniformLocation(id(), "transform");
+    opacity_ = glGetUniformLocation(id(), "alpha");
     modelMatrix_ = glGetUniformLocation(id(), "modelMatrix");
     normalMatrix_ = glGetUniformLocation(id(), "normalMatrix");
+    transform_ = glGetUniformLocation(id(), "transform");
 
     // Set texture samplers
     glUniform1i(diffuseMap_, 0);

@@ -25,13 +25,15 @@ FlatRenderer::FlatRenderer(Ptr<AssetTable> manager, bool shadowPass) {
     shadowPass_ = shadowPass;
 }
 
-void FlatRenderer::operator()(Ptr<World> world) {
-    glUseProgram(program_->id());
-    glEnable(GL_DEPTH_TEST);
-    world_ = world;
-    Renderer::operator()(world_->root());
-    glDisable(GL_DEPTH_TEST);
-    glUseProgram(0);
+void FlatRenderer::onState() {
+    if (state() == Renderer::ACTIVE) {
+        glUseProgram(program_->id());
+        glEnable(GL_DEPTH_TEST);
+    } else if (state() == Renderer::INACTIVE) {
+        glDisable(GL_DEPTH_TEST);
+    } else {
+        assert(!"Invalid state");
+    }
 }
 
 void FlatRenderer::operator()(Ptr<Transform> transform) {
@@ -47,13 +49,13 @@ void FlatRenderer::operator()(Ptr<Model> model) {
 }
 
 void FlatRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer() || !world_ || !world_->camera()) {
+    if (!mesh || !mesh->indexBuffer() || !world() || !world()->camera()) {
         return;
     }
     mesh->statusIs(Mesh::SYNCED);
 
     // Pass the model matrix to the vertex shader
-    Ptr<Camera> camera = world_->camera();
+    Ptr<Camera> camera = world()->camera();
     Matrix const transform = camera->transform() * worldTransform();
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 

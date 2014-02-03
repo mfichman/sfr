@@ -45,6 +45,7 @@ public:
     GLint modelMatrix() const { return modelMatrix_; }
     GLint normalMatrix() const { return normalMatrix_; }
     GLint transform() const { return transform_; }
+    GLint opacity() const { return opacity_; }
 
 private:
     void onLink();
@@ -57,6 +58,7 @@ private:
     GLint specular_ = -1;
     GLint emissive_ = -1;
     GLint shininess_ = -1;
+    GLint opacity_ = -1;
     GLint modelMatrix_ = -1;
     GLint normalMatrix_ = -1;
     GLint transform_ = -1;

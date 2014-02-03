@@ -16,11 +16,7 @@ Ptr<sfr::DeferredRenderer> deferredRenderer;
 Ptr<sfr::FlatRenderer> flatRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
-Ptr<sfr::SkyboxRenderer> skyboxRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
-Ptr<sfr::ParticleRenderer> particleRenderer;
-Ptr<sfr::RibbonRenderer> ribbonRenderer;
-Ptr<sfr::BillboardRenderer> billboardRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -70,12 +66,8 @@ void initWindow() {
 
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));
     shadowRenderer.reset(new sfr::ShadowRenderer(assets));
-    skyboxRenderer.reset(new sfr::SkyboxRenderer(assets));
     updater.reset(new sfr::TransformUpdater);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
-    particleRenderer.reset(new sfr::ParticleRenderer(assets));
-    ribbonRenderer.reset(new sfr::RibbonRenderer(assets)); 
-    billboardRenderer.reset(new sfr::BillboardRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));
@@ -256,10 +248,6 @@ void runRenderLoop() {
         updater->operator()(world);
         shadowRenderer->operator()(world);
         deferredRenderer->operator()(world);
-        //skyboxRenderer->operator()(world);
-        //particleRenderer->operator()(world);
-        //billboardRenderer->operator()(world);
-        //ribbonRenderer->operator()(world);
         //boundsRenderer->operator()(world);
 
         perfTime += perfClock.getElapsedTime().asSeconds();

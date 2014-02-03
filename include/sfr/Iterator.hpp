@@ -74,8 +74,8 @@ private:
         return begin_ != end_;
     }
 
-    typename C::value_type* operator->() const {
-        return begin_->get();
+    typename C::value_type const* operator->() const {
+        return begin_.operator->();
     }
 
     bool operator==(typename C::value_type const& other) {
@@ -93,7 +93,7 @@ private:
 
     
     typename C::value_type* get() const { 
-        return begin_->get(); 
+        return begin_.operator->(); 
     }
 
 private:

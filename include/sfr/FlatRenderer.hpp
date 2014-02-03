@@ -16,13 +16,13 @@ namespace sfr {
 class FlatRenderer : public Renderer {
 public:
     FlatRenderer(Ptr<AssetTable> manager, bool shadowPass=false);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<Model> object);
     void operator()(Ptr<Mesh> mesh);
     void operator()(Ptr<Transform> transform);
 
+    using Renderer::operator();
 private:
-    Ptr<World> world_;
+    void onState();
     Ptr<ModelProgram> program_;
 
     bool shadowPass_;

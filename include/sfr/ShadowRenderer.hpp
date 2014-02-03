@@ -16,13 +16,13 @@ namespace sfr {
 class ShadowRenderer : public Renderer {
 public:
     ShadowRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<PointLight> light);
     void operator()(Ptr<SpotLight> light);
 
+    using Renderer::operator();
+
 private:
     Ptr<FlatRenderer> flatRenderer_;
-    Ptr<World> world_;
 };
 
 }

@@ -25,24 +25,25 @@ ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
     program_->statusIs(Program::LINKED);
 }
 
-void ParticleRenderer::operator()(Ptr<World> world) {
-    glUseProgram(program_->id());
-    glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glDepthMask(GL_FALSE);
-
-    world_ = world;
-    Renderer::operator()(world_->root());
-
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glUseProgram(0);
+void ParticleRenderer::onState() {
+    if (state() == Renderer::ACTIVE) {
+        glUseProgram(program_->id());
+        glEnable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glDepthMask(GL_FALSE);
+    } else if (state() == Renderer::INACTIVE) {
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        glDepthMask(GL_TRUE);
+    } else {
+        assert(!"Invalid state");
+    }
 }
 
 void ParticleRenderer::operator()(Ptr<Particles> particles) {
-    Ptr<Camera> camera = world_->camera();
+    Ptr<Camera> camera = world()->camera();
     Ptr<Texture> texture = particles->texture();
     if (!texture) { return; }
 

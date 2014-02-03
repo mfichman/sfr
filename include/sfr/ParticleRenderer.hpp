@@ -19,13 +19,11 @@ public:
     void operator()(Ptr<World> world);
     void operator()(Ptr<Particles> particles);
 
-private:
-    Ptr<ParticleProgram> program_;
-    Ptr<World> world_;
+    using Renderer::operator();
 
-    GLint texture_;
-    GLint projection_;
-    GLint modelView_;
+private:
+    void onState();
+    Ptr<ParticleProgram> program_;
 };
 
 }

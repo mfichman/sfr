@@ -9,10 +9,12 @@
 #include "sfr/DeferredRenderer.hpp"
 #include "sfr/ModelRenderer.hpp"
 #include "sfr/LightRenderer.hpp"
+#include "sfr/AlphaRenderer.hpp"
+#include "sfr/SkyboxRenderer.hpp"
 #include "sfr/DeferredRenderTarget.hpp"
-#include "sfr/TransparencyRenderer.hpp"
 #include "sfr/Transform.hpp"
 #include "sfr/FlatRenderer.hpp"
+#include "sfr/Renderer.hpp"
 
 using namespace sfr;
 
@@ -25,7 +27,8 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> manager) {
 
     materialPass_.reset(new ModelRenderer(manager));
     lightPass_.reset(new LightRenderer(manager));
-    transparencyPass_.reset(new TransparencyRenderer(manager));
+    alphaPass_.reset(new AlphaRenderer(manager));
+    skyboxPass_.reset(new SkyboxRenderer(manager));
     renderTarget_.reset(new DeferredRenderTarget(width, height));
 }
 
@@ -52,6 +55,9 @@ void DeferredRenderer::operator()(Ptr<World> world) {
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
     lightPass_->operator()(world);
 
-    // Pass 3: Render transparent objects
-    transparencyPass_->operator()(world);
+    // Pass 3: Skybox
+    skyboxPass_->operator()(world);
+
+    // Pass 4: Render transparent objects
+    alphaPass_->operator()(world);
 }

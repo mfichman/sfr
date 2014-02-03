@@ -44,16 +44,10 @@ GLuint Cubemap::id() const {
 }
 
 void Cubemap::widthIs(GLuint width) {
-    if (width_ == width) {
-        return;
-    }
     width_ = width;
 }
 
 void Cubemap::heightIs(GLuint height) {
-    if (height_ == height) {
-        return;
-    }
     height_ = height;
 }
 

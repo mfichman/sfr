@@ -51,7 +51,7 @@ void World::renderDescDelAll() {
 RenderDesc::RenderDesc(Ptr<Node> node, Ptr<Program> program, Matrix const& worldTransform) {
     node_ = node;
     program_ = program;
-    worldTransform_ = worldTransform_;
+    worldTransform_ = worldTransform;
 }
 
 bool RenderDesc::operator<(RenderDesc const& other) const {

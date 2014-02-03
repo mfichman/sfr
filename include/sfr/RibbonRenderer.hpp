@@ -16,12 +16,13 @@ namespace sfr {
 class RibbonRenderer : public Renderer {
 public:
     RibbonRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<Ribbon> ribbon);
 
+    using Renderer::operator();
+
 private:
+    void onState();
     Ptr<RibbonProgram> program_;
-    Ptr<World> world_;
 };
 
 }

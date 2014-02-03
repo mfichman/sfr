@@ -19,33 +19,25 @@
 using namespace sfr;
 
 TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
-    program_ = manager->assetIs<Program>("shaders/Transparency");
-
-    // Activate shader by quering for uniform variables
+    program_ = manager->assetIs<ModelProgram>("shaders/Transparency");
     program_->statusIs(Program::LINKED);
-    glUseProgram(program_->id());
-    diffuse_ = glGetUniformLocation(program_->id(), "Kd");
-    opacity_ = glGetUniformLocation(program_->id(), "alpha");
-    transform_ = glGetUniformLocation(program_->id(), "transform");
-    glUseProgram(0);
 }
 
-void TransparencyRenderer::operator()(Ptr<World> world) {
-    glUseProgram(program_->id());
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDepthMask(GL_FALSE);
-    glFrontFace(GL_CW);
-
-    world_ = world;
-    Renderer::operator()(world_->root());
-
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
-    glDepthMask(GL_TRUE);
-    glFrontFace(GL_CCW);
-    glUseProgram(0);
+void TransparencyRenderer::onState() {
+    if (state() == Renderer::ACTIVE) {
+        glUseProgram(program_->id());
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(GL_FALSE);
+    } else if (state() == Renderer::INACTIVE) {
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        glDepthMask(GL_TRUE);
+    } else {
+        assert(!"Invalid state");
+    }
 }
 
 void TransparencyRenderer::operator()(Ptr<Model> model) {
@@ -60,15 +52,15 @@ void TransparencyRenderer::operator()(Ptr<Model> model) {
 }
 
 void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer() || !world_ || !world_->camera()) {
+    if (!mesh || !mesh->indexBuffer() || !world() || !world()->camera()) {
         return;
     }
 
-    Ptr<Camera> camera = world_->camera();
+    Ptr<Camera> camera = world()->camera();
 
     // Pass the matrices to the vertex shader
     Matrix const transform = camera->transform() * worldTransform();
-    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -78,7 +70,7 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
 }
 
 void TransparencyRenderer::operator()(Ptr<Material> material) {
-    glUniform3fv(diffuse_, 1, material->diffuseColor().vec4f());
-    glUniform1f(opacity_, material->opacity());
+    glUniform3fv(program_->diffuse(), 1, material->diffuseColor().vec4f());
+    glUniform1f(program_->opacity(), material->opacity());
 }
 

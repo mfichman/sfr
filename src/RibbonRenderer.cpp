@@ -21,26 +21,25 @@ RibbonRenderer::RibbonRenderer(Ptr<AssetTable> assets) {
     program_->statusIs(Program::LINKED);
 }
 
-void RibbonRenderer::operator()(Ptr<World> world) {
-    glUseProgram(program_->id());
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glDepthMask(GL_FALSE);
-    glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-
-    world_ = world;
-    Renderer::operator()(world_->root());
-
-    glDisable(GL_BLEND);
-    glDepthMask(GL_TRUE);
-	glEnable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glUseProgram(0);
+void RibbonRenderer::onState() {
+    if (state() == Renderer::ACTIVE) {
+        glUseProgram(program_->id());
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glDepthMask(GL_FALSE);
+    } else if (state() == Renderer::INACTIVE) {
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        glDepthMask(GL_TRUE);
+    } else {
+        assert(!"Invalid state");
+    }
 }
 
 void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
-    Ptr<Camera> camera = world_->camera();
+    Ptr<Camera> camera = world()->camera();
     Ptr<Texture> texture = ribbon->texture();
     if (!texture) { return; }
 

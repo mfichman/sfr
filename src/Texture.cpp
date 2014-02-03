@@ -44,16 +44,10 @@ GLuint Texture::id() const {
 }
 
 void Texture::widthIs(GLuint width) {
-    if (width_ == width) {
-        return;
-    }
     width_ = width;
 }
 
 void Texture::heightIs(GLuint height) {
-    if (height_ == height) {
-        return;
-    }
     height_ = height;
 }
 
