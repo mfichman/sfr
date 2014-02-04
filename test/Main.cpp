@@ -190,10 +190,11 @@ void initModels() {
 }
 
 void initFonts() {
-    Ptr<Font> font = assets->assetIs<sfr::Font>("fonts/Neuropol.ttf");
+    //Ptr<Font> font = assets->assetIs<sfr::Font>("fonts/Neuropol.ttf");
+    Ptr<Font> font = assets->assetIs<sfr::Font>("fonts/Russel.ttf");
 
     Ptr<Text> text = root->childIs<sfr::Text>();
-    text->textIs("hello world");
+    text->textIs("zero combat");
     text->sizeIs(3);
     text->fontIs(font);
 }
@@ -281,7 +282,7 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-        //initModels();
+        initModels();
         initFonts();
         //initParticles();
         //initRibbon();

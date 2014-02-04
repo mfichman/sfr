@@ -141,10 +141,10 @@ void FontLoader::onAsset(Ptr<Font> font) {
         int const height = bitmap.rows / ratio + 2*border;
 
         Glyph fontGlyph;
-        fontGlyph.texX = (GLfloat)x/(GLfloat)atlasWidth;
-        fontGlyph.texY = (GLfloat)0/(GLfloat)atlasWidth;
-        fontGlyph.texWidth = width/(GLfloat)atlasWidth;
-        fontGlyph.texHeight = height/(GLfloat)atlasHeight;
+        fontGlyph.texX = (GLfloat)(x+border)/(GLfloat)atlasWidth;
+        fontGlyph.texY = (GLfloat)(0+border)/(GLfloat)atlasHeight;
+        fontGlyph.texWidth = (GLfloat)(width-2*border)/(GLfloat)atlasWidth;
+        fontGlyph.texHeight = (GLfloat)(height-2*border)/(GLfloat)atlasHeight;
         fontGlyph.advanceX = (GLfloat)glyph->advance.x/64/(GLfloat)rawFontSize;
         fontGlyph.advanceY = (GLfloat)glyph->advance.y/64/(GLfloat)rawFontSize;
         fontGlyph.width = (GLfloat)bitmap.width/(GLfloat)rawFontSize; // ??
@@ -159,7 +159,8 @@ void FontLoader::onAsset(Ptr<Font> font) {
         if (glyph->advance.y != 0) {
             throw ResourceException("invalid font: non-zero y-advance");
         }
-        x += glyph->advance.x/64/ratio;
+        x += width;
+glyph->advance.x/64/ratio;
     }
     glGenerateMipmap(GL_TEXTURE_2D);
 

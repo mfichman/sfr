@@ -22,5 +22,4 @@ void main() {
         colorOut = color;
     }
     colorOut *= smoothstep(.1, .9, mask);
-    //colorOut = color * vec4(val, val, val, 1);
 }
