@@ -7,7 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Renderer.hpp"
-#include "sfr/Iterator.hpp"
 #include "sfr/Transform.hpp"
 #include "sfr/World.hpp"
 

@@ -9,8 +9,6 @@
 #include "sfr/Common.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Color.hpp"
-#include "sfr/Vector.hpp"
-#include "sfr/Matrix.hpp"
 
 namespace sfr {
 

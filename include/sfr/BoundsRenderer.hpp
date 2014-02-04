@@ -7,10 +7,7 @@
 #pragma once
 
 #include "sfr/Common.hpp"
-#include "sfr/Node.hpp"
-#include "sfr/Mesh.hpp"
 #include "sfr/Renderer.hpp"
-#include "sfr/SpotLight.hpp"
 
 namespace sfr {
 
@@ -18,13 +15,14 @@ namespace sfr {
 class BoundsRenderer : public Renderer {
 public:
     BoundsRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
     void operator()(Ptr<Model> object);
     void operator()(Ptr<Mesh> mesh);
     void operator()(Ptr<SpotLight> light);
 
+    using Renderer::operator();
+
 private:
-    Ptr<World> world_;
+    void onState();
     Ptr<ModelProgram> program_;
     Ptr<Mesh> unitCube_;
     Ptr<Mesh> unitCone_;

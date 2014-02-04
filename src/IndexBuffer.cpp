@@ -7,7 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/IndexBuffer.hpp"
-#include <algorithm>
 
 using namespace sfr;
 

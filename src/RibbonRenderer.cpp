@@ -6,13 +6,12 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
+#include "sfr/AssetTable.hpp"
+#include "sfr/Camera.hpp"
 #include "sfr/RibbonRenderer.hpp"
 #include "sfr/Ribbon.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/AssetTable.hpp"
-#include "sfr/World.hpp"
 #include "sfr/Texture.hpp"
-#include "sfr/Camera.hpp"
+#include "sfr/World.hpp"
 
 using namespace sfr;
 

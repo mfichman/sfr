@@ -7,10 +7,10 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/AlphaRenderer.hpp"
-#include "sfr/TransparencyRenderer.hpp"
+#include "sfr/BillboardRenderer.hpp"
 #include "sfr/ParticleRenderer.hpp"
 #include "sfr/RibbonRenderer.hpp"
-#include "sfr/BillboardRenderer.hpp"
+#include "sfr/TransparencyRenderer.hpp"
 
 using namespace sfr;
 

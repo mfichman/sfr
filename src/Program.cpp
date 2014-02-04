@@ -8,12 +8,6 @@
 #include "sfr/Common.hpp"
 #include "sfr/Program.hpp"
 #include "sfr/Shader.hpp"
-#include "sfr/Mesh.hpp"
-#include "sfr/Particles.hpp"
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <stdexcept>
 
 using namespace sfr;
 using namespace std;

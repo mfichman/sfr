@@ -7,7 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/AttributeBuffer.hpp"
-#include <algorithm>
 
 using namespace sfr;
 

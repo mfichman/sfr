@@ -8,7 +8,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Node.hpp"
-#include "sfr/Mesh.hpp"
 #include "sfr/Program.hpp"
 
 namespace sfr {

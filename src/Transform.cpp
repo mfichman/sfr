@@ -7,8 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Transform.hpp"
-#include "sfr/Mesh.hpp"
-#include <algorithm>
 
 using namespace sfr;
 

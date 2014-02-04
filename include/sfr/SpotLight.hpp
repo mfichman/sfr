@@ -53,7 +53,7 @@ private:
     Scalar spotPower_;
     Vector direction_;
     Ptr<DepthRenderTarget> shadowMap_;
-    Matrix transform_;
+    Matrix transform_; // Light-space transform (for shadow mappping)
 };
 
 }

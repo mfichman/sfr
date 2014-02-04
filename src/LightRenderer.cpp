@@ -6,20 +6,19 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/LightRenderer.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/Transform.hpp"
-#include "sfr/PointLight.hpp"
-#include "sfr/HemiLight.hpp"
-#include "sfr/SpotLight.hpp"
-#include "sfr/Light.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/AttributeBuffer.hpp"
-#include "sfr/IndexBuffer.hpp"
-#include "sfr/Mesh.hpp"
 #include "sfr/Camera.hpp"
-#include "sfr/World.hpp"
 #include "sfr/DepthRenderTarget.hpp"
+#include "sfr/HemiLight.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/Light.hpp"
+#include "sfr/LightRenderer.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/PointLight.hpp"
+#include "sfr/SpotLight.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/World.hpp"
 
 using namespace sfr;
 

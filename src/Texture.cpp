@@ -7,7 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Texture.hpp"
-#include <algorithm>
 
 using namespace sfr;
 

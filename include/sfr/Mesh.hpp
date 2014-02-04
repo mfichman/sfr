@@ -12,8 +12,6 @@
 
 namespace sfr {
 
-
-
 /* Geometric mesh node (with attached textures) */
 class Mesh : public Interface {
 public:

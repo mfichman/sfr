@@ -6,14 +6,14 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
+#include "sfr/AssetTable.hpp"
 #include "sfr/BillboardRenderer.hpp"
 #include "sfr/Billboard.hpp"
-#include "sfr/AssetTable.hpp"
-#include "sfr/IndexBuffer.hpp"
-#include "sfr/World.hpp"
 #include "sfr/Camera.hpp"
-#include "sfr/Texture.hpp"
+#include "sfr/IndexBuffer.hpp"
 #include "sfr/Mesh.hpp"
+#include "sfr/Texture.hpp"
+#include "sfr/World.hpp"
 
 using namespace sfr;
 

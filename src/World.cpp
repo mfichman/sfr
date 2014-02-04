@@ -7,8 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/World.hpp"
-#include "sfr/Camera.hpp"
-#include <algorithm>
 
 using namespace sfr;
 

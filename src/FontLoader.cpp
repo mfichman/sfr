@@ -7,8 +7,8 @@
 #pragma once
 
 #include "sfr/Common.hpp"
-#include "sfr/FontLoader.hpp"
 #include "sfr/Font.hpp"
+#include "sfr/FontLoader.hpp"
 
 namespace sfr {
 

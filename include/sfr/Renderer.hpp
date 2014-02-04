@@ -27,7 +27,6 @@ public:
     void stateIs(State state);
 
     void operator()(Ptr<World> world);
-    void operator()(Ptr<Transform> foo) {}; // FIXME
 
     virtual void onState() {}
 

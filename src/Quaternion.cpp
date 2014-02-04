@@ -8,7 +8,6 @@
 #include "sfr/Common.hpp"
 #include "sfr/Quaternion.hpp"
 #include "sfr/Vector.hpp"
-#include <cmath>
 
 using namespace sfr;
 

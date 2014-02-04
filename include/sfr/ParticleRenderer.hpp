@@ -8,7 +8,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Renderer.hpp"
-#include "sfr/Node.hpp"
 
 namespace sfr {
 

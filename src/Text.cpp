@@ -16,7 +16,6 @@ using namespace sfr;
 
 Text::Text() {
     status_ = DIRTY;
-    size_ = 12;
     color_ = Color(1.f, 1.f, 1.f, 1.f);
     buffer_.reset(new MutableAttributeBuffer<TextVertex>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
@@ -34,10 +33,6 @@ void Text::textIs(std::string const& string) {
 void Text::fontIs(Ptr<Font> font) {
     font_ = font;
     status_ = DIRTY;
-}
-
-void Text::sizeIs(GLuint size) {
-    size_ = size;
 }
 
 void Text::colorIs(Color const& color) {

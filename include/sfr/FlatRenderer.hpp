@@ -7,7 +7,6 @@
 #pragma once
 
 #include "sfr/Common.hpp"
-#include "sfr/Node.hpp"
 #include "sfr/Renderer.hpp"
 
 namespace sfr {
@@ -18,9 +17,9 @@ public:
     FlatRenderer(Ptr<AssetTable> manager, bool shadowPass=false);
     void operator()(Ptr<Model> object);
     void operator()(Ptr<Mesh> mesh);
-    void operator()(Ptr<Transform> transform);
 
     using Renderer::operator();
+
 private:
     void onState();
     Ptr<ModelProgram> program_;

@@ -7,8 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/DeferredRenderTarget.hpp"
-#include <algorithm>
-#include <stdexcept>
 
 using namespace sfr;
 

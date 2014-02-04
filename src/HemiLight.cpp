@@ -7,8 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/HemiLight.hpp"
-#include <algorithm>
-#include <cmath>
 
 using namespace sfr;
 

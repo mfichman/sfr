@@ -6,14 +6,10 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/Mesh.hpp"
-#include "sfr/Vector.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
-#include "sfr/Node.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/Material.hpp"
-#include <algorithm>
+#include "sfr/Mesh.hpp"
+#include "sfr/Vector.hpp"
 
 using namespace sfr;
 

@@ -6,14 +6,14 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/ShadowRenderer.hpp"
-#include "sfr/FlatRenderer.hpp"
 #include "sfr/Camera.hpp"
-#include "sfr/World.hpp"
-#include "sfr/PointLight.hpp"
-#include "sfr/SpotLight.hpp"
-#include "sfr/HemiLight.hpp"
 #include "sfr/DepthRenderTarget.hpp"
+#include "sfr/FlatRenderer.hpp"
+#include "sfr/HemiLight.hpp"
+#include "sfr/PointLight.hpp"
+#include "sfr/ShadowRenderer.hpp"
+#include "sfr/SpotLight.hpp"
+#include "sfr/World.hpp"
 
 using namespace sfr;
 

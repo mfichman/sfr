@@ -6,15 +6,15 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/TransparencyRenderer.hpp"
 #include "sfr/AssetTable.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/World.hpp"
-#include "sfr/Model.hpp"
-#include "sfr/Material.hpp"
 #include "sfr/AttributeBuffer.hpp"
-#include "sfr/IndexBuffer.hpp"
 #include "sfr/Camera.hpp"
+#include "sfr/IndexBuffer.hpp"
+#include "sfr/Material.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/TransparencyRenderer.hpp"
+#include "sfr/World.hpp"
 
 using namespace sfr;
 

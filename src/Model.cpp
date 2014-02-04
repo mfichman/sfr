@@ -7,10 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Model.hpp"
-#include "sfr/Vector.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/Material.hpp"
-#include <algorithm>
 
 using namespace sfr;
 

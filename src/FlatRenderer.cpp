@@ -6,15 +6,13 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/FlatRenderer.hpp"
-#include "sfr/Camera.hpp"
-#include "sfr/Transform.hpp"
-#include "sfr/Mesh.hpp"
-#include "sfr/Model.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/AttributeBuffer.hpp"
+#include "sfr/Camera.hpp"
+#include "sfr/FlatRenderer.hpp"
 #include "sfr/IndexBuffer.hpp"
-#include "sfr/Program.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Model.hpp"
 #include "sfr/World.hpp"
 
 using namespace sfr;
@@ -34,14 +32,6 @@ void FlatRenderer::onState() {
     } else {
         assert(!"Invalid state");
     }
-}
-
-void FlatRenderer::operator()(Ptr<Transform> transform) {
-    if (shadowPass_ && transform->shadowMode() != Transform::SHADOWED) {
-        // Doesn't cast or receive shadows
-    } else {
-        Renderer::operator()(transform);
-    } 
 }
 
 void FlatRenderer::operator()(Ptr<Model> model) {

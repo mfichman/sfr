@@ -6,18 +6,18 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/TransformUpdater.hpp"
+#include "sfr/Billboard.hpp"
 #include "sfr/Camera.hpp"
-#include "sfr/Transform.hpp"
-#include "sfr/PointLight.hpp"
-#include "sfr/SpotLight.hpp"
 #include "sfr/HemiLight.hpp"
-#include "sfr/World.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Particles.hpp"
+#include "sfr/PointLight.hpp"
 #include "sfr/Ribbon.hpp"
-#include "sfr/Billboard.hpp"
+#include "sfr/SpotLight.hpp"
 #include "sfr/Text.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/TransformUpdater.hpp"
+#include "sfr/World.hpp"
 
 using namespace sfr;
 

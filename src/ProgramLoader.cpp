@@ -9,8 +9,6 @@
 #include "sfr/ProgramLoader.hpp"
 #include "sfr/Program.hpp"
 #include "sfr/Shader.hpp"
-#include <iostream>
-#include <fstream>
 
 using namespace sfr;
 

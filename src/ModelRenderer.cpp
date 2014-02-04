@@ -6,17 +6,16 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/ModelRenderer.hpp"
-#include "sfr/Camera.hpp"
-#include "sfr/Transform.hpp"
-#include "sfr/Mesh.hpp"
-#include "sfr/Texture.hpp"
-#include "sfr/Material.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/Model.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/AttributeBuffer.hpp"
+#include "sfr/Camera.hpp"
 #include "sfr/IndexBuffer.hpp"
+#include "sfr/Material.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/ModelRenderer.hpp"
+#include "sfr/Transform.hpp"
+#include "sfr/Texture.hpp"
 #include "sfr/World.hpp"
 
 using namespace sfr;

@@ -29,7 +29,6 @@ public:
 
     std::string const& text() const { return text_; }
     Ptr<Font> font() const { return font_; }
-    GLuint size() const { return size_; }
     GLuint id() const { return id_; }
     Status status() const { return status_; }
     Color color() const { return color_; }
@@ -37,7 +36,6 @@ public:
 
     void textIs(std::string const& string);
     void fontIs(Ptr<Font> font);
-    void sizeIs(GLuint size);
     void statusIs(Status status);
     void colorIs(Color const& color);
 
@@ -49,7 +47,6 @@ private:
 
     std::string text_;
     Ptr<Font> font_;
-    GLuint size_;
     GLuint id_;
     Status status_;
     Color color_;

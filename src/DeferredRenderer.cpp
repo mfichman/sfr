@@ -6,15 +6,15 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/DeferredRenderer.hpp"
-#include "sfr/ModelRenderer.hpp"
-#include "sfr/LightRenderer.hpp"
 #include "sfr/AlphaRenderer.hpp"
-#include "sfr/SkyboxRenderer.hpp"
+#include "sfr/DeferredRenderer.hpp"
 #include "sfr/DeferredRenderTarget.hpp"
-#include "sfr/Transform.hpp"
 #include "sfr/FlatRenderer.hpp"
+#include "sfr/LightRenderer.hpp"
+#include "sfr/ModelRenderer.hpp"
 #include "sfr/Renderer.hpp"
+#include "sfr/SkyboxRenderer.hpp"
+#include "sfr/Transform.hpp"
 
 using namespace sfr;
 

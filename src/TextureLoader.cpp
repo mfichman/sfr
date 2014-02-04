@@ -6,11 +6,10 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/TextureLoader.hpp"
-#include "sfr/Texture.hpp"
 #include "sfr/Cubemap.hpp"
+#include "sfr/Texture.hpp"
+#include "sfr/TextureLoader.hpp"
 #include <SFML/Graphics.hpp>
-#include <stdexcept>
 
 using namespace sfr;
 

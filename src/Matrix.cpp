@@ -6,11 +6,10 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/Matrix.hpp"
-#include "sfr/Vector.hpp"
-#include "sfr/Quaternion.hpp"
 #include "sfr/Frustum.hpp"
-#include <cmath>
+#include "sfr/Matrix.hpp"
+#include "sfr/Quaternion.hpp"
+#include "sfr/Vector.hpp"
 
 using namespace sfr;
 

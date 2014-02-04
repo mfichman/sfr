@@ -7,14 +7,14 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/World.hpp"
-#include "sfr/Cubemap.hpp"
-#include "sfr/Program.hpp"
-#include "sfr/Mesh.hpp"
-#include "sfr/SkyboxRenderer.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/Camera.hpp"
+#include "sfr/Cubemap.hpp"
 #include "sfr/IndexBuffer.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Program.hpp"
+#include "sfr/World.hpp"
+#include "sfr/SkyboxRenderer.hpp"
 
 using namespace sfr;
 

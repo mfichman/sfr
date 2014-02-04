@@ -7,8 +7,6 @@
 #pragma once
 
 #include "sfr/Common.hpp"
-#include "sfr/Node.hpp"
-#include "sfr/Matrix.hpp"
 #include "sfr/Renderer.hpp"
 
 namespace sfr {

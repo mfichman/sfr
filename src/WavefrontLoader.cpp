@@ -6,17 +6,14 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/WavefrontLoader.hpp"
-#include "sfr/Model.hpp"
-#include "sfr/Texture.hpp"
 #include "sfr/AttributeBuffer.hpp"
-#include "sfr/Mesh.hpp"
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Material.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Model.hpp"
+#include "sfr/Texture.hpp"
 #include "sfr/Transform.hpp"
-#include <string>
-#include <iostream>
-#include <sstream>
+#include "sfr/WavefrontLoader.hpp"
 
 using namespace sfr;
 

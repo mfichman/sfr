@@ -7,9 +7,6 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/SpotLight.hpp"
-#include "sfr/DepthRenderTarget.hpp"
-#include <algorithm>
-#include <cmath>
 
 using namespace sfr;
 
