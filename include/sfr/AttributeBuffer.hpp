@@ -77,6 +77,11 @@ public:
         statusIs(DIRTY);
     }
 
+    void clear() {
+        element_.clear();
+        statusIs(DIRTY);
+    }
+
 private:
     const void* data() const {
         return element_.empty() ? 0 : &element_[0];

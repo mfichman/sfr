@@ -17,6 +17,7 @@ Ptr<sfr::FlatRenderer> flatRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
+Ptr<sfr::TextRenderer> textRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -68,6 +69,7 @@ void initWindow() {
     shadowRenderer.reset(new sfr::ShadowRenderer(assets));
     updater.reset(new sfr::TransformUpdater);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
+    textRenderer.reset(new sfr::TextRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));
@@ -188,7 +190,12 @@ void initModels() {
 }
 
 void initFonts() {
-    assets->assetIs<sfr::Font>("fonts/Neuropol.ttf");
+    Ptr<Font> font = assets->assetIs<sfr::Font>("fonts/Neuropol.ttf");
+
+    Ptr<Text> text = root->childIs<sfr::Text>();
+    text->textIs("hello world");
+    text->sizeIs(3);
+    text->fontIs(font);
 }
 
 void initParticles() {
@@ -250,6 +257,8 @@ void runRenderLoop() {
         deferredRenderer->operator()(world);
         //boundsRenderer->operator()(world);
 
+        textRenderer->operator()(world);
+
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;
 
@@ -272,7 +281,7 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-        initModels();
+        //initModels();
         initFonts();
         //initParticles();
         //initRibbon();

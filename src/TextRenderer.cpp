@@ -6,10 +6,10 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/ParticleRenderer.hpp"
-#include "sfr/Particles.hpp"
+#include "sfr/TextRenderer.hpp"
+#include "sfr/Text.hpp"
+#include "sfr/Font.hpp"
 #include "sfr/AssetTable.hpp"
-#include "sfr/Program.hpp"
 #include "sfr/World.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/IndexBuffer.hpp"
@@ -18,12 +18,12 @@
 
 using namespace sfr;
 
-ParticleRenderer::ParticleRenderer(Ptr<AssetTable> assets) {
-    program_ = assets->assetIs<ParticleProgram>("shaders/Particles");
+TextRenderer::TextRenderer(Ptr<AssetTable> assets) {
+    program_ = assets->assetIs<TextProgram>("shaders/Text");
     program_->statusIs(Program::LINKED);
 }
 
-void ParticleRenderer::onState() {
+void TextRenderer::onState() {
     if (state() == Renderer::ACTIVE) {
         glUseProgram(program_->id());
         glEnable(GL_BLEND);
@@ -40,25 +40,26 @@ void ParticleRenderer::onState() {
     }
 }
 
-void ParticleRenderer::operator()(Ptr<Particles> particles) {
+void TextRenderer::operator()(Ptr<Text> text) {
     Ptr<Camera> camera = world()->camera();
-    Ptr<Texture> texture = particles->texture();
-    if (!texture) { return; }
+    Ptr<Font> font = text->font();
+    if (!font) { return; }
 
-    particles->statusIs(Particles::SYNCED);
-
+    text->statusIs(Text::SYNCED);
+    
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture->id());
+    glBindTexture(GL_TEXTURE_2D, font->id());
+
+    glUniform4fv(program_->color(), 1, text->color().vec4f());
 
     // Pass the matrices to the vertex shader
-    Matrix const modelView = camera->viewTransform() * worldTransform();
-    glUniformMatrix4fv(program_->modelViewMatrix(), 1, 0, modelView.mat4f());
-    glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionTransform().mat4f());
+    Matrix const transform = camera->transform() * worldTransform();
+    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the particles
-    Ptr<AttributeBuffer> buffer = particles->buffer();
-    glBindVertexArray(particles->id());
-    glDrawArrays(GL_POINTS, 0, buffer->elementCount());
+    Ptr<AttributeBuffer> buffer = text->buffer();
+    glBindVertexArray(text->id());
+    glDrawArrays(GL_TRIANGLES, 0, buffer->elementCount());
     glBindVertexArray(0);
 }
 

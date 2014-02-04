@@ -4,25 +4,23 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-#pragma once
 
-#include "sfr/Common.hpp"
-#include "sfr/Renderer.hpp"
-#include "sfr/Node.hpp"
+#version 330
 
-namespace sfr {
+uniform sampler2D tex;
+uniform vec4 color;
 
-/* Renders transparent particles with an alpha-blend technique. */
-class ParticleRenderer : public Renderer {
-public:
-    ParticleRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<Particles> particles);
+in vec2 texCoord;
 
-    using Renderer::operator();
+out vec4 colorOut;
 
-private:
-    void onState();
-    Ptr<ParticleProgram> program_;
-};
-
+void main() {
+    float mask = texture(tex, texCoord).r;
+    if (mask < .5) {
+        colorOut = vec4(0);
+    } else {
+        colorOut = color;
+    }
+    colorOut *= smoothstep(.1, .9, mask);
+    //colorOut = color * vec4(val, val, val, 1);
 }

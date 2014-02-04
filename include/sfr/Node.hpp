@@ -31,6 +31,7 @@ public:
     virtual void operator()(Ptr<Particles> particles) {}
     virtual void operator()(Ptr<Ribbon> ribbon) {}
     virtual void operator()(Ptr<Billboard> billboard) {}
+    virtual void operator()(Ptr<Text> text) {}
 };
 
 }

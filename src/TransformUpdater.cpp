@@ -17,6 +17,7 @@
 #include "sfr/Particles.hpp"
 #include "sfr/Ribbon.hpp"
 #include "sfr/Billboard.hpp"
+#include "sfr/Text.hpp"
 
 using namespace sfr;
 
@@ -76,4 +77,9 @@ void TransformUpdater::operator()(Ptr<Ribbon> ribbon) {
 void TransformUpdater::operator()(Ptr<Billboard> billboard) {
     world_->renderDescIs(RenderDesc(billboard, 0, transform_));
 }
+
+void TransformUpdater::operator()(Ptr<Text> text) {
+    world_->renderDescIs(RenderDesc(text, 0, transform_));
+}
+
 

@@ -4,25 +4,18 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-#pragma once
 
-#include "sfr/Common.hpp"
-#include "sfr/Renderer.hpp"
-#include "sfr/Node.hpp"
+#version 330
 
-namespace sfr {
+uniform mat4 transform;
 
-/* Renders transparent particles with an alpha-blend technique. */
-class ParticleRenderer : public Renderer {
-public:
-    ParticleRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<Particles> particles);
+layout(location=0) in vec2 positionIn;
+layout(location=1) in vec2 texCoordIn;
 
-    using Renderer::operator();
+out vec2 texCoord;
 
-private:
-    void onState();
-    Ptr<ParticleProgram> program_;
-};
-
+/* Text shader */
+void main() {
+    gl_Position = transform * vec4(positionIn, 0, 1);
+    texCoord = texCoordIn;
 }

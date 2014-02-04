@@ -56,7 +56,6 @@ void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
     GLuint stride = sizeof(Particle);
     glEnableVertexAttribArray(id);
     glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
-
 }
 
 void Particles::syncHardwareBuffer() {
