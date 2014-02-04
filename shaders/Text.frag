@@ -16,10 +16,13 @@ out vec4 colorOut;
 
 void main() {
     float mask = texture(tex, texCoord).r;
+    float alpha; 
     if (mask < .5) {
-        colorOut = vec4(0);
+        alpha = vec4(0);
     } else {
-        colorOut = color;
+        alpha = 1.;
     }
-    colorOut *= smoothstep(.1, .9, mask);
+    alpha *= smoothstep(.1, .9, mask);
+    colorOut.rgb = color.rgb;
+    colorOut.a = alpha * color.a;
 }

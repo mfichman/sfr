@@ -159,8 +159,7 @@ void FontLoader::onAsset(Ptr<Font> font) {
         if (glyph->advance.y != 0) {
             throw ResourceException("invalid font: non-zero y-advance");
         }
-        x += width;
-glyph->advance.x/64/ratio;
+        x += glyph->advance.x/64/ratio;
     }
     glGenerateMipmap(GL_TEXTURE_2D);
 

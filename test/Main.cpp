@@ -197,6 +197,7 @@ void initFonts() {
     text->textIs("zero combat");
     text->sizeIs(3);
     text->fontIs(font);
+    text->colorIs(sfr::Color(1, .4, .1, 1.));
 }
 
 void initParticles() {

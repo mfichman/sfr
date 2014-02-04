@@ -28,7 +28,7 @@ void TextRenderer::onState() {
         glUseProgram(program_->id());
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
     } else if (state() == Renderer::INACTIVE) {
         glDisable(GL_BLEND);
