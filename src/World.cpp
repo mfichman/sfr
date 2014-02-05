@@ -7,11 +7,13 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/World.hpp"
+#include "sfr/Ui.hpp"
 
 using namespace sfr;
 
 World::World() {
     root_.reset(new Transform("root"));
+    ui_.reset(new Ui);
 }
 
 Ptr<Transform> World::root() const {
@@ -24,6 +26,10 @@ Ptr<Camera> World::camera() const {
 
 Ptr<Cubemap> World::skybox() const {
     return skybox_;
+}
+
+Ptr<Ui> World::ui() const {
+    return ui_;
 }
 
 Iterator<std::set<RenderDesc>> World::renderDescs() const {

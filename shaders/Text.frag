@@ -18,11 +18,12 @@ void main() {
     float mask = texture(tex, texCoord).r;
     float alpha; 
     if (mask < .5) {
-        alpha = vec4(0);
+        alpha = 0.;
     } else {
         alpha = 1.;
     }
-    alpha *= smoothstep(.1, .9, mask);
+    //alpha *= smoothstep(.1, .9, mask);
+    alpha *= smoothstep(.25, .75, mask);
     colorOut.rgb = color.rgb;
     colorOut.a = alpha * color.a;
 }

@@ -33,6 +33,7 @@ public:
     Ptr<Transform> root() const;
     Ptr<Camera> camera() const;
     Ptr<Cubemap> skybox() const;
+    Ptr<Ui> ui() const;
     Iterator<std::set<RenderDesc>> renderDescs() const;
 
     void cameraIs(Ptr<Camera> camera);
@@ -44,6 +45,7 @@ private:
     Ptr<Transform> root_;
     Ptr<Camera> camera_;
     Ptr<Cubemap> skybox_;
+    Ptr<Ui> ui_;
 
     std::set<RenderDesc> renderDesc_;
 };

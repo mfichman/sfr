@@ -4,7 +4,6 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-#pragma once
 
 #include "sfr/Common.hpp"
 #include "sfr/Light.hpp"

@@ -3,7 +3,10 @@ import pkgboot
 
 class Sfr(pkgboot.Package):
     defines = {}
-    includes = []
+    includes = [
+        '/usr/local/include/freetype2',
+    ]
+
     libs = [
         pkgboot.Lib('glew32s', 'win32'),
         pkgboot.Lib('opengl32', 'win32'),

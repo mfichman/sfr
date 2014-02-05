@@ -21,6 +21,8 @@ public:
     GLfloat advanceY = 0;
     GLfloat width = 0;
     GLfloat height = 0;
+    GLfloat x = 0;
+    GLfloat y = 0;
 };
 
 class Font : public Interface {

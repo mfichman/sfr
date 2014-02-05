@@ -1,8 +1,6 @@
 #include <sfr/Common.hpp>
 #include <sfr/sfr.hpp>
 #include <SFML/Window.hpp>
-#include <stdexcept>
-#include <iostream>
 
 using namespace sfr;
 
@@ -18,6 +16,7 @@ Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::ShadowRenderer> shadowRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
 Ptr<sfr::TextRenderer> textRenderer;
+Ptr<sfr::UiRenderer> uiRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
@@ -70,6 +69,7 @@ void initWindow() {
     updater.reset(new sfr::TransformUpdater);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
     textRenderer.reset(new sfr::TextRenderer(assets));
+    uiRenderer.reset(new sfr::UiRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
     flatRenderer.reset(new sfr::FlatRenderer(assets));
@@ -197,6 +197,12 @@ void initFonts() {
     text->textIs("zero combat");
     text->fontIs(font);
     text->colorIs(sfr::Color(1, .4, .1, 1.));
+
+    Ptr<Text> text2 = world->ui()->childIs<sfr::Text>();
+    text2->textIs("multiplayer.");
+    text2->fontIs(font);
+    text2->colorIs(sfr::Color(1, 1, 1, .8));
+    text2->sizeIs(120);
 }
 
 void initParticles() {
@@ -259,6 +265,7 @@ void runRenderLoop() {
         //boundsRenderer->operator()(world);
 
         textRenderer->operator()(world);
+        uiRenderer->operator()(world);
 
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;

@@ -5,8 +5,6 @@
  * February, 2014                                                            *
  *****************************************************************************/
 
-#pragma once
-
 #include "sfr/Common.hpp"
 #include "sfr/Font.hpp"
 

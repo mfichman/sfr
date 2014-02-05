@@ -12,3 +12,9 @@ ipch
 *.o
 *.swp
 
+*.pch
+*.gch
+*.blend1
+*.blend2
+*.dblite
+*.pyc

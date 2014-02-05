@@ -72,6 +72,8 @@
 #include "Transform.hpp"
 #include "TransformUpdater.hpp"
 #include "TransparencyRenderer.hpp"
+#include "Ui.hpp"
+#include "UiRenderer.hpp"
 #include "Vector.hpp"
 #include "WavefrontLoader.hpp"
 #include "World.hpp"

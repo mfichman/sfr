@@ -4,7 +4,6 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-#pragma once
 
 #include "sfr/Common.hpp"
 #include "sfr/Font.hpp"
@@ -149,6 +148,8 @@ void FontLoader::onAsset(Ptr<Font> font) {
         fontGlyph.advanceY = (GLfloat)glyph->advance.y/64/(GLfloat)rawFontSize;
         fontGlyph.width = (GLfloat)bitmap.width/(GLfloat)rawFontSize; // ??
         fontGlyph.height = (GLfloat)bitmap.rows/(GLfloat)rawFontSize; // ??
+        fontGlyph.x = (GLfloat)glyph->bitmap_left/(GLfloat)rawFontSize; // ??
+        fontGlyph.y = (GLfloat)(glyph->bitmap_top-bitmap.rows)/(GLfloat)rawFontSize; // ??
         font->glyphIs(i, fontGlyph);
 
         

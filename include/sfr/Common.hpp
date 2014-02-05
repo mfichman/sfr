@@ -110,6 +110,7 @@ class Texture;
 class TextureLoader;
 class Transform;
 class TransparencyRenderer;
+class Ui;
 class Vector;
 class WavefrontLoader;
 class World;

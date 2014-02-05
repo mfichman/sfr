@@ -15,6 +15,7 @@ using namespace sfr;
 #define SIZE(field) (sizeof((((TextVertex*)0)->field)))
 
 Text::Text() {
+    size_ = 1.;
     status_ = DIRTY;
     color_ = Color(1.f, 1.f, 1.f, 1.f);
     buffer_.reset(new MutableAttributeBuffer<TextVertex>("", GL_STREAM_DRAW));
@@ -39,6 +40,10 @@ void Text::colorIs(Color const& color) {
     color_ = color;
 }
 
+void Text::sizeIs(GLfloat size) {
+    size_ = size;
+}
+
 void Text::statusIs(Status status) {
     if (status == status_) {
         return;
@@ -60,13 +65,15 @@ void Text::updateTextBuffer() {
     // Update the text buffer to prepare it for rendering, using the font glyph
     // metrics.  For each character, insert a particle into the attribute
     // buffer.
-    GLfloat x = 0;
+    GLfloat cursor = 0;
     for (auto ch : text_) {
         Glyph const& glyph = font_->glyph(ch);
-		TextVertex tg0 = { GLvec2(x, 0),						GLvec2(glyph.texX, glyph.texY+glyph.texHeight) };
-		TextVertex tg1 = { GLvec2(x, glyph.height),				GLvec2(glyph.texX, glyph.texY) };
-        TextVertex tg2 = { GLvec2(x+glyph.width, glyph.height), GLvec2(glyph.texX+glyph.texWidth, glyph.texY) };
-        TextVertex tg3 = { GLvec2(x+glyph.width, 0),			GLvec2(glyph.texX+glyph.texWidth, glyph.texY+glyph.texHeight) };
+        GLfloat const x = cursor+glyph.x;
+        GLfloat const y = glyph.y;
+		TextVertex tg0 = { GLvec2(x, y), GLvec2(glyph.texX, glyph.texY+glyph.texHeight) };
+		TextVertex tg1 = { GLvec2(x, y+glyph.height), GLvec2(glyph.texX, glyph.texY) };
+        TextVertex tg2 = { GLvec2(x+glyph.width, y+glyph.height), GLvec2(glyph.texX+glyph.texWidth, glyph.texY) };
+        TextVertex tg3 = { GLvec2(x+glyph.width, y), GLvec2(glyph.texX+glyph.texWidth, glyph.texY+glyph.texHeight) };
 
         buffer_->elementEnq(tg0);
         buffer_->elementEnq(tg1);
@@ -75,7 +82,7 @@ void Text::updateTextBuffer() {
 		buffer_->elementEnq(tg0);
 		buffer_->elementEnq(tg2);
         buffer_->elementEnq(tg3);
-		x += glyph.advanceX;
+		cursor += glyph.advanceX;
     }     
 }
 

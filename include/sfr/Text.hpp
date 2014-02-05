@@ -32,12 +32,14 @@ public:
     GLuint id() const { return id_; }
     Status status() const { return status_; }
     Color color() const { return color_; }
+    GLfloat size() const { return size_; }
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
 
     void textIs(std::string const& string);
     void fontIs(Ptr<Font> font);
     void statusIs(Status status);
     void colorIs(Color const& color);
+    void sizeIs(GLfloat size);
 
     virtual void operator()(Ptr<Functor> functor);
 private:
@@ -50,6 +52,7 @@ private:
     GLuint id_;
     Status status_;
     Color color_;
+    GLfloat size_;
     Ptr<MutableAttributeBuffer<TextVertex>> buffer_; 
 };
 

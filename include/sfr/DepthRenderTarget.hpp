@@ -31,8 +31,6 @@ private:
     GLuint id_;
     GLuint width_;
     GLuint height_;
-    GLuint saveWidth_;
-    GLuint saveHeight_;
     GLuint depthBuffer_;
     Status status_;
 };
