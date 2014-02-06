@@ -1,24 +1,9 @@
-/*
- * Copyright (c) 2014 Matt Fichman
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, APEXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- */
+/*****************************************************************************
+ * Simple, Fast Renderer (SFR)                                               *
+ * CS249b                                                                    *
+ * Matt Fichman                                                              *
+ * February, 2011                                                            *
+ *****************************************************************************/
 
 #pragma once
 
@@ -28,6 +13,13 @@
 
 namespace sfr {
 
+class Rect {
+public:
+    GLfloat x;
+    GLfloat y;
+    GLfloat width;
+    GLfloat height;
+};
 
 /* Represents a length, such as the width or height of a container. */
 class Span {
@@ -37,6 +29,7 @@ public:
 
     GLdouble value() const { return value_; }
     Unit unit() const { return unit_; }
+    GLfloat absolute(GLfloat parentSpan);
 
     static Span fill() { return Span(100, Span::PERCENT); }
 
@@ -59,6 +52,8 @@ public:
     GLdouble value() const { return value_; }
     Unit unit() const { return unit_; }
     Basis basis() const { return basis_; } 
+    GLfloat absolute(GLfloat begin, GLfloat parentSpan, GLfloat selfSpan);
+    GLfloat offset(GLfloat span);
 
     static Coord begin() { return Coord(0, Coord::PERCENT, Coord::BEGIN); }
     static Coord end() { return Coord(0, Coord::PERCENT, Coord::END); }
@@ -74,19 +69,22 @@ private:
 class Ui : public Node {
 public:
     enum LayoutMode { OVERLAY, BLOCK };
+    typedef std::function<void()> ClickHandler;
 
     Span width() const { return width_; }
     Span height() const { return height_; }
     Coord x() const { return x_; }
     Coord y() const { return y_; }
     LayoutMode layoutMode() const { return layoutMode_; }
+    ClickHandler clickHandler() const { return clickHandler_; }
     Iterator<std::vector<Ptr<Node>>> children();
 
-    void widthIs(Span const& span) { width_ = span; }
-    void heightIs(Span const& span) { height_ = span; }
-    void xIs(Coord const& x) { x_ = x; }
-    void yIs(Coord const& y) { y_ = y; }
-    void layoutModeIs(LayoutMode mode) { layoutMode_ = mode; }
+    void widthIs(Span const& span);
+    void heightIs(Span const& span);
+    void xIs(Coord const& x);
+    void yIs(Coord const& y);
+    void layoutModeIs(LayoutMode mode);
+    void clickHandlerIs(ClickHandler const& handler);
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {
@@ -106,6 +104,7 @@ private:
     Coord x_;
     Coord y_;
     LayoutMode layoutMode_ = BLOCK;
+    ClickHandler clickHandler_;
 };
 
 }

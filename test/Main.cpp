@@ -190,19 +190,22 @@ void initModels() {
 }
 
 void initFonts() {
-    //Ptr<Font> font = assets->assetIs<sfr::Font>("fonts/Neuropol.ttf");
-    Ptr<Font> font = assets->assetIs<sfr::Font>("fonts/Russel.ttf");
-
-    Ptr<Text> text = root->childIs<sfr::Text>();
+    Ptr<sfr::Font> font = assets->assetIs<sfr::Font>("fonts/NeuropolX.ttf");
+    Ptr<sfr::Text> text = root->childIs<sfr::Text>();
     text->textIs("zero combat");
     text->fontIs(font);
     text->colorIs(sfr::Color(1, .4, .1, 1.));
 
-    Ptr<Text> text2 = world->ui()->childIs<sfr::Text>();
+    Ptr<sfr::Font> font2 = assets->assetIs<sfr::Font>("fonts/Neuropol.ttf#40");
+    Ptr<sfr::Ui> ui = world->ui()->childIs<sfr::Ui>();
+    ui->xIs(sfr::Coord::center());
+    ui->yIs(sfr::Coord::center());
+    ui->heightIs(sfr::Span(120, sfr::Span::PIXELS));
+    Ptr<sfr::Text> text2 = ui->childIs<sfr::Text>();
     text2->textIs("multiplayer.");
-    text2->fontIs(font);
+    text2->fontIs(font2);
     text2->colorIs(sfr::Color(1, 1, 1, .8));
-    text2->sizeIs(120);
+    text2->sizeIs(40);
 }
 
 void initParticles() {

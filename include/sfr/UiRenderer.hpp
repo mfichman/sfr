@@ -13,19 +13,9 @@
 
 namespace sfr {
 
-class Rect {
-public:
-    GLfloat x;
-    GLfloat y;
-    GLfloat width;
-    GLfloat height;
-};
-
 /* Renders user-interface components, rooted at a "Ui"-type node */
 class UiRenderer : public Node::Functor {
 public:
-    enum State { ACTIVE, INACTIVE };
-
     UiRenderer(Ptr<AssetTable> assets);
     void operator()(Ptr<World> world);
     void operator()(Ptr<Ui> ui);

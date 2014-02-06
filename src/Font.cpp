@@ -12,10 +12,13 @@ namespace sfr {
 
 Font::Font(std::string const& name) {
     name_ = name;
+    type_ = SIZED;
     glGenTextures(1, &id_);
     glBindTexture(GL_TEXTURE_2D, id_);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//  N.B.: I think the text looks better without mipmapping.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -32,6 +35,10 @@ void Font::glyphIs(char code, Glyph const& glyph) {
         glyph_.resize(std::max(glyph_.size(),size_t(code+1)));
     }
     glyph_[code] = glyph;
+}
+
+void Font::typeIs(Type type) {
+    type_ = type;
 }
 
 Glyph Font::glyph(char code) const {

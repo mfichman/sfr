@@ -104,6 +104,7 @@ void TextProgram::onLink() {
     texture_ = glGetUniformLocation(id(), "tex");
     transform_ = glGetUniformLocation(id(), "transform");
     color_ = glGetUniformLocation(id(), "color");
+    sdf_ = glGetUniformLocation(id(), "sdf");
 
     glUniform1i(texture_, 0);
 }

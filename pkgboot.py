@@ -116,7 +116,7 @@ class Package:
     def _setup_win(self):
         # Set up Windows-specific options
         if self.build_mode == 'debug':
-            self.env.Append(CXXFLAGS='/O0')
+            pass 
         elif self.build_mode == 'release':
             self.env.Append(CXXFLAGS='/O2')
         else:

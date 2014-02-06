@@ -49,6 +49,7 @@ void TextRenderer::operator()(Ptr<Text> text) {
     glBindTexture(GL_TEXTURE_2D, font->id());
 
     glUniform4fv(program_->color(), 1, text->color().vec4f());
+    glUniform1i(program_->sdf(), font->type()==Font::SDF);
 
     // Pass the matrices to the vertex shader
     Matrix const transform = camera->transform() * worldTransform();

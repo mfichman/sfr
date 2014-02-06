@@ -63,6 +63,7 @@ public:
     GLint texture() const { return texture_; }
     GLint transform() const { return transform_; }
     GLint color() const { return color_; }
+    GLint sdf() const { return sdf_; }
 
 private:
     void onLink();
@@ -70,6 +71,7 @@ private:
     GLint texture_ = -1;
     GLint transform_ = -1;
     GLint color_ = -1;
+    GLint sdf_ = -1; // Signed distance field font if true
 };
 
 }

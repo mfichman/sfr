@@ -72,8 +72,8 @@ int distanceForTexel(FT_Bitmap bitmap, int x, int y) {
 
 void distanceField(FT_Bitmap bitmap, int ratio, int border, char* buffer) {
     // Convert a font bitmap to a scaled-down
-    int const width = bitmap.width / ratio;// + 2*border;
-    int const height = bitmap.rows / ratio;/// + 2*border;
+    int const width = bitmap.width / ratio;
+    int const height = bitmap.rows / ratio;
     int const borderedWidth = width + 2*border;
 
 
@@ -92,6 +92,18 @@ void distanceField(FT_Bitmap bitmap, int ratio, int border, char* buffer) {
 }
 
 void FontLoader::onAsset(Ptr<Font> font) {
+    // Load either an SDF font (no appended size) or a true-type rendered font
+    // for a specific size (appended size) after the #.
+    std::string const name = font->name();
+    size_t const pos = name.find("#");
+    std::string const faceName = (pos==std::string::npos) ? name : name.substr(0, pos);
+    std::string const sizeStr = (pos==std::string::npos) ? "" : name.substr(pos+1, name.size()-pos-1);
+    size_t size = 0;
+    if (!sizeStr.empty()) {
+        std::stringstream ss(sizeStr); 
+        ss >> size;
+    }
+    
     // Create and initialize a new FreeType font library handle.
     FT_Library library;
     if (FT_Init_FreeType(&library)) {
@@ -100,16 +112,25 @@ void FontLoader::onAsset(Ptr<Font> font) {
     
     // Create and initialize a new font face.
     FT_Face face;
-    if (FT_New_Face(library, font->name().c_str(), 0, &face)) {
+    if (FT_New_Face(library, faceName.c_str(), 0, &face)) {
         throw ResourceException("could not initialize font: "+font->name());
     }
-    
     // FreeType measures font size in 1/64ths of pixels.  So we multiply the
     // height by 64 to get the right size
-    int const rawFontSize = 512; 
-    int const fontSize = 64;
+    bool const useSdf = !size;
+    //int const rawFontSize = 512; 
+    //int const fontSize = 64;
+    int const rawFontSize = useSdf ? 512 : size;
+    int const fontSize = useSdf ? 64 : size;
     int const ratio = rawFontSize / fontSize;
-    int const border = 2; // Extra border around each glyph
+    int const border = 2; // Border around each glyph in the atlas
+
+    if (useSdf) {
+        font->typeIs(Font::SDF);
+    } else {
+        font->typeIs(Font::SIZED);
+    }
+
     FT_Set_Char_Size(face, rawFontSize*64, rawFontSize*64, 96, 96);
 
     FT_GlyphSlot glyph = face->glyph;
@@ -121,8 +142,8 @@ void FontLoader::onAsset(Ptr<Font> font) {
         if (FT_Load_Char(face, i, FT_LOAD_RENDER)) {
             throw ResourceException("could not load font glyph: "+font->name());
         }
-        atlasWidth += glyph->advance.x/64/ratio + 2*border;//bitmap.width;
-        atlasHeight = std::max(atlasHeight, glyph->bitmap.rows/ratio);
+        atlasWidth += glyph->advance.x/64/ratio + 2*border;
+        atlasHeight = std::max(atlasHeight, glyph->bitmap.rows/ratio+2*border);
     }
 
     glBindTexture(GL_TEXTURE_2D, font->id());
@@ -151,16 +172,18 @@ void FontLoader::onAsset(Ptr<Font> font) {
         fontGlyph.x = (GLfloat)glyph->bitmap_left/(GLfloat)rawFontSize; // ??
         fontGlyph.y = (GLfloat)(glyph->bitmap_top-bitmap.rows)/(GLfloat)rawFontSize; // ??
         font->glyphIs(i, fontGlyph);
-
         
-        std::vector<char> buffer(width * height);
-        distanceField(bitmap, ratio, border, &buffer[0]);
-
-        glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, &buffer[0]);
+        if (useSdf) {
+            std::vector<char> buffer(width * height);
+            distanceField(bitmap, ratio, border, &buffer[0]);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, &buffer[0]);
+        } else {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, x+border, border, bitmap.width, bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, bitmap.buffer);
+        }
         if (glyph->advance.y != 0) {
             throw ResourceException("invalid font: non-zero y-advance");
         }
-        x += glyph->advance.x/64/ratio;
+        x += glyph->advance.x/64/ratio+2*border;
     }
     glGenerateMipmap(GL_TEXTURE_2D);
 

@@ -27,14 +27,19 @@ public:
 
 class Font : public Interface {
 public:
+    enum Type { SDF, SIZED };
+
     Font(std::string const& name);
     ~Font();
     std::string const& name() const { return name_; }
     GLuint id() const { return id_; }
     Glyph glyph(char code) const;
+    Type type() const { return type_; }
 
     void glyphIs(char code, Glyph const& glyph);
+    void typeIs(Type type);
 private:
+    Type type_;
     std::string name_;
     GLuint id_;
     std::vector<Glyph> glyph_;

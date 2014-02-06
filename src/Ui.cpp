@@ -1,24 +1,9 @@
-/*
- * Copyright (c) 2013 Matt Fichman
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, APEXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- */
+/*****************************************************************************
+ * Simple, Fast Renderer (SFR)                                               *
+ * CS249b                                                                    *
+ * Matt Fichman                                                              *
+ * February, 2011                                                            *
+ *****************************************************************************/
 
 
 #include "sfr/Common.hpp"
@@ -31,10 +16,59 @@ Span::Span(GLdouble value, Unit unit) {
     unit_ = unit;
 }
 
+GLfloat Span::absolute(GLfloat parentSpan) {
+    // Returns the span of a UI element given the span of the enclosing
+    // container in pixels.
+    switch (unit()) {
+    case Span::PIXELS:
+        return value();
+    case Span::PERCENT:
+        return value()*parentSpan;
+    default:
+        assert(!"Not implemented"); 
+    }
+    return 0;
+}
+
+
 Coord::Coord(GLdouble value, Unit unit, Basis basis) {
     value_ = value;
     unit_ = unit;
     basis_ = basis;
+}
+
+GLfloat Coord::offset(GLfloat span) {
+    // Returns the offset of the coordinate from the basis.  If the units are
+    // pixels, returns the literal value.  Otherwise, computes the #pixels
+    // relative to a percentage of the enclosing container.
+    switch (unit()) {
+    case Coord::PIXELS:
+        return value(); 
+    case Coord::PERCENT:
+        return value()*span;
+    default:
+        assert(!"Not implemented"); 
+    }
+    return 0;
+}
+
+GLfloat Coord::absolute(GLfloat begin, GLfloat parentSpan, GLfloat selfSpan) {
+    // Returns the location of a coord, given the beginning and width of the
+    // enclosing container.
+    GLfloat const offset = this->offset(parentSpan);
+    switch (basis()) {
+    case Coord::BEGIN:
+        return offset+begin;
+    case Coord::END:
+        return offset+begin+parentSpan-selfSpan;
+    case Coord::CENTER:
+        return offset+parentSpan/2.-selfSpan/2.;
+    case Coord::ABSOLUTE:
+        return offset;
+    default:
+       assert(!"Not implemented");
+    }
+    return 0;
 }
 
 Iterator<std::vector<Ptr<Node>>> Ui::children() {
@@ -47,6 +81,30 @@ void Ui::childIs(Ptr<Node> child) {
 
 void Ui::childDel(Ptr<Node> child) {
     std::remove(children_.begin(), children_.end(), child);
+}
+
+void Ui::widthIs(Span const& span) {
+    width_ = span;
+}
+
+void Ui::heightIs(Span const& span) {
+    height_ = span;
+}
+
+void Ui::xIs(Coord const& x) {
+    x_ = x;
+}
+
+void Ui::yIs(Coord const& y) {
+    y_ = y;
+}
+
+void Ui::layoutModeIs(LayoutMode mode) {
+    layoutMode_ = mode;
+}
+
+void Ui::clickHandlerIs(ClickHandler const& handler) {
+    clickHandler_ = handler;
 }
 
 void Ui::operator()(Ptr<Functor> functor) {

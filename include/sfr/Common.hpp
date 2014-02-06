@@ -10,11 +10,14 @@
 
 #define GLEW_STATIC
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
 #define NOMINMAX
 #define SFR_USE_GLEW
 #include <windows.h>
 #include <GL/glew.h>
 #include <GL/GL.h>
+#undef ABSOLUTE
 #undef far
 #undef near
 #endif
@@ -34,6 +37,7 @@
 #include <cassert>
 #include <algorithm>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <queue>
 #include <set>
@@ -42,6 +46,7 @@
 #include <map>
 #include <stdexcept>
 #include <fstream>
+#include <functional>
 #include <memory>
 #include <ft2build.h>
 #include FT_FREETYPE_H
