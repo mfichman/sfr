@@ -8,10 +8,19 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/AttributeBuffer.hpp"
-#include "sfr/Particle.hpp"
+#include "sfr/Node.hpp"
 #include "sfr/Program.hpp"
 
 namespace sfr {
+
+class Particle {
+public:
+    GLvec3 position; // Position of the particle
+    GLvec3 velocity; // Velocity of the particle
+    GLvec4 color; // Color blend of the particle
+    GLfloat size; // Size of the particle in world coordinates
+    GLfloat rotation; // Texture rotation about view z-axis
+};
 
 /* Particle system */
 class Particles : public Node {

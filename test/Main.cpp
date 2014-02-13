@@ -222,15 +222,17 @@ void initParticles() {
 void initRibbon() {
     Ptr<sfr::Transform> rnode = root->childIs<sfr::Transform>("ribbon");
     ribbon = rnode->childIs<sfr::Ribbon>();
+    rnode->positionIs(Vector(0, 0, 0));
 
     ribbon->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
-    ribbon->widthIs(.1);
+    ribbon->widthIs(.7);
+    ribbon->minWidthIs(.3);
+    ribbon->pointQuotaIs(100);
 
-    for (float i = 0; i < 1; i += 0.1) {
-        ribbon->pointEnq(Vector(i/4, i, 0));
-    }
-    for (float i = 0; i < 1; i += 0.1) {
-        ribbon->pointEnq(Vector(.25-i/4, 1+i, 0));
+    for (float i = -2; i < 2; i += .1) {
+        //ribbon->pointEnq(Vector(i*i, i, 0));
+        //ribbon->pointEnq(Vector(0, i, 0));
+        ribbon->pointEnq(Vector(0, i, 0));
     }
 }
 
@@ -292,12 +294,12 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-        initModels();
-        initFonts();
+        //initModels();
+        //initFonts();
         //initParticles();
-        //initRibbon();
+        initRibbon();
         //initQuad();
-        initLights();
+        //initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;

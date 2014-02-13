@@ -53,7 +53,6 @@
 #include "Model.hpp"
 #include "Node.hpp"
 #include "NullFunctor.hpp"
-#include "Particle.hpp"
 #include "Particles.hpp"
 #include "ParticleRenderer.hpp"
 #include "PointLight.hpp"

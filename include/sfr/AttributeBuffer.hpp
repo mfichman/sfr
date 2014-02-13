@@ -76,8 +76,8 @@ public:
         element_.push_back(element);
         statusIs(DIRTY);
     }
-
-    void clear() {
+    
+    void elementDelAll() {
         element_.clear();
         statusIs(DIRTY);
     }

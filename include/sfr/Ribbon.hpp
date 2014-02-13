@@ -17,21 +17,21 @@ namespace sfr {
 class RibbonVertex {
 public:
     GLvec3 position;
-    GLvec2 texCoord;
-    GLfloat alpha;
+    GLvec3 direction;
+    GLuint index;
 };
 
 /* Ribbon trail system */
 class Ribbon : public Node {
 public:
     enum Status { SYNCED, DIRTY };
-    enum Attribute { POSITION, TEXCOORD, ALPHA };
+    enum Attribute { POSITION, DIRECTION, INDEX };
 
     Ribbon();
     ~Ribbon();
 
-    Vector const& pointHead() const { return point_.front(); }
     GLuint pointCount() const { return point_.size(); }
+    GLuint pointQuota() const { return pointQuota_; }
     GLuint id() const { return id_; }
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
     Ptr<Texture> texture() const { return texture_; }
@@ -39,31 +39,33 @@ public:
     Scalar width() const { return width_; }
     Scalar minWidth() const { return minWidth_; }
 
-    void pointDeq();
-    void pointHeadIs(Vector const& point);
+    void pointQuotaIs(GLuint quota);
     void pointEnq(Vector const& point);
-    void pointDelAll() { point_.clear(); }
+    void pointDelAll() { tail_ = 0; point_.clear(); }
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
     void widthIs(Scalar width);
     void minWidthIs(Scalar width);
-    void cameraPositionIs(Vector const& pos);
 
     virtual void operator()(Ptr<Functor> functor);
 
 private:
     void defAttribute(Attribute id, GLuint size, void* offset);
-    void rebuildBuffer();
     void syncHardwareBuffer();
 
     Ptr<Texture> texture_;
     Ptr<MutableAttributeBuffer<RibbonVertex>> buffer_; 
-    std::list<Vector> point_;
+    std::vector<RibbonVertex> point_;
     Status status_;
     GLuint id_;
+    GLint tail_;
+    GLuint pointQuota_;
     Scalar width_;
     Scalar minWidth_;
-    Vector cameraPosition_;
+
+    RibbonVertex prev0_;
+    RibbonVertex prev1_;
+    GLuint total_;
 };
 
 class RibbonProgram : public Program {
@@ -71,13 +73,23 @@ public:
     RibbonProgram(std::string const& name) : Program(name) {}
 
     GLint texture() { return texture_; }
-    GLint transform() { return transform_; }
+    GLint projectionMatrix() { return projectionMatrix_; }
+    GLint modelViewMatrix() { return modelViewMatrix_; }
+    GLint normalMatrix() { return normalMatrix_; }
+    GLint width() { return width_; }
+    GLint minWidth() { return minWidth_; }
+    GLint elementCount() { return elementCount_; }
 
 private:
     void onLink();
 
     GLint texture_ = -1;
-    GLint transform_ = -1;
+    GLint projectionMatrix_ = -1;
+    GLint modelViewMatrix_ = -1;
+    GLint normalMatrix_ = -1;
+    GLint width_ = -1;
+    GLint minWidth_ = -1;
+    GLint elementCount_ = -1;
 };
 
 }

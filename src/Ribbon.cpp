@@ -16,6 +16,10 @@ using namespace sfr;
 Ribbon::Ribbon() {
     status_ = DIRTY;
     width_ = 0;
+    tail_ = 0;
+    width_ = 1;
+    minWidth_ = 1;
+    pointQuota_ = 10;
     buffer_.reset(new MutableAttributeBuffer<RibbonVertex>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
 }
@@ -24,23 +28,30 @@ Ribbon::~Ribbon() {
     glDeleteVertexArrays(1, &id_);
 }
 
-void Ribbon::pointDeq() {
-    status_ = DIRTY;
-    point_.pop_front(); 
-}
-
-void Ribbon::pointHeadIs(Vector const& point) {
-    status_ = DIRTY;
-    if (point_.empty()) {
-        point_.push_back(point);
-    } else {
-        point_.back() = point;
-    }
+void Ribbon::pointQuotaIs(GLuint quota) {
+    // Maximum number of points to store in the ribbon.
+    pointQuota_ = quota;
 }
 
 void Ribbon::pointEnq(Vector const& point) {
     status_ = DIRTY;
-    point_.push_back(point);
+    tail_ = tail_ % pointQuota();
+
+    Vector dir(0, 0, 0);
+    if (point_.size() > 0) {
+        GLuint prevIndex = (tail_ == 0) ? (point_.size()-1) : (tail_-1);
+        RibbonVertex const& prev = point_[prevIndex];
+        Vector prevPoint(prev.position.x, prev.position.y, prev.position.z);
+        dir = (point - prevPoint).unit();
+    }
+
+    RibbonVertex rv = { point.vec3f(), dir.vec3f(), 0 };
+    if (tail_ >= point_.size()) {
+        point_.push_back(rv);
+    } else {
+        point_[tail_] = rv;
+    }
+    tail_++;
 }
 
 void Ribbon::textureIs(Ptr<Texture> texture) {
@@ -53,9 +64,21 @@ void Ribbon::statusIs(Status status) {
     }
     status_ = status;
     if (SYNCED == status) {
-        buffer_->elementCountIs(0);
-        rebuildBuffer();
-        //rebuildBuffer(false);
+        // FIXME: Possibly find a way to do this without copying.  The problem
+        // is that we use a circular buffer to store the points.  However,
+        // there's no way to properly load a circular buffer containing a
+        // triangle strip into OpenGL...damn.  One option (memory-inefficient
+        // though) is to store triangles rather than a triangle strip.
+        GLint index = tail_-1;
+        buffer_->elementDelAll();
+        for (GLint i = point_.size()-1; i >= 0; --i) {
+            index = index % pointQuota();
+            RibbonVertex rv = point_[index];
+            rv.index = i;
+            buffer_->elementIs(i, rv);
+            index--;
+            if (index < 0) { index = point_.size()-1; }
+        }
         syncHardwareBuffer();
     }
 }
@@ -68,59 +91,10 @@ void Ribbon::minWidthIs(Scalar width) {
     minWidth_ = width;
 }
 
-void Ribbon::cameraPositionIs(Vector const& pos) {
-    status_ = DIRTY;
-    cameraPosition_ = pos;
-}
-
 void Ribbon::defAttribute(Attribute id, GLuint size, void* offset) {
     GLuint stride = sizeof(RibbonVertex);
     glEnableVertexAttribArray(id);
     glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
-}
-
-void Ribbon::rebuildBuffer() {
-    // Rebuild the ribbon strip from the points given in the point array 
-    auto sign = 1.f;
-    auto index = 0;
-    for (std::list<Vector>::iterator i = point_.begin(); i != point_.end(); ++i) {
-        // Iterate over each point, and find a vector to the next point.  Then,
-        // draw a new triangle orthogonal to that direction.
-        std::list<Vector>::iterator next = i;
-        ++next;
-        Vector forward;
-        auto center = *i;
-        if (next == point_.end()) {
-            std::list<Vector>::iterator prev = i;
-            --prev;
-            forward = (*i - *prev).unit();
-        } else {
-            forward = (*next - *i).unit();
-        } 
-        auto width = minWidth_ + (width_-minWidth_) * index / point_.size();
-        auto look = (cameraPosition_ - center).unit();
-        auto right = look.cross(forward).unit();
-
-        if (i == point_.begin() || next == point_.end()) {
-            // Start off with one point that is placed slightly differently, to
-            // keep the end of the ribbon flat at a 90-degree angle to the
-            // movement direction.
-            auto rv = RibbonVertex();
-            rv.position = (*i + (right*sign*width/2.)).vec3f();
-            rv.texCoord = GLvec2(.5, (sign+1.)/2.);
-            rv.alpha = 4*(GLfloat)index/(GLfloat)point_.size();
-            buffer_->elementEnq(rv);
-            sign *= -1;
-        }
-        auto rv = RibbonVertex();
-        rv.position = (*i + (right*sign*width/2.)).vec3f();
-        rv.texCoord = GLvec2(.5, (sign+1.)/2.);
-        rv.alpha = 4*(GLfloat)index/(GLfloat)point_.size();
-        buffer_->elementEnq(rv);
-        sign *= -1;
-
-        ++index;
-    }
 }
 
 void Ribbon::syncHardwareBuffer() {
@@ -133,8 +107,8 @@ void Ribbon::syncHardwareBuffer() {
     buffer_->statusIs(AttributeBuffer::SYNCED);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
     defAttribute(POSITION, SIZE(position), OFFSET(position));
-    defAttribute(TEXCOORD, SIZE(texCoord), OFFSET(texCoord)); 
-    defAttribute(ALPHA, SIZE(alpha), OFFSET(alpha)); 
+    defAttribute(DIRECTION, SIZE(direction), OFFSET(direction));
+    defAttribute(INDEX, SIZE(index), OFFSET(index)); 
     glBindVertexArray(0);
 }
 
@@ -144,7 +118,12 @@ void Ribbon::operator()(Ptr<Node::Functor> functor) {
 
 void RibbonProgram::onLink() {
     texture_ = glGetUniformLocation(id(), "tex");
-    transform_ = glGetUniformLocation(id(), "transform");
+    projectionMatrix_ = glGetUniformLocation(id(), "projectionMatrix");
+    modelViewMatrix_ = glGetUniformLocation(id(), "modelViewMatrix");
+    normalMatrix_ = glGetUniformLocation(id(), "normalMatrix");
+    width_ = glGetUniformLocation(id(), "width");
+    minWidth_ = glGetUniformLocation(id(), "minWidth");
+    elementCount_ = glGetUniformLocation(id(), "elementCount");
        
     glUniform1i(texture_, 0);
 }
