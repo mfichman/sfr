@@ -18,7 +18,7 @@ class RibbonVertex {
 public:
     GLvec3 position;
     GLvec3 direction;
-    GLuint index;
+    GLint index;
 };
 
 /* Ribbon trail system */
@@ -30,18 +30,19 @@ public:
     Ribbon();
     ~Ribbon();
 
-    GLuint pointCount() const { return point_.size(); }
-    GLuint pointQuota() const { return pointQuota_; }
+    GLuint pointCount() const { return std::min(tail_, pointQuota()); }
     GLuint id() const { return id_; }
+    GLint pointQuota() const { return pointQuota_; }
+    GLint pointTail() const { return tail_; }
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
     Ptr<Texture> texture() const { return texture_; }
     Status status() const { return status_; }
     Scalar width() const { return width_; }
     Scalar minWidth() const { return minWidth_; }
 
-    void pointQuotaIs(GLuint quota);
+    void pointQuotaIs(GLint quota);
     void pointEnq(Vector const& point);
-    void pointDelAll() { tail_ = 0; point_.clear(); }
+    void pointDelAll(); 
     void textureIs(Ptr<Texture> texture);
     void statusIs(Status status);
     void widthIs(Scalar width);
@@ -55,17 +56,15 @@ private:
 
     Ptr<Texture> texture_;
     Ptr<MutableAttributeBuffer<RibbonVertex>> buffer_; 
-    std::vector<RibbonVertex> point_;
     Status status_;
     GLuint id_;
     GLint tail_;
-    GLuint pointQuota_;
+    GLint pointQuota_;
     Scalar width_;
     Scalar minWidth_;
 
     RibbonVertex prev0_;
     RibbonVertex prev1_;
-    GLuint total_;
 };
 
 class RibbonProgram : public Program {
@@ -78,7 +77,8 @@ public:
     GLint normalMatrix() { return normalMatrix_; }
     GLint width() { return width_; }
     GLint minWidth() { return minWidth_; }
-    GLint elementCount() { return elementCount_; }
+    GLint count() { return count_; }
+    GLint tail() { return tail_; }
 
 private:
     void onLink();
@@ -89,7 +89,8 @@ private:
     GLint normalMatrix_ = -1;
     GLint width_ = -1;
     GLint minWidth_ = -1;
-    GLint elementCount_ = -1;
+    GLint count_ = -1;
+    GLint tail_ = -1;
 };
 
 }

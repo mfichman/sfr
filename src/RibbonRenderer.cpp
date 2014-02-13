@@ -55,7 +55,8 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionTransform().mat4f());
     glUniform1f(program_->width(), ribbon->width());
     glUniform1f(program_->minWidth(), ribbon->minWidth());
-    glUniform1i(program_->elementCount(), buffer->elementCount());
+    glUniform1i(program_->count(), ribbon->pointCount());
+    glUniform1i(program_->tail(), ribbon->pointTail());
 
     Matrix const normalMatrix = modelView.inverse().transpose();
     GLfloat temp[9] = {
@@ -67,7 +68,7 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
 
     // Render the particles
     glBindVertexArray(ribbon->id());
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, buffer->elementCount());
+    glDrawArrays(GL_TRIANGLES, 0, buffer->elementCount());
     glBindVertexArray(0);
 
 }

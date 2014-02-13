@@ -225,11 +225,11 @@ void initRibbon() {
     rnode->positionIs(Vector(0, 0, 0));
 
     ribbon->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
-    ribbon->widthIs(.7);
-    ribbon->minWidthIs(.3);
-    ribbon->pointQuotaIs(100);
+    ribbon->widthIs(1);
+    ribbon->minWidthIs(0);
+    ribbon->pointQuotaIs(10);
 
-    for (float i = -2; i < 2; i += .1) {
+    for (float i = -100; i < 2; i += .1) {
         //ribbon->pointEnq(Vector(i*i, i, 0));
         //ribbon->pointEnq(Vector(0, i, 0));
         ribbon->pointEnq(Vector(0, i, 0));

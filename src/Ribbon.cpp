@@ -15,7 +15,6 @@ using namespace sfr;
 
 Ribbon::Ribbon() {
     status_ = DIRTY;
-    width_ = 0;
     tail_ = 0;
     width_ = 1;
     minWidth_ = 1;
@@ -28,28 +27,48 @@ Ribbon::~Ribbon() {
     glDeleteVertexArrays(1, &id_);
 }
 
-void Ribbon::pointQuotaIs(GLuint quota) {
+void Ribbon::pointQuotaIs(GLint quota) {
     // Maximum number of points to store in the ribbon.
     pointQuota_ = quota;
 }
 
+void Ribbon::pointDelAll() {
+    tail_ = 0; 
+    buffer_->elementDelAll(); 
+}
+
 void Ribbon::pointEnq(Vector const& point) {
     status_ = DIRTY;
-    tail_ = tail_ % pointQuota();
 
-    Vector dir(0, 0, 0);
-    if (point_.size() > 0) {
-        GLuint prevIndex = (tail_ == 0) ? (point_.size()-1) : (tail_-1);
-        RibbonVertex const& prev = point_[prevIndex];
-        Vector prevPoint(prev.position.x, prev.position.y, prev.position.z);
-        dir = (point - prevPoint).unit();
-    }
+    GLint const index = 3 * ((tail_ % pointQuota()) + 1);
 
-    RibbonVertex rv = { point.vec3f(), dir.vec3f(), 0 };
-    if (tail_ >= point_.size()) {
-        point_.push_back(rv);
+    if (tail_ == 0) {
+        prev1_.position = point.vec3f();
+        prev1_.index = tail_-1;
+        prev0_.position = point.vec3f();
+        prev0_.index = tail_;
     } else {
-        point_[tail_] = rv;
+        Vector const prev(prev0_.position.x, prev0_.position.y, prev0_.position.z);
+        Vector const dir(point-prev);
+        if (tail_ == 1) {
+            prev1_.direction = dir.vec3f();
+            prev0_.direction = dir.vec3f();
+        }
+    
+        RibbonVertex rv = { point.vec3f(), dir.vec3f(), tail_ };
+        buffer_->elementIs(index+0, prev1_);
+        buffer_->elementIs(index+1, prev0_);
+        buffer_->elementIs(index+2, rv);
+
+        RibbonVertex cap = { point.vec3f(), dir.vec3f(), tail_+1 };
+        buffer_->elementIs(0, prev0_);
+        buffer_->elementIs(1, rv);
+        buffer_->elementIs(2, cap);
+        // First 3 slots are reserved for the endcap
+
+        prev1_ = prev0_;
+        prev0_ = rv;
+        // Rotate points: rv => prev0 => prev1
     }
     tail_++;
 }
@@ -64,21 +83,6 @@ void Ribbon::statusIs(Status status) {
     }
     status_ = status;
     if (SYNCED == status) {
-        // FIXME: Possibly find a way to do this without copying.  The problem
-        // is that we use a circular buffer to store the points.  However,
-        // there's no way to properly load a circular buffer containing a
-        // triangle strip into OpenGL...damn.  One option (memory-inefficient
-        // though) is to store triangles rather than a triangle strip.
-        GLint index = tail_-1;
-        buffer_->elementDelAll();
-        for (GLint i = point_.size()-1; i >= 0; --i) {
-            index = index % pointQuota();
-            RibbonVertex rv = point_[index];
-            rv.index = i;
-            buffer_->elementIs(i, rv);
-            index--;
-            if (index < 0) { index = point_.size()-1; }
-        }
         syncHardwareBuffer();
     }
 }
@@ -123,7 +127,8 @@ void RibbonProgram::onLink() {
     normalMatrix_ = glGetUniformLocation(id(), "normalMatrix");
     width_ = glGetUniformLocation(id(), "width");
     minWidth_ = glGetUniformLocation(id(), "minWidth");
-    elementCount_ = glGetUniformLocation(id(), "elementCount");
+    count_ = glGetUniformLocation(id(), "count");
+    tail_ = glGetUniformLocation(id(), "tail");
        
     glUniform1i(texture_, 0);
 }
