@@ -7,44 +7,40 @@
 
 #version 330
 
-uniform mat4 projectionMatrix;
+uniform mat4 transform;
 
 layout (points) in;
 layout (triangle_strip) out;
 layout (max_vertices = 4) out;
 
 in Vertex {
-    vec4 position;
-    vec4 color;
-    float rotation;
-    float size;
+    vec3 position;
+    vec3 forward;
+    vec3 right;
+    float width;
+    float height;
 } vertex[];
 
-out vec4 color;
 out vec2 texCoord;
-out float alpha;
-out float rotation;
 
 void main() {
-    vec3 pos = vertex[0].position.xyz;
-    color = vertex[0].color;
-    rotation = vertex[0].rotation;
+    vec3 pos = vertex[0].position;
+    vec3 f = vertex[0].forward * vertex[0].width / 2;
+    vec3 r = vertex[0].right * vertex[0].height / 2;
 
-    float s = vertex[0].size / 2;
-
-    gl_Position = projectionMatrix * vec4(pos + vec3(-s, -s, 0), 1);
+    gl_Position = transform * vec4(pos - f + r, 1);
     texCoord = vec2(0, 1);
     EmitVertex();
 
-    gl_Position = projectionMatrix * vec4(pos + vec3(s, -s, 0), 1);
+    gl_Position = transform * vec4(pos - f - r, 1);
     texCoord = vec2(0, 0);
     EmitVertex();
 
-    gl_Position = projectionMatrix * vec4(pos + vec3(-s, s, 0), 1);
+    gl_Position = transform * vec4(pos + f + r, 1);
     texCoord = vec2(1, 1);
     EmitVertex();
 
-    gl_Position = projectionMatrix * vec4(pos + vec3(s, s, 0), 1);
+    gl_Position = transform * vec4(pos + f - r, 1);
     texCoord = vec2(1, 0);
     EmitVertex();
 }

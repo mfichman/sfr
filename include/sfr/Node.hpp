@@ -30,7 +30,7 @@ public:
     virtual void operator()(Ptr<SpotLight> light) {}
     virtual void operator()(Ptr<Particles> particles) {}
     virtual void operator()(Ptr<Ribbon> ribbon) {}
-    virtual void operator()(Ptr<Billboard> billboard) {}
+    virtual void operator()(Ptr<Billboards> billboards) {}
     virtual void operator()(Ptr<Text> text) {}
     virtual void operator()(Ptr<Ui> ui) {}
 };

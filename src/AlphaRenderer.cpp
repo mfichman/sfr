@@ -62,8 +62,8 @@ void AlphaRenderer::operator()(Ptr<Ribbon> ribbon) {
     ribbonRenderer_->operator()(ribbon);
 }
 
-void AlphaRenderer::operator()(Ptr<Billboard> billboard) {
+void AlphaRenderer::operator()(Ptr<Billboards> billboards) {
     rendererIs(billboardRenderer_);
-    billboardRenderer_->operator()(billboard);
+    billboardRenderer_->operator()(billboards);
 }
 

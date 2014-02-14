@@ -15,6 +15,7 @@ layout(location=2) in float sizeIn;
 layout(location=3) in float rotationIn;
 
 out Vertex {
+    vec4 position;
     vec4 color;
     float rotation;
     float size;
@@ -23,7 +24,7 @@ out Vertex {
 
 /* Particle shader */
 void main() {
-    gl_Position = modelViewMatrix * vec4(positionIn, 1);
+    vertex.position = modelViewMatrix * vec4(positionIn, 1);
     vertex.color = colorIn;
     vertex.rotation = rotationIn;
     vertex.size = sizeIn;

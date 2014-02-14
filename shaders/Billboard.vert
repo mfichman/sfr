@@ -6,14 +6,31 @@
  *****************************************************************************/
 
 #version 330
-#pragma include "shaders/Mesh.vert"
 
 uniform mat4 transform;
+uniform mat4 normalMatrix;
 
-out vec2 texCoord;
+layout(location=0) in vec3 positionIn;
+layout(location=1) in vec3 forwardIn;
+layout(location=2) in vec3 rightIn;
+layout(location=3) in float widthIn;
+layout(location=4) in float heightIn;
 
-/* Particle shader */
+out Vertex {
+    vec3 position;
+    vec3 forward;
+    vec3 right;
+    float width;
+    float height;
+} vertex;
+
+/* Billboard shader */
 void main() {
-    gl_Position = transform * vec4(positionIn, 1);
-    texCoord = texCoordIn;
+    // Simply pass vertices thru.  We need to extrude 4 corners from the
+    // position in the geometry shader, and this must be done in model space.
+    vertex.position = positionIn;
+    vertex.forward = forwardIn;
+    vertex.right = rightIn;
+    vertex.width = widthIn;
+    vertex.height = heightIn;
 }

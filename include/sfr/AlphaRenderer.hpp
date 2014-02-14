@@ -18,7 +18,7 @@ public:
     void operator()(Ptr<Model> model);
     void operator()(Ptr<Particles> particles);
     void operator()(Ptr<Ribbon> ribbon);
-    void operator()(Ptr<Billboard> billboard);
+    void operator()(Ptr<Billboards> billboards);
 
     using Renderer::operator();
     

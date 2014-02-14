@@ -8,6 +8,7 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/AttributeBuffer.hpp"
+#include "sfr/Color.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Program.hpp"
 
@@ -35,16 +36,17 @@ public:
     GLuint id() const { return id_; }
     Ptr<AttributeBuffer> buffer() const { return buffer_; }
     Ptr<Texture> texture() const { return texture_; }
+    Color const& tint() const { return tint_; }
     Status status() const { return status_; }
 
     void particleEnq(Particle const& particle);
     void particleIs(GLuint index, Particle const& particle);
     void textureIs(Ptr<Texture> texture);
+    void tintIs(Color const& tint);
     void statusIs(Status status);
 
-    virtual void operator()(Ptr<Functor> functor);
-
 private:
+    virtual void operator()(Ptr<Functor> functor);
     void defAttribute(Attribute id, GLuint size, void* offset);
     void syncHardwareBuffer();
 
@@ -52,6 +54,7 @@ private:
     Ptr<MutableAttributeBuffer<Particle>> buffer_; 
     Status status_;
     GLuint id_;
+    Color tint_;
 };
 
 class ParticleProgram : public Program {
@@ -59,6 +62,7 @@ public:
     ParticleProgram(std::string const& name) : Program(name) {}
 
     GLint texture() { return texture_; }
+    GLint tint() { return tint_; }
     GLint modelViewMatrix() { return modelViewMatrix_; }
     GLint projectionMatrix() { return projectionMatrix_; }
 
@@ -66,6 +70,7 @@ private:
     void onLink();
 
     GLint texture_ = -1;
+    GLint tint_ = -1;
     GLint modelViewMatrix_ = -1;
     GLint projectionMatrix_ = -1;
 };

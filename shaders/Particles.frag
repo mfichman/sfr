@@ -8,6 +8,7 @@
 #version 330
 
 uniform sampler2D tex;
+uniform vec4 tint;
 
 in float alpha;
 in float rotation;
@@ -22,6 +23,6 @@ void main() {
     float s = x * cos(rotation) - y * sin(rotation) + 0.5;
     float t = x * sin(rotation) + y * cos(rotation) + 0.5;
     
-	colorOut = color * texture(tex, vec2(s, t));
+	colorOut = color * tint * texture(tex, vec2(s, t));
 }
 

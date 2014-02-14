@@ -24,7 +24,7 @@ public:
     void operator()(Ptr<SpotLight> light);
     void operator()(Ptr<Particles> particles);
     void operator()(Ptr<Ribbon> ribbon);
-    void operator()(Ptr<Billboard> billboard);
+    void operator()(Ptr<Billboards> billboards);
     void operator()(Ptr<Text> text);
 
 private:

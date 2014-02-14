@@ -212,8 +212,8 @@ void initParticles() {
     Ptr<sfr::Transform> pnode = root->childIs<sfr::Transform>("particles");
     particles = pnode->childIs<sfr::Particles>();
 
-    Particle p1 = { GLvec3(0, 0, 0), GLvec3(), GLvec4(), 100, 0 };
-    Particle p2 = { GLvec3(2, 0, 0), GLvec3(), GLvec4(), 100, 0 };
+    Particle p1 = { GLvec3(0, 0, 0), GLvec3(), GLvec4(1, 1, 1, 1), 1, 0 };
+    Particle p2 = { GLvec3(2, 0, 0), GLvec3(), GLvec4(1, 1, 1, 1), 1, 0 };
     particles->particleEnq(p1);
     particles->particleEnq(p2);
     particles->textureIs(assets->assetIs<Texture>("textures/BurstGold.png"));
@@ -237,9 +237,20 @@ void initRibbon() {
 }
 
 void initQuad() {
-    Ptr<sfr::Billboard> billboard = root->childIs<sfr::Billboard>();
-    billboard->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
-    billboard->widthIs(2.);
+    Ptr<sfr::Billboards> billboards = root->childIs<sfr::Billboards>();
+    billboards->textureIs(assets->assetIs<Texture>("textures/IncandescentBlue.png"));
+
+    Billboard billboard;
+    billboard.width = 2.;
+    billboard.height = 2;
+    billboard.right = GLvec3(1, 0, 0);
+    billboard.forward = GLvec3(0, 1, 0);
+    billboard.position = GLvec3(0, 0, 0);
+
+    billboards->billboardEnq(billboard);
+
+    billboard.position = GLvec3(10, 0, 0);
+    billboards->billboardEnq(billboard);
 }
 
 void runRenderLoop() {
@@ -296,9 +307,9 @@ int main(int argc, char** argv) {
         initCamera();
         //initModels();
         //initFonts();
-        //initParticles();
-        initRibbon();
-        //initQuad();
+        initParticles();
+        //initRibbon();
+        initQuad();
         //initLights();
         runRenderLoop();
     } catch (std::exception& ex) {

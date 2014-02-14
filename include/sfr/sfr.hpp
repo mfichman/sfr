@@ -24,7 +24,7 @@
 
 #include "AssetTable.hpp"
 #include "AttributeBuffer.hpp"
-#include "Billboard.hpp"
+#include "Billboards.hpp"
 #include "BillboardRenderer.hpp"
 #include "Camera.hpp"
 #include "Color.hpp"

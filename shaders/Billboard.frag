@@ -11,9 +11,9 @@ uniform sampler2D tex;
 uniform vec4 tint;
 
 in vec2 texCoord;
-out vec4 color;
+out vec4 colorOut;
 
 void main() {
-    color = tint * texture(tex, texCoord);
+    colorOut = tint * texture(tex, texCoord);
 }
 

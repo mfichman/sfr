@@ -16,6 +16,7 @@ using namespace sfr;
 
 Particles::Particles() {
     status_ = DIRTY;
+    tint_ = Color(1., 1., 1., 1.);
     buffer_.reset(new MutableAttributeBuffer<Particle>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
 }
@@ -40,6 +41,10 @@ Particle const& Particles::particle(GLuint index) const {
 
 void Particles::textureIs(Ptr<Texture> texture) {
     texture_ = texture;
+}
+
+void Particles::tintIs(Color const& tint) {
+    tint_ = tint;
 }
 
 void Particles::statusIs(Status status) {
@@ -76,6 +81,7 @@ void Particles::operator()(Ptr<Node::Functor> functor) {
 
 void ParticleProgram::onLink() {
     texture_ = glGetUniformLocation(id(), "tex");
+    tint_ = glGetUniformLocation(id(), "tint");
     modelViewMatrix_ = glGetUniformLocation(id(), "modelViewMatrix");
     projectionMatrix_ = glGetUniformLocation(id(), "projectionMatrix");
        

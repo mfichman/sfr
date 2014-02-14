@@ -7,35 +7,53 @@
 #pragma once
 
 #include "sfr/Common.hpp"
+#include "sfr/AttributeBuffer.hpp"
 #include "sfr/Color.hpp"
 #include "sfr/Node.hpp"
 #include "sfr/Program.hpp"
 
 namespace sfr {
 
-class Billboard : public Node {
+class Billboard {
 public:
-    enum Mode { NORMAL, PARTICLE };
-    Billboard();
-    Ptr<Texture> texture() const { return texture_; }
-    Scalar width() const { return width_; }
-    Scalar height() const { return height_; }
-    Mode mode() const { return mode_; }
-    sfr::Color const& tint() const { return tint_; }
+    GLvec3 position;
+    GLvec3 forward;
+    GLvec3 right;
+    GLfloat width;
+    GLfloat height;
+};
 
+class Billboards : public Node {
+public:
+    enum Status { SYNCED, DIRTY };
+    enum Attribute { POSITION, FORWARD, RIGHT, WIDTH, HEIGHT };
+
+    Billboards();
+    ~Billboards();
+    Ptr<Texture> texture() const { return texture_; }
+    Ptr<AttributeBuffer> buffer() const { return buffer_; }
+    Billboard const& billboard(GLuint index) const;
+    GLuint billboardCount() const { return buffer_->elementCount(); }
+    GLuint id() const { return id_; }
+    sfr::Color const& tint() const { return tint_; }
+    Status status() const { return status_; }
+
+    void billboardEnq(Billboard const& billboard);
+    void billboardIs(GLuint index, Billboard const& billboard);
+    void billboardDelAll();
     void textureIs(Ptr<Texture> texture);
-    void widthIs(Scalar width);
-    void heightIs(Scalar height);
-    void modeIs(Mode mode);
     void tintIs(sfr::Color tint);
+    void statusIs(Status status);
 private:
     void operator()(Ptr<Functor> functor);
+    void defAttribute(Attribute id, GLuint size, void* offset);
+    void syncHardwareBuffer();
 
     Ptr<Texture> texture_;
-    Mode mode_;
-    Scalar width_;
-    Scalar height_;
+    Ptr<MutableAttributeBuffer<Billboard>> buffer_;
+    Status status_;
     sfr::Color tint_;
+    GLuint id_;
 };
 
 class BillboardProgram : public Program {

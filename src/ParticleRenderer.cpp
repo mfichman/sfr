@@ -47,6 +47,7 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
+    glUniform4fv(program_->tint(), 1, particles->tint().vec4f());
 
     // Pass the matrices to the vertex shader
     Matrix const modelView = camera->viewTransform() * worldTransform();

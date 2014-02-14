@@ -6,7 +6,7 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/Billboard.hpp"
+#include "sfr/Billboards.hpp"
 #include "sfr/Camera.hpp"
 #include "sfr/HemiLight.hpp"
 #include "sfr/Model.hpp"
@@ -74,8 +74,8 @@ void TransformUpdater::operator()(Ptr<Ribbon> ribbon) {
     world_->renderDescIs(RenderDesc(ribbon, 0, transform_));
 }
 
-void TransformUpdater::operator()(Ptr<Billboard> billboard) {
-    world_->renderDescIs(RenderDesc(billboard, 0, transform_));
+void TransformUpdater::operator()(Ptr<Billboards> billboards) {
+    world_->renderDescIs(RenderDesc(billboards, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Text> text) {

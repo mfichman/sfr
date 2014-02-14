@@ -67,6 +67,7 @@ class AlphaRenderer;
 class AssetTable;
 class AttributeBuffer;
 class Billboard;
+class Billboards;
 class BillboardProgram;
 class BillboardRenderer;
 class Camera;
