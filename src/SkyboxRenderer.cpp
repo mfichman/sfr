@@ -37,7 +37,6 @@ void SkyboxRenderer::operator()(Ptr<World> world) {
 
     glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
     world_ = world;
 
     Matrix const view = Matrix::rotate(camera->viewTransform().rotation());

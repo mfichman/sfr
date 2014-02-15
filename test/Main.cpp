@@ -305,12 +305,12 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-        //initModels();
-        //initFonts();
+        initModels();
+        initFonts();
         initParticles();
-        //initRibbon();
+        initRibbon();
         initQuad();
-        //initLights();
+        initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;

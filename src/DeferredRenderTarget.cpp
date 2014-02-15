@@ -96,11 +96,11 @@ void DeferredRenderTarget::statusIs(Status status) {
     if (ENABLED == status_) {
         glBindFramebuffer(GL_FRAMEBUFFER, id_);
         glDrawBuffers(buffers_.size(), &buffers_[0]);
-        glReadBuffer(GL_NONE);
+        //glReadBuffer(GL_NONE);
     } else if (DISABLED == status_) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glDrawBuffer(GL_BACK);
-        glReadBuffer(GL_BACK);
+        //glDrawBuffer(GL_BACK);
+        //glReadBuffer(GL_BACK);
     } else {
         assert(!"invalid enum");
     }
