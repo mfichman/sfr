@@ -15,6 +15,7 @@ using namespace sfr;
 
 Billboards::Billboards() {
     status_ = SYNCED;
+    clearMode_ = MANUAL;
     tint_ = Color(1., 1., 1., 1.);
     buffer_.reset(new MutableAttributeBuffer<Billboard>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
@@ -59,6 +60,10 @@ void Billboards::statusIs(Status status) {
     if (SYNCED == status) {
         syncHardwareBuffer();
     }
+}
+
+void Billboards::clearModeIs(ClearMode mode) {
+    clearMode_ = mode;
 }
 
 void Billboards::defAttribute(Attribute id, GLuint size, void* offset) {

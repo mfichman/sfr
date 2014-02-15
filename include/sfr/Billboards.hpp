@@ -16,17 +16,18 @@ namespace sfr {
 
 class Billboard {
 public:
-    GLvec3 position;
-    GLvec3 forward;
-    GLvec3 right;
-    GLfloat width;
-    GLfloat height;
+    GLvec3 position; // Position of center of billboard
+    GLvec3 forward; // Forward vector for billboard (normal)
+    GLvec3 right; // Right vector for billboard
+    GLfloat width; // Width of billboard
+    GLfloat height; // Height of billboard
 };
 
 class Billboards : public Node {
 public:
     enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, FORWARD, RIGHT, WIDTH, HEIGHT };
+    enum ClearMode { MANUAL, AUTO };
 
     Billboards();
     ~Billboards();
@@ -37,6 +38,7 @@ public:
     GLuint id() const { return id_; }
     sfr::Color const& tint() const { return tint_; }
     Status status() const { return status_; }
+    ClearMode clearMode() const { return clearMode_; }
 
     void billboardEnq(Billboard const& billboard);
     void billboardIs(GLuint index, Billboard const& billboard);
@@ -44,6 +46,7 @@ public:
     void textureIs(Ptr<Texture> texture);
     void tintIs(sfr::Color tint);
     void statusIs(Status status);
+    void clearModeIs(ClearMode clearMode);
 private:
     void operator()(Ptr<Functor> functor);
     void defAttribute(Attribute id, GLuint size, void* offset);
@@ -54,6 +57,7 @@ private:
     Status status_;
     sfr::Color tint_;
     GLuint id_;
+    ClearMode clearMode_;
 };
 
 class BillboardProgram : public Program {

@@ -28,6 +28,7 @@ class Particles : public Node {
 public:
     enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, COLOR, SIZE, ROTATION };
+    enum ClearMode { MANUAL, AUTO };
 
     Particles();
     ~Particles();
@@ -38,12 +39,15 @@ public:
     Ptr<Texture> texture() const { return texture_; }
     Color const& tint() const { return tint_; }
     Status status() const { return status_; }
+    ClearMode clearMode() const { return clearMode_; }
 
     void particleEnq(Particle const& particle);
     void particleIs(GLuint index, Particle const& particle);
+    void particleDelAll();
     void textureIs(Ptr<Texture> texture);
     void tintIs(Color const& tint);
     void statusIs(Status status);
+    void clearModeIs(ClearMode mode);
 
 private:
     virtual void operator()(Ptr<Functor> functor);
@@ -55,6 +59,7 @@ private:
     Status status_;
     GLuint id_;
     Color tint_;
+    ClearMode clearMode_;
 };
 
 class ParticleProgram : public Program {

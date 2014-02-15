@@ -59,5 +59,9 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
     glBindVertexArray(particles->id());
     glDrawArrays(GL_POINTS, 0, buffer->elementCount());
     glBindVertexArray(0);
+
+    if (particles->clearMode() == Particles::AUTO) {
+        particles->particleDelAll();
+    }
 }
 

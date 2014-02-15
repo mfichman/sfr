@@ -59,4 +59,8 @@ void BillboardRenderer::operator()(Ptr<Billboards> billboards) {
     glBindVertexArray(billboards->id());
     glDrawArrays(GL_POINTS, 0, buffer->elementCount());
     glBindVertexArray(0);
+
+    if (billboards->clearMode() == Billboards::AUTO) {
+        billboards->billboardDelAll();
+    }
 }

@@ -16,6 +16,7 @@ using namespace sfr;
 
 Particles::Particles() {
     status_ = DIRTY;
+    clearMode_ = MANUAL;
     tint_ = Color(1., 1., 1., 1.);
     buffer_.reset(new MutableAttributeBuffer<Particle>("", GL_STREAM_DRAW));
     glGenVertexArrays(1, &id_);
@@ -33,6 +34,11 @@ void Particles::particleEnq(Particle const& particle) {
 void Particles::particleIs(GLuint index, Particle const& particle) {
     status_ = DIRTY;
     buffer_->elementIs(index, particle);
+}
+
+void Particles::particleDelAll() {
+    status_ = DIRTY;
+    buffer_->elementDelAll();
 }
 
 Particle const& Particles::particle(GLuint index) const {
@@ -55,6 +61,10 @@ void Particles::statusIs(Status status) {
     if (SYNCED == status) {
         syncHardwareBuffer();
     }
+}
+
+void Particles::clearModeIs(ClearMode mode) {
+    clearMode_ = mode;
 }
 
 void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
