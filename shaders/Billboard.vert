@@ -13,13 +13,15 @@ uniform mat4 normalMatrix;
 layout(location=0) in vec3 positionIn;
 layout(location=1) in vec3 forwardIn;
 layout(location=2) in vec3 rightIn;
-layout(location=3) in float widthIn;
-layout(location=4) in float heightIn;
+layout(location=3) in vec4 colorIn;
+layout(location=4) in float widthIn;
+layout(location=5) in float heightIn;
 
 out Vertex {
     vec3 position;
     vec3 forward;
     vec3 right;
+    vec4 color;
     float width;
     float height;
 } vertex;
@@ -31,6 +33,7 @@ void main() {
     vertex.position = positionIn;
     vertex.forward = forwardIn;
     vertex.right = rightIn;
+    vertex.color = colorIn;
     vertex.width = widthIn;
     vertex.height = heightIn;
 }

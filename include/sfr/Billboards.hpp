@@ -17,8 +17,10 @@ namespace sfr {
 class Billboard {
 public:
     GLvec3 position; // Position of center of billboard
+    GLvec3 velocity; // For bookkeeping only
     GLvec3 forward; // Forward vector for billboard (normal)
     GLvec3 right; // Right vector for billboard
+    GLvec4 color; // Color
     GLfloat width; // Width of billboard
     GLfloat height; // Height of billboard
 };
@@ -26,7 +28,7 @@ public:
 class Billboards : public Node {
 public:
     enum Status { SYNCED, DIRTY };
-    enum Attribute { POSITION, FORWARD, RIGHT, WIDTH, HEIGHT };
+    enum Attribute { POSITION, FORWARD, RIGHT, COLOR, WIDTH, HEIGHT };
     enum ClearMode { MANUAL, AUTO };
 
     Billboards();

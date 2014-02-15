@@ -78,8 +78,9 @@ void Billboards::syncHardwareBuffer() {
     buffer_->statusIs(AttributeBuffer::SYNCED);
     glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
     defAttribute(POSITION, SIZE(position), OFFSET(position));
-    defAttribute(RIGHT, SIZE(right), OFFSET(right));
     defAttribute(FORWARD, SIZE(forward), OFFSET(forward));
+    defAttribute(RIGHT, SIZE(right), OFFSET(right));
+    defAttribute(COLOR, SIZE(color), OFFSET(color));
     defAttribute(WIDTH, SIZE(width), OFFSET(width));
     defAttribute(HEIGHT, SIZE(height), OFFSET(height));
     glBindVertexArray(0);

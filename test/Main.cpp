@@ -246,6 +246,7 @@ void initQuad() {
     billboard.right = GLvec3(1, 0, 0);
     billboard.forward = GLvec3(0, 1, 0);
     billboard.position = GLvec3(0, 0, 0);
+    billboard.color = GLvec4(1, 1, 1, 1);
 
     billboards->billboardEnq(billboard);
 
@@ -305,12 +306,12 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
-        initModels();
-        initFonts();
-        initParticles();
-        initRibbon();
+ //       initModels();
+//        initFonts();
+  //      initParticles();
+  //      initRibbon();
         initQuad();
-        initLights();
+  //      initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
