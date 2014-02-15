@@ -19,6 +19,7 @@ public:
     void operator()(Ptr<Particles> particles);
     void operator()(Ptr<Ribbon> ribbon);
     void operator()(Ptr<Billboards> billboards);
+    void operator()(Ptr<Quad> quad);
 
     using Renderer::operator();
     
@@ -30,6 +31,7 @@ private:
     Ptr<ParticleRenderer> particleRenderer_;
     Ptr<BillboardRenderer> billboardRenderer_;
     Ptr<RibbonRenderer> ribbonRenderer_;
+    Ptr<QuadRenderer> quadRenderer_;
     Ptr<Renderer> renderer_;
 };
 

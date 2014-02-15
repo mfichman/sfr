@@ -57,6 +57,8 @@
 #include "ParticleRenderer.hpp"
 #include "PointLight.hpp"
 #include "Ptr.hpp"
+#include "Quad.hpp"
+#include "QuadRenderer.hpp"
 #include "Quaternion.hpp"
 #include "Ribbon.hpp"
 #include "RibbonRenderer.hpp"

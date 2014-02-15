@@ -25,6 +25,7 @@ public:
     void operator()(Ptr<Particles> particles);
     void operator()(Ptr<Ribbon> ribbon);
     void operator()(Ptr<Billboards> billboards);
+    void operator()(Ptr<Quad> quad);
     void operator()(Ptr<Text> text);
 
 private:

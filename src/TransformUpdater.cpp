@@ -12,6 +12,7 @@
 #include "sfr/Model.hpp"
 #include "sfr/Particles.hpp"
 #include "sfr/PointLight.hpp"
+#include "sfr/Quad.hpp"
 #include "sfr/Ribbon.hpp"
 #include "sfr/SpotLight.hpp"
 #include "sfr/Text.hpp"
@@ -76,6 +77,10 @@ void TransformUpdater::operator()(Ptr<Ribbon> ribbon) {
 
 void TransformUpdater::operator()(Ptr<Billboards> billboards) {
     world_->renderDescIs(RenderDesc(billboards, 0, transform_));
+}
+
+void TransformUpdater::operator()(Ptr<Quad> quad) {
+    world_->renderDescIs(RenderDesc(quad, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Text> text) {
