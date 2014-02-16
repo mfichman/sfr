@@ -14,8 +14,9 @@ HemiLight::HemiLight() {
     constantAttenuation_ = 1.0f;
     linearAttenuation_ = 1.;//-0.5f;
     quadraticAttenuation_ = 0.0f;
+    specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
-    backDiffuseColor_ = Color(0.2f, 0.2f, .3f, 1.f);
+    backDiffuseColor_ = Color(0.f, 0.f, 0.f, 1.f);
     direction_ = Vector(-1.f, 0.f, 0.f);
 }
 
@@ -25,6 +26,10 @@ Color const& HemiLight::diffuseColor() const {
 
 Color const& HemiLight::backDiffuseColor() const {
     return backDiffuseColor_;
+}
+
+Color const& HemiLight::specularColor() const {
+    return specularColor_;
 }
 
 Vector const& HemiLight::direction() const { 
@@ -68,6 +73,10 @@ void HemiLight::diffuseColorIs(Color const& diffuse) {
 
 void HemiLight::backDiffuseColorIs(Color const& backDiffuse) {
     backDiffuseColor_ = backDiffuse;
+}
+
+void HemiLight::specularColorIs(Color const& specular) {
+    specularColor_ = specular;
 }
 
 void HemiLight::directionIs(Vector const& direction) {

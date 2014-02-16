@@ -88,8 +88,8 @@ void initCamera() {
 
 void initLights() {
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
-    //light1->linearAttenuationIs(100);//0.1f);
     light1->diffuseColorIs(sfr::Color(.8f, .8f, .8f, 1.f));
+    light1->diffuseColorIs(sfr::Color(1., 1., 1., 1.));
     light1->backDiffuseColorIs(sfr::Color(0.01f, 0.01f, 0.01f, 1.f));
     light1->directionIs(sfr::Vector(1.f, 0.f, 0.f));
     light1->constantAttenuationIs(1);
@@ -306,12 +306,12 @@ int main(int argc, char** argv) {
     try {    
         initWindow();
         initCamera();
- //       initModels();
+        initModels();
 //        initFonts();
   //      initParticles();
   //      initRibbon();
-        initQuad();
-  //      initLights();
+  //      initQuad();
+        initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;

@@ -101,6 +101,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     // Set the light color, attenuation, and direction properties
     glUniform3fv(program_->diffuse(), 1, light->diffuseColor().vec4f());
     glUniform3fv(program_->backDiffuse(), 1, light->backDiffuseColor().vec4f());
+    glUniform3fv(program_->specular(), 1, light->specularColor().vec4f());
     glUniform1f(program_->atten0(), light->constantAttenuation());
     glUniform1f(program_->atten1(), light->linearAttenuation());
     glUniform1f(program_->atten2(), light->quadraticAttenuation());

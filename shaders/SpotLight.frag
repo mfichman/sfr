@@ -12,8 +12,8 @@ uniform sampler2D shadowMap;
 uniform float atten0; 
 uniform float atten1;
 uniform float atten2;
-uniform vec3 Ld;
-uniform vec3 Ls;
+uniform vec3 Ld; // Diffuse light intensity
+uniform vec3 Ls; // Specular light intensity
 uniform float spotCutoff;
 uniform float spotPower;
 uniform vec3 direction;
@@ -67,8 +67,8 @@ void main() {
 	float shadow = shadowPoissonPcf(li);
 
 	// Sample the normal and the view vector
-	vec3 V = normalize(-li.view); // View vec
-	vec3 R = reflect(-V, li.N);
+	vec3 V = normalize(li.view); // View vec
+	vec3 R = reflect(V, li.N);
 	vec3 L = lightPosition - li.view;
 	float D = length(L);
 	float atten = 1./(atten0 + atten1 * D + atten2 * D * D);
