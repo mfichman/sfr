@@ -18,6 +18,7 @@ HemiLight::HemiLight() {
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
     backDiffuseColor_ = Color(0.f, 0.f, 0.f, 1.f);
     direction_ = Vector(-1.f, 0.f, 0.f);
+    shadowViewDistance_ = 20; // Indicates that the whole view frustum should be shadowed.
 }
 
 Color const& HemiLight::diffuseColor() const {
@@ -67,6 +68,18 @@ Scalar HemiLight::radiusOfEffect() const {
     }
 }
 
+Scalar HemiLight::shadowViewDistance() const {
+    return shadowViewDistance_;
+}
+
+Ptr<DepthRenderTarget> HemiLight::shadowMap() const {
+    return shadowMap_;
+}
+
+Matrix const& HemiLight::transform() const {
+    return transform_;
+}
+
 void HemiLight::diffuseColorIs(Color const& diffuse) {
     diffuseColor_ = diffuse;
 }
@@ -93,6 +106,18 @@ void HemiLight::linearAttenuationIs(Scalar atten) {
 
 void HemiLight::quadraticAttenuationIs(Scalar atten) {
     quadraticAttenuation_ = atten;
+}
+
+void HemiLight::shadowMapIs(Ptr<DepthRenderTarget> target) {
+    shadowMap_ = target;
+}
+
+void HemiLight::transformIs(Matrix const& matrix) {
+    transform_ = matrix;
+}
+
+void HemiLight::shadowViewDistanceIs(Scalar distance) {
+    shadowViewDistance_ = distance;
 }
 
 void HemiLight::operator()(Ptr<Functor> functor) {

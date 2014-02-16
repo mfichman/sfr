@@ -7,8 +7,9 @@
 #pragma once
 
 #include "sfr/Common.hpp"
-#include "sfr/Node.hpp"
 #include "sfr/Color.hpp"
+#include "sfr/Matrix.hpp"
+#include "sfr/Node.hpp"
 #include "sfr/Vector.hpp"
 
 namespace sfr {
@@ -25,6 +26,9 @@ public:
     Scalar linearAttenuation() const;
     Scalar quadraticAttenuation() const;
     Scalar radiusOfEffect() const;
+    Ptr<DepthRenderTarget> shadowMap() const;
+    Matrix const& transform() const;
+    Scalar shadowViewDistance() const;
 
     void diffuseColorIs(Color const& color);
     void backDiffuseColorIs(Color const& color);
@@ -33,6 +37,9 @@ public:
     void constantAttenuationIs(Scalar atten);
     void linearAttenuationIs(Scalar atten);
     void quadraticAttenuationIs(Scalar atten);
+    void shadowMapIs(Ptr<DepthRenderTarget> target);
+    void transformIs(Matrix const& matrix);
+    void shadowViewDistanceIs(Scalar distance);
 
     void operator()(Ptr<Functor> functor);
 
@@ -44,6 +51,9 @@ private:
     Scalar constantAttenuation_;
     Scalar linearAttenuation_;
     Scalar quadraticAttenuation_;
+    Ptr<DepthRenderTarget> shadowMap_;
+    Matrix transform_; // Light-space transform (for shadow mappping)
+    Scalar shadowViewDistance_;
 };
 
 }

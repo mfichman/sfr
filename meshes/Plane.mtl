@@ -1,10 +1,10 @@
 # Blender MTL File: 'Plane.blend'
 # Material Count: 0
 newmtl Metal
-Kd .8 .8 .8
-Ks 0.0 0.0 0.0
+Kd 1.0 1.0 1.0
+Ks 1.0 1.0 1.0
 Ka 1.0 1.0 1.0
-Ns 1.
+Ns 10.
 map_Kd textures/SandDiffuse.png
 map_bump textures/MetalNormal.png
 

@@ -28,7 +28,7 @@ Ptr<WavefrontLoader> meshLoader;
 Ptr<ProgramLoader> programLoader;
 Ptr<TextureLoader> textureLoader;
 sf::Time elapsedTime = sf::seconds(0.f);
-float z = 3.1f;
+float z = 0;//3.1f;
 float x = -1.8f;
 
 void initWindow() {
@@ -87,14 +87,16 @@ void initCamera() {
 }
 
 void initLights() {
+    Ptr<sfr::DepthRenderTarget> target(new sfr::DepthRenderTarget(2048, 2048));
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
-    light1->diffuseColorIs(sfr::Color(.8f, .8f, .8f, 1.f));
     light1->diffuseColorIs(sfr::Color(1., 1., 1., 1.));
-    light1->backDiffuseColorIs(sfr::Color(0.01f, 0.01f, 0.01f, 1.f));
-    light1->directionIs(sfr::Vector(1.f, 0.f, 0.f));
+    //light1->backDiffuseColorIs(sfr::Color(0.01f, 0.01f, 0.01f, 1.f));
+    light1->backDiffuseColorIs(sfr::Color(0.f, 0.f, 0.f, 0.f));
+    light1->directionIs(sfr::Vector(1.f, -1.f, 0.f));
     light1->constantAttenuationIs(1);
     light1->linearAttenuationIs(0);
     light1->quadraticAttenuationIs(0);
+    light1->shadowMapIs(target);
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
@@ -102,6 +104,7 @@ void initLights() {
 
             Ptr<sfr::Transform> node = root->childIs<sfr::Transform>("light");
             node->positionIs(sfr::Vector(i * 2.f, 16.f, j * 5.f + 1.f));
+/*
 
             Ptr<sfr::SpotLight> light = node->childIs<sfr::SpotLight>();
             light->spotCutoffIs(20.f);
@@ -109,13 +112,13 @@ void initLights() {
             light->constantAttenuationIs(1.f);
             light->linearAttenuationIs(0.f);
             light->quadraticAttenuationIs(0.f);
-            light->specularColorIs(sfr::Color(.4f, .4f, 1.f, 1.f));
-            light->specularColorIs(sfr::Color(3.f, 3.f, 3.f, 1.f));
+            light->specularColorIs(sfr::Color(1.f, 1.f, 1.f, 1.f));
             light->diffuseColorIs(sfr::Color(3.f, 3.f, 3.f, 3.f));
             light->directionIs(sfr::Vector(0, -1, 0));
             light->shadowMapIs(target);
 
             lightNode = node;
+*/
         }
     }
 }
@@ -183,7 +186,7 @@ void initModels() {
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {
             Ptr<sfr::Transform> node = root->childIs<sfr::Transform>("car");
-            node->positionIs(sfr::Vector(i * 2.f+1.f, 0.f, j * 5.f));
+            node->positionIs(sfr::Vector(i * 2.f+1.f, 1.f, j * 5.f));
             node->childIs(car);
         }
     }

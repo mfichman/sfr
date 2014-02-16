@@ -105,10 +105,21 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform1f(program_->atten0(), light->constantAttenuation());
     glUniform1f(program_->atten1(), light->linearAttenuation());
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
+
+    // Transform the light direction from world space into view space
     Matrix transform = worldTransform() * world()->camera()->viewTransform();
     Vector direction = transform.normal(light->direction()).unit();
-    // Transform the light direction from world space into view space
     glUniform3fv(program_->direction(), 1, direction.vec3f());
+
+    // Shadow mapping.  Set the shadow map buffer and light matrix
+    glActiveTexture(GL_TEXTURE6);
+    if (light->shadowMap()) {
+        glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
+        glUniform1f(program_->shadowMapSize(), light->shadowMap()->width());
+    } else {
+        glUniform1f(program_->shadowMapSize(), 0);
+    }
+    glUniformMatrix4fv(program_->light(), 1, 0, light->transform().mat4f());
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
@@ -162,10 +173,12 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform1f(program_->spotCutoff(), cosCutoff);
     glUniform1f(program_->spotPower(), light->spotPower());
 
+    // Transform the light direction from into view space
     Matrix transform = world()->camera()->viewTransform() * worldTransform();
     Vector direction = transform.normal(light->direction()).unit();
-    // Transform the light direction from into view space
     glUniform3fv(program_->direction(), 1, direction.vec3f());
+
+    // Shadow mapping.  Set the shadow map buffer and light matrix
     glActiveTexture(GL_TEXTURE6);
     if (light->shadowMap()) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());

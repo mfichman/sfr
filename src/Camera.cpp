@@ -71,7 +71,7 @@ Camera::State Camera::state() const {
     return state_;
 }
 
-Frustum Camera::viewFrustum() const {
+Frustum Camera::viewFrustum(Scalar farLimit) const {
 
     if (ORTHOGRAPHIC == type_) {
         Frustum frustum;
@@ -87,12 +87,14 @@ Frustum Camera::viewFrustum() const {
 
         return frustum;
     } else {
+        Scalar far = farLimit ? farLimit : far_;
+    
         // Find the width and height of the near and far planes
         Scalar ratio = viewportWidth_/viewportHeight_;
         Scalar tang = tan(RADIANS(fieldOfView()) * 0.5f);
         Scalar nh = near_ * tang; // Height of the near plane
         Scalar nw = nh * ratio; // Width of the near plane
-        Scalar fh = far_ * tang; // Height of the far plane
+        Scalar fh = far * tang; // Height of the far plane
         Scalar fw = fh * ratio; // Width of the near plane
 
         // Get "look at" vectors.  The AT vector is simply a vector somewhere
@@ -100,13 +102,13 @@ Frustum Camera::viewFrustum() const {
         Vector eye(0, 0, 0);//= matrix.origin();
 
         // Construct orthogonal basis.
-        Vector z(0, 0, -1);//= -matrix.forward();
         Vector x(1, 0, 0);//= matrix.right();
         Vector y(0, 1, 0);//= matrix.up();
+        Vector z(0, 0, 1);//= -matrix.forward();
 
         // Compute the centers of the near and far planes
         Vector nc = eye - z * near_;
-        Vector fc = eye - z * far_;
+        Vector fc = eye - z * far;
 
         // Compute the 4 corners of the frustum on the near plane
         Frustum frustum;

@@ -13,6 +13,11 @@ namespace sfr {
 
 class Box {
 public:
+    Box() {};
+    Box(Frustum const& frustum);
+
+    void pointIs(Vector const& point);
+
     Vector max; // Maximum x/y/z coordinate
     Vector min; // Minimum x/y/z coordinate
 };

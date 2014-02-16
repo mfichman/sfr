@@ -6,6 +6,7 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
+#include "sfr/Box.hpp"
 #include "sfr/Camera.hpp"
 #include "sfr/DepthRenderTarget.hpp"
 #include "sfr/FlatRenderer.hpp"
@@ -71,18 +72,87 @@ void ShadowRenderer::operator()(Ptr<PointLight> light) {
     world()->cameraIs(sceneCamera);
 }
 
+void ShadowRenderer::operator()(Ptr<HemiLight> light) {
+    if (!light->shadowMap()) {
+        return;
+    }
+
+    // Set the viewport to be equal in dimensions to the shadow target.
+    glViewport(0, 0, light->shadowMap()->width(), light->shadowMap()->height());
+	light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
+
+    // Set up the view matrix for the virtual light camera
+	// Transform to the center of the light, then point in the reverse of the light 
+	// direction.  Then, invert the matrix so that it is a view matrix.  
+    // FIXME: This doesn't seem quite right.
+	Matrix view = (worldTransform() * Matrix::look(-light->direction())).inverse();
+
+    // Calculate the orthographic projection bounds for the light.  The bounds
+    // should include the entire view frustum, up to the shadow light view
+    // distance.
+    Ptr<Camera> sceneCamera = world()->camera();
+    Frustum viewFrustum = sceneCamera->viewFrustum(light->shadowViewDistance());
+    // View frustum is in view-space.  We need to transform it out of view space.
+    Matrix look = Matrix::look(-light->direction());
+    Box bounds(look * sceneCamera->viewTransform().inverse() * viewFrustum);
+
+    // Back up the shadow camera to hold more of the scene.  This doesn't
+    // affect shadow resultion, but theoretically if the camera is backed up
+    // too far there will be depth buffer resolution issues.  (Cascade: Also
+    // add a little bit of overlap in the +z direction to take care of
+    // precision issues).
+
+    bounds.min.z -= 10;
+    bounds.max.z += 10;
+
+    //std::cout << bounds.min << std::endl;
+     
+    // Set up parameters for the virtual light camera
+    Ptr<Camera> lightCamera(new Camera);
+    lightCamera->typeIs(Camera::ORTHOGRAPHIC);
+    lightCamera->viewTransformIs(view);
+    lightCamera->nearIs(bounds.min.z);
+    lightCamera->farIs(bounds.max.z);
+    lightCamera->leftIs(bounds.min.x);
+    lightCamera->rightIs(bounds.max.x);
+    lightCamera->bottomIs(bounds.min.y);
+    lightCamera->topIs(bounds.max.y);
+    lightCamera->viewportWidthIs(light->shadowMap()->width());
+    lightCamera->viewportHeightIs(light->shadowMap()->height());
+
+    Matrix projection = lightCamera->projectionTransform();
+    Matrix bias = Matrix(
+        0.5f, 0.f, 0.f, 0.5f,
+        0.f, 0.5f, 0.f, 0.5f,
+        0.f, 0.f, 0.5f, 0.5f,
+        0.f, 0.f, 0.f, 1.f);
+    Matrix lightMatrix = bias * projection * view;
+    light->transformIs(lightMatrix);
+
+    // Render the scene into the shadow map from light perspective
+    glClear(GL_DEPTH_BUFFER_BIT); 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+    world()->cameraIs(lightCamera);
+    flatRenderer_->operator()(world());
+    world()->cameraIs(sceneCamera);
+    light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
+	glCullFace(GL_BACK);
+
+    // Reset the viewport
+    glViewport(0, 0, sceneCamera->viewportWidth(), sceneCamera->viewportHeight());
+}
+
 void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     if (!light->shadowMap()) {
         return;
     }
 
-	// Camera projectionTransform uses glViewport to calculate itself...hence, the 
-	// viewport must be set before calling it by enabling the shadow render target 
-	// here.
+    // Set the viewport to be equal in dimensions to the shadow target.
     glViewport(0, 0, light->shadowMap()->width(), light->shadowMap()->height());
 	light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
-    // Set up the view matrix for the virtual light camera
 
+    // Set up the view matrix for the virtual light camera
 	// Transform to the center of the light, then point in the reverse of the light 
 	// direction.  Then, invert the matrix so that it is a view matrix.  
     // FIXME: This doesn't seem quite right.
@@ -90,11 +160,11 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
 
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
+    lightCamera->typeIs(Camera::PERSPECTIVE);
     lightCamera->viewTransformIs(view);
     lightCamera->fieldOfViewIs(light->spotCutoff() * 2.f);
     lightCamera->nearIs(1.f);
     lightCamera->farIs(light->radiusOfEffect());//something's up w/ projection
-    lightCamera->typeIs(Camera::PERSPECTIVE);
     lightCamera->viewportWidthIs(light->shadowMap()->width());
     lightCamera->viewportHeightIs(light->shadowMap()->height());
 
@@ -120,5 +190,6 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
 	glCullFace(GL_BACK);
 
+    // Reset the viewport
     glViewport(0, 0, sceneCamera->viewportWidth(), sceneCamera->viewportHeight());
 }
