@@ -85,27 +85,43 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
 	// Transform to the center of the light, then point in the reverse of the light 
 	// direction.  Then, invert the matrix so that it is a view matrix.  
     // FIXME: This doesn't seem quite right.
-	Matrix view = (worldTransform() * Matrix::look(-light->direction())).inverse();
+    Matrix look = Matrix::look(-light->direction());
+	Matrix view = look.inverse();
 
     // Calculate the orthographic projection bounds for the light.  The bounds
     // should include the entire view frustum, up to the shadow light view
     // distance.
     Ptr<Camera> sceneCamera = world()->camera();
-    Frustum viewFrustum = sceneCamera->viewFrustum(light->shadowViewDistance());
-    // View frustum is in view-space.  We need to transform it out of view space.
-    Matrix look = Matrix::look(-light->direction());
-    Box bounds(look * sceneCamera->viewTransform().inverse() * viewFrustum);
 
-    // Back up the shadow camera to hold more of the scene.  This doesn't
-    // affect shadow resultion, but theoretically if the camera is backed up
-    // too far there will be depth buffer resolution issues.  (Cascade: Also
-    // add a little bit of overlap in the +z direction to take care of
-    // precision issues).
+    // Transform the view frustum into light space
+    float far = sceneCamera->far();
+    sceneCamera->farIs(light->shadowViewDistance());
+    Matrix transform = look * sceneCamera->transform().inverse();
+    sceneCamera->farIs(far);
+    Frustum frustum;
+    frustum.nearTopLeft = Vector(-1, 1, -1);
+    frustum.nearTopRight = Vector(1, 1, -1);
+    frustum.nearBottomLeft = Vector(1, -1, -1);
+    frustum.nearBottomRight = Vector(-1, -1, -1);
 
-    bounds.min.z -= 10;
-    bounds.max.z += 10;
+    frustum.farTopLeft = Vector(-1, 1, 1);
+    frustum.farTopRight = Vector(1, 1, 1);
+    frustum.farBottomLeft = Vector(1, -1, 1);
+    frustum.farBottomRight = Vector(-1, -1, 1);
 
-    //std::cout << bounds.min << std::endl;
+    frustum = transform * frustum;
+    
+    // Slightly enlarge the bounding box for the view frustum in light-space.
+    // This prevents clamping artifacts that occur when a shadow gets close to
+    // the edge of the view frustum.
+    Box bounds(frustum);
+    bounds.max.x += 2;
+    bounds.min.x -= 2;
+    bounds.max.y += 2;
+    bounds.min.y -= 2;
+
+    // Include objects behind the camera...note that this will not work for all scenes.
+    bounds.min.z -= 100;
      
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);

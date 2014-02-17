@@ -22,7 +22,8 @@ public:
 
     Camera();
     
-    Frustum viewFrustum(Scalar farLimit=0) const;
+    Frustum viewFrustum(Scalar near, Scalar far) const;
+    Frustum viewFrustum() const;
     Matrix transform() const;
     Matrix projectionTransform() const;
     Matrix const& viewTransform() const;

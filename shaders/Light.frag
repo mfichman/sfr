@@ -64,7 +64,7 @@ LightingInfo lightingInfo() {
     return info;
 }
 
-float shadowPoissonPcf(in LightingInfo li) {
+float shadowPoissonPcf(in LightingInfo li, in vec3 shadowColor) {
 	// PCF shadow lookup using poisson disk distribution for samples. Assumes 
 	// that the shadow map size is 2048x2048.  Input: Coordinates in light clip 
 	// space (including perspective divide by w).  Output: A value from 1-0, 
@@ -82,8 +82,6 @@ float shadowPoissonPcf(in LightingInfo li) {
 	// Transform the world coordinates to light space and renormalize
     vec4 shadowCoord = lightMatrix * vec4(world, 1.);
 
-	float shadowIntensity = 1.0;
-
 	//float shadow = textureProj(shadowMap, shadowCoord);
     //return shadow * shadowIntensity;
 
@@ -95,7 +93,7 @@ float shadowPoissonPcf(in LightingInfo li) {
             shadow += textureProj(shadowMap, sample);
         }
     }
-	return (shadow/16) * shadowIntensity;
+	return mix(shadowColor, vec3(1, 1, 1), shadow/16.);
 /*
 	vec2 poisson[4] = vec2[](
 	    vec2(-0.94201624, -0.39906216),

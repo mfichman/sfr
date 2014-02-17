@@ -90,8 +90,7 @@ void initLights() {
     Ptr<sfr::DepthRenderTarget> target(new sfr::DepthRenderTarget(2048, 2048));
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
     light1->diffuseColorIs(sfr::Color(1., 1., 1., 1.));
-    //light1->backDiffuseColorIs(sfr::Color(0.01f, 0.01f, 0.01f, 1.f));
-    light1->backDiffuseColorIs(sfr::Color(0.f, 0.f, 0.f, 0.f));
+    light1->backDiffuseColorIs(sfr::Color(.1f, .1f, .1f, 1.f));
     light1->directionIs(sfr::Vector(1.f, -1.f, 0.f));
     light1->constantAttenuationIs(1);
     light1->linearAttenuationIs(0);

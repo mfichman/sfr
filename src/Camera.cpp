@@ -11,8 +11,6 @@
 
 using namespace sfr;
 
-#define RADIANS(x) ((x)*3.14f/180.0f)
-
 Camera::Camera() {
     far_ = 1000.f;
     near_ = .1f;
@@ -71,7 +69,11 @@ Camera::State Camera::state() const {
     return state_;
 }
 
-Frustum Camera::viewFrustum(Scalar farLimit) const {
+Frustum Camera::viewFrustum() const {
+    return viewFrustum(near_, far_);
+}
+
+Frustum Camera::viewFrustum(Scalar near, Scalar far) const {
 
     if (ORTHOGRAPHIC == type_) {
         Frustum frustum;
@@ -87,12 +89,10 @@ Frustum Camera::viewFrustum(Scalar farLimit) const {
 
         return frustum;
     } else {
-        Scalar far = farLimit ? farLimit : far_;
-    
         // Find the width and height of the near and far planes
         Scalar ratio = viewportWidth_/viewportHeight_;
-        Scalar tang = tan(RADIANS(fieldOfView()) * 0.5f);
-        Scalar nh = near_ * tang; // Height of the near plane
+        Scalar tang = tan(fieldOfView()*M_PI/360.f);
+        Scalar nh = near * tang; // Height of the near plane
         Scalar nw = nh * ratio; // Width of the near plane
         Scalar fh = far * tang; // Height of the far plane
         Scalar fw = fh * ratio; // Width of the near plane
@@ -107,7 +107,7 @@ Frustum Camera::viewFrustum(Scalar farLimit) const {
         Vector z(0, 0, 1);//= -matrix.forward();
 
         // Compute the centers of the near and far planes
-        Vector nc = eye - z * near_;
+        Vector nc = eye - z * near;
         Vector fc = eye - z * far;
 
         // Compute the 4 corners of the frustum on the near plane
