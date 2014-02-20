@@ -2,6 +2,8 @@ build/Debug
 build/Release
 build
 main
+src/Assets.cpp
+include/sfr/Assets.hpp
 ipch
 *.sdf
 *.suo

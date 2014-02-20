@@ -17,8 +17,6 @@ public:
 	ProgramLoader(Ptr<AssetTable> notifier) : AssetTable::Listener(notifier) {}
     void onAsset(Ptr<Program> program);
 	void onAsset(Ptr<Shader> shader);
-private:
-    std::string fileContents(std::string const& path);
 };
 
 }

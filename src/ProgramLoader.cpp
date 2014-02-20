@@ -13,15 +13,13 @@
 using namespace sfr;
 
 void ProgramLoader::onAsset(Ptr<Program> program) {
-	Ptr<Shader> fragShader(notifier_->assetIs<Shader>(program->name() + ".frag", GL_FRAGMENT_SHADER));
-	Ptr<Shader> vertShader(notifier_->assetIs<Shader>(program->name() + ".vert", GL_VERTEX_SHADER));
-
-    std::fstream in((program->name() + ".geom").c_str());
+	Ptr<Shader> fragShader(notifier_->assetIs<Shader>(program->name()+".frag", GL_FRAGMENT_SHADER));
+	Ptr<Shader> vertShader(notifier_->assetIs<Shader>(program->name()+".vert", GL_VERTEX_SHADER));
 	Ptr<Shader> geomShader;
-    if (in) {
-        geomShader = notifier_->assetIs<Shader>(program->name() + ".geom", GL_GEOMETRY_SHADER);
-    }
 
+    if (assetExists(program->name()+".geom")) {
+        geomShader = notifier_->assetIs<Shader>(program->name()+".geom", GL_GEOMETRY_SHADER);
+    }
     program->fragmentShaderIs(fragShader);
     program->vertexShaderIs(vertShader);
     program->geometryShaderIs(geomShader);
@@ -29,7 +27,7 @@ void ProgramLoader::onAsset(Ptr<Program> program) {
 }
 
 void ProgramLoader::onAsset(Ptr<Shader> shader) {
-	std::string source = fileContents(shader->name());
+	std::string source = assetContents(shader->name());
 
 	size_t i = 0;
 	while (i != std::string::npos) {
@@ -58,29 +56,3 @@ void ProgramLoader::onAsset(Ptr<Shader> shader) {
 	shader->sourceIs(source);
 }
 
-std::string ProgramLoader::fileContents(std::string const& path) {
-
-    std::vector<char> source;
-
-    // Open the file
-    std::ifstream in(path.c_str());
-    if (in.fail()) {
-        throw ResourceException("shader not found: " + path);
-    }
-    
-    // Seek to the end, and reserve a buffer
-    in.seekg(0, std::ios::end);
-    source.reserve(static_cast<size_t>(1 + in.tellg()));
-    source.resize(static_cast<size_t>(in.tellg()));
-    in.seekg(0, std::ios::beg);
-    
-    if (!source.size()) {
-        throw ResourceException("empty shader file: " + path);
-    }
-    
-    // Read the whole buffer in one call
-    in.read(&source.front(), source.size());
-    source.push_back(0); // Null terminate the string
-
-    return std::string(&source.front());
-}

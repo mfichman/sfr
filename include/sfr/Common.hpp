@@ -62,6 +62,7 @@ typedef double Scalar;
 #else
 typedef float Scalar;
 #endif
+struct Asset;
 
 class AlphaRenderer;
 class AssetTable;
@@ -160,7 +161,6 @@ public:
     GLfloat v;
     operator GLfloat const*() const { return &u; }
 };
-
 
 }
 

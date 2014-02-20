@@ -24,7 +24,7 @@ out vec4 color; // Output to color buffer
 /* Deferred spot light shader */
 void main() {
 	LightingInfo li = lightingInfo();
-	float shadow = shadowPoissonPcf(li, vec3(0, 0, 0));
+	float shadow = shadowPoissonPcf(li);
 
 	// Sample the normal and the view vector
 	vec3 V = normalize(li.view); // View vec

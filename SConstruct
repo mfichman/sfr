@@ -23,6 +23,19 @@ class Sfr(pkgboot.Package):
         'Carbon',
         'IoKit',
     ]
+
+    assets = [
+        'shaders/*.vert',
+        'shaders/*.frag',
+        'shaders/*.geom',
+        'meshes/LightShapes.mtl',
+        'meshes/LightShapes.obj',
+        'meshes/Quad.mtl',
+        'meshes/Quad.obj',
+        'textures/Blue.png',
+        'textures/White.png',
+    ]
+
     major_version = '0'
     minor_version = '0'
     patch = '0'

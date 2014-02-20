@@ -28,8 +28,8 @@ void WavefrontLoader::onAsset(Ptr<Transform> transform) {
     }
 
     // Open the file for the current transform object
-    std::ifstream in(transform->name().c_str());
-    if (!in.good()) {
+    Ptr<std::istream> in = sfr::assetStream(transform->name());
+    if (!in->good()) {
         throw ResourceException("file not found: "+transform->name());
     }
     
@@ -38,7 +38,7 @@ void WavefrontLoader::onAsset(Ptr<Transform> transform) {
     normal_.clear();
     cache_.clear();
 
-    newModel(in);
+    newModel(*in);
 
     transform_.reset();
     mesh_.reset();
@@ -260,7 +260,8 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
     }
 
     // Open the file for the current material library
-    std::ifstream in((prefix + name).c_str());
+    Ptr<std::istream> pin = sfr::assetStream(prefix+name);
+    std::istream& in = *pin;
 
     Ptr<Texture> white = notifier_->assetIs<Texture>("textures/White.png");
     Ptr<Texture> blue = notifier_->assetIs<Texture>("textures/Blue.png");

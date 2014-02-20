@@ -133,28 +133,34 @@ void Program::linkShaders() {
         GLint length = 0;
         std::vector<char> log;
 
-        glGetShaderiv(vertexShader_->id(), GL_INFO_LOG_LENGTH, &length);
-        log.resize(length + 1);
-        if (length) {
-            std::cerr << "error: " << vertexShader_->name() << std::endl;
-            glGetShaderInfoLog(vertexShader_->id(), length, &length, &log[0]);
-            std::cerr << &log[0] << std::endl;
+        if (vertexShader_) {
+            glGetShaderiv(vertexShader_->id(), GL_INFO_LOG_LENGTH, &length);
+            log.resize(length + 1);
+            if (length) {
+                std::cerr << "error: " << vertexShader_->name() << std::endl;
+                glGetShaderInfoLog(vertexShader_->id(), length, &length, &log[0]);
+                std::cerr << &log[0] << std::endl;
+            }
         }
 
-        glGetShaderiv(fragmentShader_->id(), GL_INFO_LOG_LENGTH, &length);
-        log.resize(length + 1);
-        if (length) {
-            std::cerr << "error: " << fragmentShader_->name() << std::endl;
-            glGetShaderInfoLog(fragmentShader_->id(), length, &length, &log[0]);
-            std::cerr << &log[0] << std::endl;
+        if (fragmentShader_) {
+            glGetShaderiv(fragmentShader_->id(), GL_INFO_LOG_LENGTH, &length);
+            log.resize(length + 1);
+            if (length) {
+                std::cerr << "error: " << fragmentShader_->name() << std::endl;
+                glGetShaderInfoLog(fragmentShader_->id(), length, &length, &log[0]);
+                std::cerr << &log[0] << std::endl;
+            }
         }
 
-        glGetShaderiv(geometryShader_->id(), GL_INFO_LOG_LENGTH, &length);
-        log.resize(length + 1);
-        if (length) {
-            std::cerr << "error: " << geometryShader_->name() << std::endl;
-            glGetShaderInfoLog(geometryShader_->id(), length, &length, &log[0]);
-            std::cerr << &log[0] << std::endl;
+        if (geometryShader_) {
+            glGetShaderiv(geometryShader_->id(), GL_INFO_LOG_LENGTH, &length);
+            log.resize(length + 1);
+            if (length) {
+                std::cerr << "error: " << geometryShader_->name() << std::endl;
+                glGetShaderInfoLog(geometryShader_->id(), length, &length, &log[0]);
+                std::cerr << &log[0] << std::endl;
+            }
         }
 
         glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &length);
@@ -164,7 +170,6 @@ void Program::linkShaders() {
             glGetProgramInfoLog(id_, length, &length, &log[0]);
             std::cerr << &log[0] << std::endl;
         }
-
         throw ResourceException("shader program error: " + name_);
     }
 }

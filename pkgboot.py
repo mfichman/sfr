@@ -5,6 +5,7 @@ import sys
 import shutil
 import subprocess
 import shlex
+import glob
 
 try:
     from SCons.Script import *
@@ -65,12 +66,14 @@ class Package:
     patch = '0'
     kind = 'lib'
     frameworks = []
+    assets = []
 
     def __init__(self):
         # Initializes a package, and sets up an SCons build environment given
         # the instructions found in the subclass definition.
         self._setup_vars()
         self._setup_env()
+        self._setup_assets()
         if self.env['PLATFORM'] == 'win32':
             self._setup_win()
         else:
@@ -85,6 +88,39 @@ class Package:
             return self.env['PLATFORM'] in lib.platforms
         elif type(lib.platforms) == str:
             return self.env['PLATFORM'] == lib.platforms
+
+    def _setup_assets(self):
+        if len(self.assets) < 0:
+            return
+
+        fd = open('include/%s/Assets.hpp' % self.name, 'w')
+        fd.write('namespace %s {\n' % self.name)
+        fd.write('struct Asset {\n')
+        fd.write('    char const* name;\n')
+        fd.write('    char const* data;\n')
+        fd.write('    size_t len;\n')
+        fd.write('};\n')
+        fd.write('extern Asset const assets[];\n')
+        fd.write('}\n')
+        fd.close()
+
+        fd = open('src/Assets.cpp', 'w')
+        fd.write('#include "%s/Assets.hpp"\n' % self.name)
+        fd.write('namespace %s {\n' % self.name)
+        fd.write('extern Asset const assets[] = {\n')
+        for pattern in self.assets:
+            for fn in glob.glob(pattern):
+                fd.write('{"%s",' % fn) 
+                r = open(fn)
+                data = r.read()
+                length = len(data)
+                data = ''.join(['\\x%02x' % ord(ch) for ch in data])
+                fd.write('"%s",%d},\n' % (data, length))
+        fd.write('{0, 0, 0},')
+        fd.write('};\n')
+        fd.write('}\n')
+        fd.close()
+                  
     
     def _setup_vars(self):
         # Set up the basic configuration options
@@ -198,6 +234,9 @@ class Package:
         if self.kind == 'bin':
             main = self.env.Glob('Main.cpp')
             self.program = self.env.Program('bin/%s' % self.name, (self.lib, main))
+        for tool in glob.glob('tools/*.cpp'):
+            name = os.path.splitext(os.path.basename(tool.lower()))[0]
+            self.env.Program('bin/%s-%s' % (self.name, name), (self.lib, tool))
 
     def _setup_tests(self):
         # Configure the test environment
@@ -208,7 +247,11 @@ class Package:
         for test in self.env.Glob('build/test/**.cpp'):
             self.env.Depends(test, self.pch)
             name = test.name.replace('.cpp', '')
-            prog = testenv.Program('bin/test/%s' % name, (test, self.pch))
+            if self.env['PLATFORM'] == 'win32':
+                inputs = (test, self.pch)
+            else:
+                inputs = (test,)
+            prog = testenv.Program('bin/test/%s' % name, inputs)
             if 'check' in COMMAND_LINE_TARGETS:
                 self.tests.append(testenv.Test(name, prog))
         if 'check' in COMMAND_LINE_TARGETS:

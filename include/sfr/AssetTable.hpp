@@ -51,6 +51,22 @@ protected:
  	Ptr<AssetTable> const notifier_;
 };
 
+class AssetUri {
+public:
+    AssetUri(std::string const& path);
+    std::string const& scheme() { return scheme_; }
+    std::string const& path() { return path_; }
+
+private:
+    std::string scheme_;
+    std::string path_;
+};
+
+Asset const* assetPtr(std::string const& path);
+std::string assetContents(std::string const& path);
+Ptr<std::istream> assetStream(std::string const& path);
+bool assetExists(std::string const& path);
+
 template <typename T, typename ...Arg>
 Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
     Ptr<Interface> asset = asset_[name];

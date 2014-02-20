@@ -6,6 +6,7 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
+#include "sfr/Assets.hpp"
 #include "sfr/Cubemap.hpp"
 #include "sfr/Texture.hpp"
 #include "sfr/TextureLoader.hpp"
@@ -16,8 +17,16 @@ using namespace sfr;
 void TextureLoader::onAsset(Ptr<Texture> texture) {
 
     sf::Image image;
-    if (!image.loadFromFile(texture->name())) {
-        throw ResourceException("couldn't load image: "+texture->name());
+    std::ifstream in(texture->name());
+    if (in) {
+        if (!image.loadFromFile(texture->name())) {
+            throw ResourceException("couldn't load image: "+texture->name());
+        }
+    } else {
+        Asset const* data = sfr::assetPtr(texture->name());
+        if (!image.loadFromMemory(data->data, data->len)) {
+            throw ResourceException("couldn't load image: "+texture->name());
+        }
     }
 
     texture->widthIs(image.getSize().x);
@@ -28,8 +37,16 @@ void TextureLoader::onAsset(Ptr<Texture> texture) {
 void TextureLoader::onAsset(Ptr<Cubemap> cubemap) {
 
     sf::Image image;
-    if (!image.loadFromFile(cubemap->name())) {
-        throw ResourceException("couldn't load image: "+cubemap->name());
+    std::ifstream in(cubemap->name());
+    if (in) {
+        if (!image.loadFromFile(cubemap->name())) {
+            throw ResourceException("couldn't load image: "+cubemap->name());
+        }
+    } else {
+        Asset const* data = sfr::assetPtr(cubemap->name());
+        if (!image.loadFromMemory(data->data, data->len)) {
+            throw ResourceException("couldn't load image: "+cubemap->name());
+        }
     }
 
     cubemap->widthIs(image.getSize().x);
