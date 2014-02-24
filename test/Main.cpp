@@ -206,7 +206,7 @@ void initFonts() {
     Ptr<sfr::Ui> ui = world->ui()->childIs<sfr::Ui>();
     ui->xIs(sfr::Coord::center());
     ui->yIs(sfr::Coord::center());
-    ui->heightIs(sfr::Span(120, sfr::Span::PIXELS));
+    ui->heightIs(sfr::Span(50, sfr::Span::PIXELS));
     Ptr<sfr::Text> text2 = ui->childIs<sfr::Text>();
     text2->textIs("multiplayer.");
     text2->fontIs(font2);
@@ -313,7 +313,7 @@ int main(int argc, char** argv) {
         initWindow();
         initCamera();
         initModels();
-//        initFonts();
+        initFonts();
   //      initParticles();
   //      initRibbon();
   //      initQuad();

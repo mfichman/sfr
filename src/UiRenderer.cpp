@@ -44,6 +44,10 @@ void UiRenderer::operator()(Ptr<World> world) {
 }
 
 void UiRenderer::operator()(Ptr<Ui> ui) {
+    if (ui->renderMode() == Ui::INVISIBLE) {
+        return;
+    }
+
     Rect parentRect = rect_;
     rect_.width = ui->width().absolute(parentRect.width);
     rect_.height = ui->height().absolute(parentRect.height);

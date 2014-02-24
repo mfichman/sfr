@@ -71,6 +71,19 @@ GLfloat Coord::absolute(GLfloat begin, GLfloat parentSpan, GLfloat selfSpan) {
     return 0;
 }
 
+Ui::Ui() {
+    layoutMode_ = BLOCK;
+    renderMode_ = VISIBLE;
+}
+
+Ptr<Node> Ui::child(GLuint index) {
+    if (index < children_.size()) {
+        return children_[index];
+    } else {
+        return 0;
+    }
+}
+
 Iterator<std::vector<Ptr<Node>>> Ui::children() {
     return Iterator<std::vector<Ptr<Node>>>(children_);
 }
@@ -101,10 +114,6 @@ void Ui::yIs(Coord const& y) {
 
 void Ui::layoutModeIs(LayoutMode mode) {
     layoutMode_ = mode;
-}
-
-void Ui::clickHandlerIs(ClickHandler const& handler) {
-    clickHandler_ = handler;
 }
 
 void Ui::operator()(Ptr<Functor> functor) {

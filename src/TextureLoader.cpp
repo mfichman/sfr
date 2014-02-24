@@ -24,6 +24,9 @@ void TextureLoader::onAsset(Ptr<Texture> texture) {
         }
     } else {
         Asset const* data = sfr::assetPtr(texture->name());
+        if (!data) {
+            throw ResourceException("couldn't load image: "+texture->name());
+        }
         if (!image.loadFromMemory(data->data, data->len)) {
             throw ResourceException("couldn't load image: "+texture->name());
         }
@@ -44,6 +47,9 @@ void TextureLoader::onAsset(Ptr<Cubemap> cubemap) {
         }
     } else {
         Asset const* data = sfr::assetPtr(cubemap->name());
+        if (!data) {
+            throw ResourceException("couldn't load image: "+cubemap->name());
+        }
         if (!image.loadFromMemory(data->data, data->len)) {
             throw ResourceException("couldn't load image: "+cubemap->name());
         }

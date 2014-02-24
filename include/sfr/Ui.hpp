@@ -69,22 +69,24 @@ private:
 class Ui : public Node {
 public:
     enum LayoutMode { OVERLAY, BLOCK };
-    typedef std::function<void()> ClickHandler;
+    enum RenderMode { VISIBLE, INVISIBLE };
 
+    Ui();
     Span width() const { return width_; }
     Span height() const { return height_; }
     Coord x() const { return x_; }
     Coord y() const { return y_; }
     LayoutMode layoutMode() const { return layoutMode_; }
-    ClickHandler clickHandler() const { return clickHandler_; }
+    RenderMode renderMode() const { return renderMode_; }
     Iterator<std::vector<Ptr<Node>>> children();
+    Ptr<Node> child(GLuint index);
 
     void widthIs(Span const& span);
     void heightIs(Span const& span);
     void xIs(Coord const& x);
     void yIs(Coord const& y);
     void layoutModeIs(LayoutMode mode);
-    void clickHandlerIs(ClickHandler const& handler);
+    void renderModeIs(RenderMode mode);
 
     template <typename T, typename ...Arg>
     Ptr<T> childIs(Arg... arg) {
@@ -103,8 +105,8 @@ private:
     Span height_;
     Coord x_;
     Coord y_;
-    LayoutMode layoutMode_ = BLOCK;
-    ClickHandler clickHandler_;
+    RenderMode renderMode_;
+    LayoutMode layoutMode_;
 };
 
 }
