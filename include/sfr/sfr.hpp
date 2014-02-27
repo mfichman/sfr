@@ -23,6 +23,7 @@
 #pragma once
 
 #include "AssetTable.hpp"
+#include "AssetLoader.hpp"
 #include "AttributeBuffer.hpp"
 #include "Billboards.hpp"
 #include "BillboardRenderer.hpp"

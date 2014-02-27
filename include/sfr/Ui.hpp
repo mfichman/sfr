@@ -79,7 +79,7 @@ public:
     LayoutMode layoutMode() const { return layoutMode_; }
     RenderMode renderMode() const { return renderMode_; }
     Iterator<std::vector<Ptr<Node>>> children();
-    Ptr<Node> child(GLuint index);
+    Ptr<Node> child(GLuint index) const;
 
     void widthIs(Span const& span);
     void heightIs(Span const& span);
@@ -94,6 +94,11 @@ public:
         children_.push_back(child);
         return child;
     }
+    
+    template <typename T>
+    Ptr<T> child(GLuint index) const {
+        return std::dynamic_pointer_cast<T>(child(index));
+    } 
 
     void childIs(Ptr<Node> child);
     void childDel(Ptr<Node> child);

@@ -65,15 +65,37 @@ void Text::updateTextBuffer() {
     // Update the text buffer to prepare it for rendering, using the font glyph
     // metrics.  For each character, insert a particle into the attribute
     // buffer.
-    GLfloat cursor = 0;
+    GLfloat cursorX = 0;
+    GLfloat cursorY = 0;
+    char prev = '\0';
     for (auto ch : text_) {
+        if (prev) {
+            GLvec2 kerning = font_->kerning(prev, ch);
+            std::cout << kerning.u << std::endl;
+            cursorX += kerning.u;
+            cursorY += kerning.v;
+        }
+
         Glyph const& glyph = font_->glyph(ch);
-        GLfloat const x = cursor+glyph.x;
-        GLfloat const y = glyph.y;
-		TextVertex tg0 = { GLvec2(x, y), GLvec2(glyph.texX, glyph.texY+glyph.texHeight) };
-		TextVertex tg1 = { GLvec2(x, y+glyph.height), GLvec2(glyph.texX, glyph.texY) };
-        TextVertex tg2 = { GLvec2(x+glyph.width, y+glyph.height), GLvec2(glyph.texX+glyph.texWidth, glyph.texY) };
-        TextVertex tg3 = { GLvec2(x+glyph.width, y), GLvec2(glyph.texX+glyph.texWidth, glyph.texY+glyph.texHeight) };
+        GLfloat const x = cursorX+glyph.x;
+        GLfloat const y = cursorY+glyph.y;
+
+		TextVertex tg0 = { 
+            GLvec2(x, y), 
+            GLvec2(glyph.texX, glyph.texY+glyph.texHeight) 
+        };
+		TextVertex tg1 = { 
+            GLvec2(x, y+glyph.height), 
+            GLvec2(glyph.texX, glyph.texY) 
+        };
+        TextVertex tg2 = { 
+            GLvec2(x+glyph.width, y+glyph.height), 
+            GLvec2(glyph.texX+glyph.texWidth, glyph.texY) 
+        };
+        TextVertex tg3 = { 
+            GLvec2(x+glyph.width, y), 
+            GLvec2(glyph.texX+glyph.texWidth, glyph.texY+glyph.texHeight) 
+        };
 
         buffer_->elementEnq(tg0);
         buffer_->elementEnq(tg1);
@@ -82,7 +104,11 @@ void Text::updateTextBuffer() {
 		buffer_->elementEnq(tg0);
 		buffer_->elementEnq(tg2);
         buffer_->elementEnq(tg3);
-		cursor += glyph.advanceX;
+
+		cursorX += glyph.advanceX;
+        cursorY += glyph.advanceY;
+
+        prev = ch;
     }     
 }
 

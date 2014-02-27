@@ -67,6 +67,7 @@ void Transform::childIs(Ptr<Node> child) {
 
 void Transform::childDel(Ptr<Node> child) {
     std::remove(children_.begin(), children_.end(), child);
+    children_.pop_back();
 }
 
 void Transform::shadowModeIs(ShadowMode mode) {

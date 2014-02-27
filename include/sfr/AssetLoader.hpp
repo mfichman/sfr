@@ -4,28 +4,26 @@
  * Matt Fichman                                                              *
  * February, 2011                                                            *
  *****************************************************************************/
-
 #pragma once
 
+
 #include "sfr/Common.hpp"
-#include "sfr/Node.hpp"
-#include "sfr/Matrix.hpp"
-#include "sfr/Ui.hpp"
 
 namespace sfr {
 
-/* Renders user-interface components, rooted at a "Ui"-type node */
-class UiRenderer : public Node::Functor {
+/* Convenience object that sets up all built-in asset loaders */
+class AssetLoader : public Interface {
 public:
-    UiRenderer(Ptr<AssetTable> assets);
-    void operator()(Ptr<World> world);
-    void operator()(Ptr<Ui> ui);
-    void operator()(Ptr<Text> text);
+    AssetLoader(Ptr<AssetTable> notifier);
 
 private:
-    Ptr<World> world_;
-    Ptr<TextProgram> textProgram_;
-    Rect rect_;
+    Ptr<FontLoader> fontLoader_;
+    Ptr<WavefrontLoader> meshLoader_;
+    Ptr<ProgramLoader> programLoader_;
+    Ptr<TextureLoader> textureLoader_;
 };
 
+
+
 }
+

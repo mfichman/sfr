@@ -33,8 +33,12 @@ public:
     ~Font();
     std::string const& name() const { return name_; }
     GLuint id() const { return id_; }
+    GLuint size() const { return size_; }
+    GLuint loadSize() const { return loadSize_; }
     Glyph glyph(char code) const;
     Type type() const { return type_; }
+    GLvec2 kerning(char prev, char code) const;
+    void* face() const { return face_; }
 
     void glyphIs(char code, Glyph const& glyph);
     void typeIs(Type type);
@@ -42,7 +46,11 @@ private:
     Type type_;
     std::string name_;
     GLuint id_;
+    GLuint size_;
+    GLuint loadSize_;
     std::vector<Glyph> glyph_;
+    void* library_;
+    void* face_;
 };
 
 }

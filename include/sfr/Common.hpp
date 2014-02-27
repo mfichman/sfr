@@ -66,6 +66,7 @@ struct Asset;
 
 class AlphaRenderer;
 class AssetTable;
+class AssetLoader;
 class AttributeBuffer;
 class Billboard;
 class Billboards;
@@ -121,6 +122,7 @@ class TextureLoader;
 class Transform;
 class TransparencyRenderer;
 class Ui;
+class UiRenderer;
 class Vector;
 class WavefrontLoader;
 class World;

@@ -76,7 +76,7 @@ Ui::Ui() {
     renderMode_ = VISIBLE;
 }
 
-Ptr<Node> Ui::child(GLuint index) {
+Ptr<Node> Ui::child(GLuint index) const {
     if (index < children_.size()) {
         return children_[index];
     } else {
@@ -94,6 +94,7 @@ void Ui::childIs(Ptr<Node> child) {
 
 void Ui::childDel(Ptr<Node> child) {
     std::remove(children_.begin(), children_.end(), child);
+    children_.pop_back();
 }
 
 void Ui::widthIs(Span const& span) {

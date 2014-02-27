@@ -11,16 +11,18 @@
 #include "sfr/ParticleRenderer.hpp"
 #include "sfr/RibbonRenderer.hpp"
 #include "sfr/QuadRenderer.hpp"
+#include "sfr/TextRenderer.hpp"
 #include "sfr/TransparencyRenderer.hpp"
 
 using namespace sfr;
 
-AlphaRenderer::AlphaRenderer(Ptr<AssetTable> manager) {
-    transparencyRenderer_.reset(new TransparencyRenderer(manager));
-    particleRenderer_.reset(new ParticleRenderer(manager));
-    ribbonRenderer_.reset(new RibbonRenderer(manager));
-    billboardRenderer_.reset(new BillboardRenderer(manager));
-    quadRenderer_.reset(new QuadRenderer(manager));
+AlphaRenderer::AlphaRenderer(Ptr<AssetTable> assets) {
+    transparencyRenderer_.reset(new TransparencyRenderer(assets));
+    particleRenderer_.reset(new ParticleRenderer(assets));
+    ribbonRenderer_.reset(new RibbonRenderer(assets));
+    billboardRenderer_.reset(new BillboardRenderer(assets));
+    quadRenderer_.reset(new QuadRenderer(assets));
+    textRenderer_.reset(new TextRenderer(assets));
 }
 
 void AlphaRenderer::onState() {
@@ -72,5 +74,10 @@ void AlphaRenderer::operator()(Ptr<Billboards> billboards) {
 void AlphaRenderer::operator()(Ptr<Quad> quad) {
     rendererIs(quadRenderer_);
     quadRenderer_->operator()(quad);
+}
+
+void AlphaRenderer::operator()(Ptr<Text> text) {
+    rendererIs(textRenderer_);
+    textRenderer_->operator()(text);
 }
 

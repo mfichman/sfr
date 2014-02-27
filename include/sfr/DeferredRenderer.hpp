@@ -21,7 +21,9 @@ private:
     Ptr<ModelRenderer> materialPass_;
     Ptr<LightRenderer> lightPass_;
     Ptr<AlphaRenderer> alphaPass_;
+    Ptr<ShadowRenderer> shadowPass_;
     Ptr<SkyboxRenderer> skyboxPass_;
+    Ptr<UiRenderer> uiPass_;
     Ptr<DeferredRenderTarget> renderTarget_;
 };
 

@@ -20,6 +20,7 @@ public:
     void operator()(Ptr<Ribbon> ribbon);
     void operator()(Ptr<Billboards> billboards);
     void operator()(Ptr<Quad> quad);
+    void operator()(Ptr<Text> text);
 
     using Renderer::operator();
     
@@ -32,6 +33,7 @@ private:
     Ptr<BillboardRenderer> billboardRenderer_;
     Ptr<RibbonRenderer> ribbonRenderer_;
     Ptr<QuadRenderer> quadRenderer_;
+    Ptr<TextRenderer> textRenderer_;
     Ptr<Renderer> renderer_;
 };
 

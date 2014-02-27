@@ -10,23 +10,16 @@ using namespace sfr;
 std::auto_ptr<sf::Window> window;
 std::auto_ptr<sf::Clock> timer;
 Ptr<sfr::AssetTable> assets;
+Ptr<sfr::AssetLoader> assetLoader;
 Ptr<sfr::DeferredRenderer> deferredRenderer;
-Ptr<sfr::FlatRenderer> flatRenderer;
 Ptr<sfr::TransformUpdater> updater;
-Ptr<sfr::ShadowRenderer> shadowRenderer;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
-Ptr<sfr::TextRenderer> textRenderer;
-Ptr<sfr::UiRenderer> uiRenderer;
 Ptr<sfr::World> world;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
 Ptr<sfr::Particles> particles;
 Ptr<sfr::Ribbon> ribbon;
 Ptr<sfr::Transform> root;
-Ptr<FontLoader> fontLoader;
-Ptr<WavefrontLoader> meshLoader;
-Ptr<ProgramLoader> programLoader;
-Ptr<TextureLoader> textureLoader;
 sf::Time elapsedTime = sf::seconds(0.f);
 float z = 0;//3.1f;
 float x = -1.8f;
@@ -63,20 +56,13 @@ void initWindow() {
 
     // Set up the renderer, resources, assets, etc.
     assets.reset(new sfr::AssetTable());
-    fontLoader.reset(new FontLoader(assets));
-    meshLoader.reset(new WavefrontLoader(assets));
-    programLoader.reset(new ProgramLoader(assets));
-    textureLoader.reset(new TextureLoader(assets));
+    assetLoader.reset(new sfr::AssetLoader(assets));
 
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));
-    shadowRenderer.reset(new sfr::ShadowRenderer(assets));
     updater.reset(new sfr::TransformUpdater);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
-    textRenderer.reset(new sfr::TextRenderer(assets));
-    uiRenderer.reset(new sfr::UiRenderer(assets));
     world.reset(new sfr::World());
     root = world->root();
-    flatRenderer.reset(new sfr::FlatRenderer(assets));
 }
 
 
@@ -196,19 +182,19 @@ void initModels() {
 }
 
 void initFonts() {
-    Ptr<sfr::Font> font = assets->assetIs<sfr::Font>("fonts/NeuropolX.ttf");
+    Ptr<sfr::Font> font = assets->assetIs<sfr::Font>("fonts/Ethnocentric.ttf");
     Ptr<sfr::Text> text = root->childIs<sfr::Text>();
     text->textIs("zero combat");
     text->fontIs(font);
     text->colorIs(sfr::Color(1, .4, .1, 1.));
 
-    Ptr<sfr::Font> font2 = assets->assetIs<sfr::Font>("fonts/Neuropol.ttf#40");
+    Ptr<sfr::Font> font2 = assets->assetIs<sfr::Font>("fonts/Ethnocentric.ttf#40");
     Ptr<sfr::Ui> ui = world->ui()->childIs<sfr::Ui>();
     ui->xIs(sfr::Coord::center());
     ui->yIs(sfr::Coord::center());
     ui->heightIs(sfr::Span(50, sfr::Span::PIXELS));
     Ptr<sfr::Text> text2 = ui->childIs<sfr::Text>();
-    text2->textIs("multiplayer.");
+    text2->textIs("multiplayer");
     text2->fontIs(font2);
     text2->colorIs(sfr::Color(1, 1, 1, .8));
     text2->sizeIs(40);
@@ -283,12 +269,8 @@ void runRenderLoop() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         updater->operator()(world);
-        shadowRenderer->operator()(world);
         deferredRenderer->operator()(world);
         //boundsRenderer->operator()(world);
-
-        textRenderer->operator()(world);
-        uiRenderer->operator()(world);
 
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;

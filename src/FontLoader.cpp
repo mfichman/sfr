@@ -94,46 +94,17 @@ void distanceField(FT_Bitmap bitmap, int ratio, int border, char* buffer) {
 void FontLoader::onAsset(Ptr<Font> font) {
     // Load either an SDF font (no appended size) or a true-type rendered font
     // for a specific size (appended size) after the #.
-    std::string const name = font->name();
-    size_t const pos = name.find("#");
-    std::string const faceName = (pos==std::string::npos) ? name : name.substr(0, pos);
-    std::string const sizeStr = (pos==std::string::npos) ? "" : name.substr(pos+1, name.size()-pos-1);
-    size_t size = 0;
-    if (!sizeStr.empty()) {
-        std::stringstream ss(sizeStr); 
-        ss >> size;
-    }
-    
-    // Create and initialize a new FreeType font library handle.
-    FT_Library library;
-    if (FT_Init_FreeType(&library)) {
-        throw ResourceException("could not initialize font library");
-    }
-    
-    // Create and initialize a new font face.
-    FT_Face face;
-    if (FT_New_Face(library, faceName.c_str(), 0, &face)) {
-        throw ResourceException("could not initialize font: "+font->name());
-    }
+
     // FreeType measures font size in 1/64ths of pixels.  So we multiply the
     // height by 64 to get the right size
-    bool const useSdf = !size;
-    //int const rawFontSize = 512; 
-    //int const fontSize = 64;
-    int const rawFontSize = useSdf ? 512 : size;
-    int const fontSize = useSdf ? 64 : size;
-    int const ratio = rawFontSize / fontSize;
-    int const border = 2; // Border around each glyph in the atlas
+    int const ratio = font->loadSize() / font->size();
+    int const border = 8; // Border around each glyph in the atlas
+    int const dpi = 96;
 
-    if (useSdf) {
-        font->typeIs(Font::SDF);
-    } else {
-        font->typeIs(Font::SIZED);
-    }
-
-    FT_Set_Char_Size(face, rawFontSize*64, rawFontSize*64, 96, 96);
-
+    FT_Face face = (FT_Face)font->face();
+    FT_Set_Char_Size(face, font->loadSize() << 6, font->loadSize() << 6, dpi, dpi);
     FT_GlyphSlot glyph = face->glyph;
+
     int atlasHeight = 0;
     int atlasWidth = 0;
 
@@ -142,7 +113,7 @@ void FontLoader::onAsset(Ptr<Font> font) {
         if (FT_Load_Char(face, i, FT_LOAD_RENDER)) {
             throw ResourceException("could not load font glyph: "+font->name());
         }
-        atlasWidth += glyph->advance.x/64/ratio + 2*border;
+        atlasWidth += glyph->bitmap.width/ratio+2*border;
         atlasHeight = std::max(atlasHeight, glyph->bitmap.rows/ratio+2*border);
     }
 
@@ -165,15 +136,15 @@ void FontLoader::onAsset(Ptr<Font> font) {
         fontGlyph.texY = (GLfloat)(0+border)/(GLfloat)atlasHeight;
         fontGlyph.texWidth = (GLfloat)(width-2*border)/(GLfloat)atlasWidth;
         fontGlyph.texHeight = (GLfloat)(height-2*border)/(GLfloat)atlasHeight;
-        fontGlyph.advanceX = (GLfloat)glyph->advance.x/64/(GLfloat)rawFontSize;
-        fontGlyph.advanceY = (GLfloat)glyph->advance.y/64/(GLfloat)rawFontSize;
-        fontGlyph.width = (GLfloat)bitmap.width/(GLfloat)rawFontSize; // ??
-        fontGlyph.height = (GLfloat)bitmap.rows/(GLfloat)rawFontSize; // ??
-        fontGlyph.x = (GLfloat)glyph->bitmap_left/(GLfloat)rawFontSize; // ??
-        fontGlyph.y = (GLfloat)(glyph->bitmap_top-bitmap.rows)/(GLfloat)rawFontSize; // ??
+        fontGlyph.advanceX = (GLfloat)(glyph->advance.x >> 6)/(GLfloat)font->loadSize();
+        fontGlyph.advanceY = (GLfloat)(glyph->advance.y >> 6)/(GLfloat)font->loadSize();
+        fontGlyph.width = (GLfloat)bitmap.width/(GLfloat)font->loadSize(); // ??
+        fontGlyph.height = (GLfloat)bitmap.rows/(GLfloat)font->loadSize(); // ??
+        fontGlyph.x = (GLfloat)glyph->bitmap_left/(GLfloat)font->loadSize(); // ??
+        fontGlyph.y = (GLfloat)(glyph->bitmap_top-bitmap.rows)/(GLfloat)font->loadSize(); // ??
         font->glyphIs(i, fontGlyph);
-        
-        if (useSdf) {
+
+        if (font->type() == Font::SDF) {
             std::vector<char> buffer(width * height);
             distanceField(bitmap, ratio, border, &buffer[0]);
             glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, &buffer[0]);
@@ -183,13 +154,9 @@ void FontLoader::onAsset(Ptr<Font> font) {
         if (glyph->advance.y != 0) {
             throw ResourceException("invalid font: non-zero y-advance");
         }
-        x += glyph->advance.x/64/ratio+2*border;
+        x += bitmap.width/ratio+2*border;
     }
     glGenerateMipmap(GL_TEXTURE_2D);
-
-    // Release the face and font library
-    FT_Done_Face(face);
-    FT_Done_FreeType(library);
 }
 
 }
