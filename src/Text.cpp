@@ -71,7 +71,6 @@ void Text::updateTextBuffer() {
     for (auto ch : text_) {
         if (prev) {
             GLvec2 kerning = font_->kerning(prev, ch);
-            std::cout << kerning.u << std::endl;
             cursorX += kerning.u;
             cursorY += kerning.v;
         }
