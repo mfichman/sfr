@@ -1,6 +1,8 @@
 build/Debug
 build/Release
 build
+lib
+bin
 main
 src/Assets.cpp
 include/sfr/Assets.hpp
