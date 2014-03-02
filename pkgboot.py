@@ -105,13 +105,15 @@ class Package:
         fd.close()
 
         fd = open('src/Assets.cpp', 'w')
+        fd.write('#include "%s/Common.hpp"\n' % self.name)
         fd.write('#include "%s/Assets.hpp"\n' % self.name)
         fd.write('namespace %s {\n' % self.name)
         fd.write('extern Asset const assets[] = {\n')
         for pattern in self.assets:
             for fn in glob.glob(pattern):
+                fn = fn.replace('\\', '/') # Windows!!
                 fd.write('{"%s",' % fn) 
-                r = open(fn)
+                r = open(fn, 'rb') # Windows!!! (binary mode required)
                 data = r.read()
                 length = len(data)
                 data = ''.join(['\\x%02x' % ord(ch) for ch in data])
