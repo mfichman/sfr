@@ -61,16 +61,16 @@ int distanceForTexel(FT_Bitmap bitmap, int x, int y) {
     }
     if (color) {
         // This texel is IN.  Scale to [.5, 1]
-        float scaled = sqrtf(minDistance2)/maxDistance/2.f + .5f;
-        return scaled*255;
+        float scaled = sqrtf(float(minDistance2))/float(maxDistance)/2.f + .5f;
+        return int(scaled*255);
     } else {
         // This texel is OUT.  Scale to [0, .5]
-        float scaled = -sqrtf(minDistance2)/maxDistance/2.f + .5f;
-        return scaled*255;
+        float scaled = -sqrtf(float(minDistance2))/float(maxDistance)/2.f + .5f;
+        return int(scaled*255);
     } 
 }
 
-void distanceField(FT_Bitmap bitmap, int ratio, int border, char* buffer) {
+void distanceField(FT_Bitmap bitmap, int ratio, int border, GLubyte* buffer) {
     // Convert a font bitmap to a scaled-down
     int const width = bitmap.width / ratio;
     int const height = bitmap.rows / ratio;
@@ -83,7 +83,8 @@ void distanceField(FT_Bitmap bitmap, int ratio, int border, char* buffer) {
             int const bx = x * ratio;
             int const by = y * ratio;
             int const distance = distanceForTexel(bitmap, bx, by);
-            buffer[(x+border)+borderedWidth*(y+border)] = distance;
+            assert(distance <= std::numeric_limits<GLubyte>::max());
+            buffer[(x+border)+borderedWidth*(y+border)] = GLubyte(distance);
             
             //buffer[x+width*y] = bitmap.buffer[bx+bitmap.width*by];
         }
@@ -97,19 +98,19 @@ void FontLoader::onAsset(Ptr<Font> font) {
 
     // FreeType measures font size in 1/64ths of pixels.  So we multiply the
     // height by 64 to get the right size
-    int const ratio = font->loadSize() / font->size();
-    int const border = 8; // Border around each glyph in the atlas
-    int const dpi = 96;
+    GLuint const ratio = font->loadSize() / font->size();
+    GLuint const border = 8; // Border around each glyph in the atlas
+    GLuint const dpi = 96;
 
     FT_Face face = (FT_Face)font->face();
     FT_Set_Char_Size(face, font->loadSize() << 6, font->loadSize() << 6, dpi, dpi);
     FT_GlyphSlot glyph = face->glyph;
 
-    int atlasHeight = 0;
-    int atlasWidth = 0;
+    GLuint atlasHeight = 0;
+    GLuint atlasWidth = 0;
 
     // Estimate the size of the texture atlas
-    for (int i = 32; i < 128; i++) {
+    for (GLubyte i = 32; i < 128; i++) {
         if (FT_Load_Char(face, i, FT_LOAD_RENDER)) {
             throw ResourceException("could not load font glyph: "+font->name());
         }
@@ -121,15 +122,15 @@ void FontLoader::onAsset(Ptr<Font> font) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, atlasWidth, atlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
     
     // Generate the texture atlas
-    int x = 0;
-    for (int i = 32; i < 128; i++) {
+    GLuint x = 0;
+    for (GLubyte i = 32; i < 128; i++) {
         if (FT_Load_Char(face, i, FT_LOAD_RENDER)) {
             throw ResourceException("could not load font glyph: "+font->name());
         }
         FT_Bitmap bitmap = glyph->bitmap;
 
-        int const width = bitmap.width / ratio + 2*border;
-        int const height = bitmap.rows / ratio + 2*border;
+        GLuint const width = bitmap.width / ratio + 2*border;
+        GLuint const height = bitmap.rows / ratio + 2*border;
 
         Glyph fontGlyph;
         fontGlyph.texX = (GLfloat)(x+border)/(GLfloat)atlasWidth;
@@ -145,7 +146,7 @@ void FontLoader::onAsset(Ptr<Font> font) {
         font->glyphIs(i, fontGlyph);
 
         if (font->type() == Font::SDF) {
-            std::vector<char> buffer(width * height);
+            std::vector<GLubyte> buffer(width * height);
             distanceField(bitmap, ratio, border, &buffer[0]);
             glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, &buffer[0]);
         } else {

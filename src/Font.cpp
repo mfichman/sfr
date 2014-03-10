@@ -63,7 +63,7 @@ Font::~Font() {
 
 void Font::glyphIs(char code, Glyph const& glyph) {
     assert(code > 0);
-    if (code >= glyph_.size()) {
+    if (size_t(code) >= glyph_.size()) {
         glyph_.resize(std::max(glyph_.size(),size_t(code+1)));
     }
     glyph_[code] = glyph;
@@ -84,7 +84,7 @@ GLvec2 Font::kerning(char prev, char code) const {
 }
 
 Glyph Font::glyph(char code) const {
-    if (code < glyph_.size()) {
+    if (size_t(code) < glyph_.size()) {
         return glyph_[code];
     } else {
         return Glyph();

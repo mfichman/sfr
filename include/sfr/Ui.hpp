@@ -25,16 +25,16 @@ public:
 class Span {
 public:
     enum Unit { PIXELS, PERCENT };
-    Span(GLdouble value=1, Unit unit=PERCENT);
+    Span(GLfloat value=1, Unit unit=PERCENT);
 
-    GLdouble value() const { return value_; }
+    GLfloat value() const { return value_; }
     Unit unit() const { return unit_; }
     GLfloat absolute(GLfloat parentSpan);
 
     static Span fill() { return Span(100, Span::PERCENT); }
 
 private:
-    GLdouble value_;
+    GLfloat value_;
     Unit unit_;
 };
 
@@ -43,13 +43,13 @@ class Coord {
 public:
     enum Unit { PIXELS, PERCENT };
     enum Basis { BEGIN, CENTER, END, ABSOLUTE };
-    Coord(GLdouble value=0, Unit unit=PIXELS, Basis=BEGIN);
+    Coord(GLfloat value=0, Unit unit=PIXELS, Basis=BEGIN);
     Coord operator+(float other);
     Coord operator-(float other);
     Coord const& operator+=(float other);
     Coord const& operator-=(float other);
 
-    GLdouble value() const { return value_; }
+    GLfloat value() const { return value_; }
     Unit unit() const { return unit_; }
     Basis basis() const { return basis_; } 
     GLfloat absolute(GLfloat begin, GLfloat parentSpan, GLfloat selfSpan);
@@ -60,7 +60,7 @@ public:
     static Coord center() { return Coord(0, Coord::PERCENT, Coord::CENTER); }
 
 private:
-    GLdouble value_;
+    GLfloat value_;
     Unit unit_;
     Basis basis_;
 };

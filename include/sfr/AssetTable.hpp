@@ -47,6 +47,9 @@ public:
     virtual void onAsset(Ptr<Cubemap> cubemap) {}
     virtual void onAsset(Ptr<Font> font) {}
 
+private:
+    void operator=(Listener const&) {}
+
 protected:
  	Ptr<AssetTable> const notifier_;
 };

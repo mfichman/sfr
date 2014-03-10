@@ -35,8 +35,8 @@ public:
     Scalar top() const;
     Scalar bottom() const;
     Scalar fieldOfView() const;
-    Scalar viewportWidth() const;
-    Scalar viewportHeight() const;
+    GLuint viewportWidth() const;
+    GLuint viewportHeight() const;
     State state() const;
     Type type() const;
 
@@ -51,8 +51,8 @@ public:
     void typeIs(Type type);
     void viewTransformIs(Matrix const& transform);
     void worldTransformIs(Matrix const& transform);
-    void viewportWidthIs(Scalar width);
-    void viewportHeightIs(Scalar height);
+    void viewportWidthIs(GLuint width);
+    void viewportHeightIs(GLuint height);
 
     void operator()(Ptr<Functor> functor);
 
@@ -66,8 +66,8 @@ private:
     Scalar top_;
     Scalar bottom_;
     Scalar fieldOfView_;
-    Scalar viewportWidth_;
-    Scalar viewportHeight_;
+    GLuint viewportWidth_;
+    GLuint viewportHeight_;
     State state_;
     Type type_;
 };

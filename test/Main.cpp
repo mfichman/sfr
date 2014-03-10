@@ -186,7 +186,7 @@ void initFonts() {
     Ptr<sfr::Text> text = root->childIs<sfr::Text>();
     text->textIs("zero combat");
     text->fontIs(font);
-    text->colorIs(sfr::Color(1, .4, .1, 1.));
+    text->colorIs(sfr::Color(1.f, .4f, .1f, 1.f));
 
     Ptr<sfr::Font> font2 = assets->assetIs<sfr::Font>("fonts/Ethnocentric.ttf#40");
     Ptr<sfr::Ui> ui = world->ui()->childIs<sfr::Ui>();
@@ -196,7 +196,7 @@ void initFonts() {
     Ptr<sfr::Text> text2 = ui->childIs<sfr::Text>();
     text2->textIs("multiplayer");
     text2->fontIs(font2);
-    text2->colorIs(sfr::Color(1, 1, 1, .8));
+    text2->colorIs(sfr::Color(1.f, 1.f, 1.f, .8f));
     text2->sizeIs(40);
 }
 
@@ -221,7 +221,7 @@ void initRibbon() {
     ribbon->minWidthIs(0);
     ribbon->pointQuotaIs(10);
 
-    for (float i = -100; i < 2; i += .1) {
+    for (float i = -100; i < 2; i += .1f) {
         //ribbon->pointEnq(Vector(i*i, i, 0));
         //ribbon->pointEnq(Vector(0, i, 0));
         ribbon->pointEnq(Vector(0, i, 0));
@@ -289,7 +289,7 @@ void runRenderLoop() {
     }
 }
 
-int main(int argc, char** argv) {
+int main() {
 
     try {    
         initWindow();

@@ -57,11 +57,11 @@ Scalar Camera::fieldOfView() const {
     return fieldOfView_;
 }
 
-Scalar Camera::viewportWidth() const {
+GLuint Camera::viewportWidth() const {
     return viewportWidth_;
 }
 
-Scalar Camera::viewportHeight() const {
+GLuint Camera::viewportHeight() const {
     return viewportHeight_;
 }
 
@@ -90,8 +90,8 @@ Frustum Camera::viewFrustum(Scalar near, Scalar far) const {
         return frustum;
     } else {
         // Find the width and height of the near and far planes
-        Scalar ratio = viewportWidth_/viewportHeight_;
-        Scalar tang = tan(fieldOfView()*M_PI/360.f);
+        Scalar ratio = viewportWidth_/Scalar(viewportHeight_);
+        Scalar tang = Scalar(tan(fieldOfView()*M_PI/360.f));
         Scalar nh = near * tang; // Height of the near plane
         Scalar nw = nh * ratio; // Width of the near plane
         Scalar fh = far * tang; // Height of the far plane
@@ -136,7 +136,7 @@ Matrix Camera::projectionTransform() const {
     if (ORTHOGRAPHIC == type_) {
         return Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
     } else {
-        Scalar aspectRatio = viewportWidth_/viewportHeight_;
+        Scalar aspectRatio = viewportWidth_/Scalar(viewportHeight_);
         return Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
     }
 }
@@ -149,11 +149,11 @@ Matrix const& Camera::worldTransform() const {
     return worldTransform_;
 }
 
-void Camera::viewportWidthIs(Scalar width) {
+void Camera::viewportWidthIs(GLuint width) {
     viewportWidth_ = width;
 }
 
-void Camera::viewportHeightIs(Scalar height) {
+void Camera::viewportHeightIs(GLuint height) {
     viewportHeight_ = height;
 }
 

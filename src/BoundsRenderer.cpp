@@ -26,14 +26,14 @@ BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     unitCube_ = manager->assetIs<Mesh>("meshes/UnitCube");
 
     Ptr<MutableAttributeBuffer<GLvec3>> vbuf(new MutableAttributeBuffer<GLvec3>("position", GL_STATIC_DRAW));
-    vbuf->elementEnq(GLvec3(1.000000, 1.000000, -1.000000)); // 0
-    vbuf->elementEnq(GLvec3(1.000000, -1.000000, -1.000000)); // 1
-    vbuf->elementEnq(GLvec3(-1.000000, -1.000000, -1.000000)); // 2
-    vbuf->elementEnq(GLvec3(-1.000000, 1.000000, -1.000000)); // 3
-    vbuf->elementEnq(GLvec3(1.000000, 1.000000, 1.000000)); // 4
-    vbuf->elementEnq(GLvec3(1.000000, -1.000001, 1.000000)); // 5
-    vbuf->elementEnq(GLvec3(-1.000000, -1.000000, 1.000000)); // 6
-    vbuf->elementEnq(GLvec3(-1.000000, 1.000000, 1.000000)); // 7
+    vbuf->elementEnq(GLvec3(1.f, 1.f, -1.f)); // 0
+    vbuf->elementEnq(GLvec3(1.f, -1.f, -1.f)); // 1
+    vbuf->elementEnq(GLvec3(-1.f, -1.f, -1.f)); // 2
+    vbuf->elementEnq(GLvec3(-1.f, 1.f, -1.f)); // 3
+    vbuf->elementEnq(GLvec3(1.f, 1.f, 1.f)); // 4
+    vbuf->elementEnq(GLvec3(1.f, -1.f, 1.f)); // 5
+    vbuf->elementEnq(GLvec3(-1.f, -1.f, 1.f)); // 6
+    vbuf->elementEnq(GLvec3(-1.f, 1.f, 1.f)); // 7
 
     Ptr<IndexBuffer> ibuf(new IndexBuffer("buf"));
     ibuf->elementEnq(0); ibuf->elementEnq(1);
@@ -110,7 +110,7 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
 	Scalar const maxRadius = 500.f;
 	Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
     Scalar const cutoff = light->spotCutoff() + margin;
-    Scalar const width = std::tan(M_PI * cutoff / 180.f);
+    Scalar const width = Scalar(std::tan(M_PI * cutoff / 180.f));
     Scalar const sx = width * radius;
     Scalar const sy = width * radius;
     Scalar const sz = radius;

@@ -94,6 +94,7 @@ class Package:
             return
 
         fd = open('include/%s/Assets.hpp' % self.name, 'w')
+        fd.write('#pragma once\n')
         fd.write('namespace %s {\n' % self.name)
         fd.write('struct Asset {\n')
         fd.write('    char const* name;\n')
@@ -159,7 +160,7 @@ class Package:
             self.env.Append(CXXFLAGS='/O2')
         else:
             assert not "Unknown build type"
-        self.env.Append(CXXFLAGS='/MT /EHsc /Zi /Gm /FS')
+        self.env.Append(CXXFLAGS='/W4 /WX /MT /EHsc /Zi /Gm /FS')
         self.env.Append(CXXFLAGS='/Fpbuild/Common.pch')
         self.env.Append(CXXFLAGS='/Yu%s' % self.pch)
         self.env.Append(LINKFLAGS='/DEBUG')

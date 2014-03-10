@@ -11,7 +11,7 @@
 
 using namespace sfr;
 
-Span::Span(GLdouble value, Unit unit) {
+Span::Span(GLfloat value, Unit unit) {
     value_ = value;
     unit_ = unit;
 }
@@ -31,7 +31,7 @@ GLfloat Span::absolute(GLfloat parentSpan) {
 }
 
 
-Coord::Coord(GLdouble value, Unit unit, Basis basis) {
+Coord::Coord(GLfloat value, Unit unit, Basis basis) {
     value_ = value;
     unit_ = unit;
     basis_ = basis;
@@ -62,7 +62,7 @@ GLfloat Coord::absolute(GLfloat begin, GLfloat parentSpan, GLfloat selfSpan) {
     case Coord::END:
         return offset+begin+parentSpan-selfSpan;
     case Coord::CENTER:
-        return offset+parentSpan/2.-selfSpan/2.;
+        return offset+parentSpan/2.f-selfSpan/2.f;
     case Coord::ABSOLUTE:
         return offset;
     default:

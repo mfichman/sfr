@@ -31,7 +31,7 @@ Matrix Matrix::ortho(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f)
 }
 
 Matrix Matrix::perspective(Scalar fov, Scalar aspect, Scalar n, Scalar f) {
-	Scalar top = tan(fov*M_PI/360.0f) * n;
+	Scalar top = Scalar(tan(fov*M_PI/360.0f) * n);
 	Scalar bottom = -top;
 	Scalar right = aspect * top;
 	Scalar left = aspect * bottom;

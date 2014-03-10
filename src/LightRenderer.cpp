@@ -115,7 +115,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glActiveTexture(GL_TEXTURE6);
     if (light->shadowMap()) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
-        glUniform1f(program_->shadowMapSize(), light->shadowMap()->width());
+        glUniform1f(program_->shadowMapSize(), GLfloat(light->shadowMap()->width()));
     } else {
         glUniform1f(program_->shadowMapSize(), 0);
     }
@@ -169,7 +169,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform1f(program_->atten1(), light->linearAttenuation());
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
 
-    Scalar cosCutoff = std::cos(M_PI * light->spotCutoff() / 180.f);
+    Scalar cosCutoff = Scalar(std::cos(M_PI * light->spotCutoff() / 180.f));
     glUniform1f(program_->spotCutoff(), cosCutoff);
     glUniform1f(program_->spotPower(), light->spotPower());
 
@@ -182,7 +182,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glActiveTexture(GL_TEXTURE6);
     if (light->shadowMap()) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
-        glUniform1f(program_->shadowMapSize(), light->shadowMap()->width());
+        glUniform1f(program_->shadowMapSize(), GLfloat(light->shadowMap()->width()));
     } else {
         glUniform1f(program_->shadowMapSize(), 0);
     }
@@ -196,7 +196,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
 	Scalar const maxRadius = 500.f;
 	Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
     Scalar const cutoff = light->spotCutoff() + margin;
-    Scalar const width = std::tan(M_PI * cutoff / 180.f);
+    Scalar const width = Scalar(std::tan(M_PI * cutoff / 180.f));
     Scalar const sx = width * radius;
     Scalar const sy = width * radius;
     Scalar const sz = radius;

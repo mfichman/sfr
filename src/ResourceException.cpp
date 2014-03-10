@@ -13,6 +13,7 @@ namespace sfr {
 ResourceException::ResourceException(std::string const& message) {
     message_ = message;
     std::cerr << "error: " << message << std::endl;
+#pragma warning(disable: 4996) // For getenv
     if (!getenv("SFR_NO_DEBUG_EXCEPTIONS")) {
         abort();
     }
