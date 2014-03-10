@@ -132,9 +132,6 @@ void WavefrontLoader::newMesh() {
         return;
     }
 
-    // Force immediate loading of the vertex data to the graphics card
-    mesh_->statusIs(Mesh::SYNCED);
-
     if (transform_) {
         Ptr<Model> model = transform_->childIs<Model>();
         model->meshIs(mesh_);

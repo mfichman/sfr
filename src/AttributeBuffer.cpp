@@ -15,12 +15,12 @@ AttributeBuffer::AttributeBuffer(std::string const& name, GLenum usage) {
     id_ = 0;
     status_ = DIRTY;
     usage_ = usage;
-    
-    glGenBuffers(1, &id_);
 }
 
 AttributeBuffer::~AttributeBuffer() {
-    glDeleteBuffers(1, &id_);
+	if (id_) {
+		glDeleteBuffers(1, &id_);
+	}
 }
 
 GLuint AttributeBuffer::id() const {
@@ -43,6 +43,9 @@ void AttributeBuffer::statusIs(Status status) {
 }
 
 void AttributeBuffer::syncHardwareBuffers() {
+	if (!id_) {
+		glGenBuffers(1, &id_);
+	}
     GLuint size = elementCount()*elementSize();
     glBindBuffer(GL_ARRAY_BUFFER, id_);
     glBufferData(GL_ARRAY_BUFFER, size, data(), usage_);

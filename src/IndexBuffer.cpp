@@ -14,12 +14,12 @@ IndexBuffer::IndexBuffer(std::string const& name) {
     name_ = name;
     id_ = 0;
     status_ = DIRTY;
-    
-    glGenBuffers(1, &id_);
 }
 
 IndexBuffer::~IndexBuffer() {
-    glDeleteBuffers(1, &id_);
+	if (id_) {
+		glDeleteBuffers(1, &id_);
+	}
 }
 
 GLuint IndexBuffer::id() const {
@@ -70,6 +70,9 @@ void IndexBuffer::elementIs(GLuint index, GLuint element) {
 }
 
 void IndexBuffer::syncHardwareBuffers() {
+	if (!id_) {
+		glGenBuffers(1, &id_);
+	}
     GLuint size = elementCount()*elementSize();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data(), GL_STATIC_DRAW);

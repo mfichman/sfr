@@ -16,11 +16,13 @@ using namespace sfr;
 Mesh::Mesh(std::string const& name) {
     name_ = name;
     status_ = DIRTY;
-    glGenVertexArrays(1, &id_);
+	id_ = 0;
 }
 
 Mesh::~Mesh() {
-    glDeleteVertexArrays(1, &id_);
+	if (id_) {
+		glDeleteVertexArrays(1, &id_);
+	}
 }
 
 std::string const& Mesh::name() const {
@@ -71,7 +73,7 @@ void Mesh::statusIs(Status status) {
 }
 
 void Mesh::updateVertexBuffer(std::string const& name, Attribute attr) {
-    // Update the VAO used to render the mesh
+    // Update the vertex buffers used to render the mesh
     Ptr<AttributeBuffer> buffer = attributeBuffer(name);
     if (buffer) {
         buffer->statusIs(AttributeBuffer::SYNCED);
@@ -85,6 +87,10 @@ void Mesh::updateVertexBuffer(std::string const& name, Attribute attr) {
 }
 
 void Mesh::updateVertexArrayObject() {
+	// Update the VAO, and create it lazily if necessary
+	if (!id_) {
+		glGenVertexArrays(1, &id_);
+	}
     glBindVertexArray(id_);
     updateVertexBuffer("position", Mesh::POSITION);
     updateVertexBuffer("normal", Mesh::NORMAL);
