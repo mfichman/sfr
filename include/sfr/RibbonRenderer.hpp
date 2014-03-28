@@ -21,7 +21,9 @@ public:
 
 private:
     void onState();
+
     Ptr<RibbonProgram> program_;
+    Ptr<StreamDrawBuffer> buffer_;
 };
 
 }

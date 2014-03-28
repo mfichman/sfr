@@ -26,38 +26,30 @@ public:
 /* Particle system */
 class Particles : public Node {
 public:
-    enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, COLOR, SIZE, ROTATION };
     enum ClearMode { MANUAL, AUTO };
 
     Particles();
-    ~Particles();
     Particle const& particle(GLuint index) const;
-    GLuint particleCount() const { return buffer_->elementCount(); }
-    GLuint id() const { return id_; }
-    Ptr<AttributeBuffer> buffer() const { return buffer_; }
+    Particle const* buffer() const { return &buffer_.front(); }
+    GLuint particleCount() const { return buffer_.size(); }
     Ptr<Texture> texture() const { return texture_; }
     Color const& tint() const { return tint_; }
-    Status status() const { return status_; }
     ClearMode clearMode() const { return clearMode_; }
+    bool isVisible() const { return texture_&&buffer_.size(); }
 
     void particleEnq(Particle const& particle);
     void particleIs(GLuint index, Particle const& particle);
     void particleDelAll();
     void textureIs(Ptr<Texture> texture);
     void tintIs(Color const& tint);
-    void statusIs(Status status);
     void clearModeIs(ClearMode mode);
 
 private:
     virtual void operator()(Ptr<Functor> functor);
-    void defAttribute(Attribute id, GLuint size, void* offset);
-    void syncHardwareBuffer();
 
+    std::vector<Particle> buffer_;
     Ptr<Texture> texture_;
-    Ptr<MutableAttributeBuffer<Particle>> buffer_; 
-    Status status_;
-    GLuint id_;
     Color tint_;
     ClearMode clearMode_;
 };

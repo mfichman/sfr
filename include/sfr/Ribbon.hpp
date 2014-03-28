@@ -24,40 +24,32 @@ public:
 /* Ribbon trail system */
 class Ribbon : public Node {
 public:
-    enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, DIRECTION, INDEX };
 
     Ribbon();
-    ~Ribbon();
-
     GLuint pointCount() const { return std::min(tail_, pointQuota()); }
-    GLuint id() const { return id_; }
     GLint pointQuota() const { return pointQuota_; }
     GLint pointTail() const { return tail_; }
-    Ptr<AttributeBuffer> buffer() const { return buffer_; }
+    RibbonVertex const* buffer() const { return &buffer_.front(); }
     Ptr<Texture> texture() const { return texture_; }
-    Status status() const { return status_; }
     Scalar width() const { return width_; }
     Scalar minWidth() const { return minWidth_; }
+    bool isVisible() const { return texture_&&buffer_.size(); }
+    GLuint ribbonVertexCount() const { return buffer_.size(); }
 
+    void ribbonVertexIs(GLuint index, RibbonVertex const& rv);
     void pointQuotaIs(GLint quota);
     void pointEnq(Vector const& point);
     void pointDelAll(); 
     void textureIs(Ptr<Texture> texture);
-    void statusIs(Status status);
     void widthIs(Scalar width);
     void minWidthIs(Scalar width);
 
+private:
     virtual void operator()(Ptr<Functor> functor);
 
-private:
-    void defAttribute(Attribute id, GLuint size, void* offset);
-    void syncHardwareBuffer();
-
+    std::vector<RibbonVertex> buffer_;
     Ptr<Texture> texture_;
-    Ptr<MutableAttributeBuffer<RibbonVertex>> buffer_; 
-    Status status_;
-    GLuint id_;
     GLint tail_;
     GLint pointQuota_;
     Scalar width_;

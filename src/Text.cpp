@@ -18,7 +18,7 @@ Text::Text() {
     size_ = 1.;
     status_ = DIRTY;
     color_ = Color(1.f, 1.f, 1.f, 1.f);
-    buffer_.reset(new MutableAttributeBuffer<TextVertex>("", GL_STREAM_DRAW));
+    buffer_.reset(new MutableAttributeBuffer<TextVertex>("", GL_DYNAMIC_DRAW));
     glGenVertexArrays(1, &id_);
 }
 

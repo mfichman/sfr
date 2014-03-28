@@ -27,38 +27,30 @@ public:
 
 class Billboards : public Node {
 public:
-    enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, FORWARD, RIGHT, COLOR, WIDTH, HEIGHT };
     enum ClearMode { MANUAL, AUTO };
 
     Billboards();
-    ~Billboards();
     Ptr<Texture> texture() const { return texture_; }
-    Ptr<AttributeBuffer> buffer() const { return buffer_; }
+    Billboard const* buffer() const { return &buffer_.front(); }
     Billboard const& billboard(GLuint index) const;
-    GLuint billboardCount() const { return buffer_->elementCount(); }
-    GLuint id() const { return id_; }
+    GLuint billboardCount() const { return buffer_.size(); }
     sfr::Color const& tint() const { return tint_; }
-    Status status() const { return status_; }
     ClearMode clearMode() const { return clearMode_; }
+    bool isVisible() const { return !!texture_&&buffer_.size(); }
 
     void billboardEnq(Billboard const& billboard);
     void billboardIs(GLuint index, Billboard const& billboard);
     void billboardDelAll();
     void textureIs(Ptr<Texture> texture);
     void tintIs(sfr::Color tint);
-    void statusIs(Status status);
     void clearModeIs(ClearMode clearMode);
 private:
     void operator()(Ptr<Functor> functor);
-    void defAttribute(Attribute id, GLuint size, void* offset);
-    void syncHardwareBuffer();
 
+    std::vector<Billboard> buffer_;
     Ptr<Texture> texture_;
-    Ptr<MutableAttributeBuffer<Billboard>> buffer_;
-    Status status_;
     sfr::Color tint_;
-    GLuint id_;
     ClearMode clearMode_;
 };
 

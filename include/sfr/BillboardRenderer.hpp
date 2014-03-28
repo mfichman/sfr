@@ -22,6 +22,7 @@ public:
 private:
     void onState(); 
     Ptr<BillboardProgram> program_;
+    Ptr<StreamDrawBuffer> buffer_;
 };
 
 }

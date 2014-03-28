@@ -114,6 +114,7 @@ class Shader;
 class ShadowRenderer;
 class SpotLight;
 class SkyboxRenderer;
+class StreamDrawBuffer;
 class Text;
 class TextProgram;
 class TextRenderer;

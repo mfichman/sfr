@@ -11,38 +11,28 @@
 
 using namespace sfr;
 
-#define OFFSET(field) ((void*)&(((Particle*)0)->field))
-#define SIZE(field) (sizeof((((Particle*)0)->field)))
-
 Particles::Particles() {
-    status_ = DIRTY;
     clearMode_ = MANUAL;
     tint_ = Color(1., 1., 1., 1.);
-    buffer_.reset(new MutableAttributeBuffer<Particle>("", GL_STREAM_DRAW));
-    glGenVertexArrays(1, &id_);
-}
-
-Particles::~Particles() {
-    glDeleteVertexArrays(1, &id_);
 }
 
 void Particles::particleEnq(Particle const& particle) {
-    status_ = DIRTY;
-    buffer_->elementEnq(particle);
+    buffer_.push_back(particle);
 }
 
 void Particles::particleIs(GLuint index, Particle const& particle) {
-    status_ = DIRTY;
-    buffer_->elementIs(index, particle);
+    if (buffer_.size() <= index) {
+        buffer_.resize(index+1);
+    }
+    buffer_[index] = particle;
 }
 
 void Particles::particleDelAll() {
-    status_ = DIRTY;
-    buffer_->elementDelAll();
+    buffer_.clear();
 }
 
 Particle const& Particles::particle(GLuint index) const {
-    return buffer_->element(index);
+    return buffer_[index];
 }
 
 void Particles::textureIs(Ptr<Texture> texture) {
@@ -53,36 +43,8 @@ void Particles::tintIs(Color const& tint) {
     tint_ = tint;
 }
 
-void Particles::statusIs(Status status) {
-    if (status == status_) {
-        return;
-    }
-    status_ = status;
-    if (SYNCED == status) {
-        syncHardwareBuffer();
-    }
-}
-
 void Particles::clearModeIs(ClearMode mode) {
     clearMode_ = mode;
-}
-
-void Particles::defAttribute(Attribute id, GLuint size, void* offset) {
-    GLuint stride = sizeof(Particle);
-    glEnableVertexAttribArray(id);
-    glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
-}
-
-void Particles::syncHardwareBuffer() {
-    // Update the VAO/VBO containing the particle data
-    glBindVertexArray(id_);
-    buffer_->statusIs(AttributeBuffer::SYNCED);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
-    defAttribute(POSITION, SIZE(position), OFFSET(position));
-    defAttribute(COLOR, SIZE(color), OFFSET(color));
-    defAttribute(SIZE, SIZE(size), OFFSET(size));
-    defAttribute(ROTATION, SIZE(rotation), OFFSET(rotation));
-    glBindVertexArray(0);
 }
 
 void Particles::operator()(Ptr<Node::Functor> functor) {

@@ -10,14 +10,33 @@
 #include "sfr/Camera.hpp"
 #include "sfr/RibbonRenderer.hpp"
 #include "sfr/Ribbon.hpp"
+#include "sfr/StreamDrawBuffer.hpp"
 #include "sfr/Texture.hpp"
 #include "sfr/World.hpp"
 
 using namespace sfr;
 
+#define OFFSET(field) ((void*)&(((RibbonVertex*)0)->field))
+#define SIZE(field) (sizeof((((RibbonVertex*)0)->field)))
+
+void defAttribute(Ribbon::Attribute id, GLuint size, void* offset) {
+    GLuint stride = sizeof(RibbonVertex);
+    glEnableVertexAttribArray(id);
+    glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
+}
+
 RibbonRenderer::RibbonRenderer(Ptr<AssetTable> assets) {
     program_ = assets->assetIs<RibbonProgram>("shaders/Ribbon");
     program_->statusIs(Program::LINKED);
+
+    buffer_.reset(new StreamDrawBuffer(sizeof(RibbonVertex)));
+    
+    glBindVertexArray(buffer_->vertexArrayId());
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
+    defAttribute(Ribbon::POSITION, SIZE(position), OFFSET(position));
+    defAttribute(Ribbon::DIRECTION, SIZE(direction), OFFSET(direction));
+    defAttribute(Ribbon::INDEX, SIZE(index), OFFSET(index)); 
+    glBindVertexArray(0);
 }
 
 void RibbonRenderer::onState() {
@@ -38,14 +57,11 @@ void RibbonRenderer::onState() {
 }
 
 void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
+    if (!ribbon->isVisible()) { return; }
+
     Ptr<Camera> camera = world()->camera();
     Ptr<Texture> texture = ribbon->texture();
-    if (!texture) { return; }
 
-    ribbon->statusIs(Ribbon::SYNCED);
-
-    Ptr<AttributeBuffer> buffer = ribbon->buffer();
-    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
@@ -66,9 +82,6 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     };
     glUniformMatrix3fv(program_->normalMatrix(), 1, 0, temp);    
 
-    // Render the particles
-    glBindVertexArray(ribbon->id());
-    glDrawArrays(GL_TRIANGLES, 0, buffer->elementCount());
-    glBindVertexArray(0);
-
+    // Render the ribbon
+    buffer_->bufferDataIs(GL_TRIANGLES, ribbon->buffer(), ribbon->ribbonVertexCount());
 }

@@ -22,6 +22,7 @@ public:
 private:
     void onState();
     Ptr<ParticleProgram> program_;
+    Ptr<StreamDrawBuffer> buffer_;
 };
 
 }

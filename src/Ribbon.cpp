@@ -10,21 +10,11 @@
 
 using namespace sfr;
 
-#define OFFSET(field) ((void*)&(((RibbonVertex*)0)->field))
-#define SIZE(field) (sizeof((((RibbonVertex*)0)->field)))
-
 Ribbon::Ribbon() {
-    status_ = DIRTY;
     tail_ = 0;
     width_ = 1;
     minWidth_ = 1;
     pointQuota_ = 10;
-    buffer_.reset(new MutableAttributeBuffer<RibbonVertex>("", GL_STREAM_DRAW));
-    glGenVertexArrays(1, &id_);
-}
-
-Ribbon::~Ribbon() {
-    glDeleteVertexArrays(1, &id_);
 }
 
 void Ribbon::pointQuotaIs(GLint quota) {
@@ -34,13 +24,19 @@ void Ribbon::pointQuotaIs(GLint quota) {
 
 void Ribbon::pointDelAll() {
     tail_ = 0; 
-    buffer_->elementDelAll(); 
+    buffer_.clear(); 
+}
+
+void Ribbon::ribbonVertexIs(GLuint index, RibbonVertex const& rv) {
+    if (buffer_.size() <= index) {
+        buffer_.resize(index+1);
+    }
+    buffer_[index] = rv;
 }
 
 void Ribbon::pointEnq(Vector const& point) {
-    status_ = DIRTY;
-
     GLint const index = 3 * ((tail_ % pointQuota()) + 1);
+    buffer_.resize(3*(pointQuota()+1)); // +1 is for the cap
 
     if (tail_ == 0) {
         prev1_.position = point.vec3f();
@@ -56,14 +52,14 @@ void Ribbon::pointEnq(Vector const& point) {
         }
     
         RibbonVertex rv = { point.vec3f(), dir.vec3f(), tail_ };
-        buffer_->elementIs(index+0, prev1_);
-        buffer_->elementIs(index+1, prev0_);
-        buffer_->elementIs(index+2, rv);
+        ribbonVertexIs(index+0, prev1_);
+        ribbonVertexIs(index+1, prev0_);
+        ribbonVertexIs(index+2, rv);
 
         RibbonVertex cap = { point.vec3f(), dir.vec3f(), tail_+1 };
-        buffer_->elementIs(0, prev0_);
-        buffer_->elementIs(1, rv);
-        buffer_->elementIs(2, cap);
+        ribbonVertexIs(0, prev0_);
+        ribbonVertexIs(1, rv);
+        ribbonVertexIs(2, cap);
         // First 3 slots are reserved for the endcap
 
         prev1_ = prev0_;
@@ -77,43 +73,12 @@ void Ribbon::textureIs(Ptr<Texture> texture) {
     texture_ = texture;
 }
 
-void Ribbon::statusIs(Status status) {
-    if (status == status_) {
-        return;
-    }
-    status_ = status;
-    if (SYNCED == status) {
-        syncHardwareBuffer();
-    }
-}
-
 void Ribbon::widthIs(Scalar width) {
     width_ = width;
 }
 
 void Ribbon::minWidthIs(Scalar width) {
     minWidth_ = width;
-}
-
-void Ribbon::defAttribute(Attribute id, GLuint size, void* offset) {
-    GLuint stride = sizeof(RibbonVertex);
-    glEnableVertexAttribArray(id);
-    glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
-}
-
-void Ribbon::syncHardwareBuffer() {
-    // Generate a triangle strip for the ribbon.  Each point specified in the
-    // original point list becomes the center of a triangle.  The edges
-    // criss-cross from the point + width/2 to point - width/2 in 'zigzag'
-    // fashion, keeping the ribbon flat along the axis orthogonal to the
-    // direction of movement.
-    glBindVertexArray(id_);
-    buffer_->statusIs(AttributeBuffer::SYNCED);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_->id());
-    defAttribute(POSITION, SIZE(position), OFFSET(position));
-    defAttribute(DIRECTION, SIZE(direction), OFFSET(direction));
-    defAttribute(INDEX, SIZE(index), OFFSET(index)); 
-    glBindVertexArray(0);
 }
 
 void Ribbon::operator()(Ptr<Node::Functor> functor) {

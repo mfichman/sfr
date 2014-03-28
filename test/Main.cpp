@@ -260,8 +260,6 @@ void runRenderLoop() {
 
         handleInput();
 
-        //particles->timeInc(elapsedTime.asSeconds());
-        
         // Record the CPU time used while traversing the scene graph.  Don't
         // include time processing input or running the Display() function,
         // because that causes the CPU to wait for the GPU to finish rendering.
@@ -296,9 +294,9 @@ int main() {
         initCamera();
         initModels();
         initFonts();
-  //      initParticles();
-  //      initRibbon();
-  //      initQuad();
+        initParticles();
+        initRibbon();
+        initQuad();
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
