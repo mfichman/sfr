@@ -163,16 +163,10 @@ void WavefrontLoader::newMesh(std::string const& name) {
     // by the "o" command.  Read in each mesh separately and then add it to 
     // the scene graph.
     mesh_ = notifier_->assetIs<Mesh>(transform_->name() + "/" + name);
-    vertexBuffer_.reset(new MutableAttributeBuffer<GLvec3>("position", GL_STATIC_DRAW));
-    normalBuffer_.reset(new MutableAttributeBuffer<GLvec3>("normal", GL_STATIC_DRAW));
-    texCoordBuffer_.reset(new MutableAttributeBuffer<GLvec2>("texCoord", GL_STATIC_DRAW));
-    tangentBuffer_.reset(new MutableAttributeBuffer<GLvec3>("tangent", GL_STATIC_DRAW));
+    attributeBuffer_.reset(new MutableAttributeBuffer<MeshVertex>("", GL_STATIC_DRAW));
     indexBuffer_.reset(new IndexBuffer(mesh_->name()));
 
-    mesh_->attributeBufferIs("position", vertexBuffer_);
-    mesh_->attributeBufferIs("normal", normalBuffer_);
-    mesh_->attributeBufferIs("texCoord", texCoordBuffer_);
-    mesh_->attributeBufferIs("tangent", tangentBuffer_);
+    mesh_->attributeBufferIs(attributeBuffer_);
     mesh_->indexBufferIs(indexBuffer_);
 }
 
@@ -229,12 +223,9 @@ void WavefrontLoader::newTriangle(MeshVertex face[3]) {
         if (j == cache_.end()) {
             // Vertex was not found, so push a new index and vertex into the
             // list.  Add the vertex to the cache.
-            index = vertexBuffer_->elementCount();
+            index = attributeBuffer_->elementCount();
             cache_.insert(std::make_pair(face[i], index));
-            vertexBuffer_->elementIs(index, face[i].position);
-            normalBuffer_->elementIs(index, face[i].normal);
-            texCoordBuffer_->elementIs(index, face[i].texCoord);
-            tangentBuffer_->elementIs(index, face[i].tangent);
+            attributeBuffer_->elementIs(index, face[i]);
         } else {
             //Vertex was found, so use the existing index
             index = j->second;

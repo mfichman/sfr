@@ -13,6 +13,9 @@
 
 using namespace sfr;
 
+#define OFFSET(field) ((void*)&(((MeshVertex*)0)->field))
+#define SIZE(field) (sizeof((((MeshVertex*)0)->field)))
+
 Mesh::Mesh(std::string const& name) {
     name_ = name;
     status_ = DIRTY;
@@ -29,14 +32,8 @@ std::string const& Mesh::name() const {
     return name_;
 }
 
-Ptr<AttributeBuffer> Mesh::attributeBuffer(std::string const& name) const {
-    std::map<std::string, Ptr<AttributeBuffer>>
-        ::const_iterator i = attributeBuffer_.find(name);
-    if (i == attributeBuffer_.end()) {
-        return Ptr<AttributeBuffer>();
-    } else {
-        return i->second;
-    }
+Ptr<AttributeBuffer> Mesh::attributeBuffer() const {
+    return attributeBuffer_;
 }
 
 Ptr<IndexBuffer> Mesh::indexBuffer() const {
@@ -47,8 +44,11 @@ Mesh::Status Mesh::status() const {
     return status_;
 }
 
-void Mesh::attributeBufferIs(std::string const& name, Ptr<AttributeBuffer> buf) {
-    attributeBuffer_[name] = buf;
+void Mesh::attributeBufferIs(Ptr<MutableAttributeBuffer<MeshVertex>> buf) {
+    if (attributeBuffer_ == buf) {
+        return;
+    }
+    attributeBuffer_ = buf;
     statusIs(DIRTY);
 }
 
@@ -72,18 +72,10 @@ void Mesh::statusIs(Status status) {
     }
 }
 
-void Mesh::updateVertexBuffer(std::string const& name, Attribute attr) {
-    // Update the vertex buffers used to render the mesh
-    Ptr<AttributeBuffer> buffer = attributeBuffer(name);
-    if (buffer) {
-        buffer->statusIs(AttributeBuffer::SYNCED);
-        GLint size = buffer->elementSize()/sizeof(GLfloat);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer->id());
-        glEnableVertexAttribArray(attr);
-        glVertexAttribPointer(attr, size, GL_FLOAT, 0, 0, 0);
-    } else {
-        glDisableVertexAttribArray(attr);
-    }
+void defAttribute(Mesh::Attribute id, GLuint size, void* offset) {
+    GLuint stride = sizeof(MeshVertex);
+    glEnableVertexAttribArray(id);
+    glVertexAttribPointer(id, size / sizeof(GLfloat), GL_FLOAT, 0, stride, offset);
 }
 
 void Mesh::updateVertexArrayObject() {
@@ -91,92 +83,85 @@ void Mesh::updateVertexArrayObject() {
 	if (!id_) {
 		glGenVertexArrays(1, &id_);
 	}
-    glBindVertexArray(id_);
-    updateVertexBuffer("position", Mesh::POSITION);
-    updateVertexBuffer("normal", Mesh::NORMAL);
-    updateVertexBuffer("tangent", Mesh::TANGENT);
-    updateVertexBuffer("texCoord", Mesh::TEXCOORD);
+    attributeBuffer_->statusIs(AttributeBuffer::SYNCED);
+    indexBuffer_->statusIs(IndexBuffer::SYNCED);
 
-    Ptr<IndexBuffer> buffer = indexBuffer();
-    if (buffer) {
-        buffer->statusIs(IndexBuffer::SYNCED);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->id());
+    glBindVertexArray(id_);
+    glBindBuffer(GL_ARRAY_BUFFER, attributeBuffer_->id());
+
+    defAttribute(Mesh::POSITION, SIZE(position), OFFSET(position));
+    defAttribute(Mesh::NORMAL, SIZE(normal), OFFSET(normal));
+    defAttribute(Mesh::TANGENT, SIZE(tangent), OFFSET(tangent));
+    defAttribute(Mesh::TEXCOORD, SIZE(texCoord), OFFSET(texCoord));
+
+    if (indexBuffer_) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_->id());
     }
     glBindVertexArray(0);
 }
 
 void Mesh::updateTangents() {
-    Ptr<MutableAttributeBuffer<GLvec3>> tangents(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<GLvec3>>(
-        attributeBuffer("tangent")));
+    // Iterate through all faces and add each face's contribution to the
+    // tangents of its vertices.
+    for (GLuint i = 2; i < indexBuffer()->elementCount(); i += 3) {
+        GLuint i0 = indexBuffer()->element(i-2);
+        GLuint i1 = indexBuffer()->element(i-1);
+        GLuint i2 = indexBuffer()->element(i-0);
 
-    Ptr<MutableAttributeBuffer<GLvec3>> positions(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<GLvec3>>(
-        attributeBuffer("position")));
+        MeshVertex v0 = attributeBuffer_->element(i0);
+        MeshVertex v1 = attributeBuffer_->element(i1);
+        MeshVertex v2 = attributeBuffer_->element(i2);
 
-    Ptr<MutableAttributeBuffer<GLvec2>> texCoords(std::dynamic_pointer_cast<
-        MutableAttributeBuffer<GLvec2>>(
-        attributeBuffer("texCoord")));
+        GLvec3 const& p0 = v0.position;
+        GLvec3 const& p1 = v1.position;
+        GLvec3 const& p2 = v2.position;
 
-    if (tangents && positions && texCoords) {
-        // Initialize all tangents to zero for the whole mesh to set up 
-        // weighted average
-        for (GLuint i = 0; i < tangents->elementCount(); i++) {
-            tangents->elementIs(i, GLvec3(0, 0, 0));
-        }
+        Vector const d1(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z);
+        Vector const d2(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+        GLvec2 const& tex0 = v0.texCoord;
+        GLvec2 const& tex1 = v1.texCoord;
+        GLvec2 const& tex2 = v2.texCoord;
+        Scalar const s1 = tex1.u - tex0.u;
+        Scalar const t1 = tex1.v - tex0.v;
+        Scalar const s2 = tex2.u - tex0.u;
+        Scalar const t2 = tex2.v - tex0.v;
+        Scalar const a = 1/(s1*t2 - s2*t1);
 
-        // Iterate through all faces and add each face's contribution to the
-        // tangents of its vertices.
-        for (GLuint i = 2; i < indexBuffer()->elementCount(); i += 3) {
-            GLuint i0 = indexBuffer()->element(i-2);
-            GLuint i1 = indexBuffer()->element(i-1);
-            GLuint i2 = indexBuffer()->element(i-0);
+        GLvec3 tangent0 = v0.tangent;
+        GLvec3 tangent1 = v1.tangent;
+        GLvec3 tangent2 = v2.tangent;
 
-            GLvec3 const& p0 = positions->element(i0);
-            GLvec3 const& p1 = positions->element(i1);
-            GLvec3 const& p2 = positions->element(i2);
+        Vector const tan0 = ((d1*t2 - d2*t1)*a).unit();
+        Vector const tan1 = ((d1*t2 - d2*t1)*a).unit();
+        Vector const tan2 = ((d1*t2 - d2*t1)*a).unit();
 
-            Vector const d1(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z);
-            Vector const d2(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
-            GLvec2 const& tex0 = texCoords->element(i0);
-            GLvec2 const& tex1 = texCoords->element(i1);
-            GLvec2 const& tex2 = texCoords->element(i2);
-            Scalar const s1 = tex1.u - tex0.u;
-            Scalar const t1 = tex1.v - tex0.v;
-            Scalar const s2 = tex2.u - tex0.u;
-            Scalar const t2 = tex2.v - tex0.v;
-            Scalar const a = 1/(s1*t2 - s2*t1);
+        tangent0.x += tan0.x;
+        tangent0.y += tan0.y;
+        tangent0.z += tan0.z;
 
-            GLvec3 tangent0 = tangents->element(i0);
-            GLvec3 tangent1 = tangents->element(i1);
-            GLvec3 tangent2 = tangents->element(i2);
+        tangent1.x += tan1.x;
+        tangent1.y += tan1.y;
+        tangent1.z += tan1.z;
 
-            Vector const tan0 = ((d1*t2 - d2*t1)*a).unit();
-            Vector const tan1 = ((d1*t2 - d2*t1)*a).unit();
-            Vector const tan2 = ((d1*t2 - d2*t1)*a).unit();
+        tangent2.x += tan2.x;
+        tangent2.y += tan2.y;
+        tangent2.z += tan2.z;
 
-            tangent0.x += tan0.x;
-            tangent0.y += tan0.y;
-            tangent0.z += tan0.z;
+        v0.tangent = tangent0;
+        v1.tangent = tangent1;
+        v2.tangent = tangent2;
+     
+        attributeBuffer_->elementIs(i0, v0);
+        attributeBuffer_->elementIs(i1, v1);
+        attributeBuffer_->elementIs(i2, v2);
+    }
 
-            tangent1.x += tan1.x;
-            tangent1.y += tan1.y;
-            tangent1.z += tan1.z;
-
-            tangent2.x += tan2.x;
-            tangent2.y += tan2.y;
-            tangent2.z += tan2.z;
-
-            tangents->elementIs(i0, tangent0);
-            tangents->elementIs(i1, tangent1);
-            tangents->elementIs(i2, tangent2);
-        }
-
-        // Normalize all tangents in the mesh to take the average
-        for (GLuint i = 0; i < tangents->elementCount(); i++) {
-            GLvec3 const vec = tangents->element(i);
-            Vector const tan(vec.x, vec.y, vec.z); 
-            tangents->elementIs(i, tan.unit().vec3f());
-        }
+    // Normalize all tangents in the mesh to take the average
+    for (GLuint i = 0; i < attributeBuffer_->elementCount(); i++) {
+        MeshVertex vertex = attributeBuffer_->element(i);
+        GLvec3 const vec = vertex.tangent;
+        Vector const tan(vec.x, vec.y, vec.z); 
+        vertex.tangent = tan.unit().vec3f();
+        attributeBuffer_->elementIs(i, vertex);
     }
 }

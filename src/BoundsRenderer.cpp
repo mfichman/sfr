@@ -25,15 +25,25 @@ BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
     unitCube_ = manager->assetIs<Mesh>("meshes/UnitCube");
 
-    Ptr<MutableAttributeBuffer<GLvec3>> vbuf(new MutableAttributeBuffer<GLvec3>("position", GL_STATIC_DRAW));
-    vbuf->elementEnq(GLvec3(1.f, 1.f, -1.f)); // 0
-    vbuf->elementEnq(GLvec3(1.f, -1.f, -1.f)); // 1
-    vbuf->elementEnq(GLvec3(-1.f, -1.f, -1.f)); // 2
-    vbuf->elementEnq(GLvec3(-1.f, 1.f, -1.f)); // 3
-    vbuf->elementEnq(GLvec3(1.f, 1.f, 1.f)); // 4
-    vbuf->elementEnq(GLvec3(1.f, -1.f, 1.f)); // 5
-    vbuf->elementEnq(GLvec3(-1.f, -1.f, 1.f)); // 6
-    vbuf->elementEnq(GLvec3(-1.f, 1.f, 1.f)); // 7
+    Ptr<MutableAttributeBuffer<MeshVertex>> vbuf(new MutableAttributeBuffer<MeshVertex>("", GL_STATIC_DRAW));
+    MeshVertex vertex;
+
+    vertex.position = GLvec3(1.f, 1.f, -1.f); // 0
+    vbuf->elementEnq(vertex);
+    vertex.position = GLvec3(1.f, -1.f, -1.f);
+    vbuf->elementEnq(vertex); // 1
+    vertex.position = GLvec3(-1.f, -1.f, -1.f);
+    vbuf->elementEnq(vertex); // 2
+    vertex.position = GLvec3(-1.f, 1.f, -1.f);
+    vbuf->elementEnq(vertex); // 3
+    vertex.position = GLvec3(1.f, 1.f, 1.f);
+    vbuf->elementEnq(vertex); // 4
+    vertex.position = GLvec3(1.f, -1.f, 1.f);
+    vbuf->elementEnq(vertex); // 5
+    vertex.position = GLvec3(-1.f, -1.f, 1.f);
+    vbuf->elementEnq(vertex); // 6
+    vertex.position = GLvec3(-1.f, 1.f, 1.f);
+    vbuf->elementEnq(vertex); // 7
 
     Ptr<IndexBuffer> ibuf(new IndexBuffer("buf"));
     ibuf->elementEnq(0); ibuf->elementEnq(1);
@@ -49,7 +59,7 @@ BoundsRenderer::BoundsRenderer(Ptr<AssetTable> manager) {
     ibuf->elementEnq(5); ibuf->elementEnq(6);
     ibuf->elementEnq(6); ibuf->elementEnq(7);
 
-    unitCube_->attributeBufferIs("position", vbuf);
+    unitCube_->attributeBufferIs(vbuf);
     unitCube_->indexBufferIs(ibuf);
     unitCube_->statusIs(Mesh::SYNCED);
 }
