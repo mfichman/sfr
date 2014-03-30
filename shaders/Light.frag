@@ -55,7 +55,7 @@ LightingInfo lightingInfo() {
     info.Kd = texture(diffuseBuffer, info.viewport).rgb;
     info.Ke = texture(emissiveBuffer, info.viewport).rgb;
     info.Ks = temp.rgb;
-    info.alpha = temp.a;
+    info.alpha = temp.a*1000;
 
     // Sample the normal vector for the pixel
     info.N = normalize(texture(normalBuffer, info.viewport).xyz * 2. - 1.);
