@@ -16,7 +16,7 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
 
 	GLuint formats[] = {
 		GL_RGB, // Diffuse
-		GL_RGBA16F, // Specular
+		GL_RGBA, // Specular
 		GL_RGB16F, // Normal
 		GL_RGB16F, // Position
         GL_RGB, // Emissive 
