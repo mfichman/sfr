@@ -16,7 +16,7 @@
 #include "sfr/ModelRenderer.hpp"
 #include "sfr/Transform.hpp"
 #include "sfr/Texture.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -50,14 +50,14 @@ void ModelRenderer::operator()(Ptr<Model> model) {
 }
 
 void ModelRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer() || !world() || !world()->camera()) {
+    if (!mesh || !mesh->indexBuffer() || !scene() || !scene()->camera()) {
         return;
     }
 
     mesh->statusIs(Mesh::SYNCED);
 
     // Calculate the normal matrix and pass it to the vertex shader
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Matrix normalMatrix = camera->viewTransform() * worldTransform();
     normalMatrix = normalMatrix.inverse();
     normalMatrix = normalMatrix.transpose();

@@ -36,15 +36,15 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     renderTarget_.reset(new DeferredRenderTarget(width, height));
 }
 
-void DeferredRenderer::operator()(Ptr<World> world) {
+void DeferredRenderer::operator()(Ptr<Scene> scene) {
 
     // Generate shadows
-    shadowPass_->operator()(world);
+    shadowPass_->operator()(scene);
 
     // Pass 1: Write material properties into the material G-Buffers
     renderTarget_->statusIs(DeferredRenderTarget::ENABLED);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    materialPass_->operator()(world);
+    materialPass_->operator()(scene);
     renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
     
     // Pass 2: Render lighting using light bounding boxes
@@ -60,16 +60,16 @@ void DeferredRenderer::operator()(Ptr<World> world) {
     glBindTexture(GL_TEXTURE_2D, renderTarget_->target(4));
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
-    lightPass_->operator()(world);
+    lightPass_->operator()(scene);
 
     // Pass 3: Skybox
-    skyboxPass_->operator()(world);
+    skyboxPass_->operator()(scene);
 
     // Pass 4: Render transparent objects
-    alphaPass_->operator()(world);
+    alphaPass_->operator()(scene);
 
     // Pass 5: Text/UI rendering
-    uiPass_->operator()(world);
+    uiPass_->operator()(scene);
 }
 
 

@@ -15,7 +15,7 @@ namespace sfr {
 /* Updates node transformations in the scene graph */
 class TransformUpdater : public Node::Functor {
 public:
-    void operator()(Ptr<World> world);
+    void operator()(Ptr<Scene> scene);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<Camera> camera);
     void operator()(Ptr<Model> model);
@@ -29,7 +29,7 @@ public:
     void operator()(Ptr<Text> text);
 
 private:
-    Ptr<World> world_;
+    Ptr<Scene> scene_;
     Matrix transform_;
 };
 

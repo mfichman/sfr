@@ -21,6 +21,7 @@ void LightProgram::onLink() {
     depthBuffer_ = glGetUniformLocation(id(), "depthBuffer");
     diffuse_ = glGetUniformLocation(id(), "Ld");
     specular_ = glGetUniformLocation(id(), "Ls");
+    ambient_ = glGetUniformLocation(id(), "La");
     backDiffuse_ = glGetUniformLocation(id(), "Ldb");
     atten0_ = glGetUniformLocation(id(), "atten0");
     atten1_ = glGetUniformLocation(id(), "atten1");

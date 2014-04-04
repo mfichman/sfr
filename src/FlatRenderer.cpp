@@ -13,7 +13,7 @@
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/Model.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -39,13 +39,13 @@ void FlatRenderer::operator()(Ptr<Model> model) {
 }
 
 void FlatRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer() || !world() || !world()->camera()) {
+    if (!mesh || !mesh->indexBuffer() || !scene() || !scene()->camera()) {
         return;
     }
     mesh->statusIs(Mesh::SYNCED);
 
     // Pass the model matrix to the vertex shader
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Matrix const transform = camera->transform() * worldTransform();
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 

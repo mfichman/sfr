@@ -17,6 +17,7 @@ HemiLight::HemiLight() {
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
     backDiffuseColor_ = Color(0.f, 0.f, 0.f, 1.f);
+    ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
     direction_ = Vector(-1.f, 0.f, 0.f);
     shadowViewDistance_ = 20; // Indicates that the whole view frustum should be shadowed.
 }
@@ -31,6 +32,10 @@ Color const& HemiLight::backDiffuseColor() const {
 
 Color const& HemiLight::specularColor() const {
     return specularColor_;
+}
+
+Color const& HemiLight::ambientColor() const {
+    return ambientColor_;
 }
 
 Vector const& HemiLight::direction() const { 
@@ -90,6 +95,10 @@ void HemiLight::backDiffuseColorIs(Color const& backDiffuse) {
 
 void HemiLight::specularColorIs(Color const& specular) {
     specularColor_ = specular;
+}
+
+void HemiLight::ambientColorIs(Color const& ambient) {
+    ambientColor_ = ambient;
 }
 
 void HemiLight::directionIs(Vector const& direction) {

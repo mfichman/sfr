@@ -18,7 +18,7 @@
 #include "sfr/PointLight.hpp"
 #include "sfr/SpotLight.hpp"
 #include "sfr/Transform.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -92,7 +92,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     // Render a hemi light, that is, a light that has a color for faces facing
     // the light direction, and another color for faces that face away from the
     // light direction, with attenuation.
-    if (!world() || !world()->camera()) {
+    if (!scene() || !scene()->camera()) {
         return;
     }
 
@@ -102,12 +102,13 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform3fv(program_->diffuse(), 1, light->diffuseColor().vec4f());
     glUniform3fv(program_->backDiffuse(), 1, light->backDiffuseColor().vec4f());
     glUniform3fv(program_->specular(), 1, light->specularColor().vec4f());
+    glUniform3fv(program_->ambient(), 1, light->ambientColor().vec4f());
     glUniform1f(program_->atten0(), light->constantAttenuation());
     glUniform1f(program_->atten1(), light->linearAttenuation());
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
 
-    // Transform the light direction from world space into view space
-    Matrix transform = worldTransform() * world()->camera()->viewTransform();
+    // Transform the light direction from scene space into view space
+    Matrix transform = worldTransform() * scene()->camera()->viewTransform();
     Vector direction = transform.normal(light->direction()).unit();
     glUniform3fv(program_->direction(), 1, direction.vec3f());
 
@@ -131,7 +132,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         mesh->statusIs(Mesh::SYNCED);
 
         // Set up the view, projection, and inverse projection transforms
-        Ptr<Camera> camera = world()->camera();
+        Ptr<Camera> camera = scene()->camera();
         Matrix inverseProjection = camera->projectionTransform().inverse();
         glUniformMatrix4fv(program_->transform(), 1, 0, Matrix().mat4f()); // Identity
         glUniformMatrix4fv(program_->modelView(), 1, 0, Matrix().mat4f()); // Identity
@@ -156,7 +157,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
 }
 
 void LightRenderer::operator()(Ptr<SpotLight> light) {
-    if (!world() || !world()->camera()) {
+    if (!scene() || !scene()->camera()) {
         return;
     }
 
@@ -174,7 +175,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform1f(program_->spotPower(), light->spotPower());
 
     // Transform the light direction from into view space
-    Matrix transform = world()->camera()->viewTransform() * worldTransform();
+    Matrix transform = scene()->camera()->viewTransform() * worldTransform();
     Vector direction = transform.normal(light->direction()).unit();
     glUniform3fv(program_->direction(), 1, direction.vec3f());
 
@@ -215,7 +216,7 @@ void LightRenderer::operator()(Ptr<Mesh> mesh) {
     mesh->statusIs(Mesh::SYNCED);
 
     // Set up the view, projection, and inverse projection transforms
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Matrix const inverseProjection = camera->projectionTransform().inverse();
     Matrix const transform = camera->transform() * worldTransform();
     Matrix const modelView = camera->viewTransform() * worldTransform();

@@ -12,7 +12,7 @@
 #include "sfr/Ribbon.hpp"
 #include "sfr/StreamDrawBuffer.hpp"
 #include "sfr/Texture.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -59,7 +59,7 @@ void RibbonRenderer::onState() {
 void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     if (!ribbon->isVisible()) { return; }
 
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Ptr<Texture> texture = ribbon->texture();
 
     glActiveTexture(GL_TEXTURE0);

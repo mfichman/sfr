@@ -21,6 +21,7 @@ public:
     Color const& diffuseColor() const;
     Color const& backDiffuseColor() const;
     Color const& specularColor() const;
+    Color const& ambientColor() const;
     Vector const& direction() const;
     Scalar constantAttenuation() const;
     Scalar linearAttenuation() const;
@@ -33,6 +34,7 @@ public:
     void diffuseColorIs(Color const& color);
     void backDiffuseColorIs(Color const& color);
     void specularColorIs(Color const& color);
+    void ambientColorIs(Color const& color);
     void directionIs(Vector const& direction);
     void constantAttenuationIs(Scalar atten);
     void linearAttenuationIs(Scalar atten);
@@ -47,6 +49,7 @@ private:
     Color diffuseColor_;
     Color backDiffuseColor_;
     Color specularColor_;
+    Color ambientColor_;
     Vector direction_;
     Scalar constantAttenuation_;
     Scalar linearAttenuation_;

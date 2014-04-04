@@ -13,7 +13,7 @@
 #include "sfr/Particles.hpp"
 #include "sfr/StreamDrawBuffer.hpp"
 #include "sfr/Texture.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -61,7 +61,7 @@ void ParticleRenderer::onState() {
 void ParticleRenderer::operator()(Ptr<Particles> particles) {
     if (!particles->isVisible()) { return; }
 
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Ptr<Texture> texture = particles->texture();
 
     glActiveTexture(GL_TEXTURE0);

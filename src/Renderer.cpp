@@ -8,14 +8,14 @@
 #include "sfr/Common.hpp"
 #include "sfr/Renderer.hpp"
 #include "sfr/Transform.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 namespace sfr {
 
-void Renderer::operator()(Ptr<World> world) {
+void Renderer::operator()(Ptr<Scene> scene) {
     stateIs(ACTIVE);
-    worldIs(world);
-    for(Iterator<std::set<RenderDesc>> i = world->renderDescs(); i; i++) {
+    sceneIs(scene);
+    for(Iterator<std::set<RenderDesc>> i = scene->renderDescs(); i; i++) {
         worldTransformIs(i->worldTransform());
         i->node()->operator()(std::static_pointer_cast<Renderer>(shared_from_this()));
     }
@@ -26,8 +26,8 @@ void Renderer::worldTransformIs(Matrix const& transform) {
     worldTransform_ = transform;
 }
 
-void Renderer::worldIs(Ptr<World> world) {
-    world_ = world;
+void Renderer::sceneIs(Ptr<Scene> scene) {
+    scene_ = scene;
 }
 
 void Renderer::stateIs(State state) {
@@ -41,8 +41,8 @@ Matrix const& Renderer::worldTransform() const {
     return worldTransform_;
 }
 
-Ptr<World> Renderer::world() const {
-    return world_;
+Ptr<Scene> Renderer::scene() const {
+    return scene_;
 }
 
 Renderer::State Renderer::state() const {

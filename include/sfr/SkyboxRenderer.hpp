@@ -15,10 +15,10 @@ namespace sfr {
 class SkyboxRenderer : public Renderer {
 public:
     SkyboxRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
+    void operator()(Ptr<Scene> scene);
 
 private:
-    Ptr<World> world_;
+    Ptr<Scene> scene_;
     Ptr<Program> program_;
     Ptr<Mesh> unitSphere_;
 

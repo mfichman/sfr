@@ -13,7 +13,7 @@
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/Texture.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -45,7 +45,7 @@ void QuadRenderer::onState() {
 
 void QuadRenderer::operator()(Ptr<Quad> quad) {
     // Render a single quad 
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Ptr<Texture> texture = quad->texture();
     if (!texture) { return; }
 
@@ -65,7 +65,7 @@ void QuadRenderer::operator()(Ptr<Quad> quad) {
         Quaternion rotation(right, up, look);
         transform = Matrix::Matrix(rotation, origin) * scale;
     } else {
-        // Render the quad using the world transform rotation.
+        // Render the quad using the scene transform rotation.
         transform = worldTransform() * scale;
     }
        

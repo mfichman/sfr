@@ -6,49 +6,49 @@
  *****************************************************************************/
 
 #include "sfr/Common.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 #include "sfr/Ui.hpp"
 
 using namespace sfr;
 
-World::World() {
+Scene::Scene() {
     root_.reset(new Transform("root"));
     ui_.reset(new Ui);
 }
 
-Ptr<Transform> World::root() const {
+Ptr<Transform> Scene::root() const {
     return root_;
 }
 
-Ptr<Camera> World::camera() const {
+Ptr<Camera> Scene::camera() const {
     return camera_;
 }
 
-Ptr<Cubemap> World::skybox() const {
+Ptr<Cubemap> Scene::skybox() const {
     return skybox_;
 }
 
-Ptr<Ui> World::ui() const {
+Ptr<Ui> Scene::ui() const {
     return ui_;
 }
 
-Iterator<std::set<RenderDesc>> World::renderDescs() const {
+Iterator<std::set<RenderDesc>> Scene::renderDescs() const {
     return Iterator<std::set<RenderDesc>>(renderDesc_);
 }
 
-void World::cameraIs(Ptr<Camera> camera) {
+void Scene::cameraIs(Ptr<Camera> camera) {
     camera_ = camera;
 }
 
-void World::skyboxIs(Ptr<Cubemap> skybox) {
+void Scene::skyboxIs(Ptr<Cubemap> skybox) {
     skybox_ = skybox;
 }
 
-void World::renderDescIs(RenderDesc const& renderDesc) {
+void Scene::renderDescIs(RenderDesc const& renderDesc) {
     assert(renderDesc_.insert(renderDesc).second);
 
 }
-void World::renderDescDelAll() {
+void Scene::renderDescDelAll() {
     renderDesc_.clear();
 }
 

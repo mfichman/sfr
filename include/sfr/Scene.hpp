@@ -27,9 +27,9 @@ private:
 };
 
 /* Holds the root node and global scene data. */
-class World : public Interface {
+class Scene : public Interface {
 public:
-    World();
+    Scene();
     Ptr<Transform> root() const;
     Ptr<Camera> camera() const;
     Ptr<Cubemap> skybox() const;

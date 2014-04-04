@@ -15,7 +15,7 @@ namespace sfr {
 class DeferredRenderer : public Node::Functor {
 public:
     DeferredRenderer(Ptr<AssetTable> manager);
-    void operator()(Ptr<World> world);
+    void operator()(Ptr<Scene> scene);
 
 private:
     Ptr<ModelRenderer> materialPass_;

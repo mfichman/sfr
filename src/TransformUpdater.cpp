@@ -18,14 +18,14 @@
 #include "sfr/Text.hpp"
 #include "sfr/Transform.hpp"
 #include "sfr/TransformUpdater.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
-void TransformUpdater::operator()(Ptr<World> world) {
-    world_ = world;
-    world_->renderDescDelAll();
-    operator()(world_->root());
+void TransformUpdater::operator()(Ptr<Scene> scene) {
+    scene_ = scene;
+    scene_->renderDescDelAll();
+    operator()(scene_->root());
 }
 
 void TransformUpdater::operator()(Ptr<Transform> transform) {
@@ -52,39 +52,39 @@ void TransformUpdater::operator()(Ptr<Camera> camera) {
 }
 
 void TransformUpdater::operator()(Ptr<Model> model) {
-    world_->renderDescIs(RenderDesc(model, 0, transform_));
+    scene_->renderDescIs(RenderDesc(model, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<PointLight> light) {
-    world_->renderDescIs(RenderDesc(light, 0, transform_));
+    scene_->renderDescIs(RenderDesc(light, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<HemiLight> light) {
-    world_->renderDescIs(RenderDesc(light, 0, transform_));
+    scene_->renderDescIs(RenderDesc(light, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<SpotLight> light) {
-    world_->renderDescIs(RenderDesc(light, 0, transform_));
+    scene_->renderDescIs(RenderDesc(light, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Particles> particles) {
-    world_->renderDescIs(RenderDesc(particles, 0, transform_));
+    scene_->renderDescIs(RenderDesc(particles, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Ribbon> ribbon) {
-    world_->renderDescIs(RenderDesc(ribbon, 0, transform_));
+    scene_->renderDescIs(RenderDesc(ribbon, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Billboards> billboards) {
-    world_->renderDescIs(RenderDesc(billboards, 0, transform_));
+    scene_->renderDescIs(RenderDesc(billboards, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Quad> quad) {
-    world_->renderDescIs(RenderDesc(quad, 0, transform_));
+    scene_->renderDescIs(RenderDesc(quad, 0, transform_));
 }
 
 void TransformUpdater::operator()(Ptr<Text> text) {
-    world_->renderDescIs(RenderDesc(text, 0, transform_));
+    scene_->renderDescIs(RenderDesc(text, 0, transform_));
 }
 
 

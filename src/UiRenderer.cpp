@@ -14,7 +14,7 @@
 #include "sfr/Text.hpp"
 #include "sfr/Ui.hpp"
 #include "sfr/UiRenderer.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 
 using namespace sfr;
@@ -24,18 +24,18 @@ UiRenderer::UiRenderer(Ptr<AssetTable> assets) {
     textProgram_->statusIs(Program::LINKED);
 }
 
-void UiRenderer::operator()(Ptr<World> world) {
+void UiRenderer::operator()(Ptr<Scene> scene) {
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(GL_FALSE);
 
-    world_ = world;
+    scene_ = scene;
     rect_.x = 0;
     rect_.y = 0;
-    rect_.width = GLfloat(world->camera()->viewportWidth());
-    rect_.height = GLfloat(world->camera()->viewportHeight());
-    operator()(world->ui());
+    rect_.width = GLfloat(scene->camera()->viewportWidth());
+    rect_.height = GLfloat(scene->camera()->viewportHeight());
+    operator()(scene->ui());
 
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
@@ -76,7 +76,7 @@ void UiRenderer::operator()(Ptr<Text> text) {
     glUniform1i(textProgram_->sdf(), font->type()==Font::SDF);
 
     // Pass the matrices to the vertex shader
-    Ptr<Camera> camera = world_->camera();
+    Ptr<Camera> camera = scene_->camera();
     GLfloat width = GLfloat(camera->viewportWidth());
     GLfloat height = GLfloat(camera->viewportHeight());
     Matrix view = Matrix::ortho(0, width, height, 0, -1, 1);

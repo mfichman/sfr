@@ -7,13 +7,13 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/NullFunctor.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
 
-void NullFunctor::operator()(Ptr<World> world) {
-    world->root()->operator()(std::static_pointer_cast<NullFunctor>(shared_from_this()));
+void NullFunctor::operator()(Ptr<Scene> scene) {
+    scene->root()->operator()(std::static_pointer_cast<NullFunctor>(shared_from_this()));
 }
 
 void NullFunctor::operator()(Ptr<Camera> camera) {

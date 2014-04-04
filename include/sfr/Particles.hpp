@@ -19,7 +19,7 @@ public:
     GLvec3 position; // Position of the particle
     GLvec3 velocity; // Velocity of the particle
     GLvec4 color; // Color blend of the particle
-    GLfloat size; // Size of the particle in world coordinates
+    GLfloat size; // Size of the particle in scene coordinates
     GLfloat rotation; // Texture rotation about view z-axis
 };
 

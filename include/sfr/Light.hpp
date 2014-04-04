@@ -24,6 +24,7 @@ public:
     GLint depthBuffer() const { return depthBuffer_; }
     GLint diffuse() const { return diffuse_; }
     GLint specular() const { return specular_; }
+    GLint ambient() const { return ambient_; }
     GLint backDiffuse() const { return backDiffuse_; }
     GLint atten0() const { return atten0_; }
     GLint atten1() const { return atten1_; }
@@ -50,6 +51,7 @@ private:
     GLint depthBuffer_ = -1;
     GLint diffuse_ = -1;
     GLint specular_ = -1;
+    GLint ambient_ = -1;
     GLint backDiffuse_ = -1;
     GLint atten0_ = -1;
     GLint atten1_ = -1;

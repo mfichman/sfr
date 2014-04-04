@@ -13,27 +13,27 @@
 
 namespace sfr {
 
-/* Base class for all renderers.  Keeps track of the world transform */
+/* Base class for all renderers.  Keeps track of the scene transform */
 class Renderer : public Node::Functor {
 public:
     enum State { ACTIVE, INACTIVE };
 
-    Matrix const& worldTransform() const; // Current world transform
+    Matrix const& worldTransform() const; // Current scene transform
     State state() const;
-    Ptr<World> world() const;
+    Ptr<Scene> scene() const;
 
     void worldTransformIs(Matrix const& transform);
-    void worldIs(Ptr<World> world);
+    void sceneIs(Ptr<Scene> scene);
     void stateIs(State state);
 
-    void operator()(Ptr<World> world);
+    void operator()(Ptr<Scene> scene);
 
     virtual void onState() {}
 
 private:
     Matrix worldTransform_;
     State state_ = INACTIVE;
-    Ptr<World> world_;
+    Ptr<Scene> scene_;
 };
 
 }

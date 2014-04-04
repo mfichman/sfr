@@ -13,7 +13,7 @@
 #include "sfr/IndexBuffer.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/Program.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 #include "sfr/SkyboxRenderer.hpp"
 
 using namespace sfr;
@@ -29,15 +29,15 @@ SkyboxRenderer::SkyboxRenderer(Ptr<AssetTable> manager) {
 }
 
 
-void SkyboxRenderer::operator()(Ptr<World> world) {
-    Ptr<Camera> camera = world->camera();
-    Ptr<Cubemap> cubemap = world->skybox();
+void SkyboxRenderer::operator()(Ptr<Scene> scene) {
+    Ptr<Camera> camera = scene->camera();
+    Ptr<Cubemap> cubemap = scene->skybox();
     if (!camera) { return; }
     if (!cubemap) { return; }
 
     glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
-    world_ = world;
+    scene_ = scene;
 
     Matrix const view = Matrix::rotate(camera->viewTransform().rotation());
     Matrix const transform = camera->projectionTransform() * view;

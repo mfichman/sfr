@@ -14,7 +14,7 @@
 #include "sfr/Mesh.hpp"
 #include "sfr/StreamDrawBuffer.hpp"
 #include "sfr/Texture.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -65,7 +65,7 @@ void BillboardRenderer::operator()(Ptr<Billboards> billboards) {
     // Render a single billboard 
     if (!billboards->isVisible()) { return; }
 
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Ptr<Texture> texture = billboards->texture();
 
     glActiveTexture(GL_TEXTURE0);

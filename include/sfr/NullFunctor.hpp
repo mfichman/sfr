@@ -14,7 +14,7 @@ namespace sfr {
 /* Empty functor implementation for performance testing */
 class NullFunctor : public Node::Functor {
 public:
-    void operator()(Ptr<World> world);
+    void operator()(Ptr<Scene> scene);
     void operator()(Ptr<Camera> camera);
     void operator()(Ptr<Transform> transform);
     void operator()(Ptr<PointLight> light);

@@ -18,12 +18,12 @@ namespace sfr {
 class UiRenderer : public Node::Functor {
 public:
     UiRenderer(Ptr<AssetTable> assets);
-    void operator()(Ptr<World> world);
+    void operator()(Ptr<Scene> scene);
     void operator()(Ptr<Ui> ui);
     void operator()(Ptr<Text> text);
 
 private:
-    Ptr<World> world_;
+    Ptr<Scene> scene_;
     Ptr<TextProgram> textProgram_;
     Rect rect_;
 };

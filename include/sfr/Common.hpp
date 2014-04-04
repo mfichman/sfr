@@ -126,7 +126,7 @@ class Ui;
 class UiRenderer;
 class Vector;
 class WavefrontLoader;
-class World;
+class Scene;
 
 
 class GLmat4 {

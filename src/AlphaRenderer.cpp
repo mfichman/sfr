@@ -42,7 +42,7 @@ void AlphaRenderer::rendererIs(Ptr<Renderer> renderer) {
         }
         renderer_ = renderer;
         if (renderer_) {
-            renderer_->worldIs(world());
+            renderer_->sceneIs(scene());
             renderer_->stateIs(Renderer::ACTIVE);
         }
     } 

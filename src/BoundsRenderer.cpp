@@ -15,7 +15,7 @@
 #include "sfr/Model.hpp"
 #include "sfr/SpotLight.hpp"
 #include "sfr/Transform.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -80,7 +80,7 @@ void BoundsRenderer::operator()(Ptr<Model> model) {
 }
 
 void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer() || !world() || !world()->camera()) {
+    if (!mesh || !mesh->indexBuffer() || !scene() || !scene()->camera()) {
         return;
     }
 
@@ -90,13 +90,13 @@ void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
 
     Matrix translate = Matrix::translate(pos);
     Matrix scale = Matrix::scale(d.x, d.y, d.z);  
-    Matrix worldLocal = worldTransform() * translate * scale;
+    Matrix sceneLocal = worldTransform() * translate * scale;
 
     unitCube_->statusIs(Mesh::SYNCED);
 
     // Pass the model matrix to the vertex shader
-    Ptr<Camera> camera = world()->camera();
-    Matrix const transform = camera->transform() * worldLocal;
+    Ptr<Camera> camera = scene()->camera();
+    Matrix const transform = camera->transform() * sceneLocal;
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
@@ -107,7 +107,7 @@ void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
 }
 
 void BoundsRenderer::operator()(Ptr<SpotLight> light) {
-    if (!world() || !world()->camera()) {
+    if (!scene() || !scene()->camera()) {
         return;
     }
 
@@ -128,10 +128,10 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    Matrix worldLocal = worldTransform() * rotate * scale;
+    Matrix sceneLocal = worldTransform() * rotate * scale;
 
-    Ptr<Camera> camera = world()->camera();
-    Matrix const transform = camera->transform() * worldLocal;
+    Ptr<Camera> camera = scene()->camera();
+    Matrix const transform = camera->transform() * sceneLocal;
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     Ptr<IndexBuffer> buffer = unitCone_->indexBuffer();

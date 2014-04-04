@@ -12,7 +12,7 @@
 #include "sfr/Font.hpp"
 #include "sfr/Text.hpp"
 #include "sfr/TextRenderer.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -39,7 +39,7 @@ void TextRenderer::onState() {
 }
 
 void TextRenderer::operator()(Ptr<Text> text) {
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
     Ptr<Font> font = text->font();
     if (!font) { return; }
 

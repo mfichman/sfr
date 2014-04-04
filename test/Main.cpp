@@ -14,7 +14,7 @@ Ptr<sfr::AssetLoader> assetLoader;
 Ptr<sfr::DeferredRenderer> deferredRenderer;
 Ptr<sfr::TransformUpdater> updater;
 Ptr<sfr::BoundsRenderer> boundsRenderer;
-Ptr<sfr::World> world;
+Ptr<sfr::Scene> scene;
 Ptr<sfr::Transform> camera;
 Ptr<sfr::Transform> lightNode;
 Ptr<sfr::Particles> particles;
@@ -61,8 +61,8 @@ void initWindow() {
     deferredRenderer.reset(new sfr::DeferredRenderer(assets));
     updater.reset(new sfr::TransformUpdater);
     boundsRenderer.reset(new sfr::BoundsRenderer(assets));
-    world.reset(new sfr::World());
-    root = world->root();
+    scene.reset(new sfr::Scene());
+    root = scene->root();
 }
 
 
@@ -72,8 +72,8 @@ void initCamera() {
     cam->viewportWidthIs(window->getSize().x);
     cam->viewportHeightIs(window->getSize().y);
     std::cout << cam->viewportWidth() << std::endl;
-    world->cameraIs(cam);
-    world->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
+    scene->cameraIs(cam);
+    scene->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
 }
 
 void initLights() {
@@ -189,7 +189,7 @@ void initFonts() {
     text->colorIs(sfr::Color(1.f, .4f, .1f, 1.f));
 
     Ptr<sfr::Font> font2 = assets->assetIs<sfr::Font>("fonts/Ethnocentric.ttf#40");
-    Ptr<sfr::Ui> ui = world->ui()->childIs<sfr::Ui>();
+    Ptr<sfr::Ui> ui = scene->ui()->childIs<sfr::Ui>();
     ui->xIs(sfr::Coord::center());
     ui->yIs(sfr::Coord::center());
     ui->heightIs(sfr::Span(50, sfr::Span::PIXELS));
@@ -266,9 +266,9 @@ void runRenderLoop() {
         perfClock.restart();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        updater->operator()(world);
-        deferredRenderer->operator()(world);
-        //boundsRenderer->operator()(world);
+        updater->operator()(scene);
+        deferredRenderer->operator()(scene);
+        //boundsRenderer->operator()(scene);
 
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;

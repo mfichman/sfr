@@ -14,7 +14,7 @@
 #include "sfr/Model.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/TransparencyRenderer.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -52,11 +52,11 @@ void TransparencyRenderer::operator()(Ptr<Model> model) {
 }
 
 void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
-    if (!mesh || !mesh->indexBuffer() || !world() || !world()->camera()) {
+    if (!mesh || !mesh->indexBuffer() || !scene() || !scene()->camera()) {
         return;
     }
 
-    Ptr<Camera> camera = world()->camera();
+    Ptr<Camera> camera = scene()->camera();
 
     // Pass the matrices to the vertex shader
     Matrix const transform = camera->transform() * worldTransform();

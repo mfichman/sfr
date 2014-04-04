@@ -14,7 +14,7 @@
 #include "sfr/PointLight.hpp"
 #include "sfr/ShadowRenderer.hpp"
 #include "sfr/SpotLight.hpp"
-#include "sfr/World.hpp"
+#include "sfr/Scene.hpp"
 
 using namespace sfr;
 
@@ -49,8 +49,8 @@ void ShadowRenderer::operator()(Ptr<PointLight> light) {
     //lightCamera->viewportHeightIs();
 
     // Save current camera
-    Ptr<Camera> sceneCamera = world()->camera();
-    world()->cameraIs(lightCamera);
+    Ptr<Camera> sceneCamera = scene()->camera();
+    scene()->cameraIs(lightCamera);
 
     for (int i = 0; i < 6; i++) {
 /*
@@ -64,12 +64,12 @@ void ShadowRenderer::operator()(Ptr<PointLight> light) {
 
         // Render the scene into the cube map face
         light->shadowMap()->statusIs(axis[i]);
-        flatRenderer_(world());
+        flatRenderer_(scene());
 */
     }
 
     //light->shadowMap()->statusIs(CubeDepthRenderTarget::DISABLED);
-    world()->cameraIs(sceneCamera);
+    scene()->cameraIs(sceneCamera);
 }
 
 void ShadowRenderer::operator()(Ptr<HemiLight> light) {
@@ -91,7 +91,7 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     // Calculate the orthographic projection bounds for the light.  The bounds
     // should include the entire view frustum, up to the shadow light view
     // distance.
-    Ptr<Camera> sceneCamera = world()->camera();
+    Ptr<Camera> sceneCamera = scene()->camera();
 
     // Transform the view frustum into light space
     float far = sceneCamera->far();
@@ -149,9 +149,9 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     glClear(GL_DEPTH_BUFFER_BIT); 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-    world()->cameraIs(lightCamera);
-    flatRenderer_->operator()(world());
-    world()->cameraIs(sceneCamera);
+    scene()->cameraIs(lightCamera);
+    flatRenderer_->operator()(scene());
+    scene()->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
 	glCullFace(GL_BACK);
 
@@ -194,15 +194,15 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     light->transformIs(lightMatrix);
     
     // Save the current view camera
-    Ptr<Camera> sceneCamera = world()->camera();
+    Ptr<Camera> sceneCamera = scene()->camera();
 
     // Render the scene into the shadow map from light perspective
     glClear(GL_DEPTH_BUFFER_BIT); 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
-    world()->cameraIs(lightCamera);
-    flatRenderer_->operator()(world());
-    world()->cameraIs(sceneCamera);
+    scene()->cameraIs(lightCamera);
+    flatRenderer_->operator()(scene());
+    scene()->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
 	glCullFace(GL_BACK);
 

@@ -14,6 +14,7 @@ uniform float atten2;
 uniform vec3 Ld; // Diffuse light intensity
 uniform vec3 Ldb; // Diffuse light intensity (back)
 uniform vec3 Ls; // Specular light intensity
+uniform vec3 La; // Ambient light intensity
 uniform vec3 direction;
 
 in vec3 lightPosition;
@@ -53,6 +54,7 @@ void main() {
         // well.  Currently, on the unlit side, we just ignore the shadow value.
     }
     color.rgb += li.Ke; // Emissive
+    color.rgb += La * li.Kd; // Ambient
     color.a = 1;
 	gl_FragDepth = li.depth;
 }
