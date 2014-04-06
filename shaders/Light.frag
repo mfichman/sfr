@@ -8,7 +8,6 @@
 uniform sampler2D diffuseBuffer;
 uniform sampler2D specularBuffer;
 uniform sampler2D normalBuffer;
-uniform sampler2D positionBuffer;
 uniform sampler2D emissiveBuffer;
 uniform sampler2D depthBuffer;
 
@@ -16,7 +15,7 @@ uniform sampler2DShadow shadowMap;
 uniform float shadowMapSize;
 
 uniform mat4 unprojectMatrix; // Back to view coordinates from clip coordinates
-uniform mat4 lightMatrix; // From eye coordinates to light space
+uniform mat4 lightMatrix; // From _eye coordinates_ (!!) to light space
 
 in vec4 position;
 
@@ -73,17 +72,8 @@ float shadowPoissonPcf(in LightingInfo li) {
         return 1.;
     }
 
-    // Get the world position from the position G-buffer.  Note that this 
-    // requires the position G-buffer to have a decent amount of precision
-    // per component (preferrably 16-bit float or higher)
-    vec3 world = texture(positionBuffer, li.viewport).xyz;
-
-    // Transform the world coordinates to light space and renormalize
-    vec4 shadowCoord = lightMatrix * vec4(world, 1.);
-
-    //float shadow = textureProj(shadowMap, shadowCoord);
-    //return shadow * shadowIntensity;
-    //return vec3(textureProj(shadowMap, shadowCoord));
+    // Transform the view coordinates to light space and renormalize
+    vec4 shadowCoord = lightMatrix * vec4(li.view, 1);
 
     float shadow = 0.f;
     for (float y = -1.5; y <= 1.5; y += 1.0) {

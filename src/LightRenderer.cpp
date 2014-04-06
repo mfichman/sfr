@@ -95,8 +95,9 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     if (!scene() || !scene()->camera()) {
         return;
     }
-
     operator()(hemiLight_);
+
+    Ptr<Camera> camera = scene()->camera();
 
     // Set the light color, attenuation, and direction properties
     glUniform3fv(program_->diffuse(), 1, light->diffuseColor().vec4f());
@@ -120,7 +121,10 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     } else {
         glUniform1f(program_->shadowMapSize(), 0);
     }
-    glUniformMatrix4fv(program_->light(), 1, 0, light->transform().mat4f());
+    // Set the light matrix in the shader, which transforms from view => light space.
+    // This matrix is used for shadow mapping
+    Matrix viewToLightTransform = light->transform() * camera->viewTransform().inverse();
+    glUniformMatrix4fv(program_->light(), 1, 0, viewToLightTransform.mat4f());
 
     // Calculate the model transform, and scale the model to cover the light's 
     // area of effect.
@@ -132,7 +136,6 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         mesh->statusIs(Mesh::SYNCED);
 
         // Set up the view, projection, and inverse projection transforms
-        Ptr<Camera> camera = scene()->camera();
         Matrix inverseProjection = camera->projectionTransform().inverse();
         glUniformMatrix4fv(program_->transform(), 1, 0, Matrix().mat4f()); // Identity
         glUniformMatrix4fv(program_->modelView(), 1, 0, Matrix().mat4f()); // Identity
@@ -163,6 +166,8 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
 
     operator()(spotLight_);
 
+    Ptr<Camera> camera = scene()->camera();
+
     // Set the light color, attenuation, and direction properties
     glUniform3fv(program_->diffuse(), 1, light->diffuseColor().vec4f());
     glUniform3fv(program_->specular(), 1, light->specularColor().vec4f());
@@ -187,7 +192,10 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     } else {
         glUniform1f(program_->shadowMapSize(), 0);
     }
-    glUniformMatrix4fv(program_->light(), 1, 0, light->transform().mat4f());
+    // Set the light matrix in the shader, which transforms from view => light space.
+    // This matrix is used for shadow mapping
+    Matrix viewToLightTransform = light->transform() * camera->viewTransform().inverse();
+    glUniformMatrix4fv(program_->light(), 1, 0, viewToLightTransform.mat4f());
 
     // Save the old model matrix
     Matrix previous = worldTransform();

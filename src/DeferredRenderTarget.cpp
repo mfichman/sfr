@@ -11,16 +11,15 @@
 using namespace sfr;
 
 DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
-    target_.resize(5);
     status_ = DISABLED;
 
 	GLuint formats[] = {
 		GL_RGB, // Diffuse
 		GL_RGBA, // Specular
-		GL_RGB16F, // Normal
-		GL_RGB16F, // Position
+		GL_RGB16F, // Normal (needs pretty good precision)
         GL_RGB, // Emissive 
 	};
+    target_.resize(sizeof(formats)/sizeof(*formats));
             
     // Initialize the framebuffer, which will hold all of the target textures
     glGenFramebuffers(1, &id_);

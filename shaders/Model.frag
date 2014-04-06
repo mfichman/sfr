@@ -26,8 +26,7 @@ in vec2 texCoord;
 layout(location=0) out vec3 material;
 layout(location=1) out vec4 specular;
 layout(location=2) out vec3 normalOut;
-layout(location=3) out vec3 worldPosition;
-layout(location=4) out vec3 emissive;
+layout(location=3) out vec3 emissive;
 
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
@@ -58,11 +57,6 @@ void main() {
 
 	// Save the normal vector in view space
 	normalOut = (TBN * Tn + 1.) / 2.;
-
-    // Save the world position.  Note: gl_FragData[3] MUST have be at least a 
-	// 16-bit float per component, otherwise the position will be clipped to
-	// the range [0,1)
-    worldPosition = position;
 
     // Emissive color
     emissive = Te * Ke;
