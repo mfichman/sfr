@@ -23,7 +23,7 @@ public:
     GLuint id() const;
     GLuint elementCount() const;
     GLuint elementSize() const;
-    GLuint element(GLuint index) const;
+    GLuint const& element(GLuint index) const;
     Status status() const;
 
     void elementCountIs(GLuint count);

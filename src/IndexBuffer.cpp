@@ -38,7 +38,7 @@ GLuint IndexBuffer::elementSize() const {
     return sizeof(GLuint);
 }
        
-GLuint IndexBuffer::element(GLuint index) const {
+GLuint const& IndexBuffer::element(GLuint index) const {
     return element_[index];
 }
 
