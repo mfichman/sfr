@@ -8,6 +8,7 @@ SFR features:
 * Shadow mapping (directional & spotlight)
 * Particles
 * Normal, emissive, and specular maps
+* Point, spot & directional Phong lighting
 * Transparency
 * OBJ file loader
 
