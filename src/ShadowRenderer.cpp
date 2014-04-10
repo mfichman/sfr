@@ -79,14 +79,14 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
 
     // Set the viewport to be equal in dimensions to the shadow target.
     glViewport(0, 0, light->shadowMap()->width(), light->shadowMap()->height());
-	light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
+    light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
 
     // Set up the view matrix for the virtual light camera
-	// Transform to the center of the light, then point in the reverse of the light 
-	// direction.  Then, invert the matrix so that it is a view matrix.  
+    // Transform to the center of the light, then point in the reverse of the light 
+    // direction.  Then, invert the matrix so that it is a view matrix.  
     // FIXME: This doesn't seem quite right.
     Matrix look = Matrix::look(-light->direction());
-	Matrix view = look.inverse();
+    Matrix view = look.inverse();
 
     // Calculate the orthographic projection bounds for the light.  The bounds
     // should include the entire view frustum, up to the shadow light view
@@ -147,13 +147,13 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
 
     // Render the scene into the shadow map from light perspective
     glClear(GL_DEPTH_BUFFER_BIT); 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
     scene()->cameraIs(lightCamera);
     flatRenderer_->operator()(scene());
     scene()->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
-	glCullFace(GL_BACK);
+    glCullFace(GL_BACK);
 
     // Reset the viewport
     glViewport(0, 0, sceneCamera->viewportWidth(), sceneCamera->viewportHeight());
@@ -166,13 +166,13 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
 
     // Set the viewport to be equal in dimensions to the shadow target.
     glViewport(0, 0, light->shadowMap()->width(), light->shadowMap()->height());
-	light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
+    light->shadowMap()->statusIs(DepthRenderTarget::ENABLED);
 
     // Set up the view matrix for the virtual light camera
-	// Transform to the center of the light, then point in the reverse of the light 
-	// direction.  Then, invert the matrix so that it is a view matrix.  
+    // Transform to the center of the light, then point in the reverse of the light 
+    // direction.  Then, invert the matrix so that it is a view matrix.  
     // FIXME: This doesn't seem quite right.
-	Matrix view = (worldTransform() * Matrix::look(-light->direction())).inverse();
+    Matrix view = (worldTransform() * Matrix::look(-light->direction())).inverse();
 
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
@@ -198,13 +198,13 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
 
     // Render the scene into the shadow map from light perspective
     glClear(GL_DEPTH_BUFFER_BIT); 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
     scene()->cameraIs(lightCamera);
     flatRenderer_->operator()(scene());
     scene()->cameraIs(sceneCamera);
     light->shadowMap()->statusIs(DepthRenderTarget::DISABLED);
-	glCullFace(GL_BACK);
+    glCullFace(GL_BACK);
 
     // Reset the viewport
     glViewport(0, 0, sceneCamera->viewportWidth(), sceneCamera->viewportHeight());

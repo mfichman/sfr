@@ -42,7 +42,7 @@ void LightRenderer::onState() {
         // the positive Z, the fragment is still rendered anyway.  Otherwise, you
         // can get "holes" where the light volume intersects the far clipping
         // plane.
-    	glCullFace(GL_FRONT); 
+        glCullFace(GL_FRONT); 
         // Render the face of the light volume that's furthest from the camera.
         glDepthFunc(GL_ALWAYS);
         // Always render light volume fragments, regardless of depth fail/pass.
@@ -53,7 +53,7 @@ void LightRenderer::onState() {
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
         glDisable(GL_DEPTH_CLAMP);
-    	glCullFace(GL_BACK);
+        glCullFace(GL_BACK);
         glDepthFunc(GL_LESS);
         glBlendFunc(GL_ONE, GL_ZERO);
         operator()(Ptr<Program>());
@@ -202,8 +202,8 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
 
     // Scale model to cover the light's area of effect.
     Scalar const margin = 2.f;
-	Scalar const maxRadius = 500.f;
-	Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
+    Scalar const maxRadius = 500.f;
+    Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
     Scalar const cutoff = light->spotCutoff() + margin;
     Scalar const width = Scalar(std::tan(M_PI * cutoff / 180.f));
     Scalar const sx = width * radius;

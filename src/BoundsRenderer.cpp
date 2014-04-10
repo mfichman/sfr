@@ -117,8 +117,8 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
 
     // Scale model to cover the light's area of effect.
     Scalar const margin = 2.f;
-	Scalar const maxRadius = 500.f;
-	Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
+    Scalar const maxRadius = 500.f;
+    Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
     Scalar const cutoff = light->spotCutoff() + margin;
     Scalar const width = Scalar(std::tan(M_PI * cutoff / 180.f));
     Scalar const sx = width * radius;

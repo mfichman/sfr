@@ -75,7 +75,7 @@ Vector Vector::operator-() const {
 }
 
 Vector Vector::operator/(Scalar s) const {
-	return Vector(x/s, y/s, z/s);
+    return Vector(x/s, y/s, z/s);
 }
 
 Vector Vector::operator*(Scalar s) const {

@@ -15,27 +15,27 @@ using namespace sfr;
 
 
 Matrix Matrix::frustum(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f) {
-	return Matrix(
-		2*n/(r-l),	0,			(r+l)/(r-l),	0,
-		0,			2*n/(t-b),	(t+b)/(t-b),	0,
-		0,			0,			-(f+n)/(f-n),	-2*f*n/(f-n),
-		0,			0,			-1,				0);
+    return Matrix(
+        2*n/(r-l),    0,            (r+l)/(r-l),    0,
+        0,            2*n/(t-b),    (t+b)/(t-b),    0,
+        0,            0,            -(f+n)/(f-n),    -2*f*n/(f-n),
+        0,            0,            -1,                0);
 }
 
 Matrix Matrix::ortho(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f) {
-	return Matrix(
-		2/(r-l),	0,			0,				-(r+l)/(r-l),
-		0,			2/(t-b),	0,				-(t+b)/(t-b),
-		0,			0,			-2/(f-n),		-(f+n)/(f-n),
-		0,			0,			0,				1);
+    return Matrix(
+        2/(r-l),    0,            0,                -(r+l)/(r-l),
+        0,            2/(t-b),    0,                -(t+b)/(t-b),
+        0,            0,            -2/(f-n),        -(f+n)/(f-n),
+        0,            0,            0,                1);
 }
 
 Matrix Matrix::perspective(Scalar fov, Scalar aspect, Scalar n, Scalar f) {
-	Scalar top = Scalar(tan(fov*M_PI/360.0f) * n);
-	Scalar bottom = -top;
-	Scalar right = aspect * top;
-	Scalar left = aspect * bottom;
-	return Matrix::frustum(left, right, bottom, top, n, f);
+    Scalar top = Scalar(tan(fov*M_PI/360.0f) * n);
+    Scalar bottom = -top;
+    Scalar right = aspect * top;
+    Scalar left = aspect * bottom;
+    return Matrix::frustum(left, right, bottom, top, n, f);
 }
 
 Matrix Matrix::look(Vector const& pos, Vector const& at, Vector const& sky) {

@@ -50,7 +50,7 @@ void QuadRenderer::operator()(Ptr<Quad> quad) {
     if (!texture) { return; }
 
     Ptr<Mesh> mesh = quad_;
-	mesh->statusIs(Mesh::SYNCED);
+    mesh->statusIs(Mesh::SYNCED);
 
     Matrix scale = Matrix::scale(quad->width(), quad->height(), 1.);
     Matrix transform;

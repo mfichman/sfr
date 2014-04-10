@@ -48,12 +48,12 @@ void WavefrontLoader::onAsset(Ptr<Transform> transform) {
 void WavefrontLoader::newModel(std::istream& in) {
 
     // Read in the whole file, one command at a time.  Each line starts
-	// with a command word or "#" if the line is a comment.
+    // with a command word or "#" if the line is a comment.
     while (in.good()) {
-		std::string command;
+        std::string command;
         in >> command;
 
-		if (in.fail()) break;
+        if (in.fail()) break;
         
         if (command.find("#") == 0) {
             // Skip the comment line
@@ -69,12 +69,12 @@ void WavefrontLoader::newModel(std::istream& in) {
             newMesh(name);
         } else if (command == "v") {
             newVertex(in);
-		} else if (command == "vt") {
+        } else if (command == "vt") {
             newTexCoord(in);
-		} else if (command == "vn") {
+        } else if (command == "vn") {
             newNormal(in);
-		} else if (command == "f") {
-			newTriangle(in);
+        } else if (command == "f") {
+            newTriangle(in);
         } else if (command == "mtllib") {
             std::string name;
             in >> name;
@@ -88,11 +88,11 @@ void WavefrontLoader::newModel(std::istream& in) {
 }
 
 void WavefrontLoader::newVertex(std::istream& in) {
-	GLvec3 position;
-	in >> position.x;
-	in >> position.y;
-	in >> position.z;
-	position_.push_back(position);
+    GLvec3 position;
+    in >> position.x;
+    in >> position.y;
+    in >> position.z;
+    position_.push_back(position);
     if (position.x > bounds_.max.x) {
         bounds_.max.x = position.x;
     } else if (position.x < bounds_.min.x) {
@@ -111,20 +111,20 @@ void WavefrontLoader::newVertex(std::istream& in) {
 }
 
 void WavefrontLoader::newTexCoord(std::istream& in) {
-	GLvec2 texCoord;
-	in >> texCoord.u;
-	in >> texCoord.v;
-	texCoord.v = 1 - texCoord.v;
-	//texCoord.u = 1 - texoord.u;
-	texCoord_.push_back(texCoord);
+    GLvec2 texCoord;
+    in >> texCoord.u;
+    in >> texCoord.v;
+    texCoord.v = 1 - texCoord.v;
+    //texCoord.u = 1 - texoord.u;
+    texCoord_.push_back(texCoord);
 }
 
 void WavefrontLoader::newNormal(std::istream& in) {
     GLvec3 normal;
-	in >> normal.x;
-	in >> normal.y;
-	in >> normal.z;
-	normal_.push_back(normal);
+    in >> normal.x;
+    in >> normal.y;
+    in >> normal.z;
+    normal_.push_back(normal);
 }
 
 void WavefrontLoader::newMesh() {
@@ -174,9 +174,9 @@ void WavefrontLoader::newTriangle(std::istream& in) {
     MeshVertex face[3];
     size_t index;
 
-	if (!mesh_) {
-		newMesh("root");
-	}
+    if (!mesh_) {
+        newMesh("root");
+    }
 
     // Read in the face.  The format looks like this:
     // f position/texCoord/normal
@@ -203,7 +203,7 @@ void WavefrontLoader::newTriangle(std::istream& in) {
         // Process the normal of the vertex
         in >> index;
         if (in.fail() || (index-1) >= normal_.size()) {
-	            throw ResourceException("invalid mesh (missing normal): " + mesh_->name());
+                throw ResourceException("invalid mesh (missing normal): " + mesh_->name());
         } else {
             face[i].normal = normal_[index-1];
         }
@@ -255,7 +255,7 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
     Ptr<Texture> blue = notifier_->assetIs<Texture>("textures/Blue.png");
     
     // Read in the whole file, one command at a time.  Each line starts
-	// with a command word or "#" if the line is a comment.
+    // with a command word or "#" if the line is a comment.
     while (in.good()) {
         std::string command;
         in >> command;

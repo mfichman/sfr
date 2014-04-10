@@ -50,7 +50,7 @@ void Text::statusIs(Status status) {
     }
     status_ = status;
     if (SYNCED == status) {
-		updateTextBuffer();
+        updateTextBuffer();
         syncHardwareBuffer();
     }
 }
@@ -79,11 +79,11 @@ void Text::updateTextBuffer() {
         GLfloat const x = cursorX+glyph.x;
         GLfloat const y = cursorY+glyph.y;
 
-		TextVertex tg0 = { 
+        TextVertex tg0 = { 
             GLvec2(x, y), 
             GLvec2(glyph.texX, glyph.texY+glyph.texHeight) 
         };
-		TextVertex tg1 = { 
+        TextVertex tg1 = { 
             GLvec2(x, y+glyph.height), 
             GLvec2(glyph.texX, glyph.texY) 
         };
@@ -100,11 +100,11 @@ void Text::updateTextBuffer() {
         buffer_->elementEnq(tg1);
         buffer_->elementEnq(tg2);
 
-		buffer_->elementEnq(tg0);
-		buffer_->elementEnq(tg2);
+        buffer_->elementEnq(tg0);
+        buffer_->elementEnq(tg2);
         buffer_->elementEnq(tg3);
 
-		cursorX += glyph.advanceX;
+        cursorX += glyph.advanceX;
         cursorY += glyph.advanceY;
 
         prev = ch;

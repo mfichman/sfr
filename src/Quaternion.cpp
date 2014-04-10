@@ -15,10 +15,10 @@ using namespace sfr;
 Quaternion Quaternion::IDENTITY;
 
 Quaternion::Quaternion(Scalar w, Vector const& vector) : 
-	w(w),
-	x(vector.x),
-	y(vector.y),
-	z(vector.z) {
+    w(w),
+    x(vector.x),
+    y(vector.y),
+    z(vector.z) {
 
 }
 
@@ -186,19 +186,19 @@ bool Quaternion::operator!=(Quaternion const& other) const {
 }  
 
 Quaternion& Quaternion::operator+=(Quaternion const& other) {
-	x += other.x;
-	y += other.y;
-	z += other.z;
-	w += other.w;
-	return *this;
+    x += other.x;
+    y += other.y;
+    z += other.z;
+    w += other.w;
+    return *this;
 }
 
 Quaternion& Quaternion::operator-=(Quaternion const& other) {
-	x -= other.x;
-	y -= other.y;
-	z -= other.z;
-	w -= other.w;
-	return *this;
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
+    w -= other.w;
+    return *this;
 }
 
 std::ostream& operator<<(std::ostream& out, Quaternion const& quaternion) {

@@ -50,7 +50,7 @@ void TransformUpdater::operator()(Ptr<Transform> transform) {
 }
 
 void TransformUpdater::operator()(Ptr<Camera> camera) {
-	// Why is the view transform the inverse?
+    // Why is the view transform the inverse?
     camera->viewTransformIs(transform_.inverse());
     camera->worldTransformIs(transform_);
 }

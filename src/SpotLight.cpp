@@ -70,9 +70,9 @@ Scalar SpotLight::radiusOfEffect() const {
         // If a == 0, then we use the slope instead.
         return (1 - minIntensity*c)/(minIntensity*b);
     } else {
-		// Choose a reasonable distance at which the light should be cut off.
-		return 1000.f;
-	}
+        // Choose a reasonable distance at which the light should be cut off.
+        return 1000.f;
+    }
 }
 
 Ptr<DepthRenderTarget> SpotLight::shadowMap() const {

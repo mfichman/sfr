@@ -19,13 +19,13 @@ using namespace sfr;
 Mesh::Mesh(std::string const& name) {
     name_ = name;
     status_ = DIRTY;
-	id_ = 0;
+    id_ = 0;
 }
 
 Mesh::~Mesh() {
-	if (id_) {
-		glDeleteVertexArrays(1, &id_);
-	}
+    if (id_) {
+        glDeleteVertexArrays(1, &id_);
+    }
 }
 
 std::string const& Mesh::name() const {
@@ -79,10 +79,10 @@ void defAttribute(Mesh::Attribute id, GLuint size, void* offset) {
 }
 
 void Mesh::updateVertexArrayObject() {
-	// Update the VAO, and create it lazily if necessary
-	if (!id_) {
-		glGenVertexArrays(1, &id_);
-	}
+    // Update the VAO, and create it lazily if necessary
+    if (!id_) {
+        glGenVertexArrays(1, &id_);
+    }
     attributeBuffer_->statusIs(AttributeBuffer::SYNCED);
     indexBuffer_->statusIs(IndexBuffer::SYNCED);
 
