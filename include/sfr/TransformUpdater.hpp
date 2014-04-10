@@ -27,7 +27,7 @@ public:
     void operator()(Ptr<Billboards> billboards);
     void operator()(Ptr<Quad> quad);
     void operator()(Ptr<Text> text);
-
+    void transformIs(Matrix const& transform);
 private:
     Ptr<Scene> scene_;
     Matrix transform_;

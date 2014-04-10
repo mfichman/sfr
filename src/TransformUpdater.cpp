@@ -22,6 +22,10 @@
 
 using namespace sfr;
 
+void TransformUpdater::transformIs(Matrix const& transform) {
+    transform_ = transform;
+}
+
 void TransformUpdater::operator()(Ptr<Scene> scene) {
     scene_ = scene;
     scene_->renderDescDelAll();
