@@ -114,7 +114,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform3fv(program_->direction(), 1, direction.vec3f());
 
     // Shadow mapping.  Set the shadow map buffer and light matrix
-    glActiveTexture(GL_TEXTURE6);
+    glActiveTexture(GL_TEXTURE5);
     if (light->shadowMap()) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
         glUniform1f(program_->shadowMapSize(), GLfloat(light->shadowMap()->width()));
@@ -185,7 +185,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform3fv(program_->direction(), 1, direction.vec3f());
 
     // Shadow mapping.  Set the shadow map buffer and light matrix
-    glActiveTexture(GL_TEXTURE6);
+    glActiveTexture(GL_TEXTURE5);
     if (light->shadowMap()) {
         glBindTexture(GL_TEXTURE_2D, light->shadowMap()->depthBuffer());
         glUniform1f(program_->shadowMapSize(), GLfloat(light->shadowMap()->width()));

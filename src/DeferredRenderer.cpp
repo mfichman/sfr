@@ -48,17 +48,12 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
     
     // Pass 2: Render lighting using light bounding boxes
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(0));
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(1));
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(2));
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(3));
+    for(GLuint i = 0; i < renderTarget_->targetCount(); ++i) {
+        glActiveTexture(GL_TEXTURE0+i);
+        glBindTexture(GL_TEXTURE_2D, renderTarget_->target(i));
+    }
+    assert(renderTarget_->targetCount()==4);
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, renderTarget_->target(4));
-    glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
     lightPass_->operator()(scene);
 

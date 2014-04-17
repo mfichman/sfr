@@ -16,7 +16,6 @@ void LightProgram::onLink() {
     diffuseBuffer_ = glGetUniformLocation(id(), "diffuseBuffer");
     specularBuffer_ = glGetUniformLocation(id(), "specularBuffer");
     normalBuffer_ = glGetUniformLocation(id(), "normalBuffer");
-    positionBuffer_ = glGetUniformLocation(id(), "positionBuffer");
     emissiveBuffer_ = glGetUniformLocation(id(), "emissiveBuffer");
     depthBuffer_ = glGetUniformLocation(id(), "depthBuffer");
     diffuse_ = glGetUniformLocation(id(), "Ld");
@@ -34,14 +33,13 @@ void LightProgram::onLink() {
     unproject_ = glGetUniformLocation(id(), "unprojectMatrix");
     light_ = glGetUniformLocation(id(), "lightMatrix");
 
-    // Set texture samplers
+    // Set texture samplers: FixMe: This depends on DeferredRenderTarget!
     glUniform1i(diffuseBuffer_, 0);
     glUniform1i(specularBuffer_, 1);
     glUniform1i(normalBuffer_, 2);
-    glUniform1i(positionBuffer_, 3);
-    glUniform1i(emissiveBuffer_, 4);
-    glUniform1i(depthBuffer_, 5);
-    glUniform1i(shadowMap_, 6);
+    glUniform1i(emissiveBuffer_, 3);
+    glUniform1i(depthBuffer_, 4);
+    glUniform1i(shadowMap_, 5);
 }
 
 }

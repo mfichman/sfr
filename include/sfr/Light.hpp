@@ -19,7 +19,6 @@ public:
     GLint diffuseBuffer() const { return diffuseBuffer_; }
     GLint specularBuffer() const { return specularBuffer_; }
     GLint normalBuffer() const { return normalBuffer_; }
-    GLint positionBuffer() const { return positionBuffer_; }
     GLint emissiveBuffer() const { return emissiveBuffer_; }
     GLint depthBuffer() const { return depthBuffer_; }
     GLint diffuse() const { return diffuse_; }
@@ -46,7 +45,6 @@ private:
     GLint diffuseBuffer_ = -1;
     GLint specularBuffer_ = -1;
     GLint normalBuffer_ = -1;
-    GLint positionBuffer_ = -1;
     GLint emissiveBuffer_ = -1;
     GLint depthBuffer_ = -1;
     GLint diffuse_ = -1;
