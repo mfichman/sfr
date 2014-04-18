@@ -18,7 +18,7 @@
 using namespace sfr;
 
 void WavefrontLoader::onAsset(Ptr<Transform> transform) {
-    static const std::string ext = "obj";
+    std::string ext = "obj";
     std::string name = transform->name();
     transform_ = transform;
 
