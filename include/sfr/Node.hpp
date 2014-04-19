@@ -16,6 +16,7 @@ class Node : public Interface {
 public:
     class Functor;
     virtual void operator()(Ptr<Functor> functor)=0;
+    virtual Ptr<Node> nodeClone() const { return 0; }
 };
 
 /* Implement this interface to perform processing on the scene. */

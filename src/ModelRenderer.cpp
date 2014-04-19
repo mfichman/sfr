@@ -91,13 +91,13 @@ void ModelRenderer::operator()(Ptr<Material> material) {
     glUniform1f(program_->shininess(), material->shininess());
 
     glActiveTexture(GL_TEXTURE0);
-    operator()(material->texture("diffuse"));
+    operator()(material->diffuseMap());
     glActiveTexture(GL_TEXTURE1);
-    operator()(material->texture("specular"));
+    operator()(material->specularMap());
     glActiveTexture(GL_TEXTURE2);
-    operator()(material->texture("normal"));
+    operator()(material->normalMap());
     glActiveTexture(GL_TEXTURE3);
-    operator()(material->texture("emissive"));
+    operator()(material->emissiveMap());
 }
 
 void ModelRenderer::operator()(Ptr<Texture> texture) {

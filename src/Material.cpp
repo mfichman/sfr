@@ -23,15 +23,20 @@ std::string const& Material::name() const {
     return name_;
 }
 
-Ptr<Texture> Material::texture(std::string const& name) const {
-    std::map<std::string, Ptr<Texture>>
-        ::const_iterator i = texture_.find(name);
+Ptr<Texture> Material::diffuseMap() const {
+    return diffuseMap_;
+}
 
-    if (i == texture_.end()) {
-        return Ptr<Texture>();
-    } else {
-        return i->second;
-    }
+Ptr<Texture> Material::specularMap() const {
+    return specularMap_;
+}
+
+Ptr<Texture> Material::normalMap() const {
+    return normalMap_;
+}
+
+Ptr<Texture> Material::emissiveMap() const {
+    return emissiveMap_;
 }
 
 Color const& Material::ambientColor() const {
@@ -58,8 +63,35 @@ Scalar Material::opacity() const {
     return opacity_;
 }
 
-void Material::textureIs(std::string const& name, Ptr<Texture> texture) {
-    texture_[name] = texture;
+Ptr<Material> Material::clone() const {
+    Ptr<Material> clone(new Material(name()));
+    clone->diffuseMapIs(diffuseMap());
+    clone->specularMapIs(specularMap());
+    clone->normalMapIs(normalMap());
+    clone->emissiveMapIs(emissiveMap());
+    clone->ambientColorIs(ambientColor());
+    clone->diffuseColorIs(diffuseColor());
+    clone->specularColorIs(specularColor());
+    clone->emissiveColorIs(emissiveColor());
+    clone->shininessIs(shininess());
+    clone->opacityIs(opacity());
+    return clone;
+}
+
+void Material::diffuseMapIs(Ptr<Texture> texture) {
+    diffuseMap_ = texture;
+}
+
+void Material::specularMapIs(Ptr<Texture> texture) {
+    specularMap_ = texture;
+}
+
+void Material::normalMapIs(Ptr<Texture> texture) {
+    normalMap_ = texture;
+}
+
+void Material::emissiveMapIs(Ptr<Texture> texture) {
+    emissiveMap_ = texture;
 }
 
 void Material::ambientColorIs(Color const& color) {

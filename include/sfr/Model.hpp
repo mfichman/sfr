@@ -17,6 +17,8 @@ class Model : public Node {
 public:
     Ptr<Material> material() const;
     Ptr<Mesh> mesh() const;
+    Ptr<Model> clone() const;
+    Ptr<Node> nodeClone() const;
 
     void materialIs(Ptr<Material> material);
     void meshIs(Ptr<Mesh> mesh);

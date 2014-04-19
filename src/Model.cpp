@@ -7,6 +7,7 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/Model.hpp"
+#include "sfr/Material.hpp"
 
 using namespace sfr;
 
@@ -16,6 +17,17 @@ Ptr<Material> Model::material() const {
 
 Ptr<Mesh> Model::mesh() const {
     return mesh_;
+}
+
+Ptr<Model> Model::clone() const {
+    Ptr<Model> clone(new Model);
+    clone->materialIs(material()->clone());
+    clone->meshIs(mesh());
+    return clone;
+}
+
+Ptr<Node> Model::nodeClone() const {
+    return Ptr<Model>(clone());
 }
 
 void Model::materialIs(Ptr<Material> material) {
