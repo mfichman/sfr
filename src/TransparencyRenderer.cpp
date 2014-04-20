@@ -46,6 +46,8 @@ void TransparencyRenderer::operator()(Ptr<Model> model) {
         return;
     }
 
+    std::cout << "here" << std::endl;
+
     // Set the material parameters and render mesh
     operator()(model->material());
     operator()(model->mesh());

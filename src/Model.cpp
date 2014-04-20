@@ -18,18 +18,20 @@ Ptr<Mesh> Model::mesh() const {
     return mesh_;
 }
 
+Ptr<ModelProgram> Model::program() const {
+    return program_;
+}
+
 void Model::materialIs(Ptr<Material> material) {
-    if (material_ == material) {
-        return;
-    }
     material_ = material;
 }
 
 void Model::meshIs(Ptr<Mesh> mesh) {
-    if (mesh_ == mesh) {
-        return;
-    }
     mesh_ = mesh;
+}
+
+void Model::programIs(Ptr<ModelProgram> program) {
+    program_ = program; 
 }
 
 void Model::operator()(Ptr<Functor> functor) {

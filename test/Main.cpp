@@ -71,9 +71,8 @@ void initCamera() {
     Ptr<sfr::Camera> cam = camera->childIs<sfr::Camera>();
     cam->viewportWidthIs(window->getSize().x);
     cam->viewportHeightIs(window->getSize().y);
-    std::cout << cam->viewportWidth() << std::endl;
     scene->cameraIs(cam);
-    scene->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
+    //scene->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
 }
 
 void initLights() {
@@ -159,6 +158,11 @@ void handleInput() {
         sfr::Vector(x, y, z),
         sfr::Vector(0.f, 0.3f, 0.f),
         sfr::Vector(0.f, 1.f, 0.f)));
+}
+
+void initTransparency() {
+    Ptr<sfr::Transform> shield(assets->assetIs<sfr::Transform>("meshes/Shield.obj"));
+    root->childIs(shield);
 }
 
 void initModels() {
@@ -290,11 +294,14 @@ int main() {
     try {    
         initWindow();
         initCamera();
+        initTransparency();
+/*
         initModels();
         initFonts();
         initParticles();
         initRibbon();
         initQuad();
+*/
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {

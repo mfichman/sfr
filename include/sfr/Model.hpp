@@ -17,15 +17,18 @@ class Model : public Node {
 public:
     Ptr<Material> material() const;
     Ptr<Mesh> mesh() const;
+    Ptr<ModelProgram> program() const;
 
     void materialIs(Ptr<Material> material);
     void meshIs(Ptr<Mesh> mesh);
+    void programIs(Ptr<ModelProgram> program);
 
     virtual void operator()(Ptr<Functor> functor);
 
 private:
     Ptr<Material> material_;
     Ptr<Mesh> mesh_;
+    Ptr<ModelProgram> program_;
 };
 
 class ModelProgram : public Program {

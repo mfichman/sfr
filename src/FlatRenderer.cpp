@@ -11,6 +11,7 @@
 #include "sfr/Camera.hpp"
 #include "sfr/FlatRenderer.hpp"
 #include "sfr/IndexBuffer.hpp"
+#include "sfr/Material.hpp"
 #include "sfr/Mesh.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Scene.hpp"
@@ -35,6 +36,10 @@ void FlatRenderer::onState() {
 }
 
 void FlatRenderer::operator()(Ptr<Model> model) {
+    //if (shadowPass_ && model->material()->opacity() < 1.f) {
+     //   return;
+   // }
+    std::cout << "here2" << std::endl;
     operator()(model->mesh());
 }
 
