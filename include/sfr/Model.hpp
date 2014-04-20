@@ -44,7 +44,6 @@ public:
     GLint specular() const { return specular_; }
     GLint emissive() const { return emissive_; }
     GLint shininess() const { return shininess_; }
-    GLint modelMatrix() const { return modelMatrix_; }
     GLint normalMatrix() const { return normalMatrix_; }
     GLint transform() const { return transform_; }
     GLint opacity() const { return opacity_; }
@@ -61,7 +60,6 @@ private:
     GLint emissive_ = -1;
     GLint shininess_ = -1;
     GLint opacity_ = -1;
-    GLint modelMatrix_ = -1;
     GLint normalMatrix_ = -1;
     GLint transform_ = -1;
 };

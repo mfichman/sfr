@@ -18,7 +18,6 @@ uniform vec3 Ka;
 uniform vec3 Ke;
 uniform float alpha;
 
-in vec3 position;
 in vec3 normal;
 in vec3 tangent;
 in vec2 texCoord;

@@ -38,6 +38,7 @@ private:
     Ptr<Material> material_;
     Ptr<MutableAttributeBuffer<MeshVertex>> attributeBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
+    Ptr<ModelProgram> program_;
     std::map<MeshVertex, GLuint> cache_;
     std::vector<GLvec2> texCoord_;
     std::vector<GLvec3> position_;

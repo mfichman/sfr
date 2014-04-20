@@ -8,20 +8,15 @@
 #version 330
 #pragma include "shaders/Mesh.vert"
 
-uniform mat4 modelMatrix;
 uniform mat4 transform;
 uniform mat3 normalMatrix;
 
-out vec3 position;
 out vec3 normal;
 out vec3 tangent;
 out vec2 texCoord;
  
 /* Deferred render shader with normal, specular, and diffuse mapping */
 void main() {
-    // World position
-	position = (modelMatrix * vec4(positionIn, 1)).xyz;
-
 	// Transform the vertex to get the clip-space position of the vertex
 	gl_Position = transform * vec4(positionIn, 1);
 

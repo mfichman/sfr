@@ -7,12 +7,12 @@
 
  #version 330
 
- uniform vec3 Kd;
- uniform float alpha;
+uniform vec3 Kd;
+uniform float alpha;
 
- out vec4 color;
+out vec4 color;
 
- /* Transparency forward-rendered shader (no lighting :( ) */
- void main() {
-	color = vec4(Kd, alpha);
- }
+/* Transparency forward-rendered shader (no lighting :( ) */
+void main() {
+    color = vec4(Kd, alpha);
+}

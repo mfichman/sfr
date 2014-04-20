@@ -38,7 +38,6 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
 
 void DeferredRenderer::operator()(Ptr<Scene> scene) {
 
-/*
     // Generate shadows
     shadowPass_->operator()(scene);
 
@@ -60,7 +59,6 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
 
     // Pass 3: Skybox
     skyboxPass_->operator()(scene);
-*/
 
     // Pass 4: Render transparent objects
     alphaPass_->operator()(scene);

@@ -56,7 +56,7 @@ void TransformUpdater::operator()(Ptr<Camera> camera) {
 }
 
 void TransformUpdater::operator()(Ptr<Model> model) {
-    scene_->renderDescIs(RenderDesc(model, 0, transform_));
+    scene_->renderDescIs(RenderDesc(model, model->program(), transform_));
 }
 
 void TransformUpdater::operator()(Ptr<PointLight> light) {

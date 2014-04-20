@@ -73,7 +73,6 @@ void ModelRenderer::operator()(Ptr<Mesh> mesh) {
     // Pass the model matrix to the vertex shader
     glUniformMatrix3fv(program_->normalMatrix(), 1, 0, temp);    
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
-    glUniformMatrix4fv(program_->modelMatrix(), 1, 0, worldTransform().mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

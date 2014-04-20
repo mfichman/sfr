@@ -49,7 +49,6 @@ void ModelProgram::onLink() {
     emissive_ = glGetUniformLocation(id(), "Ke");
     shininess_ = glGetUniformLocation(id(), "alpha");
     opacity_ = glGetUniformLocation(id(), "alpha");
-    modelMatrix_ = glGetUniformLocation(id(), "modelMatrix");
     normalMatrix_ = glGetUniformLocation(id(), "normalMatrix");
     transform_ = glGetUniformLocation(id(), "transform");
 

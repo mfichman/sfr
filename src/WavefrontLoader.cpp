@@ -135,6 +135,7 @@ void WavefrontLoader::newMesh() {
     if (transform_) {
         Ptr<Model> model = transform_->childIs<Model>();
         model->meshIs(mesh_);
+        model->programIs(program_);
         mesh_->boundsIs(bounds_);
         if (!material_) {
             Ptr<Texture> white = notifier_->assetIs<Texture>("textures/White.png");
@@ -321,6 +322,10 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
             Scalar opacity;
             in >> opacity;
             material_->opacityIs(opacity);
+        } else if (command == "shader") {
+            std::string shader;
+            in >> shader;
+            program_ = notifier_->assetIs<ModelProgram>(shader);
         } else {
             in.ignore(INT_MAX, '\n');
         }

@@ -25,7 +25,7 @@ TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
 
 void TransparencyRenderer::onState() {
     if (state() == Renderer::ACTIVE) {
-        glUseProgram(program_->id());
+//        glUseProgram(program_->id());
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -45,8 +45,13 @@ void TransparencyRenderer::operator()(Ptr<Model> model) {
     if (!model->material() || model->material()->opacity() >= 1.f) {
         return;
     }
-
-    std::cout << "here" << std::endl;
+    if (model->program()) {
+        activeProgram_ = model->program();
+        activeProgram_->statusIs(Program::LINKED);
+    } else {
+        activeProgram_ = program_;
+    }
+    glUseProgram(activeProgram_->id());
 
     // Set the material parameters and render mesh
     operator()(model->material());
@@ -58,11 +63,23 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
         return;
     }
 
+    mesh->statusIs(Mesh::SYNCED);
+
     Ptr<Camera> camera = scene()->camera();
+    Matrix normalMatrix = camera->viewTransform() * worldTransform();
+    normalMatrix = normalMatrix.inverse();
+    normalMatrix = normalMatrix.transpose();
+
+    GLfloat temp[9] = {
+        (GLfloat)normalMatrix[0], (GLfloat)normalMatrix[1], (GLfloat)normalMatrix[2],
+        (GLfloat)normalMatrix[4], (GLfloat)normalMatrix[5], (GLfloat)normalMatrix[6],
+        (GLfloat)normalMatrix[8], (GLfloat)normalMatrix[9], (GLfloat)normalMatrix[10]
+    };
 
     // Pass the matrices to the vertex shader
     Matrix const transform = camera->transform() * worldTransform();
-    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
+    glUniformMatrix3fv(program_->normalMatrix(), 1, 0, temp);    
+    glUniformMatrix4fv(activeProgram_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -72,7 +89,7 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
 }
 
 void TransparencyRenderer::operator()(Ptr<Material> material) {
-    glUniform3fv(program_->diffuse(), 1, material->diffuseColor().vec4f());
-    glUniform1f(program_->opacity(), material->opacity());
+    glUniform3fv(activeProgram_->diffuse(), 1, material->diffuseColor().vec4f());
+    glUniform1f(activeProgram_->opacity(), material->opacity());
 }
 

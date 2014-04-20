@@ -2,7 +2,7 @@
  * Simple, Fast Renderer (SFR)                                               *
  * CS249b                                                                    *
  * Matt Fichman                                                              *
- * February, 2011                                                            *
+ * April, 2014                                                               *
  *****************************************************************************/
 #pragma once
 
@@ -26,6 +26,7 @@ public:
 private:
     virtual void onState();
     Ptr<ModelProgram> program_;
+    Ptr<ModelProgram> activeProgram_;
 };
 
 }

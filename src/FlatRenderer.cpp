@@ -36,10 +36,9 @@ void FlatRenderer::onState() {
 }
 
 void FlatRenderer::operator()(Ptr<Model> model) {
-    //if (shadowPass_ && model->material()->opacity() < 1.f) {
-     //   return;
-   // }
-    std::cout << "here2" << std::endl;
+    if (shadowPass_ && model->material()->opacity() < 1.f) {
+        return;
+    }
     operator()(model->mesh());
 }
 
