@@ -78,7 +78,7 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Pass the matrices to the vertex shader
     Matrix const transform = camera->transform() * worldTransform();
-    glUniformMatrix3fv(program_->normalMatrix(), 1, 0, temp);    
+    glUniformMatrix3fv(activeProgram_->normalMatrix(), 1, 0, temp);    
     glUniformMatrix4fv(activeProgram_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh

@@ -294,15 +294,13 @@ int main() {
     try {    
         initWindow();
         initCamera();
- //       initTransparency();
-/*
+        initTransparency();
         initModels();
         initFonts();
         initParticles();
         initRibbon();
         initQuad();
         initLights();
-*/
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
