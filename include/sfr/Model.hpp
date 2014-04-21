@@ -15,15 +15,18 @@ namespace sfr {
 /* Geometric mesh node (with attached textures) */
 class Model : public Node {
 public:
+    Model();
     Ptr<Material> material() const;
     Ptr<Mesh> mesh() const;
     Ptr<ModelProgram> program() const;
     Ptr<Model> clone() const;
     Ptr<Node> nodeClone() const;
+    void* userData() const;
 
     void materialIs(Ptr<Material> material);
     void meshIs(Ptr<Mesh> mesh);
     void programIs(Ptr<ModelProgram> program);
+    void userDataIs(void* data);
 
     virtual void operator()(Ptr<Functor> functor);
 
@@ -31,6 +34,7 @@ private:
     Ptr<Material> material_;
     Ptr<Mesh> mesh_;
     Ptr<ModelProgram> program_;
+    void* userData_;
 };
 
 class ModelProgram : public Program {
@@ -50,8 +54,10 @@ public:
     GLint transform() const { return transform_; }
     GLint opacity() const { return opacity_; }
 
+    virtual void onLink();
+    virtual void onRender(Ptr<Model> model) {}
+
 private:
-    void onLink();
     GLint diffuseMap_ = -1;
     GLint specularMap_ = -1;
     GLint normalMap_ = -1;

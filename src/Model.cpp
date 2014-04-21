@@ -11,6 +11,10 @@
 
 using namespace sfr;
 
+Model::Model() {
+    userData_ = 0;
+}
+
 Ptr<Material> Model::material() const {
     return material_;
 }
@@ -23,6 +27,7 @@ Ptr<Model> Model::clone() const {
     Ptr<Model> clone(new Model);
     clone->materialIs(material()->clone());
     clone->meshIs(mesh());
+    clone->programIs(program());
     return clone;
 }
 
@@ -32,6 +37,10 @@ Ptr<ModelProgram> Model::program() const {
 
 Ptr<Node> Model::nodeClone() const {
     return Ptr<Model>(clone());
+}
+
+void* Model::userData() const {
+    return userData_;
 }
 
 void Model::materialIs(Ptr<Material> material) {
@@ -44,6 +53,10 @@ void Model::meshIs(Ptr<Mesh> mesh) {
 
 void Model::programIs(Ptr<ModelProgram> program) {
     program_ = program; 
+}
+
+void Model::userDataIs(void* data) {
+    userData_ = data;
 }
 
 void Model::operator()(Ptr<Functor> functor) {

@@ -42,12 +42,8 @@ public:
     void transformModeIs(TransformMode mode);
     void renderModeIs(RenderMode mode);
 
-    template <typename T, typename ...Arg>
-    Ptr<T> childIs(Arg... arg) {
-        Ptr<T> child(new T(arg...));
-        children_.push_back(child);
-        return child;
-    }
+    template <typename T, typename ...Arg> Ptr<T> childIs(Arg... arg);
+    template <typename T> Ptr<T> child(GLuint index) const;
 
     void childIs(Ptr<Node> child);
     void childDel(Ptr<Node> child);
@@ -62,6 +58,18 @@ private:
     TransformMode transformMode_;
     RenderMode renderMode_;
 };
+
+template <typename T, typename ...Arg>
+Ptr<T> Transform::childIs(Arg... arg) {
+    Ptr<T> child(new T(arg...));
+    children_.push_back(child);
+    return child;
+}
+
+template <typename T>
+Ptr<T> Transform::child(GLuint index) const {
+    return std::dynamic_pointer_cast<T>(children_[index]);
+}
 
 
 }

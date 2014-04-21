@@ -53,6 +53,9 @@ void TransparencyRenderer::operator()(Ptr<Model> model) {
     }
     glUseProgram(activeProgram_->id());
 
+    // Allow user program to set custom uniforms
+    activeProgram_->onRender(model);
+
     // Set the material parameters and render mesh
     operator()(model->material());
     operator()(model->mesh());
