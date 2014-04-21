@@ -18,7 +18,7 @@
 using namespace sfr;
 
 void WavefrontLoader::onAsset(Ptr<Transform> transform) {
-    static const std::string ext = "obj";
+    std::string ext = "obj";
     std::string name = transform->name();
     transform_ = transform;
 
@@ -141,10 +141,10 @@ void WavefrontLoader::newMesh() {
             Ptr<Texture> white = notifier_->assetIs<Texture>("textures/White.png");
             Ptr<Texture> blue = notifier_->assetIs<Texture>("textures/Blue.png");
             material_ = notifier_->assetIs<Material>("Default");
-            material_->textureIs("diffuse", white);
-            material_->textureIs("specular", white);
-            material_->textureIs("normal", blue);
-            material_->textureIs("emissive", white);
+            material_->diffuseMapIs(white);
+            material_->specularMapIs(white);
+            material_->normalMapIs(blue);
+            material_->emissiveMapIs(white);
         }
         model->materialIs(material_);
     }
@@ -271,10 +271,10 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
             in >> name;
             name = transform_->name() + "/material/" + name;
             material_ = notifier_->assetIs<Material>(name);
-            material_->textureIs("diffuse", white);
-            material_->textureIs("specular", white);
-            material_->textureIs("normal", blue);
-            material_->textureIs("emissive", blue);
+            material_->diffuseMapIs(white);
+            material_->specularMapIs(white);
+            material_->normalMapIs(blue);
+            material_->emissiveMapIs(white);
         } else if (!material_) {
             std::string line;
             std::getline(in, line);
@@ -282,7 +282,7 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
-            material_->textureIs("normal", texture);
+            material_->normalMapIs(texture);
         } else if (command == "Ka") {
             Color ambient;
             in >> ambient;
@@ -307,17 +307,17 @@ void WavefrontLoader::newMaterialLibrary(std::string const& name) {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
-            material_->textureIs("diffuse", texture);
+            material_->diffuseMapIs(texture);
         } else if (command == "map_Ks") {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
-            material_->textureIs("specular", texture);
+            material_->specularMapIs(texture);
         } else if (command == "map_Ke") {
             std::string name;
             in >> name;
             Ptr<Texture> texture = notifier_->assetIs<Texture>(name);
-            material_->textureIs("emissive", texture);
+            material_->emissiveMapIs(texture);
         } else if (command == "d") {
             Scalar opacity;
             in >> opacity;

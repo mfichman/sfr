@@ -49,6 +49,24 @@ Transform::RenderMode Transform::renderMode() const {
     return renderMode_;
 }
 
+Ptr<Transform> Transform::clone() const {
+    Ptr<Transform> clone(new Transform(name()));
+    clone->transformIs(transform()); 
+    clone->shadowModeIs(shadowMode());
+    clone->transformModeIs(transformMode());
+    clone->renderModeIs(renderMode());
+    for(std::vector<Ptr<Node>>::const_iterator i = children_.begin(); 
+        i != children_.end(); ++i) {
+
+        clone->childIs((*i)->nodeClone()); 
+    }
+    return clone;
+}
+
+Ptr<Node> Transform::nodeClone() const {
+    return Ptr<Node>(clone()); 
+}
+
 void Transform::transformIs(Matrix const& transform) {
     transform_ = transform;
 }

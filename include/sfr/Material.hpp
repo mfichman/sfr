@@ -18,15 +18,22 @@ public:
     Material(std::string const& name);
 
     std::string const& name() const;
-    Ptr<Texture> texture(std::string const& name) const;
+    Ptr<Texture> diffuseMap() const;
+    Ptr<Texture> specularMap() const;
+    Ptr<Texture> normalMap() const;
+    Ptr<Texture> emissiveMap() const;
     Color const& ambientColor() const;
     Color const& diffuseColor() const;
     Color const& specularColor() const;
     Color const& emissiveColor() const;
     Scalar shininess() const;
     Scalar opacity() const;
+    Ptr<Material> clone() const;
 
-    void textureIs(std::string const& name, Ptr<Texture> texture);
+    void diffuseMapIs(Ptr<Texture> texture);
+    void specularMapIs(Ptr<Texture> texture);
+    void normalMapIs(Ptr<Texture> texture);
+    void emissiveMapIs(Ptr<Texture> texture);
     void ambientColorIs(Color const& color);
     void diffuseColorIs(Color const& color);
     void specularColorIs(Color const& color);
@@ -36,7 +43,10 @@ public:
 
 private:
     std::string name_;
-    std::map<std::string, Ptr<Texture>> texture_;
+    Ptr<Texture> diffuseMap_;
+    Ptr<Texture> specularMap_;
+    Ptr<Texture> normalMap_;
+    Ptr<Texture> emissiveMap_;
     Color ambientColor_;
     Color diffuseColor_;
     Color specularColor_;

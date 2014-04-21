@@ -32,6 +32,8 @@ public:
     ShadowMode shadowMode() const; // Render shadows, or not?
     TransformMode transformMode() const; // Inherit transform from parent?
     RenderMode renderMode() const; // Render this node & children, or not?
+    Ptr<Transform> clone() const;
+    Ptr<Node> nodeClone() const;
 
     void transformIs(Matrix const& transform);
     void positionIs(Vector const& position);
