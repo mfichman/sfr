@@ -18,6 +18,7 @@ public:
     void operator()(Ptr<Model> model);
     void operator()(Ptr<Mesh> mesh);
     void operator()(Ptr<Material> material);
+    void operator()(Ptr<Texture> buffer);
     void operator()(Ptr<AttributeBuffer> buffer);
     void operator()(Ptr<IndexBuffer> buffer);
 

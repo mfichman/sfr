@@ -13,6 +13,7 @@
 #include "sfr/Material.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Mesh.hpp"
+#include "sfr/Texture.hpp"
 #include "sfr/TransparencyRenderer.hpp"
 #include "sfr/Scene.hpp"
 
@@ -94,5 +95,14 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
 void TransparencyRenderer::operator()(Ptr<Material> material) {
     glUniform3fv(activeProgram_->diffuse(), 1, material->diffuseColor().vec4f());
     glUniform1f(activeProgram_->opacity(), material->opacity());
+
+    glActiveTexture(GL_TEXTURE0);
+    operator()(material->diffuseMap());
 }
+
+void TransparencyRenderer::operator()(Ptr<Texture> texture) {
+    if (texture) {
+        glBindTexture(GL_TEXTURE_2D, texture->id());
+    }
+} 
 
