@@ -29,7 +29,6 @@ void TransparencyRenderer::onState() {
 //        glUseProgram(program_->id());
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
     } else if (state() == Renderer::INACTIVE) {
         glDisable(GL_DEPTH_TEST);
@@ -95,6 +94,12 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
 void TransparencyRenderer::operator()(Ptr<Material> material) {
     glUniform3fv(activeProgram_->diffuse(), 1, material->diffuseColor().vec4f());
     glUniform1f(activeProgram_->opacity(), material->opacity());
+
+    switch (material->blendMode()) {
+    case Material::ALPHA: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
+    case Material::ADDITIVE: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
+    default: assert(!"error: unknown blend mode");
+    }
 
     glActiveTexture(GL_TEXTURE0);
     operator()(material->diffuseMap());

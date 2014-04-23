@@ -46,7 +46,6 @@ void ParticleRenderer::onState() {
         glUseProgram(program_->id());
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glDepthMask(GL_FALSE);
     } else if (state() == Renderer::INACTIVE) {
         glDisable(GL_BLEND);
@@ -63,6 +62,12 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
 
     Ptr<Camera> camera = scene()->camera();
     Ptr<Texture> texture = particles->texture();
+
+    switch (particles->blendMode()) {
+    case Particles::ALPHA: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
+    case Particles::ADDITIVE: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
+    default: assert(!"error: unknown blend mode");
+    }
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());

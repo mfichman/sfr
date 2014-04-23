@@ -13,6 +13,7 @@ using namespace sfr;
 
 Particles::Particles() {
     clearMode_ = MANUAL;
+    blendMode_ = ADDITIVE;
     tint_ = Color(1., 1., 1., 1.);
 }
 
@@ -45,6 +46,10 @@ void Particles::tintIs(Color const& tint) {
 
 void Particles::clearModeIs(ClearMode mode) {
     clearMode_ = mode;
+}
+
+void Particles::blendModeIs(BlendMode mode) {
+    blendMode_ = mode;
 }
 
 void Particles::operator()(Ptr<Node::Functor> functor) {

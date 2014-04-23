@@ -12,6 +12,7 @@ using namespace sfr;
 
 Billboards::Billboards() {
     clearMode_ = MANUAL;
+    blendMode_ = ADDITIVE;
     tint_ = Color(1., 1., 1., 1.);
 }
 
@@ -44,6 +45,10 @@ void Billboards::tintIs(sfr::Color tint) {
 
 void Billboards::clearModeIs(ClearMode mode) {
     clearMode_ = mode;
+}
+
+void Billboards::blendModeIs(BlendMode mode) {
+    blendMode_ = mode;
 }
 
 void Billboards::operator()(Ptr<Functor> functor) {

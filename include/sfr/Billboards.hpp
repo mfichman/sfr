@@ -29,6 +29,7 @@ class Billboards : public Node {
 public:
     enum Attribute { POSITION, FORWARD, RIGHT, COLOR, WIDTH, HEIGHT };
     enum ClearMode { MANUAL, AUTO };
+    enum BlendMode { ALPHA, ADDITIVE };
 
     Billboards();
     Ptr<Texture> texture() const { return texture_; }
@@ -37,6 +38,7 @@ public:
     GLuint billboardCount() const { return buffer_.size(); }
     sfr::Color const& tint() const { return tint_; }
     ClearMode clearMode() const { return clearMode_; }
+    BlendMode blendMode() const { return blendMode_; }
     bool isVisible() const { return !!texture_&&buffer_.size(); }
 
     void billboardEnq(Billboard const& billboard);
@@ -45,6 +47,8 @@ public:
     void textureIs(Ptr<Texture> texture);
     void tintIs(sfr::Color tint);
     void clearModeIs(ClearMode clearMode);
+    void blendModeIs(BlendMode mode);
+
 private:
     void operator()(Ptr<Functor> functor);
 
@@ -52,6 +56,7 @@ private:
     Ptr<Texture> texture_;
     sfr::Color tint_;
     ClearMode clearMode_;
+    BlendMode blendMode_;
 };
 
 class BillboardProgram : public Program {

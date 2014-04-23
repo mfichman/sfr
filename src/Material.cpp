@@ -17,6 +17,7 @@ Material::Material(std::string const& name) {
     ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
     specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
+    blendMode_ = ALPHA;
 }
 
 std::string const& Material::name() const {
@@ -61,6 +62,10 @@ Scalar Material::shininess() const {
 
 Scalar Material::opacity() const {
     return opacity_;
+}
+
+Material::BlendMode Material::blendMode() const {
+    return blendMode_; 
 }
 
 Ptr<Material> Material::clone() const {
@@ -116,5 +121,9 @@ void Material::shininessIs(Scalar shininess) {
 
 void Material::opacityIs(Scalar opacity) {
     opacity_ = opacity;
+}
+
+void Material::blendModeIs(BlendMode mode) {
+    blendMode_ = mode;
 }
 

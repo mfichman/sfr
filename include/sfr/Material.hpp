@@ -15,6 +15,8 @@ namespace sfr {
 /* Mesh color and texture properties */
 class Material : public Interface {
 public:
+    enum BlendMode { ALPHA, ADDITIVE };
+
     Material(std::string const& name);
 
     std::string const& name() const;
@@ -28,6 +30,7 @@ public:
     Color const& emissiveColor() const;
     Scalar shininess() const;
     Scalar opacity() const;
+    BlendMode blendMode() const;
     Ptr<Material> clone() const;
 
     void diffuseMapIs(Ptr<Texture> texture);
@@ -40,6 +43,7 @@ public:
     void emissiveColorIs(Color const& color);
     void shininessIs(Scalar shininess);
     void opacityIs(Scalar opacity);
+    void blendModeIs(BlendMode mode);
 
 private:
     std::string name_;
@@ -53,6 +57,7 @@ private:
     Color emissiveColor_;
     Scalar shininess_;
     Scalar opacity_;
+    BlendMode blendMode_;
 };
 
 }

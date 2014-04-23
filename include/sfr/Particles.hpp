@@ -28,6 +28,7 @@ class Particles : public Node {
 public:
     enum Attribute { POSITION, COLOR, SIZE, ROTATION };
     enum ClearMode { MANUAL, AUTO };
+    enum BlendMode { ALPHA, ADDITIVE };
 
     Particles();
     Particle const& particle(GLuint index) const;
@@ -36,6 +37,7 @@ public:
     Ptr<Texture> texture() const { return texture_; }
     Color const& tint() const { return tint_; }
     ClearMode clearMode() const { return clearMode_; }
+    BlendMode blendMode() const { return blendMode_; }
     bool isVisible() const { return texture_&&buffer_.size(); }
 
     void particleEnq(Particle const& particle);
@@ -44,6 +46,7 @@ public:
     void textureIs(Ptr<Texture> texture);
     void tintIs(Color const& tint);
     void clearModeIs(ClearMode mode);
+    void blendModeIs(BlendMode mode);
 
 private:
     virtual void operator()(Ptr<Functor> functor);
@@ -52,6 +55,7 @@ private:
     Ptr<Texture> texture_;
     Color tint_;
     ClearMode clearMode_;
+    BlendMode blendMode_;
 };
 
 class ParticleProgram : public Program {
