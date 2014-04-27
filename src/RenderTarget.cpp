@@ -11,6 +11,7 @@
 using namespace sfr;
 
 RenderTarget::RenderTarget(GLuint width, GLuint height, GLuint format) {
+    id_ = 0;
     glGenTextures(1, &id_);
     glBindTexture(GL_TEXTURE_2D, id_);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -20,6 +21,8 @@ RenderTarget::RenderTarget(GLuint width, GLuint height, GLuint format) {
     
     if (format == GL_DEPTH_COMPONENT24) {
         // FIXME: Check for other depth component types
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+    } else if (format == GL_DEPTH24_STENCIL8) {
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
     } else {
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);

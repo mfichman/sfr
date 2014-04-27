@@ -20,6 +20,10 @@ FrameBuffer::~FrameBuffer() {
     glDeleteFramebuffers(1, &id_);
 }
 
+GLuint FrameBuffer::id() const {
+    return id_;
+}
+
 GLuint FrameBuffer::drawBufferCount() const {
     return drawBuffer_.size();
 }
@@ -30,6 +34,10 @@ Ptr<RenderTarget> FrameBuffer::drawBuffer(GLuint index) const {
 
 Ptr<RenderTarget> FrameBuffer::depthBuffer() const {
     return depthBuffer_;
+}
+
+Ptr<RenderTarget> FrameBuffer::stencilBuffer() const {
+    return stencilBuffer_;
 }
 
 FrameBuffer::Status FrameBuffer::status() const {
@@ -55,6 +63,16 @@ void FrameBuffer::depthBufferIs(Ptr<RenderTarget> target) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     depthBuffer_ = target;
+}
+
+void FrameBuffer::stencilBufferIs(Ptr<RenderTarget> target) {
+    assert(!stencilBuffer_ && "depth buffer already attached");
+
+    glBindFramebuffer(GL_FRAMEBUFFER, id_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, target->id(), 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    stencilBuffer_ = target;
 }
 
 void FrameBuffer::check() {

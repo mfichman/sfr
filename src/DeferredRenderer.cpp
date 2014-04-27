@@ -7,6 +7,7 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/AlphaRenderer.hpp"
+#include "sfr/Camera.hpp"
 #include "sfr/DecalRenderer.hpp"
 #include "sfr/DeferredRenderer.hpp"
 #include "sfr/FlatRenderer.hpp"
@@ -15,6 +16,7 @@
 #include "sfr/ModelRenderer.hpp"
 #include "sfr/Renderer.hpp"
 #include "sfr/RenderTarget.hpp"
+#include "sfr/Scene.hpp"
 #include "sfr/ShadowRenderer.hpp"
 #include "sfr/SkyboxRenderer.hpp"
 #include "sfr/Transform.hpp"
@@ -42,6 +44,7 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     normal_.reset(new RenderTarget(width, height, GL_RGB16F));
     emissive_.reset(new RenderTarget(width, height, GL_RGB));
     depth_.reset(new RenderTarget(width, height, GL_DEPTH_COMPONENT24)); 
+    //depth_.reset(new RenderTarget(width, height, GL_DEPTH24_STENCIL8)); 
 
     frameBuffer_.reset(new FrameBuffer);
     frameBuffer_->drawBufferEnq(diffuse_);
@@ -49,6 +52,7 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     frameBuffer_->drawBufferEnq(normal_);
     frameBuffer_->drawBufferEnq(emissive_);
     frameBuffer_->depthBufferIs(depth_);
+    //frameBuffer_->stencilBufferIs(depth_);
     frameBuffer_->check();
 
     decalFrameBuffer_.reset(new FrameBuffer);
@@ -57,23 +61,48 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
 }
 
 void DeferredRenderer::operator()(Ptr<Scene> scene) {
-
     // Generate shadows
     shadowPass_->operator()(scene);
 
+/*
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 1, 0xff); 
+    glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+    glStencilMask(0xff);
+*/
+
     // Pass 1: Write material properties into the material G-Buffers
     frameBuffer_->statusIs(FrameBuffer::ENABLED);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     materialPass_->operator()(scene);
     frameBuffer_->statusIs(FrameBuffer::DISABLED);
 
+/*
+    // Using the stencil to discard fragments not present in the G-buffer
+    // doesn't seem to make much of a performance difference. In most cases,
+    // the screen is almost entirely filled with pixels rendered by the sun, so
+    // the stencil buffer is almost completely filled. Need to investigate
+    // further whether the stencil test is actually working as intended.
+    //
+    // Copy the stencil from the FBO to the back buffer so that we can use it
+    GLuint width = scene->camera()->viewportWidth();
+    GLuint height = scene->camera()->viewportHeight();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer_->id());
+    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+    glStencilFunc(GL_LEQUAL, 1, 0xff); // Pass fragments with non-zero stencil value
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0);
+*/
+
     // Pass 1a: Project decals into diffuse buffer
+    decalFrameBuffer_->statusIs(FrameBuffer::ENABLED);
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, depth_->id());
-    decalFrameBuffer_->statusIs(FrameBuffer::ENABLED);
     decalPass_->operator()(scene);
     decalFrameBuffer_->statusIs(FrameBuffer::DISABLED);
-    
+
     // Pass 2: Render lighting using light bounding boxes
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuse_->id());
@@ -87,14 +116,19 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     glBindTexture(GL_TEXTURE_2D, depth_->id());
     lightPass_->operator()(scene);
 
+    //glStencilFunc(GL_EQUAL, 0, 0xff); // Pass fragments with zero stencil value
+
     // Pass 3: Skybox
     skyboxPass_->operator()(scene);
+
+    //glDisable(GL_STENCIL_TEST);
 
     // Pass 4: Render transparent objects
     alphaPass_->operator()(scene);
 
     // Pass 5: Text/UI rendering
     uiPass_->operator()(scene);
+    
 }
 
 

@@ -54,5 +54,5 @@ void main() {
     float lumd = lum / (1+lum); 
     
     color.rgb *= lumd;
-	gl_FragDepth = li.depth;
+    gl_FragDepth = li.depth;
 }

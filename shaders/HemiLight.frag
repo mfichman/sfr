@@ -56,5 +56,5 @@ void main() {
     color.rgb += li.Ke; // Emissive
     color.rgb += La * li.Kd; // Ambient
     color.a = 1;
-	gl_FragDepth = li.depth;
+    gl_FragDepth = li.depth;
 }

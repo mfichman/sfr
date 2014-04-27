@@ -21,10 +21,13 @@ public:
     GLuint drawBufferCount() const;
     Ptr<RenderTarget> drawBuffer(GLuint index) const;
     Ptr<RenderTarget> depthBuffer() const;
+    Ptr<RenderTarget> stencilBuffer() const;
     Status status() const;
+    GLuint id() const;
 
     void drawBufferEnq(Ptr<RenderTarget> target);
     void depthBufferIs(Ptr<RenderTarget> target);
+    void stencilBufferIs(Ptr<RenderTarget> target);
     void statusIs(Status status);
 
     void check();
@@ -34,6 +37,7 @@ private:
     std::vector<Ptr<RenderTarget>> drawBuffer_;
     std::vector<GLenum> drawBufferAttachment_;
     Ptr<RenderTarget> depthBuffer_;
+    Ptr<RenderTarget> stencilBuffer_;
     Status status_;
 };
 

@@ -30,10 +30,10 @@ namespace sfr {
 
 void initWindow() {
     // Initialize the window
-    sf::ContextSettings settings(32, 0, 0, 3, 2);
+    sf::ContextSettings settings(24, 8, 0, 3, 2);
     sf::VideoMode mode(1200, 800, 32);
     window.reset(new sf::Window(mode, "Window", sf::Style::Default, settings));
-    window->setVerticalSyncEnabled(true);
+    //window->setVerticalSyncEnabled(true);
     timer.reset(new sf::Clock);
 
     settings = window->getSettings();
@@ -73,7 +73,7 @@ void initCamera() {
     cam->viewportWidthIs(window->getSize().x);
     cam->viewportHeightIs(window->getSize().y);
     scene->cameraIs(cam);
-    //scene->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
+    scene->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
     //
     /*
     cam->nearIs(0);
@@ -185,8 +185,8 @@ void initTransparency() {
 
 void initModels() {
     // Initialize the models that are part of the scene
-    Ptr<sfr::Transform> plane(assets->assetIs<sfr::Transform>("meshes/Plane.obj"));
-    root->childIs(plane);
+    //Ptr<sfr::Transform> plane(assets->assetIs<sfr::Transform>("meshes/Plane.obj"));
+    //root->childIs(plane);
 
     //Ptr<sfr::Transform> sphere = assets->nodeIs("meshes/SmoothSphere.obj");
     //sphere->positionIs(sfr::Vector(0.f, 0.f, 5.f));
@@ -290,6 +290,11 @@ void runRenderLoop() {
     float realTime = 0.f;
     float perfTime = 0.f;
     float perfFrames = 0.f;
+    float cpuTime = 0.f;
+    GLuint64 gpuTime = 0;
+
+    GLuint queryId = 0;
+    glGenQueries(1, &queryId);
 
     // Run the game loop while the window is still open
     while (window->isOpen()) {
@@ -303,27 +308,47 @@ void runRenderLoop() {
         // include time processing input or running the Display() function,
         // because that causes the CPU to wait for the GPU to finish rendering.
         perfClock.restart();
+
+        glBeginQuery(GL_TIME_ELAPSED, queryId);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         updater->operator()(scene);
         deferredRenderer->operator()(scene);
         //boundsRenderer->operator()(scene);
 
+        cpuTime += perfClock.getElapsedTime().asSeconds();
+        // CPU time used for rendering
+
+        window->display();
+
+        glFinish();
+
+        GLuint64 elapsed = 0;
+        glEndQuery(GL_TIME_ELAPSED);
+        glGetQueryObjectui64v(queryId, GL_QUERY_RESULT, &elapsed);
+        gpuTime += elapsed;
+        // Total GPU time
+        
         perfTime += perfClock.getElapsedTime().asSeconds();
         perfFrames++;
+        // Total time 
 
         // Display the time every couple of seconds.  This is not the total
         // time taken per frame, but the total time used per frame to
         // traverse the scene graph and send the info to the graphics card.
-        if (realTime >= .5f) {
-            std::cout << perfTime/perfFrames * 1000.f;
-            std::cout << " ms/frame" << std::endl;
+        if (realTime >= 10.f) {
+            printf("%06.3f cpu ms/frame\n", cpuTime/perfFrames * 1000.f);
+            printf("%06.3f gpu ms/frame\n", gpuTime/1000000.f/perfFrames);
+            printf("%06.3f ms/frame (total)\n\n", perfTime/perfFrames * 1000.f);
             perfTime = 0;
             perfFrames = 0;
             realTime = 0;
+            cpuTime = 0;
+            gpuTime = 0;
         }
-        window->display();
     }
+
+    glDeleteQueries(1, &queryId);
 }
 
 int main() {
@@ -334,12 +359,10 @@ int main() {
         initDecals();
 //        initTransparency();
         initModels();
-/*
         initFonts();
         initParticles();
         initRibbon();
         initQuad();
-*/
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {
