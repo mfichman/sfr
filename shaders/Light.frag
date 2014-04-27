@@ -29,6 +29,7 @@ struct LightingInfo {
     vec3 N; // Normal vector
 };
 
+    vec2 normalized = position.xy/position.w;
 LightingInfo lightingInfo() {
     // Reconstruct lighting info from the G-buffers that was generated in the first 
     // rendering pass
@@ -37,7 +38,6 @@ LightingInfo lightingInfo() {
     // Perform the viewport transform on the clip position. 
 
     // Normalize the coordinates
-    vec2 normalized = position.xy/position.w;
 
     // Viewport (x, y) coordinates of pixel, range: [0, 1]
     vec2 viewport = (normalized.xy + 1.)/2.;
