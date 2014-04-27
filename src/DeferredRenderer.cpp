@@ -7,6 +7,7 @@
 
 #include "sfr/Common.hpp"
 #include "sfr/AlphaRenderer.hpp"
+#include "sfr/DecalRenderer.hpp"
 #include "sfr/DeferredRenderer.hpp"
 #include "sfr/FlatRenderer.hpp"
 #include "sfr/FrameBuffer.hpp"
@@ -33,7 +34,8 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     lightPass_.reset(new LightRenderer(assets));
     alphaPass_.reset(new AlphaRenderer(assets));
     skyboxPass_.reset(new SkyboxRenderer(assets));
-    uiPass_.reset(new sfr::UiRenderer(assets));
+    uiPass_.reset(new UiRenderer(assets));
+    decalPass_.reset(new DecalRenderer(assets));
 
     diffuse_.reset(new RenderTarget(width, height, GL_RGB));
     specular_.reset(new RenderTarget(width, height, GL_RGBA));
@@ -66,13 +68,10 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     frameBuffer_->statusIs(FrameBuffer::DISABLED);
 
     // Pass 1a: Project decals into diffuse buffer
-    // * bind diffuse buffer to decal fbo
-    // * bind depth buffer for reading
-    // * render bounding box for each decal
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, depth_->id());
     decalFrameBuffer_->statusIs(FrameBuffer::ENABLED);
-    // decalPass_->operator()(scene);
+    decalPass_->operator()(scene);
     decalFrameBuffer_->statusIs(FrameBuffer::DISABLED);
     
     // Pass 2: Render lighting using light bounding boxes

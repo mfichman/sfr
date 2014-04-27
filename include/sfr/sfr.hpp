@@ -31,6 +31,8 @@
 #include "Color.hpp"
 #include "Common.hpp"
 #include "Cubemap.hpp"
+#include "Decals.hpp"
+#include "DecalRenderer.hpp"
 #include "DeferredRenderer.hpp"
 #include "BoundsRenderer.hpp"
 #include "DepthRenderTarget.hpp"

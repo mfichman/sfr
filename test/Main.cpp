@@ -22,7 +22,7 @@ Ptr<sfr::Ribbon> ribbon;
 Ptr<sfr::Transform> root;
 sf::Time elapsedTime = sf::seconds(0.f);
 float z = 0;//3.1f;
-float x = -1.8f;
+float x = -5.f;
 
 namespace sfr {
     extern char const* const resources[];
@@ -33,6 +33,7 @@ void initWindow() {
     sf::ContextSettings settings(32, 0, 0, 3, 2);
     sf::VideoMode mode(1200, 800, 32);
     window.reset(new sf::Window(mode, "Window", sf::Style::Default, settings));
+    window->setVerticalSyncEnabled(true);
     timer.reset(new sf::Clock);
 
     settings = window->getSettings();
@@ -73,6 +74,16 @@ void initCamera() {
     cam->viewportHeightIs(window->getSize().y);
     scene->cameraIs(cam);
     //scene->skyboxIs(assets->assetIs<Cubemap>("textures/Nebula.png"));
+    //
+    /*
+    cam->nearIs(0);
+    cam->farIs(100);
+    cam->leftIs(-10);
+    cam->rightIs(10);
+    cam->topIs(10);
+    cam->bottomIs(-10);
+    cam->typeIs(sfr::Camera::ORTHOGRAPHIC);
+*/
 }
 
 void initLights() {
@@ -158,6 +169,13 @@ void handleInput() {
         sfr::Vector(x, y, z),
         sfr::Vector(0.f, 0.3f, 0.f),
         sfr::Vector(0.f, 1.f, 0.f)));
+/*
+    float const y = 8.f;
+    camera->transformIs(sfr::Matrix::look(
+        sfr::Vector(x, y, z),
+        sfr::Vector(0.f, 0.0f, 0.f),
+        sfr::Vector(1.f, 0.f, 0.f)));
+*/
 }
 
 void initTransparency() {
@@ -182,6 +200,25 @@ void initModels() {
         }
     }
 }
+
+void initDecals() {
+    Ptr<sfr::Decals> decals = root->childIs<sfr::Decals>();
+    Ptr<sfr::Texture> tex = assets->assetIs<sfr::Texture>("textures/Checkerboard.png");
+
+    Decal decal;
+    decal.normal = sfr::GLvec3(0.f, 1.f, 0.f);
+    decal.right = sfr::GLvec3(1.f, 0.f, 0.f);
+    decal.position = sfr::GLvec3(0.f, 0.f, 0);
+    decal.alpha = 1.f;
+    decal.width = 2.f;
+    decal.height = 2.f;
+    decal.depth = 2.f;
+
+    decals->decalEnq(decal);
+    decals->textureIs(tex);
+
+}
+
 
 void initFonts() {
     Ptr<sfr::Font> font = assets->assetIs<sfr::Font>("fonts/Ethnocentric.ttf");
@@ -294,12 +331,15 @@ int main() {
     try {    
         initWindow();
         initCamera();
+        initDecals();
 //        initTransparency();
         initModels();
+/*
         initFonts();
         initParticles();
         initRibbon();
         initQuad();
+*/
         initLights();
         runRenderLoop();
     } catch (std::exception& ex) {

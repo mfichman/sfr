@@ -14,8 +14,8 @@ uniform sampler2D depthBuffer;
 uniform sampler2DShadow shadowMap;
 uniform float shadowMapSize;
 
-uniform mat4 unprojectMatrix; // Back to view coordinates from clip coordinates
-uniform mat4 lightMatrix; // From _eye coordinates_ (!!) to light space
+uniform mat4 unprojectMatrix; // From clip space to view space
+uniform mat4 lightMatrix; // From _view space_ (!!) to light space
 
 in vec4 position;
 
@@ -29,7 +29,6 @@ struct LightingInfo {
     vec3 N; // Normal vector
 };
 
-    vec2 normalized = position.xy/position.w;
 LightingInfo lightingInfo() {
     // Reconstruct lighting info from the G-buffers that was generated in the first 
     // rendering pass
@@ -38,6 +37,7 @@ LightingInfo lightingInfo() {
     // Perform the viewport transform on the clip position. 
 
     // Normalize the coordinates
+    vec2 normalized = position.xy/position.w;
 
     // Viewport (x, y) coordinates of pixel, range: [0, 1]
     vec2 viewport = (normalized.xy + 1.)/2.;

@@ -22,14 +22,14 @@
 
 using namespace sfr;
 
-LightRenderer::LightRenderer(Ptr<AssetTable> manager) {
-    manager->assetIs<Transform>("meshes/LightShapes.obj");
-    unitSphere_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Sphere");
-    unitCone_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
-    unitQuad_ = manager->assetIs<Mesh>("meshes/LightShapes.obj/Quad");
-    pointLight_ = manager->assetIs<LightProgram>("shaders/PointLight");
-    hemiLight_ = manager->assetIs<LightProgram>("shaders/HemiLight");
-    spotLight_ = manager->assetIs<LightProgram>("shaders/SpotLight");
+LightRenderer::LightRenderer(Ptr<AssetTable> assets) {
+    assets->assetIs<Transform>("meshes/LightShapes.obj");
+    unitSphere_ = assets->assetIs<Mesh>("meshes/LightShapes.obj/Sphere");
+    unitCone_ = assets->assetIs<Mesh>("meshes/LightShapes.obj/Cone");
+    unitQuad_ = assets->assetIs<Mesh>("meshes/LightShapes.obj/Quad");
+    pointLight_ = assets->assetIs<LightProgram>("shaders/PointLight");
+    hemiLight_ = assets->assetIs<LightProgram>("shaders/HemiLight");
+    spotLight_ = assets->assetIs<LightProgram>("shaders/SpotLight");
 }
 
 void LightRenderer::onState() {

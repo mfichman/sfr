@@ -38,10 +38,14 @@ void Decals::operator()(Ptr<Node::Functor> functor) {
 }
 
 void DecalProgram::onLink() {
-    texture_ = glGetUniformLocation(id(), "tex");
     transform_ = glGetUniformLocation(id(), "transform");
+    texture_ = glGetUniformLocation(id(), "tex");
+    depthBuffer_ = glGetUniformLocation(id(), "depthBuffer");
+    unproject_ = glGetUniformLocation(id(), "unprojectMatrix");
     decalMatrix_ = glGetUniformLocation(id(), "decalMatrix");
 
     // Set texture samplers
     glUniform1i(texture_, 0);
+    // FIXME: This depends on the depth component being bound to location 4
+    glUniform1i(depthBuffer_, 4);
 }

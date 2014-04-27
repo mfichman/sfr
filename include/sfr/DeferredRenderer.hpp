@@ -23,6 +23,7 @@ private:
     Ptr<AlphaRenderer> alphaPass_;
     Ptr<ShadowRenderer> shadowPass_;
     Ptr<SkyboxRenderer> skyboxPass_;
+    Ptr<DecalRenderer> decalPass_;
     Ptr<UiRenderer> uiPass_;
 
     Ptr<FrameBuffer> frameBuffer_;

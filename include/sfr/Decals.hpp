@@ -48,14 +48,18 @@ class DecalProgram : public Program {
 public:
     DecalProgram(std::string const& name) : Program(name) {}
 
-    GLint texture() const { return texture_; }
     GLint transform() const { return transform_; }
+    GLint texture() const { return texture_; }
+    GLint depthBuffer() const { return depthBuffer_; }
+    GLint unproject() const { return unproject_; }
     GLint decalMatrix() const { return decalMatrix_; }
 
 private:
     void onLink();
-    GLint texture_ = -1;
     GLint transform_ = -1;
+    GLint texture_ = -1;
+    GLint depthBuffer_ = -1;
+    GLint unproject_ = -1;
     GLint decalMatrix_ = -1;
 };
 
