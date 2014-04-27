@@ -44,5 +44,4 @@ void main() {
     } else {
         color = texture(tex, decal.xy);
     }
-    //color = vec4(1, 0, 0, 1);
 }
