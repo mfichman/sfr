@@ -8,6 +8,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/Billboards.hpp"
 #include "sfr/Camera.hpp"
+#include "sfr/Decals.hpp"
 #include "sfr/HemiLight.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Particles.hpp"
@@ -89,6 +90,10 @@ void TransformUpdater::operator()(Ptr<Quad> quad) {
 
 void TransformUpdater::operator()(Ptr<Text> text) {
     scene_->renderDescIs(RenderDesc(text, 0, transform_));
+}
+
+void TransformUpdater::operator()(Ptr<Decals> decals) {
+    scene_->renderDescIs(RenderDesc(decals, 0, transform_));
 }
 
 

@@ -20,8 +20,6 @@ uniform mat4 lightMatrix; // From _eye coordinates_ (!!) to light space
 in vec4 position;
 
 struct LightingInfo {
-    vec2 viewport; // Viewport (x, y) coordinates of pixel, range: [0, 1]
-    vec3 clip; // Reconstructed clip space coordinates of pixel, range: [-1, 1]
     vec3 view; // View space coordinates of pixel
     float depth; // Coord in range [0, 1]
     vec3 Kd; // Diffuse color sampled from G-buffers
@@ -36,28 +34,34 @@ LightingInfo lightingInfo() {
     // rendering pass
     LightingInfo info;
    
-       // Perform the viewport transform on the clip position. 
+    // Perform the viewport transform on the clip position. 
+
+    // Normalize the coordinates
     vec2 normalized = position.xy/position.w;
-    info.viewport = (normalized.xy + 1.)/2.;
+
+    // Viewport (x, y) coordinates of pixel, range: [0, 1]
+    vec2 viewport = (normalized.xy + 1.)/2.;
 
     // Sample the depth and reconstruct the fragment view coordinates. 
     // Make sure the depth is unpacked into clip coordinates.
-    info.depth = texture(depthBuffer, info.viewport).r;
-    info.clip = vec3(normalized, 2. * info.depth - 1.);
+    info.depth = texture(depthBuffer, viewport).r;
+
+    // Reconstructed clip space coordinates of pixel, range: [-1, 1]
+    vec3 clip = vec3(normalized, 2. * info.depth - 1.);
 
     // Transform the clip coordinates back into view space for lighting calculations
-    vec4 view = unprojectMatrix * vec4(info.clip, 1.);
+    vec4 view = unprojectMatrix * vec4(clip, 1.);
     info.view = view.xyz/view.w;
 
     // Sample the materials using the viewport position
-    vec4 temp = texture(specularBuffer, info.viewport);
-    info.Kd = texture(diffuseBuffer, info.viewport).rgb;
-    info.Ke = texture(emissiveBuffer, info.viewport).rgb;
+    vec4 temp = texture(specularBuffer, viewport);
+    info.Kd = texture(diffuseBuffer, viewport).rgb;
+    info.Ke = texture(emissiveBuffer, viewport).rgb;
     info.Ks = temp.rgb;
     info.alpha = temp.a*1000;
 
     // Sample the normal vector for the pixel
-    info.N = normalize(texture(normalBuffer, info.viewport).xyz * 2. - 1.);
+    info.N = normalize(texture(normalBuffer, viewport).xyz * 2. - 1.);
 
     return info;
 }

@@ -48,6 +48,10 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     frameBuffer_->drawBufferEnq(emissive_);
     frameBuffer_->depthBufferIs(depth_);
     frameBuffer_->check();
+
+    decalFrameBuffer_.reset(new FrameBuffer);
+    decalFrameBuffer_->drawBufferEnq(diffuse_);
+    decalFrameBuffer_->check();
 }
 
 void DeferredRenderer::operator()(Ptr<Scene> scene) {
@@ -65,6 +69,11 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     // * bind diffuse buffer to decal fbo
     // * bind depth buffer for reading
     // * render bounding box for each decal
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, depth_->id());
+    decalFrameBuffer_->statusIs(FrameBuffer::ENABLED);
+    // decalPass_->operator()(scene);
+    decalFrameBuffer_->statusIs(FrameBuffer::DISABLED);
     
     // Pass 2: Render lighting using light bounding boxes
     glActiveTexture(GL_TEXTURE0);

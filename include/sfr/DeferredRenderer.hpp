@@ -11,7 +11,7 @@
 
 namespace sfr {
 
-/* Deferred shading renderer (1st and 2nd pass). */
+/* Deferred shading renderer (with forward-rendering fallback for alpha) */
 class DeferredRenderer : public Node::Functor {
 public:
     DeferredRenderer(Ptr<AssetTable> manager);
@@ -31,6 +31,8 @@ private:
     Ptr<RenderTarget> normal_;
     Ptr<RenderTarget> emissive_;
     Ptr<RenderTarget> depth_;
+
+    Ptr<FrameBuffer> decalFrameBuffer_;
 };
 
 }

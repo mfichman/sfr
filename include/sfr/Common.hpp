@@ -77,6 +77,7 @@ class Color;
 class Cubemap;
 class Decal;
 class Decals;
+class DecalProgram;
 class DecalRenderer;
 class DeferredRenderer;
 class DepthRenderTarget;
