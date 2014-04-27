@@ -8,11 +8,12 @@
 #include "sfr/Common.hpp"
 #include "sfr/AlphaRenderer.hpp"
 #include "sfr/DeferredRenderer.hpp"
-#include "sfr/DeferredRenderTarget.hpp"
 #include "sfr/FlatRenderer.hpp"
+#include "sfr/FrameBuffer.hpp"
 #include "sfr/LightRenderer.hpp"
 #include "sfr/ModelRenderer.hpp"
 #include "sfr/Renderer.hpp"
+#include "sfr/RenderTarget.hpp"
 #include "sfr/ShadowRenderer.hpp"
 #include "sfr/SkyboxRenderer.hpp"
 #include "sfr/Transform.hpp"
@@ -33,7 +34,20 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     alphaPass_.reset(new AlphaRenderer(assets));
     skyboxPass_.reset(new SkyboxRenderer(assets));
     uiPass_.reset(new sfr::UiRenderer(assets));
-    renderTarget_.reset(new DeferredRenderTarget(width, height));
+
+    diffuse_.reset(new RenderTarget(width, height, GL_RGB));
+    specular_.reset(new RenderTarget(width, height, GL_RGBA));
+    normal_.reset(new RenderTarget(width, height, GL_RGB16F));
+    emissive_.reset(new RenderTarget(width, height, GL_RGB));
+    depth_.reset(new RenderTarget(width, height, GL_DEPTH_COMPONENT24)); 
+
+    frameBuffer_.reset(new FrameBuffer);
+    frameBuffer_->drawBufferEnq(diffuse_);
+    frameBuffer_->drawBufferEnq(specular_);
+    frameBuffer_->drawBufferEnq(normal_);
+    frameBuffer_->drawBufferEnq(emissive_);
+    frameBuffer_->depthBufferIs(depth_);
+    frameBuffer_->check();
 }
 
 void DeferredRenderer::operator()(Ptr<Scene> scene) {
@@ -42,19 +56,27 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     shadowPass_->operator()(scene);
 
     // Pass 1: Write material properties into the material G-Buffers
-    renderTarget_->statusIs(DeferredRenderTarget::ENABLED);
+    frameBuffer_->statusIs(FrameBuffer::ENABLED);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     materialPass_->operator()(scene);
-    renderTarget_->statusIs(DeferredRenderTarget::DISABLED);
+    frameBuffer_->statusIs(FrameBuffer::DISABLED);
+
+    // Pass 1a: Project decals into diffuse buffer
+    // * bind diffuse buffer to decal fbo
+    // * bind depth buffer for reading
+    // * render bounding box for each decal
     
     // Pass 2: Render lighting using light bounding boxes
-    for(GLuint i = 0; i < renderTarget_->targetCount(); ++i) {
-        glActiveTexture(GL_TEXTURE0+i);
-        glBindTexture(GL_TEXTURE_2D, renderTarget_->target(i));
-    }
-    assert(renderTarget_->targetCount()==4);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuse_->id());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, specular_->id());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, normal_->id());
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, emissive_->id());
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, renderTarget_->depthBuffer());
+    glBindTexture(GL_TEXTURE_2D, depth_->id());
     lightPass_->operator()(scene);
 
     // Pass 3: Skybox

@@ -24,7 +24,13 @@ private:
     Ptr<ShadowRenderer> shadowPass_;
     Ptr<SkyboxRenderer> skyboxPass_;
     Ptr<UiRenderer> uiPass_;
-    Ptr<DeferredRenderTarget> renderTarget_;
+
+    Ptr<FrameBuffer> frameBuffer_;
+    Ptr<RenderTarget> diffuse_;
+    Ptr<RenderTarget> specular_;
+    Ptr<RenderTarget> normal_;
+    Ptr<RenderTarget> emissive_;
+    Ptr<RenderTarget> depth_;
 };
 
 }

@@ -294,7 +294,7 @@ int main() {
     try {    
         initWindow();
         initCamera();
-        initTransparency();
+//        initTransparency();
         initModels();
         initFonts();
         initParticles();

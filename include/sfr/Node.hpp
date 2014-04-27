@@ -35,6 +35,7 @@ public:
     virtual void operator()(Ptr<Quad> quad) {}
     virtual void operator()(Ptr<Text> text) {}
     virtual void operator()(Ptr<Ui> ui) {}
+    virtual void operator()(Ptr<Decals> decals) {}
 };
 
 }
