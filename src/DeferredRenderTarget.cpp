@@ -15,10 +15,11 @@ DeferredRenderTarget::DeferredRenderTarget(GLuint w, GLuint h) {
 
     GLuint formats[] = {
         GL_RGB, // Diffuse
-        GL_RGBA, // Specular
-        GL_RGB16F, // Normal (needs pretty good precision)
+        GL_RGBA, // Specular (+ exponent)
+        GL_RGB16F, // Normal (needs pretty good precision, hence 16f)
         GL_RGB, // Emissive 
     };
+    // Total: 3+4+6+3 = 16 bytes = ~31MB at 1920x1080
     target_.resize(sizeof(formats)/sizeof(*formats));
             
     // Initialize the framebuffer, which will hold all of the target textures
