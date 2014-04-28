@@ -321,8 +321,6 @@ void runRenderLoop() {
 
         window->display();
 
-        glFinish();
-
         GLuint64 elapsed = 0;
         glEndQuery(GL_TIME_ELAPSED);
         glGetQueryObjectui64v(queryId, GL_QUERY_RESULT, &elapsed);

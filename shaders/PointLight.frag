@@ -38,11 +38,9 @@ void main() {
         vec3 specular = li.Ks * Ls * pow(max(0., dot(L, R)), li.alpha);
 
         color = vec4(diffuse + specular, 1.);
-        color.xyz *= atten;
+        color.rgb *= atten;
     } else {
         color = vec4(0., 0., 0., 1.);
     }
-
-    color += vec4(.1, .1, .1, 1.); // FIXME
     gl_FragDepth = li.depth;
 }
