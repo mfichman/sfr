@@ -14,12 +14,21 @@ HemiLight::HemiLight() {
     constantAttenuation_ = 1.0f;
     linearAttenuation_ = 1.;//-0.5f;
     quadraticAttenuation_ = 0.0f;
-    specularColor_ = Color(1.f, 1.f, 1.f, 1.f);
-    diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
-    backDiffuseColor_ = Color(0.f, 0.f, 0.f, 1.f);
-    ambientColor_ = Color(0.f, 0.f, 0.f, 1.f);
+    specularColor_ = Color(1.f, 1.f, 1.f, 0.f);
+    diffuseColor_ = Color(1.f, 1.f, 1.f, 0.f);
+    backDiffuseColor_ = Color(0.f, 0.f, 0.f, 0.f);
+    ambientColor_ = Color(0.f, 0.f, 0.f, 0.f);
     direction_ = Vector(-1.f, 0.f, 0.f);
     shadowViewDistance_ = 20; // Indicates that the whole view frustum should be shadowed.
+}
+
+bool HemiLight::isVisible() const {
+    // FIXME: Check if attenuation is defunct
+    return diffuseColor_.red > 0 || diffuseColor_.green > 0 || diffuseColor_.blue > 0
+        || backDiffuseColor_.red > 0 || backDiffuseColor_.green > 0 || backDiffuseColor_.blue > 0
+        || specularColor_.red > 0 || specularColor_.green > 0 || specularColor_.blue > 0
+        || ambientColor_.red > 0 || ambientColor_.green > 0 || ambientColor_.blue > 0;
+
 }
 
 Color const& HemiLight::diffuseColor() const {

@@ -21,6 +21,11 @@ SpotLight::SpotLight() {
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
 
+bool SpotLight::isVisible() const {
+    return diffuseColor_.red > 0 || diffuseColor_.green > 0 || diffuseColor_.blue > 0
+        || specularColor_.red > 0 || specularColor_.green > 0 || specularColor_.blue > 0;
+}
+
 Color const& SpotLight::diffuseColor() const {
     return diffuseColor_;
 }

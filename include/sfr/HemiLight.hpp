@@ -30,6 +30,7 @@ public:
     Ptr<DepthRenderTarget> shadowMap() const;
     Matrix const& transform() const;
     Scalar shadowViewDistance() const;
+    bool isVisible() const;
 
     void diffuseColorIs(Color const& color);
     void backDiffuseColorIs(Color const& color);

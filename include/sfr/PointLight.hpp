@@ -22,6 +22,7 @@ public:
     Scalar linearAttenuation() const;
     Scalar quadraticAttenuation() const;
     Scalar radiusOfEffect() const;
+    bool isVisible() const;
 
     void diffuseColorIs(Color const& diffuse);
     void specularColorIs(Color const& specular);

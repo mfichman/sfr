@@ -18,6 +18,11 @@ PointLight::PointLight() {
     diffuseColor_ = Color(1.f, 1.f, 1.f, 1.f);
 }
 
+bool PointLight::isVisible() const {
+    return diffuseColor_.red > 0 || diffuseColor_.green > 0 || diffuseColor_.blue > 0
+        || specularColor_.red > 0 || specularColor_.green > 0 || specularColor_.blue > 0;
+}
+
 Color const& PointLight::diffuseColor() const {
     return diffuseColor_;
 }

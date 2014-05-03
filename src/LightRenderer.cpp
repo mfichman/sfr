@@ -63,6 +63,11 @@ void LightRenderer::onState() {
 }
 
 void LightRenderer::operator()(Ptr<PointLight> light) {
+    Scalar radius = light->radiusOfEffect();
+    if (!light->isVisible() || radius <= 0.f) {
+        return;
+    }
+
     operator()(pointLight_);
 
     // Set the light color, attenuation, and position properties.
@@ -75,9 +80,6 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     // Save old model matrix
     Matrix previous = worldTransform();
 
-    // Scale model to cover the light's area of effect
-    Scalar radius = light->radiusOfEffect();
-    
     // Scale the light geometry to the correct size
     Matrix scale = Matrix::scale(radius, radius, radius);
     worldTransformIs(worldTransform() * scale);
@@ -92,9 +94,11 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     // Render a hemi light, that is, a light that has a color for faces facing
     // the light direction, and another color for faces that face away from the
     // light direction, with attenuation.
-    if (!scene() || !scene()->camera()) {
+    Scalar radius = light->radiusOfEffect();
+    if (!light->isVisible() || radius <= 0.f) {
         return;
     }
+
     operator()(hemiLight_);
 
     Ptr<Camera> camera = scene()->camera();
@@ -152,7 +156,6 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     } else {
         // This renders the light's bounding volume (usually a sphere)
         Matrix previous = worldTransform();
-        Scalar radius = light->radiusOfEffect();
         worldTransformIs(worldTransform() * Matrix::scale(radius, radius, radius));
         operator()(unitSphere_);
         worldTransformIs(previous);
@@ -160,7 +163,8 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
 }
 
 void LightRenderer::operator()(Ptr<SpotLight> light) {
-    if (!scene() || !scene()->camera()) {
+    Scalar radius = light->radiusOfEffect();
+    if (!light->isVisible() || radius <= 0.f) {
         return;
     }
 
@@ -203,7 +207,8 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     // Scale model to cover the light's area of effect.
     Scalar const margin = 2.f;
     Scalar const maxRadius = 500.f;
-    Scalar const radius = std::min(maxRadius, light->radiusOfEffect());
+    radius = std::min(maxRadius, radius);
+
     Scalar const cutoff = light->spotCutoff() + margin;
     Scalar const width = Scalar(std::tan(M_PI * cutoff / 180.f));
     Scalar const sx = width * radius;

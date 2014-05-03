@@ -29,6 +29,7 @@ public:
     Scalar radiusOfEffect() const;
     Ptr<DepthRenderTarget> shadowMap() const;
     Matrix const& transform() const;
+    bool isVisible() const;
 
     void diffuseColorIs(Color const& diffuse);
     void specularColorIs(Color const& specular);
