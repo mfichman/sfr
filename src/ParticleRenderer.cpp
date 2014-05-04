@@ -75,8 +75,10 @@ void ParticleRenderer::operator()(Ptr<Particles> particles) {
 
     // Pass the matrices to the vertex shader
     Matrix const modelView = camera->viewTransform() * worldTransform();
+    Matrix const inverseProjection = camera->projectionTransform().inverse();
     glUniformMatrix4fv(program_->modelViewMatrix(), 1, 0, modelView.mat4f());
     glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionTransform().mat4f());
+    glUniformMatrix4fv(program_->unprojectMatrix(), 1, 0, inverseProjection.mat4f());
 
     // Render the particles
     buffer_->bufferDataIs(GL_POINTS, particles->buffer(), particles->particleCount());

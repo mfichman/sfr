@@ -61,6 +61,10 @@ void ParticleProgram::onLink() {
     tint_ = glGetUniformLocation(id(), "tint");
     modelViewMatrix_ = glGetUniformLocation(id(), "modelViewMatrix");
     projectionMatrix_ = glGetUniformLocation(id(), "projectionMatrix");
+    depthBuffer_ = glGetUniformLocation(id(), "depthBuffer");
+    unprojectMatrix_ = glGetUniformLocation(id(), "unprojectMatrix");
        
     glUniform1i(texture_, 0);
+    glUniform1i(depthBuffer_, 4);
+    // FIXME: Depends on deferred renderer texture defs
 }

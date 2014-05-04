@@ -61,18 +61,22 @@ class ParticleProgram : public Program {
 public:
     ParticleProgram(std::string const& name) : Program(name) {}
 
-    GLint texture() { return texture_; }
-    GLint tint() { return tint_; }
-    GLint modelViewMatrix() { return modelViewMatrix_; }
-    GLint projectionMatrix() { return projectionMatrix_; }
+    GLint texture() const { return texture_; }
+    GLint tint() const { return tint_; }
+    GLint modelViewMatrix() const { return modelViewMatrix_; }
+    GLint projectionMatrix() const { return projectionMatrix_; }
+    GLint depthBuffer() const { return depthBuffer_; }
+    GLint unprojectMatrix() const { return unprojectMatrix_; }
 
 private:
     void onLink();
 
     GLint texture_ = -1;
+    GLint depthBuffer_ = -1;
     GLint tint_ = -1;
     GLint modelViewMatrix_ = -1;
     GLint projectionMatrix_ = -1;
+    GLint unprojectMatrix_ = -1;
 };
 
 }
