@@ -12,6 +12,8 @@
 using namespace sfr;
 
 Camera::Camera() {
+    projectionDirty_ = true;
+    viewDirty_ = true;
     far_ = 1000.f;
     near_ = .1f;
     fieldOfView_ = 45.f;
@@ -127,22 +129,35 @@ Frustum Camera::viewFrustum(Scalar near, Scalar far) const {
     }
 }
 
-Matrix Camera::transform() const {
-    return projectionTransform() * viewTransform();
+Matrix const& Camera::transform() const {
+    if (projectionDirty_ || viewDirty_) {
+        transform_ = projectionTransform() * viewTransform();
+        projectionDirty_ = false;
+        viewDirty_ = false;
+    }
+    return transform_;
 }
 
-Matrix Camera::projectionTransform() const {
-
-    if (ORTHOGRAPHIC == type_) {
-        return Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
-    } else {
-        Scalar aspectRatio = viewportWidth_/Scalar(viewportHeight_);
-        return Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
+Matrix const& Camera::projectionTransform() const {
+    if (projectionDirty_) {
+        projectionDirty_ = false;
+    
+        if (ORTHOGRAPHIC == type_) {
+            projectionTransform_ = Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
+        } else {
+            Scalar aspectRatio = viewportWidth_/Scalar(viewportHeight_);
+            projectionTransform_ = Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
+        }
     }
+    return projectionTransform_;
 }
 
 Matrix const& Camera::viewTransform() const {
     return viewTransform_;
+}
+
+Matrix const& Camera::inverseViewTransform() const {
+    return worldTransform();
 }
 
 Matrix const& Camera::worldTransform() const {
@@ -150,46 +165,53 @@ Matrix const& Camera::worldTransform() const {
 }
 
 void Camera::viewportWidthIs(GLuint width) {
+    projectionDirty_ = true;
     viewportWidth_ = width;
 }
 
 void Camera::viewportHeightIs(GLuint height) {
+    projectionDirty_ = true;
     viewportHeight_ = height;
 }
 
 void Camera::farIs(Scalar distance) {
+    projectionDirty_ = true;
     far_ = distance;
 }
 
 void Camera::nearIs(Scalar distance) {
+    projectionDirty_ = true;
     near_ = distance;
 }
 
 void Camera::leftIs(Scalar distance) {
+    projectionDirty_ = true;
     left_ = distance;
 }
 
 void Camera::rightIs(Scalar distance) {
+    projectionDirty_ = true;
     right_ = distance;
 }
 
 void Camera::topIs(Scalar distance) {
+    projectionDirty_ = true;
     top_ = distance;
 }
 
 void Camera::bottomIs(Scalar distance) {
+    projectionDirty_ = true;
     bottom_ = distance;
 }
 
 void Camera::fieldOfViewIs(Scalar view) {
+    projectionDirty_ = true;
     fieldOfView_ = view;
 }
 
-void Camera::viewTransformIs(Matrix const& transform) {
-    viewTransform_ = transform;
-}
-
 void Camera::worldTransformIs(Matrix const& transform) {
+    viewDirty_ = true;
+    viewTransform_ = transform.inverse();
     worldTransform_ = transform;
 }
 
@@ -198,6 +220,7 @@ void Camera::stateIs(State state) {
 }
 
 void Camera::typeIs(Type type) {
+    projectionDirty_ = true;
     type_ = type;
 }
 

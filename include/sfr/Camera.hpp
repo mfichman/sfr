@@ -24,10 +24,11 @@ public:
     
     Frustum viewFrustum(Scalar near, Scalar far) const;
     Frustum viewFrustum() const;
-    Matrix transform() const;
-    Matrix projectionTransform() const;
+    Matrix const& transform() const;
+    Matrix const& projectionTransform() const;
     Matrix const& viewTransform() const;
     Matrix const& worldTransform() const;
+    Matrix const& inverseViewTransform() const;
     Scalar far() const;
     Scalar near() const;
     Scalar left() const;
@@ -49,7 +50,6 @@ public:
     void fieldOfViewIs(Scalar view);
     void stateIs(State state);
     void typeIs(Type type);
-    void viewTransformIs(Matrix const& transform);
     void worldTransformIs(Matrix const& transform);
     void viewportWidthIs(GLuint width);
     void viewportHeightIs(GLuint height);
@@ -70,6 +70,12 @@ private:
     GLuint viewportHeight_;
     State state_;
     Type type_;
+
+    // Cached computed values
+    mutable Matrix projectionTransform_;
+    mutable Matrix transform_;
+    mutable bool projectionDirty_;
+    mutable bool viewDirty_;
 };
 
 }

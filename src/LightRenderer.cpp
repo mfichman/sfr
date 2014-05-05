@@ -127,7 +127,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     }
     // Set the light matrix in the shader, which transforms from view => light space.
     // This matrix is used for shadow mapping
-    Matrix viewToLightTransform = light->transform() * camera->viewTransform().inverse();
+    Matrix viewToLightTransform = light->transform() * camera->inverseViewTransform();
     glUniformMatrix4fv(program_->light(), 1, 0, viewToLightTransform.mat4f());
 
     // Calculate the model transform, and scale the model to cover the light's 
@@ -198,7 +198,7 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     }
     // Set the light matrix in the shader, which transforms from view => light space.
     // This matrix is used for shadow mapping
-    Matrix viewToLightTransform = light->transform() * camera->viewTransform().inverse();
+    Matrix viewToLightTransform = light->transform() * camera->inverseViewTransform();
     glUniformMatrix4fv(program_->light(), 1, 0, viewToLightTransform.mat4f());
 
     // Save the old model matrix

@@ -54,7 +54,7 @@ void DecalRenderer::operator()(Ptr<Decals> decals) {
     
     Ptr<Camera> camera = scene()->camera();
     Matrix const inverseProjection = camera->projectionTransform().inverse();
-    Matrix const inverseView = camera->viewTransform().inverse();
+    Matrix const inverseView = camera->inverseViewTransform();
     Matrix const cameraTransform = camera->transform();
     glUniformMatrix4fv(program_->unproject(), 1, 0, inverseProjection.mat4f());
 

@@ -220,6 +220,13 @@ Matrix::Matrix() {
 
 Matrix Matrix::operator*(Matrix const& other) const {
     Matrix out;
+
+    static const Matrix ident;
+
+    if (memcmp((void*)&ident, (void*)this, sizeof(ident)) == 0) {
+        // optimize the identity case
+        return other;
+    }
     
     /*
     0  1  2  3
