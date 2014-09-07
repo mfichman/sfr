@@ -35,7 +35,7 @@ public:
     Scalar width() const { return width_; }
     Scalar minWidth() const { return minWidth_; }
     bool isVisible() const { return texture_&&buffer_.size(); }
-    GLuint ribbonVertexCount() const { return buffer_.size(); }
+    GLuint ribbonVertexCount() const { return GLuint(buffer_.size()); }
 
     void ribbonVertexIs(GLuint index, RibbonVertex const& rv);
     void pointQuotaIs(GLint quota);

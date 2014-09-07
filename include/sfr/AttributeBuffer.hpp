@@ -44,17 +44,9 @@ public:
         AttributeBuffer(name, usage) {
     }
 
-    GLuint elementCount() const {
-        return element_.size();
-    }
-
-    GLuint elementSize() const {
-        return sizeof(T);
-    }
-
-    T const& element(GLuint index) {
-        return element_[index];
-    }
+    GLuint elementCount() const { return GLuint(element_.size()); }
+    GLuint elementSize() const { return sizeof(T); }
+    T const& element(GLuint index) { return element_[index]; }
 
     void elementCountIs(GLuint count) {
         if (count == element_.size()) {

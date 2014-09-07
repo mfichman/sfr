@@ -20,6 +20,8 @@ public:
 
     Vector max; // Maximum x/y/z coordinate
     Vector min; // Minimum x/y/z coordinate
+
+    Vector center() const;
 };
 
 }

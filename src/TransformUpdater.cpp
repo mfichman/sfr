@@ -10,6 +10,7 @@
 #include "sfr/Camera.hpp"
 #include "sfr/Decals.hpp"
 #include "sfr/HemiLight.hpp"
+#include "sfr/Mesh.hpp"
 #include "sfr/Model.hpp"
 #include "sfr/Particles.hpp"
 #include "sfr/PointLight.hpp"
@@ -56,7 +57,9 @@ void TransformUpdater::operator()(Ptr<Camera> camera) {
 }
 
 void TransformUpdater::operator()(Ptr<Model> model) {
-    scene_->renderDescIs(RenderDesc(model, model->program(), transform_));
+    if (model->mesh()->renderMode() == sfr::Mesh::VISIBLE) {
+        scene_->renderDescIs(RenderDesc(model, model->program(), transform_));
+    }
 }
 
 void TransformUpdater::operator()(Ptr<PointLight> light) {

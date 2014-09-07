@@ -61,7 +61,7 @@ void DecalRenderer::operator()(Ptr<Decals> decals) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, decals->texture()->id());
     
-    for (size_t i = 0; i < decals->decalCount(); ++i) {
+    for (GLuint i = 0; i < decals->decalCount(); ++i) {
 
         Decal const& decal = decals->decal(i); 
 

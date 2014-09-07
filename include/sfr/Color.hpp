@@ -15,7 +15,7 @@ namespace sfr {
 
 class Color {
 public:
-    Color(Scalar red, Scalar blue, Scalar green, Scalar alpha);
+    Color(Scalar red, Scalar green, Scalar blue, Scalar alpha);
     Color();
     
     GLvec4 vec4f() const;
@@ -26,8 +26,8 @@ public:
     friend std::istream& ::operator>>(std::istream& in, Color& color);
 
     Scalar red;
-    Scalar blue;
     Scalar green;
+    Scalar blue;
     Scalar alpha;
 };
 

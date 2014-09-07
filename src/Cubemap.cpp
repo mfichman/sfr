@@ -52,7 +52,7 @@ void Cubemap::heightIs(GLuint height) {
 
 void Cubemap::dataIs(const GLubyte* pixels) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, id_);
-    for (size_t i = 0; i < 6; ++i) {
+    for (GLuint i = 0; i < 6; ++i) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGBA8, width_, height_, 
             0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     }

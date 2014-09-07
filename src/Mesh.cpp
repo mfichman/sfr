@@ -19,6 +19,7 @@ using namespace sfr;
 Mesh::Mesh(std::string const& name) {
     name_ = name;
     status_ = DIRTY;
+    renderMode_ = VISIBLE;
     id_ = 0;
 }
 

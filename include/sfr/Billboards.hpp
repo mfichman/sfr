@@ -34,7 +34,7 @@ public:
     Ptr<Texture> texture() const { return texture_; }
     Billboard const* buffer() const { return &buffer_.front(); }
     Billboard const& billboard(GLuint index) const;
-    GLuint billboardCount() const { return buffer_.size(); }
+    GLuint billboardCount() const { return GLuint(buffer_.size()); }
     sfr::Color const& tint() const { return tint_; }
     ClearMode clearMode() const { return clearMode_; }
     BlendMode blendMode() const { return blendMode_; }

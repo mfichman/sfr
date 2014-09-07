@@ -31,7 +31,7 @@ std::string const& IndexBuffer::name() const {
 }
 
 GLuint IndexBuffer::elementCount() const {
-    return element_.size();
+    return GLuint(element_.size());
 }
 
 GLuint IndexBuffer::elementSize() const {

@@ -46,3 +46,11 @@ void Box::pointIs(Vector const& point) {
         max.z = point.z;
     }
 }
+
+Vector Box::center() const {
+    Vector center;
+    center.x = (max.x+min.x)/2.f;
+    center.y = (max.y+min.y)/2.f;
+    center.z = (max.z+min.z)/2.f;
+    return center;
+}

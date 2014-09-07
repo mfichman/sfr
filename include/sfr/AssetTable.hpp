@@ -20,6 +20,9 @@ public:
     Ptr<T> assetIs(std::string const& name, Arg... args); 
 
     template <typename T>
+    Ptr<T> assetIs(std::string const& name, Ptr<T> asset);
+
+    template <typename T>
     Ptr<T> asset(std::string const& name) const;
 
     void listenerIs(Listener* listener) const;
@@ -85,6 +88,12 @@ Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
     } else {
         return std::dynamic_pointer_cast<T>(asset);
     }
+}
+
+template <typename T>
+Ptr<T> AssetTable::assetIs(std::string const& name, Ptr<T> asset) {
+    asset_[name] = asset;
+    return asset;
 }
 
 template <typename T>

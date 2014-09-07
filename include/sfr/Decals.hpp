@@ -28,7 +28,7 @@ class Decals : public Node {
 public:
     Decal const& decal(GLuint index) const;
     Decal const* buffer() const { return &decal_.front(); }
-    GLuint decalCount() const { return decal_.size(); }
+    GLuint decalCount() const { return GLuint(decal_.size()); }
     Ptr<Texture> texture() const { return texture_; }
     bool isVisible() const { return texture_&&decal_.size(); }
 

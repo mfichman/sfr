@@ -19,6 +19,7 @@ class Mesh : public Interface {
 public:
     enum Status { SYNCED, DIRTY };
     enum Attribute { POSITION, NORMAL, TANGENT, TEXCOORD };
+    enum RenderMode { VISIBLE, INVISIBLE };
 
     Mesh(std::string const& name);
     ~Mesh();
@@ -26,12 +27,14 @@ public:
     Ptr<AttributeBuffer> attributeBuffer() const;
     Ptr<IndexBuffer> indexBuffer() const;
     Status status() const;
+    RenderMode renderMode() const { return renderMode_; }
     GLuint id() const { return id_; }
     Box const& bounds() { return bounds_; }
 
     void attributeBufferIs(Ptr<MutableAttributeBuffer<MeshVertex>> buffer);
     void indexBufferIs(Ptr<IndexBuffer> indices);
     void statusIs(Status status);
+    void renderModeIs(RenderMode mode) { renderMode_ = mode; }
     void boundsIs(Box const& bounds) { bounds_ = bounds; }
 
 private:
@@ -42,6 +45,7 @@ private:
     Ptr<MutableAttributeBuffer<MeshVertex>> attributeBuffer_;
     Ptr<IndexBuffer> indexBuffer_;
     Status status_;
+    RenderMode renderMode_;
     GLuint id_;  
     Box bounds_;
 };

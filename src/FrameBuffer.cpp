@@ -25,7 +25,7 @@ GLuint FrameBuffer::id() const {
 }
 
 GLuint FrameBuffer::drawBufferCount() const {
-    return drawBuffer_.size();
+    return GLuint(drawBuffer_.size());
 }
 
 Ptr<RenderTarget> FrameBuffer::drawBuffer(GLuint index) const {
@@ -45,7 +45,7 @@ FrameBuffer::Status FrameBuffer::status() const {
 }
 
 void FrameBuffer::drawBufferEnq(Ptr<RenderTarget> target) {
-    GLenum const attachment = GL_COLOR_ATTACHMENT0+drawBuffer_.size();
+    GLenum const attachment = GL_COLOR_ATTACHMENT0+GLuint(drawBuffer_.size());
     drawBuffer_.push_back(target);
     drawBufferAttachment_.push_back(attachment);
 
@@ -91,7 +91,7 @@ void FrameBuffer::statusIs(Status status) {
     status_ = status;
     if (ENABLED == status_) {
         glBindFramebuffer(GL_FRAMEBUFFER, id_);
-        glDrawBuffers(drawBufferAttachment_.size(), &drawBufferAttachment_[0]);
+        glDrawBuffers(GLuint(drawBufferAttachment_.size()), &drawBufferAttachment_[0]);
     } else if (DISABLED == status_) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     } else {

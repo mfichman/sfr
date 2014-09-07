@@ -32,7 +32,7 @@ public:
     Particles();
     Particle const& particle(GLuint index) const;
     Particle const* buffer() const { return &buffer_.front(); }
-    GLuint particleCount() const { return buffer_.size(); }
+    GLuint particleCount() const { return GLuint(buffer_.size()); }
     Ptr<Texture> texture() const { return texture_; }
     Color const& tint() const { return tint_; }
     ClearMode clearMode() const { return clearMode_; }

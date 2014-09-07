@@ -57,7 +57,7 @@ void Shader::statusIs(Status status) {
     }
     if (COMPILED == status) {
         const GLchar* strings = source_.c_str();
-        GLint lengths = source_.length();
+        GLint lengths = GLint(source_.length());
         glShaderSource(id_, 1, &strings, &lengths);
         glCompileShader(id_);
     }

@@ -28,7 +28,7 @@ public:
 
     void elementCountIs(GLuint count);
     void elementIs(GLuint offset, GLuint element);
-    void elementEnq(GLuint element) { elementIs(element_.size(), element); }
+    void elementEnq(GLuint element) { elementIs(GLuint(element_.size()), element); }
     void statusIs(Status status);
 
 private:

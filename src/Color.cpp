@@ -12,21 +12,21 @@ using namespace sfr;
 
 Color::Color() :
     red(0.0f),
-    blue(0.0f),
     green(0.0f),
+    blue(0.0f),
     alpha(1.0f) {
 }
 
-Color::Color(Scalar red, Scalar blue, Scalar green, Scalar alpha) :
+Color::Color(Scalar red, Scalar green, Scalar blue, Scalar alpha) :
     red(red),
-    blue(blue),
     green(green),
+    blue(blue),
     alpha(alpha) {
 }
 
 GLvec4
 Color::vec4f() const {
-    return GLvec4(red, blue, green, alpha);
+    return GLvec4(red, green, blue, alpha);
 }
     
 Color Color::operator*(Scalar scale) const {
@@ -43,5 +43,5 @@ std::ostream& operator<<(std::ostream& out, Color const& color) {
 }
 
 std::istream& operator>>(std::istream& in, Color& color) {
-    return in >> color.red >> color.blue >> color.green;
+    return in >> color.red >> color.green >> color.blue;
 }

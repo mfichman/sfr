@@ -47,7 +47,7 @@ Scalar PointLight::radiusOfEffect() const {
     Scalar a = quadraticAttenuation();
     Scalar b = linearAttenuation();
     Scalar c = constantAttenuation(); 
-    Scalar minIntensity = 0.02f;
+    Scalar minIntensity = 0.01f;
 
     if (a != 0) {
         // Quadratic equation to find distance at which intensity

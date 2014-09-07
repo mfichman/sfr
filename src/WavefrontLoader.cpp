@@ -169,6 +169,9 @@ void WavefrontLoader::newMesh(std::string const& name) {
 
     mesh_->attributeBufferIs(attributeBuffer_);
     mesh_->indexBufferIs(indexBuffer_);
+    if (name[0] == '.') { // Meshes starting with '.' are hidden by default
+        mesh_->renderModeIs(sfr::Mesh::INVISIBLE);
+    }
 }
 
 void WavefrontLoader::newTriangle(std::istream& in) {
