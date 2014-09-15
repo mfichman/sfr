@@ -1,5 +1,5 @@
 Simple, Fast Renderer
-====================
+=====================
 
 Simple, Fast Renderer (SFR) is an OpenGL 3.2+ rendering library.  The aim of
 the library is to be as simple as possible: you construct the scene graph, and
@@ -23,6 +23,7 @@ Dependencies
 ------------
 
 SFR depends on GLEW for OpenGL 3.2+ context loading.  It also relies on [SFML](http://www.sfml-dev.org/download.php) to run the sample application.
+
 
 Building
 --------
