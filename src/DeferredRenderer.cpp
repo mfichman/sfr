@@ -75,11 +75,11 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     materialPass_->operator()(scene);
     frameBuffer_->statusIs(FrameBuffer::DISABLED);
 
-    // Using the stencil to discard fragments not present in the G-buffer
+    // FIXME: Using the stencil to discard fragments not present in the G-buffer
     // doesn't seem to make much of a performance difference. In most cases,
-    // the screen is almost entirely filled with pixels rendered by the sun, so
-    // the stencil buffer is almost completely filled. Need to investigate
-    // further whether the stencil test is actually working as intended.
+    // the screen is almost entirely filled with pixels lit by the sun, so the
+    // stencil buffer is almost completely filled. Need to investigate further
+    // whether the stencil test is actually working as intended.
     //
     // Copy the stencil from the FBO to the back buffer so that we can use it
     GLuint width = scene->camera()->viewportWidth();
@@ -112,6 +112,7 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     glBindTexture(GL_TEXTURE_2D, depth_->id());
     lightPass_->operator()(scene);
 
+    // FIXME: glDepthRange(1, 1) instead of using stencil?
     glStencilFunc(GL_EQUAL, 0, 0xff); // Pass fragments with zero stencil value
 
     // Pass 3: Skybox

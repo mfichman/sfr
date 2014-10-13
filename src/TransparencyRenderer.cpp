@@ -26,7 +26,6 @@ TransparencyRenderer::TransparencyRenderer(Ptr<AssetTable> manager) {
 
 void TransparencyRenderer::onState() {
     if (state() == Renderer::ACTIVE) {
-//        glUseProgram(program_->id());
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glDepthMask(GL_FALSE);

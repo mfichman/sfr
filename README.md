@@ -18,11 +18,13 @@ SFR features:
 * Transparency
 * OBJ file loader
 
-
 Dependencies
 ------------
 
-SFR depends on GLEW for OpenGL 3.2+ context loading.  It also relies on [SFML](http://www.sfml-dev.org/download.php) to run the sample application.
+Depends on [GLEW](http://glew.sourceforge.net/) for OpenGL 3.2+ context
+loading, [Freetype](http://www.freetype.org/freetype2/) for font loading, and
+[SFML](http://www.sfml-dev.org/download.php) to run the sample application and
+load textures. 
 
 
 Building

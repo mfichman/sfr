@@ -10,26 +10,26 @@
 
 #define GLEW_STATIC
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#define VC_EXTRALEAN
-#define NOMINMAX
-#define SFR_USE_GLEW
-#include <windows.h>
-#include <GL/glew.h>
-#include <GL/GL.h>
-#undef ABSOLUTE
-#undef far
-#undef near
+    #define WIN32_LEAN_AND_MEAN
+    #define VC_EXTRALEAN
+    #define NOMINMAX
+    #define SFR_USE_GLEW
+    #include <windows.h>
+    #include <GL/glew.h>
+    #include <GL/GL.h>
+    #undef ABSOLUTE
+    #undef far
+    #undef near
 #endif
+
 #ifdef __linux__
-#define SFR_USE_GLEW
-#include <GL/glew.h>
-#include <GL/GL.h>
+    #define SFR_USE_GLEW
+    #include <GL/glew.h>
+    #include <GL/GL.h>
 #endif
+
 #ifdef __APPLE__
-//#define SFR_USE_GLEW
-//#include <GL/glew.h>
-#include <OpenGL/GL3.h>
+    #include <OpenGL/GL3.h>
 #endif
 
 #define _USE_MATH_DEFINES

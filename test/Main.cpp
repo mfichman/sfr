@@ -48,7 +48,7 @@ void initWindow() {
     if (GLEW_OK != error) {
         throw std::runtime_error((char*)glewGetErrorString(error));
     }
-    if (!GLEW_VERSION_3_0) {
+    if (!GLEW_VERSION_3_2) {
         throw std::runtime_error("This program requires OpenGL 3.2");
     }
     std::cerr << glGetString(GL_VERSION) << std::endl;
@@ -366,4 +366,5 @@ int main() {
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
     }
+    return 0;
 }

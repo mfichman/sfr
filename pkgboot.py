@@ -79,6 +79,7 @@ class Package:
         else:
             self._setup_unix()
         self._setup_tests()
+        self._setup_examples()
         self.build() # Run custom code for building the package
 
     def _lib_is_valid_for_platform(self, lib):
@@ -151,6 +152,7 @@ class Package:
         self.env.Append(ENV=os.environ)
         self.env.VariantDir('build/src', 'src', duplicate=0)
         self.env.VariantDir('build/test', 'test', duplicate=0)
+        self.env.VariantDir('build/examples', 'examples', duplicate=0)
 
     def _setup_win(self):
         # Set up Windows-specific options
@@ -250,20 +252,32 @@ class Package:
         # Configure the test environment
         self.env.Append(BUILDERS={'Test': Builder(action=run_test)})
         self.tests = []
-        testenv = self.env.Clone()
-        testenv.Append(LIBS=self.lib)
+        env = self.env.Clone()
+        env.Append(LIBS=self.lib)
         for test in self.env.Glob('build/test/**.cpp'):
-            self.env.Depends(test, self.pch)
+            env.Depends(test, self.pch)
             name = test.name.replace('.cpp', '')
             if self.env['PLATFORM'] == 'win32':
                 inputs = (test, self.pch)
             else:
                 inputs = (test,)
-            prog = testenv.Program('bin/test/%s' % name, inputs)
+            prog = env.Program('bin/test/%s' % name, inputs)
             if 'check' in COMMAND_LINE_TARGETS:
-                self.tests.append(testenv.Test(name, prog))
+                self.tests.append(env.Test(name, prog))
         if 'check' in COMMAND_LINE_TARGETS:
             self.env.Alias('check', self.tests)
+
+    def _setup_examples(self):
+        env = self.env.Clone()
+        env.Append(LIBS=self.lib)
+        for example in self.env.Glob('build/examples/**.cpp'):
+            env.Depends(example, self.pch)
+            name = example.name.replace('.cpp', '')
+            if self.env['PLATFORM'] == 'win32':
+                inputs = (example, self.pch)
+            else:
+                inputs = (example,)
+            prog = env.Program('bin/examples/%s' % name, inputs)
 
     def build(self):
         pass
