@@ -9,6 +9,8 @@ include/sfr/Assets.hpp
 ipch
 *.sdf
 *.suo
+*.pdb
+*.idb
 *.vcxproj.filters
 *.vcxproj.user
 *.orig
