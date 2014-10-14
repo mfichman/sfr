@@ -43,8 +43,10 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     specular_.reset(new RenderTarget(width, height, GL_RGBA));
     normal_.reset(new RenderTarget(width, height, GL_RGB16F));
     emissive_.reset(new RenderTarget(width, height, GL_RGB));
-    //depth_.reset(new RenderTarget(width, height, GL_DEPTH_COMPONENT24)); 
-    depth_.reset(new RenderTarget(width, height, GL_DEPTH24_STENCIL8)); 
+    depth_.reset(new RenderTarget(width, height, GL_DEPTH_COMPONENT24)); 
+
+//    depth_.reset(new RenderTarget(width, height, GL_DEPTH24_STENCIL8)); 
+// Enable stencil optimization
 
     frameBuffer_.reset(new FrameBuffer);
     frameBuffer_->drawBufferEnq(diffuse_);
@@ -52,7 +54,7 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
     frameBuffer_->drawBufferEnq(normal_);
     frameBuffer_->drawBufferEnq(emissive_);
     frameBuffer_->depthBufferIs(depth_);
-    frameBuffer_->stencilBufferIs(depth_);
+    //frameBuffer_->stencilBufferIs(depth_);
     frameBuffer_->check();
 
     decalFrameBuffer_.reset(new FrameBuffer);
@@ -75,6 +77,7 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     materialPass_->operator()(scene);
     frameBuffer_->statusIs(FrameBuffer::DISABLED);
 
+/*
     // FIXME: Using the stencil to discard fragments not present in the G-buffer
     // doesn't seem to make much of a performance difference. In most cases,
     // the screen is almost entirely filled with pixels lit by the sun, so the
@@ -91,6 +94,7 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     glStencilFunc(GL_LEQUAL, 1, 0xff); // Pass fragments with non-zero stencil value
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
     glStencilMask(0);
+*/
 
     // Pass 1a: Project decals into diffuse buffer
     decalFrameBuffer_->statusIs(FrameBuffer::ENABLED);
@@ -113,7 +117,7 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     lightPass_->operator()(scene);
 
     // FIXME: glDepthRange(1, 1) instead of using stencil?
-    glStencilFunc(GL_EQUAL, 0, 0xff); // Pass fragments with zero stencil value
+ //   glStencilFunc(GL_EQUAL, 0, 0xff); // Pass fragments with zero stencil value
 
     // Pass 3: Skybox
     skyboxPass_->operator()(scene);
