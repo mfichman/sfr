@@ -65,6 +65,7 @@ void Text::updateTextBuffer() {
     // Update the text buffer to prepare it for rendering, using the font glyph
     // metrics.  For each character, insert a particle into the attribute
     // buffer.
+    buffer_->elementDelAll();
     GLfloat cursorX = 0;
     GLfloat cursorY = 0;
     char prev = '\0';
