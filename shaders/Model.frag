@@ -49,10 +49,10 @@ void main() {
 
 	// Save the specular material parameters (with shininess)
 	specular.rgb = Ts * Ks;
-	specular.a = alpha/1000; 
+	specular.a = alpha/1024; 
     // Shininess must be in the range [0-1000].  This is required to scale down
-    // the shininess to 8 bits, so that shininess above 1.0f doesn't get
-    // clamped.
+    // the shininess to 8 bits, so that "converted" shininess above 1.0f
+    // doesn't get clamped.
 
 	// Save the normal vector in view space
 	normalOut = (TBN * Tn + 1.) / 2.;
