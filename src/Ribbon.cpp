@@ -34,6 +34,20 @@ void Ribbon::ribbonVertexIs(GLuint index, RibbonVertex const& rv) {
     buffer_[index] = rv;
 }
 
+void Ribbon::pointTailIs(Vector const& point) {
+    auto prevTail = tail_ - 1;
+    if (tail_ < 0) { return; }
+
+    auto index = 3 * ((prevTail % pointQuota()) + 1);
+    buffer_.resize(3*(pointQuota()+1)); // +1 is for the cap
+
+    auto rv = buffer_[index+2];
+    rv.position = point.vec3f();
+    ribbonVertexIs(index+2, rv);
+    ribbonVertexIs(1, rv);
+    
+}
+
 void Ribbon::pointEnq(Vector const& point) {
     GLint const index = 3 * ((tail_ % pointQuota()) + 1);
     buffer_.resize(3*(pointQuota()+1)); // +1 is for the cap

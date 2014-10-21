@@ -39,6 +39,7 @@ public:
 
     void ribbonVertexIs(GLuint index, RibbonVertex const& rv);
     void pointQuotaIs(GLint quota);
+    void pointTailIs(Vector const& point);
     void pointEnq(Vector const& point);
     void pointDelAll(); 
     void textureIs(Ptr<Texture> texture);
