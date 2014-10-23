@@ -84,7 +84,7 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     // Set up the view matrix for the virtual light camera
     // Transform to the center of the light, then point in the reverse of the
     // light direction. 
-    Matrix const lightWorld = Matrix::look(-light->direction());
+    Matrix const lightWorld = Matrix::look(-light->direction().unit());
     // FIXME: Shouldn't this be transformed by worldTransform(), as for
     // spotlights...?
 
@@ -93,9 +93,9 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     // distance.
     Ptr<Camera> sceneCamera = scene()->camera();
 
-    // Transform the view frustum into light space
+    // Transform the view frustum into light space from clip space
     float far = sceneCamera->far();
-    sceneCamera->farIs(light->shadowViewDistance());
+    sceneCamera->farIs(sceneCamera->near()+light->shadowViewDistance());
     Matrix transform = lightWorld * sceneCamera->transform().inverse();
     sceneCamera->farIs(far);
     Frustum frustum;
@@ -111,14 +111,8 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
 
     frustum = transform * frustum;
     
-    // Slightly enlarge the bounding box for the view frustum in light-space.
-    // This prevents clamping artifacts that occur when a shadow gets close to
-    // the edge of the view frustum.
+    // Calculate bounding box of frustum; this will be the orthographic projection box.
     Box bounds(frustum);
-    bounds.max.x += 2;
-    bounds.min.x -= 2;
-    bounds.max.y += 2;
-    bounds.min.y -= 2;
 
     // Include objects behind the camera...note that this will not work for all scenes.
     bounds.min.z -= 100;
