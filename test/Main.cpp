@@ -239,6 +239,19 @@ void initFonts() {
     text2->sizeIs(40);
 }
 
+void initUiQuad() {
+    Ptr<sfr::Ui> ui = scene->ui()->childIs<sfr::Ui>();
+    ui->xIs(sfr::Coord(0, sfr::Coord::PIXELS));//::center());
+    ui->yIs(sfr::Coord(0, sfr::Coord::PIXELS));//::center());
+    //ui->yIs(sfr::Coord::center());
+    Ptr<sfr::Quad> quad = ui->childIs<sfr::Quad>();
+    quad->textureIs(assets->assetIs<sfr::Texture>("textures/White.png"));
+    quad->widthIs(100);
+    quad->heightIs(100);
+    quad->tintIs(sfr::Color(1.f, 1.f, 1.f, 1.f));
+    
+}
+
 void initParticles() {
     Ptr<sfr::Transform> pnode = root->childIs<sfr::Transform>("particles");
     particles = pnode->childIs<sfr::Particles>();
@@ -355,13 +368,14 @@ int main() {
         initWindow();
         initCamera();
         initDecals();
-//        initTransparency();
+        initTransparency();
         initModels();
         initFonts();
         initParticles();
         initRibbon();
         initQuad();
         initLights();
+        initUiQuad();
         runRenderLoop();
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;

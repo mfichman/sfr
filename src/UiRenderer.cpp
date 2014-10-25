@@ -10,11 +10,15 @@
 #include "sfr/AssetTable.hpp"
 #include "sfr/Camera.hpp"
 #include "sfr/Font.hpp"
+#include "sfr/IndexBuffer.hpp"
 #include "sfr/Iterator.hpp"
+#include "sfr/Mesh.hpp"
+#include "sfr/Quad.hpp"
+#include "sfr/Scene.hpp"
 #include "sfr/Text.hpp"
+#include "sfr/Texture.hpp"
 #include "sfr/Ui.hpp"
 #include "sfr/UiRenderer.hpp"
-#include "sfr/Scene.hpp"
 
 
 using namespace sfr;
@@ -22,6 +26,13 @@ using namespace sfr;
 UiRenderer::UiRenderer(Ptr<AssetTable> assets) {
     textProgram_ = assets->assetIs<TextProgram>("shaders/Text");
     textProgram_->statusIs(Program::LINKED);
+
+    quadProgram_ = assets->assetIs<QuadProgram>("shaders/Quad");
+    quadProgram_->statusIs(Program::LINKED);
+
+    assets->assetIs<Transform>("meshes/Quad.obj");
+    quad_ = assets->asset<Mesh>("meshes/Quad.obj/Quad");
+    assert(quad_);
 }
 
 void UiRenderer::operator()(Ptr<Scene> scene) {
@@ -59,6 +70,40 @@ void UiRenderer::operator()(Ptr<Ui> ui) {
     }
 
     rect_ = parentRect;
+}
+
+void UiRenderer::operator()(Ptr<Quad> quad) {
+    Ptr<Texture> texture = quad->texture();
+    if (!texture) { return; }
+
+    Ptr<Mesh> mesh = quad_;
+    mesh->statusIs(Mesh::SYNCED);
+
+    glUseProgram(quadProgram_->id());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->id());
+
+    glUniform4fv(quadProgram_->tint(), 1, quad->tint().vec4f());
+
+    // Pass the matrices to the vertex shader
+    Ptr<Camera> camera = scene_->camera();
+    GLfloat width = GLfloat(camera->viewportWidth());
+    GLfloat height = GLfloat(camera->viewportHeight());
+    Matrix view = Matrix::ortho(0, width, height, 0, -1, 1);
+    Matrix model = Matrix::translate(Vector(rect_.x, rect_.y, 0));
+    Matrix scale = Matrix::scale(quad->width(), quad->height(), 0);
+    Matrix center = Matrix::translate(Vector(.5f, .5f, 0));
+    // The +.5's are so that the quad's top-left corner is at (rect_.x, rect_.y)
+
+    Matrix transform = view * model * scale * center;
+    glUniformMatrix4fv(quadProgram_->transform(), 1, 0, transform.mat4f());
+
+    // Render the mesh
+    Ptr<IndexBuffer> buffer = mesh->indexBuffer();
+    glBindVertexArray(mesh->id());
+    glDrawElements(GL_TRIANGLES, buffer->elementCount(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
 void UiRenderer::operator()(Ptr<Text> text) {

@@ -20,11 +20,14 @@ public:
     UiRenderer(Ptr<AssetTable> assets);
     void operator()(Ptr<Scene> scene);
     void operator()(Ptr<Ui> ui);
+    void operator()(Ptr<Quad> quad);
     void operator()(Ptr<Text> text);
 
 private:
     Ptr<Scene> scene_;
     Ptr<TextProgram> textProgram_;
+    Ptr<QuadProgram> quadProgram_;
+    Ptr<Mesh> quad_;
     Rect rect_;
 };
 
