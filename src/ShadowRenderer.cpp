@@ -114,7 +114,12 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     // Calculate bounding box of frustum; this will be the orthographic projection box.
     Box bounds(frustum);
 
-    // Include objects behind the camera...note that this will not work for all scenes.
+    // Include objects behind/off to the side of the camera...note that this
+    // will not work for all scenes. FIXME: Make this margin configurable
+    bounds.max.y += 2.f;
+    bounds.min.y -= 2.f;
+    bounds.max.x += 2.f;
+    bounds.min.x -= 2.f;
     bounds.min.z -= 100;
      
     // Set up parameters for the virtual light camera

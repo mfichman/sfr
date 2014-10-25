@@ -15,7 +15,7 @@ namespace sfr {
 void Renderer::operator()(Ptr<Scene> scene) {
     stateIs(ACTIVE);
     sceneIs(scene);
-    for(Iterator<std::set<RenderDesc>> i = scene->renderDescs(); i; i++) {
+    for(Iterator<std::vector<RenderDesc>> i = scene->renderDescs(); i; i++) {
         worldTransformIs(i->worldTransform());
         i->node()->operator()(std::static_pointer_cast<Renderer>(shared_from_this()));
     }

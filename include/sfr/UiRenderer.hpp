@@ -19,7 +19,6 @@ class UiRenderer : public Node::Functor {
 public:
     UiRenderer(Ptr<AssetTable> assets);
     void operator()(Ptr<Scene> scene);
-    void operator()(Ptr<Ui> ui);
     void operator()(Ptr<Quad> quad);
     void operator()(Ptr<Text> text);
 

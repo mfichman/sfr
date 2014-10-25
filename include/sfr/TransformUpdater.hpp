@@ -28,10 +28,13 @@ public:
     void operator()(Ptr<Quad> quad);
     void operator()(Ptr<Text> text);
     void operator()(Ptr<Decals> decals);
+    void operator()(Ptr<Ui> ui);
     void transformIs(Matrix const& transform);
 private:
     Ptr<Scene> scene_;
     Matrix transform_;
+    Rect rect_;
+    bool ui_;
 };
 
 

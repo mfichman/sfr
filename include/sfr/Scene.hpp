@@ -26,6 +26,21 @@ private:
     Matrix worldTransform_;
 };
 
+class UiRenderDesc {
+public:
+    UiRenderDesc(Ptr<Node> node, Ptr<Program> program, Rect const& rect);
+
+    Ptr<Node> node() const { return node_; }
+    Ptr<Program> program() const { return program_; }
+    Rect const& rect() const { return rect_; }
+    bool operator<(UiRenderDesc const& other) const;
+
+private:
+    Ptr<Node> node_;
+    Ptr<Program> program_;
+    Rect rect_;
+};
+
 /* Holds the root node and global scene data. */
 class Scene : public Interface {
 public:
@@ -34,12 +49,17 @@ public:
     Ptr<Camera> camera() const;
     Ptr<Cubemap> skybox() const;
     Ptr<Ui> ui() const;
-    Iterator<std::set<RenderDesc>> renderDescs() const;
+    Iterator<std::vector<RenderDesc>> renderDescs() const;
+    Iterator<std::vector<UiRenderDesc>> uiRenderDescs() const;
 
     void cameraIs(Ptr<Camera> camera);
     void skyboxIs(Ptr<Cubemap> cubemap);
     void renderDescIs(RenderDesc const& renderDesc);
     void renderDescDelAll();
+    void uiRenderDescIs(UiRenderDesc const& uiRenderDesc);
+    void uiRenderDescDelAll();
+
+    void sort();
 
 private:
     Ptr<Transform> root_;
@@ -47,7 +67,8 @@ private:
     Ptr<Cubemap> skybox_;
     Ptr<Ui> ui_;
 
-    std::set<RenderDesc> renderDesc_;
+    std::vector<RenderDesc> renderDesc_;
+    std::vector<UiRenderDesc> uiRenderDesc_;
 };
 
 }

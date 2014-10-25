@@ -170,6 +170,14 @@ public:
     operator GLfloat const*() const { return &u; }
 };
 
+class Rect {
+public:
+    GLfloat x;
+    GLfloat y;
+    GLfloat width;
+    GLfloat height;
+};
+
 }
 
 #endif

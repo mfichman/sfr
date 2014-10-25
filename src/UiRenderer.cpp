@@ -37,39 +37,20 @@ UiRenderer::UiRenderer(Ptr<AssetTable> assets) {
 
 void UiRenderer::operator()(Ptr<Scene> scene) {
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(GL_FALSE);
 
     scene_ = scene;
-    rect_.x = 0;
-    rect_.y = 0;
-    rect_.width = GLfloat(scene->camera()->viewportWidth());
-    rect_.height = GLfloat(scene->camera()->viewportHeight());
-    operator()(scene->ui());
+    for(Iterator<std::vector<UiRenderDesc>> i = scene->uiRenderDescs(); i; i++) {
+        rect_=  i->rect();
+        i->node()->operator()(std::static_pointer_cast<Node::Functor>(shared_from_this()));
+    }
 
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_ONE, GL_ZERO);
     glDepthMask(GL_TRUE);
-}
-
-void UiRenderer::operator()(Ptr<Ui> ui) {
-    if (ui->renderMode() == Ui::INVISIBLE) {
-        return;
-    }
-
-    Rect parentRect = rect_;
-    rect_.width = ui->width().absolute(parentRect.width);
-    rect_.height = ui->height().absolute(parentRect.height);
-    rect_.x = ui->x().absolute(parentRect.x, parentRect.width, rect_.width);
-    rect_.y = ui->y().absolute(parentRect.y, parentRect.height, rect_.height);
-
-    for(Iterator<std::vector<Ptr<Node>>> i = ui->children(); i; i++) {
-        i->get()->operator()(std::static_pointer_cast<UiRenderer>(shared_from_this()));
-    }
-
-    rect_ = parentRect;
 }
 
 void UiRenderer::operator()(Ptr<Quad> quad) {

@@ -13,14 +13,6 @@
 
 namespace sfr {
 
-class Rect {
-public:
-    GLfloat x;
-    GLfloat y;
-    GLfloat width;
-    GLfloat height;
-};
-
 /* Represents a length, such as the width or height of a container. */
 class Span {
 public:
