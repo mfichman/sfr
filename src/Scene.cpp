@@ -66,7 +66,7 @@ void Scene::uiRenderDescDelAll() {
 
 void Scene::sort() {
     std::sort(renderDesc_.begin(), renderDesc_.end());
-    std::sort(uiRenderDesc_.begin(), uiRenderDesc_.end());
+    //std::sort(uiRenderDesc_.begin(), uiRenderDesc_.end());
 
 }
 
