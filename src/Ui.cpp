@@ -71,6 +71,19 @@ GLfloat Coord::absolute(GLfloat begin, GLfloat parentSpan, GLfloat selfSpan) {
     return 0;
 }
 
+Coord Coord::operator+(float other) {
+    Coord coord = *this;
+    coord.value_ += other;
+    return coord;
+}
+
+
+Coord Coord::operator-(float other) {
+    Coord coord = *this;
+    coord.value_ -= other;
+    return coord;
+}
+
 Ui::Ui() {
     layoutMode_ = BLOCK;
     renderMode_ = VISIBLE;
@@ -86,6 +99,10 @@ Ptr<Node> Ui::child(GLuint index) const {
 
 Iterator<std::vector<Ptr<Node>>> Ui::children() {
     return Iterator<std::vector<Ptr<Node>>>(children_);
+}
+
+void Ui::renderModeIs(RenderMode val) {
+    renderMode_ = val;
 }
 
 void Ui::childIs(Ptr<Node> child) {
