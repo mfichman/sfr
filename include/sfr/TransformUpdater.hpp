@@ -30,6 +30,7 @@ public:
     void operator()(Ptr<Decals> decals);
     void operator()(Ptr<Ui> ui);
     void transformIs(Matrix const& transform);
+    template <typename T> void submit(Ptr<T> obj, Matrix const& transform);
 private:
     Ptr<Scene> scene_;
     Matrix transform_;
@@ -37,5 +38,13 @@ private:
     bool ui_;
 };
 
+
+template <typename T> 
+void TransformUpdater::submit(Ptr<T> obj, Matrix const& transform) {
+    Matrix save = transform_;
+    transform_ = transform;
+    operator()(obj);
+    transform_ = save;
+}
 
 }
