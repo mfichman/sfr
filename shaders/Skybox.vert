@@ -15,7 +15,7 @@ out vec3 texCoord;
 void main() {
     gl_Position = transform * vec4(positionIn, 1);
     // Set z=w so that the skydome is always on the far z plane
-    gl_Position.w = gl_Position.z;
+    gl_Position.z = gl_Position.w; // Requires glDepthFunc(GL_LEQUAL):
 
     // Use the skymesh vertex position, in local space,
     // as an index into the cubemap

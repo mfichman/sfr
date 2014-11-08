@@ -66,10 +66,12 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     // Generate shadows
     shadowPass_->operator()(scene);
 
+/*
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_ALWAYS, 1, 0xff); 
     glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
     glStencilMask(0xff);
+*/
 
     // Pass 1: Write material properties into the material G-Buffers
     frameBuffer_->statusIs(FrameBuffer::ENABLED);
@@ -122,6 +124,7 @@ void DeferredRenderer::operator()(Ptr<Scene> scene) {
     // Pass 3: Skybox
     skyboxPass_->operator()(scene);
 
+    glDepthFunc(GL_LEQUAL);
     glDisable(GL_STENCIL_TEST);
 
     // Pass 4: Render transparent objects

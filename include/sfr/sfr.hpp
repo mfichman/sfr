@@ -51,7 +51,6 @@
 #include "ModelRenderer.hpp"
 #include "Matrix.hpp"
 #include "Mesh.hpp"
-#include "MeshVertex.hpp"
 #include "Model.hpp"
 #include "Node.hpp"
 #include "NullFunctor.hpp"

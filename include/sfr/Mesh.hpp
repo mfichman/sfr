@@ -10,9 +10,22 @@
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Interface.hpp"
 #include "sfr/Box.hpp"
-#include "sfr/MeshVertex.hpp"
 
 namespace sfr {
+
+class MeshVertex {
+public:
+    bool operator<(MeshVertex const& other) const;
+    bool operator==(MeshVertex const& other) const;
+    bool operator!=(MeshVertex const& other) const;
+    MeshVertex operator+(MeshVertex const& other) const;
+    MeshVertex operator*(Scalar scale) const;
+
+    GLvec3 position;
+    GLvec3 normal;
+    GLvec3 tangent;
+    GLvec2 texCoord;
+};
 
 /* Geometric mesh node (with attached textures) */
 class Mesh : public Interface {

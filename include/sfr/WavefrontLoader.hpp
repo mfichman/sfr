@@ -9,7 +9,7 @@
 #include "sfr/Common.hpp"
 #include "sfr/AssetTable.hpp"
 #include "sfr/Vector.hpp"
-#include "sfr/MeshVertex.hpp"
+#include "sfr/Mesh.hpp"
 #include "sfr/AttributeBuffer.hpp"
 #include "sfr/Box.hpp"
 

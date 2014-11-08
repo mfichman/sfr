@@ -61,7 +61,7 @@ std::string fileContents(std::string const& path) {
 std::string memContents(std::string const& path) {
     Asset const* data = assetPtr(path);
     if (data) {
-        return std::string(data->data, data->len);
+        return std::string((char*)data->data, data->len);
     } else {
         throw ResourceException("file not found: " + path);
     }
