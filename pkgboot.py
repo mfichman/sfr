@@ -252,18 +252,18 @@ class Package:
         # Configure the test environment
         self.env.Append(BUILDERS={'Test': Builder(action=run_test)})
         self.tests = []
-        env = self.env.Clone()
-        env.Append(LIBS=self.lib)
+        testenv = self.env.Clone()
+        testenv.Append(LIBS=self.lib)
         for test in self.env.Glob('build/test/**.cpp'):
-            env.Depends(test, self.pch)
+            self.env.Depends(test, self.pch)
             name = test.name.replace('.cpp', '')
             if self.env['PLATFORM'] == 'win32':
                 inputs = (test, self.pch)
             else:
                 inputs = (test,)
-            prog = env.Program('bin/test/%s' % name, inputs)
+            prog = testenv.Program('bin/test/%s' % name, inputs)
             if 'check' in COMMAND_LINE_TARGETS:
-                self.tests.append(env.Test(name, prog))
+                self.tests.append(testenv.Test(name, prog))
         if 'check' in COMMAND_LINE_TARGETS:
             self.env.Alias('check', self.tests)
 
@@ -281,11 +281,4 @@ class Package:
 
     def build(self):
         pass
-        
-        
-
-
-
-
-
 
