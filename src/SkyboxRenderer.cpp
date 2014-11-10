@@ -37,6 +37,7 @@ void SkyboxRenderer::operator()(Ptr<Scene> scene) {
 
     glUseProgram(program_->id());
     glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
     glDepthFunc(GL_LEQUAL);
     scene_ = scene;
 
@@ -55,5 +56,6 @@ void SkyboxRenderer::operator()(Ptr<Scene> scene) {
     glBindVertexArray(0);
 
     glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
     glUseProgram(0);
 }

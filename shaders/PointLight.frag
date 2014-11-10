@@ -42,6 +42,4 @@ void main() {
     } else {
         color = vec4(0., 0., 0., 1.);
     }
-//    color += vec4(.1, .1, .1, 1); // FIXME
-    gl_FragDepth = li.depth;
 }

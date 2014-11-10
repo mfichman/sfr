@@ -32,8 +32,10 @@ private:
     Ptr<RenderTarget> normal_;
     Ptr<RenderTarget> emissive_;
     Ptr<RenderTarget> depth_;
+    Ptr<RenderTarget> final_;
 
     Ptr<FrameBuffer> decalFrameBuffer_;
+    Ptr<FrameBuffer> finalFrameBuffer_;
 };
 
 }

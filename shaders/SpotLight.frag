@@ -55,6 +55,4 @@ void main() {
     // float lumd = lum / (1+lum); 
     
     //color.rgb *= lumd;
-//    color += vec4(.1, .1, .1, 0); // FIXME
-    gl_FragDepth = li.depth;
 }

@@ -30,7 +30,7 @@ namespace sfr {
 
 void initWindow() {
     // Initialize the window
-    sf::ContextSettings settings(24, 8, 0, 3, 2);
+    sf::ContextSettings settings(0, 0, 0, 3, 2); // depth/stencil unnecessary w/ deferred
     sf::VideoMode mode(1200, 800, 32);
     window.reset(new sf::Window(mode, "Window", sf::Style::Default, settings));
     //window->setVerticalSyncEnabled(true);

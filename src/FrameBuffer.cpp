@@ -50,7 +50,6 @@ void FrameBuffer::drawBufferEnq(Ptr<RenderTarget> target) {
     drawBufferAttachment_.push_back(attachment);
 
     glBindFramebuffer(GL_FRAMEBUFFER, id_);
-    //glBindTexture(GL_TEXTURE_2D, target->id()); ??
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, target->id(), 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -66,7 +65,7 @@ void FrameBuffer::depthBufferIs(Ptr<RenderTarget> target) {
 }
 
 void FrameBuffer::stencilBufferIs(Ptr<RenderTarget> target) {
-    assert(!stencilBuffer_ && "depth buffer already attached");
+    assert(!stencilBuffer_ && "stencil buffer already attached");
 
     glBindFramebuffer(GL_FRAMEBUFFER, id_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, target->id(), 0);
