@@ -1,6 +1,7 @@
-Simple, Fast Renderer ![Build Status](https://travis-ci.org/mfichman/sfr.svg?branch=master)
+Simple, Fast Renderer 
 =====================
 
+![Build Status](https://travis-ci.org/mfichman/sfr.svg?branch=master)
 
 Simple, Fast Renderer (SFR) is an OpenGL 3.2+ rendering library.  The aim of
 the library is to be as simple as possible: you construct the scene graph, and
