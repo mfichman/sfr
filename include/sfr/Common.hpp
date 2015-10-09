@@ -26,7 +26,7 @@
 #ifdef __linux__
     #define SFR_USE_GLEW
     #include <GL/glew.h>
-    #include <GL/GL.h>
+    #include <GL/gl.h>
 #endif
 
 #ifdef __APPLE__
