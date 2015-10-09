@@ -3,12 +3,11 @@ sudo: false
 script: scons
 compiler: clang
 addons:
-  sources:
-    - ppa:sonkun/sfml-stable
   apt:
     packages:
       - libgl1-mesa-dev
       - libglew-dev
-      - libsfml-dev
       - libfreetype6-dev
       - libjpeg-dev
+before_install:
+    - bash install-sfml.sh 
