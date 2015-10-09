@@ -3,6 +3,8 @@ sudo: false
 script: scons
 compiler: clang
 addons:
+  sources:
+    - ppa:sonkun/sfml-stable
   apt:
     packages:
       - libgl1-mesa-dev
