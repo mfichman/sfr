@@ -1,9 +1,7 @@
 language: cpp
 sudo: false
 script: scons
-compiler: 
-  - clang
-  - gcc
+compiler: clang
 addons:
   apt:
     packages:
