@@ -202,8 +202,10 @@ class Package:
         self.env['CXX'] = 'clang++'
         #self.env.Append(CXXFLAGS='-std=c++11 -stdlib=libc++ -g -Wall -Werror -fPIC')
         self.env.Append(CXXFLAGS='-std=c++11 -g -Wall -Werror -fPIC')
-        for framework in self.frameworks:
-            self.env.Append(LINKFLAGS='-framework %s' % framework)
+
+        if self.env['PLATFORM'] = 'Linux':
+            for framework in self.frameworks:
+                self.env.Append(LINKFLAGS='-framework %s' % framework)
         #self.env.Append(LINKFLAGS='-stdlib=libc++')
         self.env.Append(BUILDERS={'Pch': Builder(action=build_pch)})
         self.src += self.env.Glob('build/src/**.s')
