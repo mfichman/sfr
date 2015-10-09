@@ -8,13 +8,18 @@ class Sfr(pkgboot.Package):
     ]
 
     libs = [
-        pkgboot.Lib('glew32s', 'win32'),
         pkgboot.Lib('opengl32', 'win32'),
-        pkgboot.Lib('jpeg', ['darwin', 'posix']),
+        pkgboot.Lib('gdi32', 'win32'),
+        pkgboot.Lib('user32', 'win32'),
+        pkgboot.Lib('advapi32', 'win32'),
+        pkgboot.Lib('winmm', 'win32'),
+        pkgboot.Lib('glew', 'win32'),
         'sfml-window',
         'sfml-graphics',
         'sfml-system',
+        'sfml-window',
         'freetype',
+        'jpeg',
     ]
 
     frameworks = [
