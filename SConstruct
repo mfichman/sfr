@@ -5,6 +5,8 @@ class Sfr(pkgboot.Package):
     defines = {}
     includes = [
         '/usr/local/include/freetype2',
+        '/usr/include/freetype2',
+        '/usr/include/freetype',
     ]
 
     libs = [
