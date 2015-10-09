@@ -5,7 +5,6 @@ compiler: clang
 addons:
   apt:
     packages:
-      - libc++-dev
       - libgl1-mesa-dev
       - libglew-dev
       - libsfml-dev
