@@ -203,7 +203,7 @@ class Package:
         #self.env.Append(CXXFLAGS='-std=c++11 -stdlib=libc++ -g -Wall -Werror -fPIC')
         self.env.Append(CXXFLAGS='-std=c++11 -g -Wall -Werror -fPIC')
 
-        if self.env['PLATFORM'] = 'Linux':
+        if self.env['PLATFORM'] != 'darwin':
             for framework in self.frameworks:
                 self.env.Append(LINKFLAGS='-framework %s' % framework)
         #self.env.Append(LINKFLAGS='-stdlib=libc++')
