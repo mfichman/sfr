@@ -12,5 +12,6 @@ addons:
       - libjpeg-dev
       - libopenal-dev
       - libudev-dev
+      - libsndfile1-dev
 before_install:
     - bash install-sfml.sh 
