@@ -10,6 +10,7 @@ addons:
       - libglew-dev
       - libfreetype6-dev
       - libjpeg-dev
+      - libopenal-dev
       - libudev-dev
 before_install:
     - bash install-sfml.sh 
