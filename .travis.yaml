@@ -1,0 +1,14 @@
+language: cpp
+sudo: false
+script: scons
+compiler: 
+  - clang
+  - gcc
+addons:
+  apt:
+    packages:
+      - libgl1-mesa-dev
+      - libglew-dev
+      - libsfml-dev
+      - libfreetype6-dev
+      - libjpeg-dev
