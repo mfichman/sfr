@@ -5,6 +5,7 @@ compiler: clang
 addons:
   apt:
     packages:
+      - cmake
       - libgl1-mesa-dev
       - libglew-dev
       - libfreetype6-dev
