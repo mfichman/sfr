@@ -79,7 +79,6 @@ class Package:
         else:
             self._setup_unix()
         self._setup_tests()
-        self._setup_examples()
         self.build() # Run custom code for building the package
 
     def _lib_is_valid_for_platform(self, lib):
@@ -152,7 +151,6 @@ class Package:
         self.env.Append(ENV=os.environ)
         self.env.VariantDir('build/src', 'src', duplicate=0)
         self.env.VariantDir('build/test', 'test', duplicate=0)
-        self.env.VariantDir('build/examples', 'examples', duplicate=0)
 
     def _setup_win(self):
         # Set up Windows-specific options
@@ -170,15 +168,15 @@ class Package:
         # Add MASM assembly files
 
         self.includes.extend([
-            'C:\\WinBrew\\include',
+            os.environ['LOCALAPPDATA']+'\\WinBrew\\include',
         ])
         self.lib_path.extend([
-            'C:\\WinBrew\\lib',
+            os.environ['LOCALAPPDATA']+'\\WinBrew\\lib',
         ])
         self.path.extend([
             os.environ['PATH'],
-            'C:\\WinBrew\\lib', 
-            'C:\\WinBrew\\bin', 
+            os.environ['LOCALAPPDATA']+'\\WinBrew\\bin',
+            os.environ['LOCALAPPDATA']+'\\WinBrew\\lib',
         ])
         # Extra Windows includes
 
@@ -200,13 +198,10 @@ class Package:
             assert not "Unknown build type"
 
         self.env['CXX'] = 'clang++'
-        #self.env.Append(CXXFLAGS='-std=c++11 -stdlib=libc++ -g -Wall -Werror -fPIC')
-        self.env.Append(CXXFLAGS='-std=c++11 -g -Wall -Werror -fPIC')
-
-        if self.env['PLATFORM'] == 'darwin':
-            for framework in self.frameworks:
-                self.env.Append(LINKFLAGS='-framework %s' % framework)
-        #self.env.Append(LINKFLAGS='-stdlib=libc++')
+        self.env.Append(CXXFLAGS='-std=c++11 -stdlib=libc++ -g -Wall -Werror -fPIC')
+        for framework in self.frameworks:
+            self.env.Append(LINKFLAGS='-framework %s' % framework)
+        self.env.Append(LINKFLAGS='-stdlib=libc++')
         self.env.Append(BUILDERS={'Pch': Builder(action=build_pch)})
         self.src += self.env.Glob('build/src/**.s')
         # Add gas assembly files
@@ -270,18 +265,13 @@ class Package:
         if 'check' in COMMAND_LINE_TARGETS:
             self.env.Alias('check', self.tests)
 
-    def _setup_examples(self):
-        env = self.env.Clone()
-        env.Append(LIBS=self.lib)
-        for example in self.env.Glob('build/examples/**.cpp'):
-            env.Depends(example, self.pch)
-            name = example.name.replace('.cpp', '')
-            if self.env['PLATFORM'] == 'win32':
-                inputs = (example, self.pch)
-            else:
-                inputs = (example,)
-            prog = env.Program('bin/examples/%s' % name, inputs)
-
     def build(self):
         pass
+        
+        
+
+
+
+
+
 
