@@ -87,7 +87,7 @@ void initCamera() {
 }
 
 void initLights() {
-    Ptr<sfr::DepthRenderTarget> target(new sfr::DepthRenderTarget(2048, 2048));
+    Ptr<sfr::DepthRenderTarget> target1(new sfr::DepthRenderTarget(2048, 2048));
     Ptr<sfr::HemiLight> light1 = root->childIs<sfr::HemiLight>();
     light1->diffuseColorIs(sfr::Color(1., 1., 1., 1.));
     light1->backDiffuseColorIs(sfr::Color(.1f, .1f, .1f, 1.f));
@@ -95,7 +95,7 @@ void initLights() {
     light1->constantAttenuationIs(1);
     light1->linearAttenuationIs(0);
     light1->quadraticAttenuationIs(0);
-    light1->shadowMapIs(target);
+    light1->shadowMapIs(target1);
 
     for (int i = -ROWS/2; i < ROWS-ROWS/2; i++) {
         for (int j = -COLS/2; j < COLS-COLS/2; j++) {

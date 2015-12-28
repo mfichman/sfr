@@ -75,14 +75,14 @@ bool assetExists(std::string const& path);
 
 template <typename T, typename ...Arg>
 Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
-    Ptr<Interface> asset = asset_[name];
+    Ptr<Interface> const asset = asset_[name];
     if (!asset) {
-        Ptr<T> asset = std::make_shared<T>(name, args...);
-        asset_[name] = asset;
+        Ptr<T> const asset2 = std::make_shared<T>(name, args...);
+        asset_[name] = asset2;
         for (size_t i = 0; i < listener_.size(); i++) {
-            listener_[i]->onAsset(asset);
+            listener_[i]->onAsset(asset2);
         }
-        return asset;
+        return asset2;
     } else if (typeid(T) != typeid(*asset)) {
         throw ResourceException("asset already exists: "+name);
     } else {
