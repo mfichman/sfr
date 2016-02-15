@@ -1,0 +1,16 @@
+language: cpp
+script: scons
+compiler: clang
+addons:
+  apt:
+    packages:
+      - cmake
+      - libgl1-mesa-dev
+      - libglew-dev
+      - libfreetype6-dev
+      - libjpeg-dev
+      - libopenal-dev
+      - libudev-dev
+      - libsndfile1-dev
+before_install:
+    - bash install-sfml.sh 

@@ -10,6 +10,7 @@
 
 #define GLEW_STATIC
 #ifdef _WIN32
+    #define SFML_STATIC
     #define WIN32_LEAN_AND_MEAN
     #define VC_EXTRALEAN
     #define NOMINMAX
@@ -25,7 +26,7 @@
 #ifdef __linux__
     #define SFR_USE_GLEW
     #include <GL/glew.h>
-    #include <GL/GL.h>
+    #include <GL/gl.h>
 #endif
 
 #ifdef __APPLE__

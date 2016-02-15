@@ -127,6 +127,7 @@ void handleInput() {
         switch (evt.type) {
         case sf::Event::Closed:
             std::cout << "Exiting" << std::endl;
+			window.reset();
             exit(0);
         case sf::Event::KeyPressed:
             break;
