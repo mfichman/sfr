@@ -164,7 +164,7 @@ Quaternion Quaternion::slerp(Quaternion const& other, Scalar alpha) const {
         rkt = other;
     }
 
-    if (abs(cos) < 1 - 1e-03) {
+    if (std::abs(cos) < 1 - 1e-03) {
         Scalar sin = std::sqrt(1 - cos*cos);
         Scalar angle = std::atan2(sin, cos);
         Scalar inv_sin = 1/sin;

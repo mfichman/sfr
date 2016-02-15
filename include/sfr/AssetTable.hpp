@@ -83,7 +83,9 @@ Ptr<T> AssetTable::assetIs(std::string const& name, Arg... args) {
             listener_[i]->onAsset(asset);
         }
         return asset;
-    } else if (typeid(T) != typeid(*asset)) {
+    }
+    Interface const& i = *asset;
+    if (typeid(T) != typeid(i)) {
         throw ResourceException("asset already exists: "+name);
     } else {
         return std::dynamic_pointer_cast<T>(asset);

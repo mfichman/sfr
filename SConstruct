@@ -4,7 +4,12 @@ import pkgboot
 class Sfr(pkgboot.Package):
     defines = {}
     includes = [
+        '/usr/local/include',
         '/usr/local/include/freetype2',
+    ]
+
+    lib_path = [
+        '/usr/local/lib',
     ]
 
     libs = [
