@@ -53,10 +53,8 @@ void DecalRenderer::operator()(Ptr<Decals> decals) {
     // * shader converts viewspace coords to decal space & sample texture
     
     Ptr<Camera> camera = scene()->camera();
-    Matrix const& projectionMatrixInv = camera->projectionMatrixInv();
     Matrix const& viewMatrixInv = camera->viewMatrixInv();
     Matrix const& viewProjectionMatrix = camera->viewProjectionMatrix();
-    glUniformMatrix4fv(program_->unproject(), 1, 0, projectionMatrixInv.mat4f());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, decals->texture()->id());

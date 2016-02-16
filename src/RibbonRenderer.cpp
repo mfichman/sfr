@@ -68,7 +68,6 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     // Pass the matrices to the vertex shader
     Matrix const modelViewMatrix = camera->viewMatrix() * worldMatrix();
     glUniformMatrix4fv(program_->modelViewMatrix(), 1, 0, modelViewMatrix.mat4f());
-    glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionMatrix().mat4f());
     glUniform1f(program_->width(), ribbon->width());
     glUniform1f(program_->minWidth(), ribbon->minWidth());
     glUniform1i(program_->count(), ribbon->pointCount());

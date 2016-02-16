@@ -5,6 +5,8 @@
  * February, 2011                                                            *
  *****************************************************************************/
 
+#pragma include "shaders/Camera.inc.glsl"
+
 uniform sampler2D diffuseBuffer;
 uniform sampler2D specularBuffer;
 uniform sampler2D normalBuffer;
@@ -14,7 +16,6 @@ uniform sampler2D depthBuffer;
 uniform sampler2DShadow shadowMap;
 uniform float shadowMapSize;
 
-uniform mat4 unprojectMatrix; // From clip space to view space
 uniform mat4 lightMatrix; // From _view space_ (!!) to light space
 
 in vec4 position;
@@ -50,7 +51,7 @@ LightingInfo lightingInfo() {
     vec3 clip = vec3(normalized, 2. * info.depth - 1.);
 
     // Transform the clip coordinates back into view space for lighting calculations
-    vec4 view = unprojectMatrix * vec4(clip, 1.);
+    vec4 view = projectionMatrixInv * vec4(clip, 1.);
     info.view = view.xyz/view.w;
 
     // Sample the materials using the viewport position

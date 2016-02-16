@@ -6,11 +6,11 @@
  *****************************************************************************/
 
 #version 330
+#pragma include "shaders/Camera.inc.glsl"
 
 uniform sampler2D tex;
 uniform sampler2D depthBuffer;
 
-uniform mat4 unprojectMatrix; // From clip space to view space
 uniform mat4 decalMatrix; // From _view space_ (!!) to decal space
 
 in vec4 position;
@@ -32,7 +32,7 @@ void main() {
     vec3 clip = vec3(normalized, 2. * depth - 1.);
 
     // Transform the clip coordinates back into view space
-    vec4 viewRaw = unprojectMatrix * vec4(clip, 1.);
+    vec4 viewRaw = projectionMatrixInv * vec4(clip, 1.);
     vec3 view = viewRaw.xyz/viewRaw.w;
 
     // Transform to decal space (range: [0, 1])

@@ -34,6 +34,7 @@ class Sfr(pkgboot.Package):
     ]
 
     assets = [
+        'shaders/*.glsl',
         'shaders/*.vert',
         'shaders/*.frag',
         'shaders/*.geom',

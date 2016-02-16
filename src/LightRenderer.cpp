@@ -141,13 +141,11 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         mesh->statusIs(Mesh::SYNCED);
 
         // Set up the view, projection, and inverse projection transforms
-        Matrix const& projectionMatrixInv = camera->projectionMatrixInv();
         glUniformMatrix4fv(program_->transform(), 1, 0, Matrix().mat4f()); // Identity
         glUniformMatrix4fv(program_->modelView(), 1, 0, Matrix().mat4f()); // Identity
         // Use the identity transform, so that the specially-shaped unit quad
         // maps to the whole screen as a fullscreen quad in clip-space, that
         // is, x=[-1,1] y=[-1,1]
-        glUniformMatrix4fv(program_->unproject(), 1, 0, projectionMatrixInv.mat4f());
 
         // Render the mesh
         Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -231,12 +229,10 @@ void LightRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Set up the view, projection, and inverse projection transforms
     Ptr<Camera> camera = scene()->camera();
-    Matrix const projectionMatrixInv = camera->projectionMatrixInv();
     Matrix const worldViewProjectionMatrix = camera->viewProjectionMatrix() * worldMatrix();
     Matrix const worldViewMatrix = camera->viewMatrix() * worldMatrix();
     glUniformMatrix4fv(program_->transform(), 1, 0, worldViewProjectionMatrix.mat4f());
     glUniformMatrix4fv(program_->modelView(), 1, 0, worldViewMatrix.mat4f());
-    glUniformMatrix4fv(program_->unproject(), 1, 0, projectionMatrixInv.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

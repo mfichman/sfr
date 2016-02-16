@@ -6,9 +6,9 @@
  *****************************************************************************/
 
 #version 330
+#pragma include "shaders/Camera.inc.glsl"
 
 uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
 uniform float width;
 uniform float minWidth;
