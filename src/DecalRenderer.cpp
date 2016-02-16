@@ -53,10 +53,10 @@ void DecalRenderer::operator()(Ptr<Decals> decals) {
     // * shader converts viewspace coords to decal space & sample texture
     
     Ptr<Camera> camera = scene()->camera();
-    Matrix const inverseProjection = camera->projectionTransform().inverse();
-    Matrix const inverseView = camera->inverseViewTransform();
-    Matrix const cameraTransform = camera->transform();
-    glUniformMatrix4fv(program_->unproject(), 1, 0, inverseProjection.mat4f());
+    Matrix const& projectionMatrixInv = camera->projectionMatrixInv();
+    Matrix const& viewMatrixInv = camera->viewMatrixInv();
+    Matrix const& viewProjectionMatrix = camera->viewProjectionMatrix();
+    glUniformMatrix4fv(program_->unproject(), 1, 0, projectionMatrixInv.mat4f());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, decals->texture()->id());
@@ -74,9 +74,9 @@ void DecalRenderer::operator()(Ptr<Decals> decals) {
 
         Matrix const scale = Matrix::scale(decal.width/2.f, decal.height/2.f, decal.depth/2.f);
         Matrix const model(rotation, position);
-        Matrix const world = worldTransform() * model * scale;
-        Matrix const transform = cameraTransform * world;
-        Matrix const decalMatrix = world.inverse() * inverseView;
+        Matrix const world = worldMatrix() * model * scale;
+        Matrix const transform = viewProjectionMatrix * world;
+        Matrix const decalMatrix = world.inverse() * viewMatrixInv;
 
         glUniformMatrix4fv(program_->decalMatrix(), 1, 0, decalMatrix.mat4f());
         glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());

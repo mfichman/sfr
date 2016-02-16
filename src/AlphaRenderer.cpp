@@ -47,7 +47,7 @@ void AlphaRenderer::rendererIs(Ptr<Renderer> renderer) {
         }
     } 
     if (renderer_) {
-        renderer_->worldTransformIs(worldTransform());
+        renderer_->worldMatrixIs(worldMatrix());
     }
 }
 

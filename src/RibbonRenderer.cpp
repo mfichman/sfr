@@ -66,15 +66,15 @@ void RibbonRenderer::operator()(Ptr<Ribbon> ribbon) {
     glBindTexture(GL_TEXTURE_2D, texture->id());
 
     // Pass the matrices to the vertex shader
-    Matrix const modelView = camera->viewTransform() * worldTransform();
-    glUniformMatrix4fv(program_->modelViewMatrix(), 1, 0, modelView.mat4f());
-    glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionTransform().mat4f());
+    Matrix const modelViewMatrix = camera->viewMatrix() * worldMatrix();
+    glUniformMatrix4fv(program_->modelViewMatrix(), 1, 0, modelViewMatrix.mat4f());
+    glUniformMatrix4fv(program_->projectionMatrix(), 1, 0, camera->projectionMatrix().mat4f());
     glUniform1f(program_->width(), ribbon->width());
     glUniform1f(program_->minWidth(), ribbon->minWidth());
     glUniform1i(program_->count(), ribbon->pointCount());
     glUniform1i(program_->tail(), ribbon->pointTail());
 
-    Matrix const normalMatrix = modelView.inverse().transpose();
+    Matrix const normalMatrix = modelViewMatrix.inverse().transpose();
     GLfloat temp[9] = {
         (GLfloat)normalMatrix[0], (GLfloat)normalMatrix[1], (GLfloat)normalMatrix[2],
         (GLfloat)normalMatrix[4], (GLfloat)normalMatrix[5], (GLfloat)normalMatrix[6],

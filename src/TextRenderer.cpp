@@ -52,8 +52,8 @@ void TextRenderer::operator()(Ptr<Text> text) {
     glUniform1i(program_->sdf(), font->type()==Font::SDF);
 
     // Pass the matrices to the vertex shader
-    Matrix const transform = camera->transform() * worldTransform();
-    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
+    Matrix const worldViewProjectionMatrix = camera->viewProjectionMatrix() * worldMatrix();
+    glUniformMatrix4fv(program_->transform(), 1, 0, worldViewProjectionMatrix.mat4f());
 
     // Render the particles
     Ptr<AttributeBuffer> buffer = text->buffer();

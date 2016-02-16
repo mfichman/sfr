@@ -172,4 +172,9 @@ void Program::linkShaders() {
         }
         throw ResourceException("shader program error: " + name_);
     }
+
+    GLuint const camera = glGetUniformBlockIndex(id_, "camera"); 
+    if (camera != GL_INVALID_INDEX) {
+        glUniformBlockBinding(id_, camera, CAMERA);
+    }
 }

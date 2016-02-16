@@ -56,9 +56,9 @@ void QuadRenderer::operator()(Ptr<Quad> quad) {
     Matrix transform;
     if (quad->mode()==Quad::PARTICLE) {
         // Rotate the quad to always face the camera, like a particle.
-        Vector const origin = worldTransform().origin(); 
-        Vector up = camera->worldTransform().up().unit();
-        Vector const look = (camera->worldTransform().origin() - origin).unit();
+        Vector const origin = worldMatrix().origin(); 
+        Vector up = camera->viewMatrixInv().up().unit();
+        Vector const look = (camera->viewMatrixInv().origin() - origin).unit();
         Vector const right = up.cross(look).unit();
         up = look.cross(right).unit();
 
@@ -66,15 +66,15 @@ void QuadRenderer::operator()(Ptr<Quad> quad) {
         transform = Matrix::Matrix(rotation, origin) * scale;
     } else {
         // Render the quad using the scene transform rotation.
-        transform = worldTransform() * scale;
+        transform = worldMatrix() * scale;
     }
        
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id());
     glUniform4fv(program_->tint(), 1, quad->tint().vec4f());
 
-    transform = camera->transform() * transform;
-    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
+    Matrix worldViewProjectionMatrix = camera->viewProjectionMatrix() * transform;
+    glUniformMatrix4fv(program_->transform(), 1, 0, worldViewProjectionMatrix.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

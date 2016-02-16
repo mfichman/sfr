@@ -78,16 +78,17 @@ void LightRenderer::operator()(Ptr<PointLight> light) {
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
 
     // Save old model matrix
-    Matrix previous = worldTransform();
+    Matrix previous = worldMatrix();
 
     // Scale the light geometry to the correct size
     Matrix scale = Matrix::scale(radius, radius, radius);
-    worldTransformIs(worldTransform() * scale);
+    worldMatrixIs(worldMatrix() * scale);
     
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitSphere_);
 
-    worldTransformIs(previous);
+    worldMatrixIs(previous);
+
 }
 
 void LightRenderer::operator()(Ptr<HemiLight> light) {
@@ -113,8 +114,8 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     glUniform1f(program_->atten2(), light->quadraticAttenuation());
 
     // Transform the light direction from scene space into view space
-    Matrix transform = worldTransform() * scene()->camera()->viewTransform();
-    Vector direction = transform.normal(light->direction()).unit();
+    Matrix worldViewMatrix = worldMatrix() * scene()->camera()->viewMatrix();
+    Vector direction = worldViewMatrix.normal(light->direction()).unit();
     glUniform3fv(program_->direction(), 1, direction.vec3f());
 
     // Shadow mapping.  Set the shadow map buffer and light matrix
@@ -127,7 +128,7 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
     }
     // Set the light matrix in the shader, which transforms from view => light space.
     // This matrix is used for shadow mapping
-    Matrix viewToLightTransform = light->transform() * camera->inverseViewTransform();
+    Matrix viewToLightTransform = light->transform() * camera->viewMatrixInv();
     glUniformMatrix4fv(program_->light(), 1, 0, viewToLightTransform.mat4f());
 
     // Calculate the model transform, and scale the model to cover the light's 
@@ -140,13 +141,13 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         mesh->statusIs(Mesh::SYNCED);
 
         // Set up the view, projection, and inverse projection transforms
-        Matrix inverseProjection = camera->projectionTransform().inverse();
+        Matrix const& projectionMatrixInv = camera->projectionMatrixInv();
         glUniformMatrix4fv(program_->transform(), 1, 0, Matrix().mat4f()); // Identity
         glUniformMatrix4fv(program_->modelView(), 1, 0, Matrix().mat4f()); // Identity
         // Use the identity transform, so that the specially-shaped unit quad
         // maps to the whole screen as a fullscreen quad in clip-space, that
         // is, x=[-1,1] y=[-1,1]
-        glUniformMatrix4fv(program_->unproject(), 1, 0, inverseProjection.mat4f());
+        glUniformMatrix4fv(program_->unproject(), 1, 0, projectionMatrixInv.mat4f());
 
         // Render the mesh
         Ptr<IndexBuffer> buffer = mesh->indexBuffer();
@@ -155,10 +156,10 @@ void LightRenderer::operator()(Ptr<HemiLight> light) {
         glBindVertexArray(0);
     } else {
         // This renders the light's bounding volume (usually a sphere)
-        Matrix previous = worldTransform();
-        worldTransformIs(worldTransform() * Matrix::scale(radius, radius, radius));
+        Matrix previous = worldMatrix();
+        worldMatrixIs(worldMatrix() * Matrix::scale(radius, radius, radius));
         operator()(unitSphere_);
-        worldTransformIs(previous);
+        worldMatrixIs(previous);
     }
 }
 
@@ -184,8 +185,8 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     glUniform1f(program_->spotPower(), light->spotPower());
 
     // Transform the light direction from into view space
-    Matrix transform = scene()->camera()->viewTransform() * worldTransform();
-    Vector direction = transform.normal(light->direction()).unit();
+    Matrix worldViewMatrix = scene()->camera()->viewMatrix() * worldMatrix();
+    Vector direction = worldViewMatrix.normal(light->direction()).unit();
     glUniform3fv(program_->direction(), 1, direction.vec3f());
 
     // Shadow mapping.  Set the shadow map buffer and light matrix
@@ -198,11 +199,11 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     }
     // Set the light matrix in the shader, which transforms from view => light space.
     // This matrix is used for shadow mapping
-    Matrix viewToLightTransform = light->transform() * camera->inverseViewTransform();
+    Matrix viewToLightTransform = light->transform() * camera->viewMatrix();
     glUniformMatrix4fv(program_->light(), 1, 0, viewToLightTransform.mat4f());
 
     // Save the old model matrix
-    Matrix previous = worldTransform();
+    Matrix previous = worldMatrix();
 
     // Scale model to cover the light's area of effect.
     Scalar const margin = 2.f;
@@ -218,11 +219,11 @@ void LightRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    worldTransformIs(worldTransform() * rotate * scale);
+    worldMatrixIs(worldMatrix() * rotate * scale);
 
     // This renders the light's bounding volume (usually a sphere)
     operator()(unitCone_);
-    worldTransformIs(previous);
+    worldMatrixIs(previous);
 }
 
 void LightRenderer::operator()(Ptr<Mesh> mesh) {
@@ -230,12 +231,12 @@ void LightRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Set up the view, projection, and inverse projection transforms
     Ptr<Camera> camera = scene()->camera();
-    Matrix const inverseProjection = camera->projectionTransform().inverse();
-    Matrix const transform = camera->transform() * worldTransform();
-    Matrix const modelView = camera->viewTransform() * worldTransform();
-    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
-    glUniformMatrix4fv(program_->modelView(), 1, 0, modelView.mat4f());
-    glUniformMatrix4fv(program_->unproject(), 1, 0, inverseProjection.mat4f());
+    Matrix const projectionMatrixInv = camera->projectionMatrixInv();
+    Matrix const worldViewProjectionMatrix = camera->viewProjectionMatrix() * worldMatrix();
+    Matrix const worldViewMatrix = camera->viewMatrix() * worldMatrix();
+    glUniformMatrix4fv(program_->transform(), 1, 0, worldViewProjectionMatrix.mat4f());
+    glUniformMatrix4fv(program_->modelView(), 1, 0, worldViewMatrix.mat4f());
+    glUniformMatrix4fv(program_->unproject(), 1, 0, projectionMatrixInv.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

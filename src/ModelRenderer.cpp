@@ -58,9 +58,7 @@ void ModelRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Calculate the normal matrix and pass it to the vertex shader
     Ptr<Camera> camera = scene()->camera();
-    Matrix normalMatrix = camera->viewTransform() * worldTransform();
-    normalMatrix = normalMatrix.inverse();
-    normalMatrix = normalMatrix.transpose();
+    Matrix normalMatrix = (camera->viewMatrix() * worldMatrix()).inverse().transpose();
 
     GLfloat temp[9] = {
         (GLfloat)normalMatrix[0], (GLfloat)normalMatrix[1], (GLfloat)normalMatrix[2],
@@ -68,11 +66,11 @@ void ModelRenderer::operator()(Ptr<Mesh> mesh) {
         (GLfloat)normalMatrix[8], (GLfloat)normalMatrix[9], (GLfloat)normalMatrix[10]
     };
 
-    Matrix const transform = camera->transform() * worldTransform();
+    Matrix const worldViewProjectionMatrix = camera->viewProjectionMatrix() * worldMatrix();
     
     // Pass the model matrix to the vertex shader
     glUniformMatrix3fv(program_->normalMatrix(), 1, 0, temp);    
-    glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
+    glUniformMatrix4fv(program_->transform(), 1, 0, worldViewProjectionMatrix.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();

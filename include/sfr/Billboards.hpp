@@ -62,8 +62,8 @@ class BillboardProgram : public Program {
 public:
     BillboardProgram(std::string const& name) : Program(name) {}
 
-    GLint texture() const { return texture_; }
     GLint transform() const { return transform_; }
+    GLint texture() const { return texture_; }
     GLint tint() const { return tint_; }
 
 private:

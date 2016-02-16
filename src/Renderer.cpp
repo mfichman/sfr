@@ -16,14 +16,14 @@ void Renderer::operator()(Ptr<Scene> scene) {
     stateIs(ACTIVE);
     sceneIs(scene);
     for(Iterator<std::vector<RenderDesc>> i = scene->renderDescs(); i; i++) {
-        worldTransformIs(i->worldTransform());
+        worldMatrixIs(i->worldMatrix());
         i->node()->operator()(std::static_pointer_cast<Renderer>(shared_from_this()));
     }
     stateIs(Renderer::INACTIVE);
 }
 
-void Renderer::worldTransformIs(Matrix const& transform) {
-    worldTransform_ = transform;
+void Renderer::worldMatrixIs(Matrix const& transform) {
+    worldMatrix_ = transform;
 }
 
 void Renderer::sceneIs(Ptr<Scene> scene) {
@@ -37,8 +37,8 @@ void Renderer::stateIs(State state) {
     }
 }
 
-Matrix const& Renderer::worldTransform() const { 
-    return worldTransform_;
+Matrix const& Renderer::worldMatrix() const { 
+    return worldMatrix_;
 }
 
 Ptr<Scene> Renderer::scene() const {

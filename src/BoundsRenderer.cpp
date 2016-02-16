@@ -90,13 +90,13 @@ void BoundsRenderer::operator()(Ptr<Mesh> mesh) {
 
     Matrix translate = Matrix::translate(pos);
     Matrix scale = Matrix::scale(d.x, d.y, d.z);  
-    Matrix sceneLocal = worldTransform() * translate * scale;
+    Matrix sceneLocal = worldMatrix() * translate * scale;
 
     unitCube_->statusIs(Mesh::SYNCED);
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = scene()->camera();
-    Matrix const transform = camera->transform() * sceneLocal;
+    Matrix const transform = camera->viewProjectionMatrix() * sceneLocal;
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh
@@ -128,10 +128,10 @@ void BoundsRenderer::operator()(Ptr<SpotLight> light) {
     // Transform the light to point in the correct direction
     Matrix rotate = Matrix::look(light->direction());
     Matrix scale = Matrix::scale(sx, sy, sz);
-    Matrix sceneLocal = worldTransform() * rotate * scale;
+    Matrix sceneLocal = worldMatrix() * rotate * scale;
 
     Ptr<Camera> camera = scene()->camera();
-    Matrix const transform = camera->transform() * sceneLocal;
+    Matrix const transform = camera->viewProjectionMatrix() * sceneLocal;
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     Ptr<IndexBuffer> buffer = unitCone_->indexBuffer();

@@ -41,9 +41,9 @@ void SkyboxRenderer::operator()(Ptr<Scene> scene) {
     glDepthFunc(GL_LEQUAL);
     scene_ = scene;
 
-    Matrix const view = Matrix::rotate(camera->viewTransform().rotation());
-    Matrix const transform = camera->projectionTransform() * view;
-    glUniformMatrix4fv(transform_, 1, 0, transform.mat4f());
+    Matrix const viewMatrix = Matrix::rotate(camera->viewMatrix().rotation());
+    Matrix const viewProjectionMatrix = camera->projectionMatrix() * viewMatrix;
+    glUniformMatrix4fv(transform_, 1, 0, viewProjectionMatrix.mat4f());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->id());

@@ -23,6 +23,7 @@ public:
     static Matrix look(Vector const& pos, Vector const& at, Vector const& up);
     static Matrix look(Vector const& direction);
     static Matrix translate(Vector const& trans);
+    static Matrix fromForwardVector(Vector const& forward);
 
     Matrix(const Scalar data[16]);
     Matrix(Scalar m00, Scalar m01, Scalar m02, Scalar m03,

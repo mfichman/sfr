@@ -13,17 +13,17 @@ namespace sfr {
 
 class RenderDesc {
 public:
-    RenderDesc(Ptr<Node> node, Ptr<Program> program, Matrix const& worldTransform);
+    RenderDesc(Ptr<Node> node, Ptr<Program> program, Matrix const& worldMatrix);
 
     Ptr<Node> node() const { return node_; }
     Ptr<Program> program() const { return program_; }
-    Matrix const& worldTransform() const { return worldTransform_; }
+    Matrix const& worldMatrix() const { return worldMatrix_; }
     bool operator<(RenderDesc const& other) const;
 
 private:
     Ptr<Node> node_;
     Ptr<Program> program_;
-    Matrix worldTransform_;
+    Matrix worldMatrix_;
 };
 
 class UiRenderDesc {

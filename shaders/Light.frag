@@ -66,6 +66,29 @@ LightingInfo lightingInfo() {
     return info;
 }
 
+float shadowDefault(in LightingInfo li) {
+    // Use textureProj to look up the shadow coord 
+    if (shadowMapSize == 0) {
+        return 1.;
+    }
+
+    // Transform the view coordinates to light space and renormalize
+    vec4 shadowCoord = lightMatrix * vec4(li.view, 1);
+
+    if(shadowCoord.x>1||shadowCoord.x<0||shadowCoord.y>1||shadowCoord.y<0) {
+        return 1;
+    }
+
+    float shadow = textureProj(shadowMap, shadowCoord);
+    if (shadow <= 0) {
+        float dist = shadowCoord.z/shadowCoord.w;
+        float maxDist = .9;
+        return clamp(sqrt(max(dist-maxDist, 0)/maxDist), 0, 1);
+    } else {
+        return 1;
+    }
+}
+
 float shadowPoissonPcf(in LightingInfo li) {
     // PCF shadow lookup using poisson disk distribution for samples. Assumes 
     // that the shadow map size is 2048x2048.  Input: Coordinates in light clip 

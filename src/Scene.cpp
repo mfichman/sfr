@@ -70,10 +70,10 @@ void Scene::sort() {
 
 }
 
-RenderDesc::RenderDesc(Ptr<Node> node, Ptr<Program> program, Matrix const& worldTransform) {
+RenderDesc::RenderDesc(Ptr<Node> node, Ptr<Program> program, Matrix const& worldMatrix) {
     node_ = node;
     program_ = program;
-    worldTransform_ = worldTransform;
+    worldMatrix_ = worldMatrix;
 }
 
 bool RenderDesc::operator<(RenderDesc const& other) const {

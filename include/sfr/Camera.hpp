@@ -18,17 +18,20 @@ namespace sfr {
 class Camera : public Node {
 public:
     enum State { ACTIVE, INACTIVE };
+    enum Status { SYNCED, DIRTY };
     enum Type { PERSPECTIVE, ORTHOGRAPHIC };
 
     Camera();
+    ~Camera();
     
     Frustum viewFrustum(Scalar near, Scalar far) const;
     Frustum viewFrustum() const;
-    Matrix const& transform() const;
-    Matrix const& projectionTransform() const;
-    Matrix const& viewTransform() const;
-    Matrix const& worldTransform() const;
-    Matrix const& inverseViewTransform() const;
+    Matrix const& projectionMatrix() const;
+    Matrix const& projectionMatrixInv() const;
+    Matrix const& viewMatrix() const;
+    Matrix const& viewMatrixInv() const;
+    Matrix const& viewProjectionMatrix() const;
+    Matrix const& viewProjectionMatrixInv() const;
     Scalar far() const;
     Scalar near() const;
     Scalar left() const;
@@ -40,6 +43,8 @@ public:
     GLuint viewportHeight() const;
     State state() const;
     Type type() const;
+    Status status() const;
+    GLuint id() const;
 
     void farIs(Scalar distance);
     void nearIs(Scalar distance);
@@ -50,15 +55,15 @@ public:
     void fieldOfViewIs(Scalar view);
     void stateIs(State state);
     void typeIs(Type type);
-    void worldTransformIs(Matrix const& transform);
+    void statusIs(Status status);
     void viewportWidthIs(GLuint width);
     void viewportHeightIs(GLuint height);
+    void viewMatrixIs(Matrix const& matrix);
 
     void operator()(Ptr<Functor> functor);
 
 private:
-    Matrix viewTransform_;
-    Matrix worldTransform_;
+    GLuint id_;
     Scalar far_;
     Scalar near_;
     Scalar left_;
@@ -72,10 +77,17 @@ private:
     Type type_;
 
     // Cached computed values
-    mutable Matrix projectionTransform_;
-    mutable Matrix transform_;
-    mutable bool projectionDirty_;
-    mutable bool viewDirty_;
+    struct Buffer {
+        Matrix projectionMatrix_;
+        Matrix projectionMatrixInv_;
+        Matrix viewMatrix_;
+        Matrix viewMatrixInv_; 
+        Matrix viewProjectionMatrix_;
+        Matrix viewProjectionMatrixInv_;
+    };
+
+    mutable Buffer buffer_;
+    mutable Status status_;
 };
 
 }

@@ -12,8 +12,7 @@
 using namespace sfr;
 
 Camera::Camera() {
-    projectionDirty_ = true;
-    viewDirty_ = true;
+    id_ = 0;
     far_ = 1000.f;
     near_ = .1f;
     fieldOfView_ = 45.f;
@@ -25,10 +24,19 @@ Camera::Camera() {
     bottom_ = 0;
     viewportWidth_ = 0;
     viewportHeight_ = 0;
+    status_ = DIRTY;
+}
+
+Camera::~Camera() {
+    glDeleteBuffers(1, &id_);
 }
 
 Camera::Type Camera::type() const {
     return type_;
+}
+
+Camera::Status Camera::status() const {
+    return status_; 
 }
 
 Scalar Camera::far() const {
@@ -129,90 +137,73 @@ Frustum Camera::viewFrustum(Scalar near, Scalar far) const {
     }
 }
 
-Matrix const& Camera::transform() const {
-    if (projectionDirty_ || viewDirty_) {
-        transform_ = projectionTransform() * viewTransform();
-        projectionDirty_ = false;
-        viewDirty_ = false;
-    }
-    return transform_;
+Matrix const& Camera::projectionMatrix() const {
+    return buffer_.projectionMatrix_;
 }
 
-Matrix const& Camera::projectionTransform() const {
-    if (projectionDirty_) {
-        projectionDirty_ = false;
-    
-        if (ORTHOGRAPHIC == type_) {
-            projectionTransform_ = Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
-        } else {
-            Scalar aspectRatio = viewportWidth_/Scalar(viewportHeight_);
-            projectionTransform_ = Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
-        }
-    }
-    return projectionTransform_;
+Matrix const& Camera::projectionMatrixInv() const {
+    return buffer_.projectionMatrixInv_;
 }
 
-Matrix const& Camera::viewTransform() const {
-    return viewTransform_;
+Matrix const& Camera::viewMatrix() const {
+    return buffer_.viewMatrix_;
 }
 
-Matrix const& Camera::inverseViewTransform() const {
-    return worldTransform();
+Matrix const& Camera::viewMatrixInv() const {
+    return buffer_.viewMatrixInv_;
 }
 
-Matrix const& Camera::worldTransform() const {
-    return worldTransform_;
+Matrix const& Camera::viewProjectionMatrix() const {
+    return buffer_.viewProjectionMatrix_;
+}
+
+Matrix const& Camera::viewProjectionMatrixInv() const {
+    return buffer_.viewProjectionMatrixInv_;
 }
 
 void Camera::viewportWidthIs(GLuint width) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     viewportWidth_ = width;
 }
 
 void Camera::viewportHeightIs(GLuint height) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     viewportHeight_ = height;
 }
 
 void Camera::farIs(Scalar distance) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     far_ = distance;
 }
 
 void Camera::nearIs(Scalar distance) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     near_ = distance;
 }
 
 void Camera::leftIs(Scalar distance) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     left_ = distance;
 }
 
 void Camera::rightIs(Scalar distance) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     right_ = distance;
 }
 
 void Camera::topIs(Scalar distance) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     top_ = distance;
 }
 
 void Camera::bottomIs(Scalar distance) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     bottom_ = distance;
 }
 
 void Camera::fieldOfViewIs(Scalar view) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     fieldOfView_ = view;
-}
-
-void Camera::worldTransformIs(Matrix const& transform) {
-    viewDirty_ = true;
-    viewTransform_ = transform.inverse();
-    worldTransform_ = transform;
 }
 
 void Camera::stateIs(State state) {
@@ -220,8 +211,46 @@ void Camera::stateIs(State state) {
 }
 
 void Camera::typeIs(Type type) {
-    projectionDirty_ = true;
+    status_ = DIRTY;
     type_ = type;
+}
+
+void Camera::viewMatrixIs(Matrix const& matrix) {
+    status_ = DIRTY;
+    buffer_.viewMatrix_ = matrix;
+}
+
+void Camera::statusIs(Status status) {
+    if (status_ == status) {
+        return;
+    }
+    status_ = status;
+    if (status_ == SYNCED) {
+
+        if (!id_) {
+            glGenBuffers(1, &id_);
+        }
+
+        if (ORTHOGRAPHIC == type_) {
+            buffer_.projectionMatrix_ = Matrix::ortho(left_, right_, bottom_, top_, near_, far_);
+        } else if (PERSPECTIVE == type_) {
+            Scalar aspectRatio = viewportWidth_/Scalar(viewportHeight_);
+            buffer_.projectionMatrix_ = Matrix::perspective(fieldOfView_, aspectRatio, near_, far_);
+        } else {
+            assert(!"invalid camera mode");
+        }
+        buffer_.projectionMatrixInv_ = buffer_.projectionMatrix_.inverse();
+        buffer_.viewMatrixInv_ = buffer_.viewMatrix_.inverse();
+        buffer_.viewProjectionMatrix_ = buffer_.projectionMatrix_ * buffer_.viewMatrix_;
+        buffer_.viewProjectionMatrixInv_ = buffer_.viewProjectionMatrix_.inverse();
+
+        glBindBuffer(GL_UNIFORM_BUFFER, id_);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(buffer_), &buffer_, GL_STATIC_DRAW);
+    }
+}
+
+GLuint Camera::id() const {
+    return id_;
 }
 
 void Camera::operator()(Ptr<Functor> functor) {

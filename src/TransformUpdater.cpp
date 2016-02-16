@@ -81,7 +81,7 @@ void TransformUpdater::operator()(Ptr<Ui> ui) {
 
 void TransformUpdater::operator()(Ptr<Camera> camera) {
     // Why is the view transform the inverse?
-    camera->worldTransformIs(transform_);
+    camera->viewMatrixIs(transform_.inverse());
 }
 
 void TransformUpdater::operator()(Ptr<Model> model) {

@@ -1,5 +1,6 @@
 
 import pkgboot
+import os
 
 class Sfr(pkgboot.Package):
     defines = {}
@@ -7,6 +8,7 @@ class Sfr(pkgboot.Package):
         '/usr/local/include/freetype2',
         '/usr/include/freetype2',
         '/usr/include/freetype',
+        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'WinBrew\\include\\freetype'),
     ]
 
     libs = [

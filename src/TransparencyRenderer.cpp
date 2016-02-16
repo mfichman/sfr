@@ -68,10 +68,7 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
     mesh->statusIs(Mesh::SYNCED);
 
     Ptr<Camera> camera = scene()->camera();
-    Matrix normalMatrix = camera->viewTransform() * worldTransform();
-    normalMatrix = normalMatrix.inverse();
-    normalMatrix = normalMatrix.transpose();
-
+    Matrix normalMatrix = (camera->viewMatrix() * worldMatrix()).inverse().transpose();
     GLfloat temp[9] = {
         (GLfloat)normalMatrix[0], (GLfloat)normalMatrix[1], (GLfloat)normalMatrix[2],
         (GLfloat)normalMatrix[4], (GLfloat)normalMatrix[5], (GLfloat)normalMatrix[6],
@@ -79,9 +76,9 @@ void TransparencyRenderer::operator()(Ptr<Mesh> mesh) {
     };
 
     // Pass the matrices to the vertex shader
-    Matrix const transform = camera->transform() * worldTransform();
+    Matrix const worldViewProjectionMatrix = camera->viewProjectionMatrix() * worldMatrix();
     glUniformMatrix3fv(activeProgram_->normalMatrix(), 1, 0, temp);    
-    glUniformMatrix4fv(activeProgram_->transform(), 1, 0, transform.mat4f());
+    glUniformMatrix4fv(activeProgram_->transform(), 1, 0, worldViewProjectionMatrix.mat4f());
 
     // Render the mesh
     Ptr<IndexBuffer> buffer = mesh->indexBuffer();
