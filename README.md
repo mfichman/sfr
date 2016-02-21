@@ -18,6 +18,7 @@ SFR features:
 * Normal, emissive, and specular maps
 * Point, spot & directional Phong lighting
 * Transparency
+* Signed distance field font rendering
 * OBJ file loader
 
 Dependencies
