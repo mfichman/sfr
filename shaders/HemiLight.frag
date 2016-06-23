@@ -24,7 +24,7 @@ out vec4 color;
 /* Deferred point light shader */
 void main() {
 	LightingInfo li = lightingInfo();
-	float shadow = shadowPoissonPcf(li);
+	float shadow = shadowDefault(li);
 
 	// Sample the normal and the view vector
     vec3 V = normalize(li.view);

@@ -50,7 +50,7 @@ void FlatRenderer::operator()(Ptr<Mesh> mesh) {
 
     // Pass the model matrix to the vertex shader
     Ptr<Camera> camera = scene()->camera();
-    Matrix const transform = camera->transform() * worldTransform();
+    Matrix const transform = camera->viewProjectionMatrix() * worldMatrix();
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the mesh

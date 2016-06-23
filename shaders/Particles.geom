@@ -6,8 +6,7 @@
  *****************************************************************************/
 
 #version 330
-
-uniform mat4 projectionMatrix;
+#pragma include "shaders/Camera.inc.glsl"
 
 layout (points) in;
 layout (triangle_strip) out;

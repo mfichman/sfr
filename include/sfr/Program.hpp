@@ -15,6 +15,7 @@ namespace sfr {
 class Program : public Interface {
 public:
     enum Status { LINKED, DIRTY };
+    enum UniformBuffer { CAMERA };
 
     Program(std::string const& name);
     ~Program();

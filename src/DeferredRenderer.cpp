@@ -21,6 +21,7 @@
 #include "sfr/SkyboxRenderer.hpp"
 #include "sfr/Transform.hpp"
 #include "sfr/UiRenderer.hpp"
+#include "sfr/Program.hpp"
 
 using namespace sfr;
 
@@ -69,6 +70,10 @@ DeferredRenderer::DeferredRenderer(Ptr<AssetTable> assets) {
 }
 
 void DeferredRenderer::operator()(Ptr<Scene> scene) {
+    // Link the camera
+    scene->camera()->statusIs(Camera::SYNCED);
+    glBindBufferBase(GL_UNIFORM_BUFFER, Program::CAMERA, scene->camera()->id());
+
     // Generate shadows
     shadowPass_->operator()(scene);
 

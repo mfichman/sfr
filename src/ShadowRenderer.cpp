@@ -84,7 +84,7 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     // Set up the view matrix for the virtual light camera
     // Transform to the center of the light, then point in the reverse of the
     // light direction. 
-    Matrix const lightWorld = Matrix::look(-light->direction().unit());
+    Matrix const lightViewMatrix = Matrix::fromForwardVector(-light->direction().unit());
     // FIXME: Shouldn't this be transformed by worldTransform(), as for
     // spotlights...?
 
@@ -96,8 +96,10 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
     // Transform the view frustum into light space from clip space
     float far = sceneCamera->far();
     sceneCamera->farIs(sceneCamera->near()+light->shadowViewDistance());
-    Matrix transform = lightWorld * sceneCamera->transform().inverse();
+
+    Matrix transform = lightViewMatrix * sceneCamera->viewProjectionMatrixInv();
     sceneCamera->farIs(far);
+
     Frustum frustum;
     frustum.nearTopLeft = Vector(-1, 1, -1);
     frustum.nearTopRight = Vector(1, 1, -1);
@@ -116,33 +118,34 @@ void ShadowRenderer::operator()(Ptr<HemiLight> light) {
 
     // Include objects behind/off to the side of the camera...note that this
     // will not work for all scenes. FIXME: Make this margin configurable
+    /*
     bounds.max.y += 2.f;
     bounds.min.y -= 2.f;
     bounds.max.x += 2.f;
     bounds.min.x -= 2.f;
     bounds.min.z -= 100;
+    */
      
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
     lightCamera->typeIs(Camera::ORTHOGRAPHIC);
-    lightCamera->worldTransformIs(lightWorld);
-    lightCamera->nearIs(bounds.min.z);
-    lightCamera->farIs(bounds.max.z);
-    lightCamera->leftIs(bounds.min.x);
-    lightCamera->rightIs(bounds.max.x);
-    lightCamera->bottomIs(bounds.min.y);
-    lightCamera->topIs(bounds.max.y);
+    lightCamera->viewMatrixIs(lightViewMatrix);
+    lightCamera->nearIs(std::min(bounds.min.z, bounds.max.z));
+    lightCamera->farIs(std::max(bounds.min.z, bounds.max.z));
+    lightCamera->leftIs(std::min(bounds.min.x, bounds.max.x));
+    lightCamera->rightIs(std::max(bounds.min.x, bounds.max.x));
+    lightCamera->bottomIs(std::min(bounds.min.y, bounds.max.y));
+    lightCamera->topIs(std::max(bounds.min.y, bounds.max.y));
     lightCamera->viewportWidthIs(light->shadowMap()->width());
     lightCamera->viewportHeightIs(light->shadowMap()->height());
+    lightCamera->statusIs(Camera::SYNCED);
 
-    Matrix const& lightProjection = lightCamera->projectionTransform();
-    Matrix const& lightView = lightCamera->viewTransform();
     Matrix bias = Matrix(
         0.5f, 0.f, 0.f, 0.5f,
         0.f, 0.5f, 0.f, 0.5f,
         0.f, 0.f, 0.5f, 0.5f,
         0.f, 0.f, 0.f, 1.f);
-    Matrix const lightMatrix = bias * lightProjection * lightView;
+    Matrix const lightMatrix = bias * lightCamera->viewProjectionMatrix();
     light->transformIs(lightMatrix);
 
     // Render the scene into the shadow map from light perspective
@@ -172,26 +175,24 @@ void ShadowRenderer::operator()(Ptr<SpotLight> light) {
     // Transform to the center of the light, then point in the reverse of the light 
     // direction.  Then, invert the matrix so that it is a view matrix.  
     // FIXME: This doesn't seem quite right.
-    Matrix const lightWorld = worldTransform() * Matrix::look(-light->direction());
+    Matrix const lightViewMatrix = Matrix::fromForwardVector(-light->direction().unit());
 
     // Set up parameters for the virtual light camera
     Ptr<Camera> lightCamera(new Camera);
     lightCamera->typeIs(Camera::PERSPECTIVE);
-    lightCamera->worldTransformIs(lightWorld);
+    lightCamera->viewMatrixIs(lightViewMatrix);
     lightCamera->fieldOfViewIs(light->spotCutoff() * 2.f);
     lightCamera->nearIs(1.f);
     lightCamera->farIs(light->radiusOfEffect());//something's up w/ projection
     lightCamera->viewportWidthIs(light->shadowMap()->width());
     lightCamera->viewportHeightIs(light->shadowMap()->height());
 
-    Matrix const& lightProjection = lightCamera->projectionTransform();
-    Matrix const& lightView = lightCamera->viewTransform();
     Matrix const bias = Matrix(
         0.5f, 0.f, 0.f, 0.5f,
         0.f, 0.5f, 0.f, 0.5f,
         0.f, 0.f, 0.5f, 0.5f,
         0.f, 0.f, 0.f, 1.f);
-    Matrix const lightMatrix = bias * lightProjection * lightView;
+    Matrix const lightMatrix = bias * lightCamera->viewProjectionMatrix();
     light->transformIs(lightMatrix);
     
     // Save the current view camera

@@ -18,11 +18,11 @@ class Renderer : public Node::Functor {
 public:
     enum State { ACTIVE, INACTIVE };
 
-    Matrix const& worldTransform() const; // Current scene transform
+    Matrix const& worldMatrix() const; // Current scene transform
     State state() const;
     Ptr<Scene> scene() const;
 
-    void worldTransformIs(Matrix const& transform);
+    void worldMatrixIs(Matrix const& transform);
     void sceneIs(Ptr<Scene> scene);
     void stateIs(State state);
 
@@ -31,7 +31,7 @@ public:
     virtual void onState() {}
 
 private:
-    Matrix worldTransform_;
+    Matrix worldMatrix_;
     State state_ = INACTIVE;
     Ptr<Scene> scene_;
 };

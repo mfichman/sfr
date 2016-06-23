@@ -77,7 +77,7 @@ void BillboardRenderer::operator()(Ptr<Billboards> billboards) {
     glBindTexture(GL_TEXTURE_2D, texture->id());
     glUniform4fv(program_->tint(), 1, billboards->tint().vec4f());
 
-    Matrix const transform = camera->transform() * worldTransform();
+    Matrix const transform = camera->viewProjectionMatrix() * worldMatrix();
     glUniformMatrix4fv(program_->transform(), 1, 0, transform.mat4f());
 
     // Render the billboards

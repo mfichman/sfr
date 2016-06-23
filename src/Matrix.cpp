@@ -14,6 +14,19 @@
 using namespace sfr;
 
 
+Matrix Matrix::fromForwardVector(Vector const& forward) {
+    Vector const zaxis = forward.unit();
+    Vector const xaxis = forward.orthogonal().cross(zaxis).unit();
+    Vector const yaxis = zaxis.cross(xaxis).unit();
+
+    return Matrix(
+        xaxis.x, xaxis.y, xaxis.z, 0,
+        yaxis.x, yaxis.y, yaxis.z, 0,
+        zaxis.x, zaxis.y, zaxis.z, 0,
+        0,       0,       0,       1
+    );
+}
+
 Matrix Matrix::frustum(Scalar l, Scalar r, Scalar b, Scalar t, Scalar n, Scalar f) {
     return Matrix(
         2*n/(r-l),    0,            (r+l)/(r-l),    0,

@@ -15,6 +15,8 @@
 #include "sfr/Transform.hpp"
 #include "sfr/WavefrontLoader.hpp"
 
+#pragma warning(disable: 4457)
+
 using namespace sfr;
 
 void WavefrontLoader::onAsset(Ptr<Transform> transform) {
